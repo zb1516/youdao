@@ -6,11 +6,13 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "e421083458/wxxcx": "^1.1",
         "fideloper/proxy": "~3.3",
+        "hprose/hprose": "v1.5.3",
+        "johnlui/aliyun-oss": "^2.2",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "predis/predis": "^1.1",
-        "hprose/hprose": "v1.5.3"
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

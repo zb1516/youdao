@@ -14,6 +14,7 @@ return array(
     '6124b4c8570aa390c21fafd04a26c69f' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     '801c31d8ed748cfa537fa45402288c95' => $vendorDir . '/psy/psysh/src/functions.php',
     'a31000009db36fa1075c15a2888b4a27' => $vendorDir . '/hprose/hprose/Hprose.php',
+    '4378f255c67b62a024d3295602369ebf' => $vendorDir . '/johnlui/aliyun-oss/src/AliyunOSS.php',
     'f0906e6318348a765ffb6eb24e0d0938' => $vendorDir . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
     '58571171fd5812e6e447dce228f52f4d' => $vendorDir . '/laravel/framework/src/Illuminate/Support/helpers.php',
     'ff086428ca04349ca1a7b01ea2d9a650' => $baseDir . '/app/Helper/function.php',

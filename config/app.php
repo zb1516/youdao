@@ -176,7 +176,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        E421083458\Wxxcx\WxxcxServiceProvider::class,
     ],
 
     /*
@@ -249,5 +249,6 @@ return [
         '2' => '中',
         '3' => '难',
     ],
-    'MIDDLE_TIME'=>strtotime(date('2018-11-07'))
+    'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
+    'AGENCY_UPLOAD_NUMBER'=>20
 ];
