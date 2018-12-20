@@ -81,15 +81,23 @@ Route::post('label/manage/taskSort', 'Label\ManageController@taskSort');
 
 
 
-Route::group(['prefix'=>'WxProgram'],function($router){
-    $router->post('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+Route::group(['prefix'=>'wxprogram'],function($router){
+    $router->get('/wx/login','WxProgram\WxController@login');
+    $router->post('/paper/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/paper/getUploadCount','WxProgram\PaperController@getUploadCount');
+    $router->get('/paper/getUserUploadMonthCount','WxProgram\PaperController@getUserUploadMonthCount');
+    $router->get('/paper/getYDPaperCount','WxProgram\PaperController@getYDPaperCount');
+    $router->get('/paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
+    $router->get('/paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
+    $router->get('/paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
+    $router->post('/paper/editPaperImage','WxProgram\PaperController@editPaperImage');
+    $router->get('/message/getMessageCount','WxProgram\MessageController@getMessageCount');
+    $router->get('/message/getMessageList','WxProgram\MessageController@getMessageList');
+    $router->get('/user/login','WxProgram\UserController@login');
+
 });
+
+
 //以下为4.0路由
 
 //获取公有信息

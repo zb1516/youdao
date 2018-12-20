@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         try{
             //接收参数
-            $searchArgs['telphone']=$request->telphone;
+            $searchArgs['userName']=$request->userName;
             $searchArgs['password']=$request->password;
             $searchArgs['agencyId']=$request->agencyId;
             //调用微服务接口，进行用户登陆

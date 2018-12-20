@@ -48,7 +48,7 @@ class MessageController extends Controller
             //统计当前用户下
             $vipMessageRemindModel=new VipMessageRemind();
             $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds]]);
-            return response()->json(['status'=>200,'data'=>$messageCount]);
+            return response()->json(['status'=>200,'count'=>$messageCount]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
