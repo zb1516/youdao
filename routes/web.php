@@ -20,18 +20,6 @@ Route::get('/', function () {
 Route::get('label/tag/index', 'Label\TagController@index');
 
 
-//获取公有信息
-
-Route::get('label/common/getYear', 'Label\CommonController@getYear');
-Route::get('label/common/getPaperSourceAjaxSearch', 'Label\CommonController@getPaperSourceAjaxSearch');
-Route::get('label/common/getQuestionTypeAjaxSearch', 'Label\CommonController@getQuestionTypeAjaxSearch');
-Route::get('label/manage/getPaperInfo', 'Label\ManageController@getPaperInfo');
-Route::get('label/common/getMonthTime', 'Label\CommonController@getMonthTime');
-Route::get('label/common/getAllGrade', 'Label\CommonController@getAllGrade');
-Route::get('label/manage/question', 'Label\ManageController@question');
-Route::get('label/manage/questionDetailAjaxSearch', 'Label\ManageController@questionDetailAjaxSearch');
-Route::get('label/common/getJudgeType', 'Label\CommonController@getJudgeType');
-Route::get('label/common/getPaperCitysAjaxSearch', 'Label\CommonController@getPaperCitysAjaxSearch');
 
 
 
@@ -102,6 +90,21 @@ Route::group(['prefix'=>'WxProgram'],function($router){
     $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
     $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
 });
+//以下为4.0路由
 
+//获取公有信息
+
+Route::get('common/common/getYear', 'Common\CommonController@getYear');
+Route::get('common/common/getPaperSourceAjaxSearch', 'Common\CommonController@getPaperSourceAjaxSearch');
+Route::get('common/common/getQuestionTypeAjaxSearch', 'Common\CommonController@getQuestionTypeAjaxSearch');
+Route::get('common/common/getMonthTime', 'Common\CommonController@getMonthTime');
+Route::get('common/common/getAllGrade', 'Common\CommonController@getAllGrade');
+Route::get('common/common/getPaperCitysAjaxSearch', 'Common\CommonController@getPaperCitysAjaxSearch');
+Route::get('common/common/getSubjects', 'Common\CommonController@getSubjects');
+Route::get('common/common/getProvince', 'Common\CommonController@getProvince');
+
+$router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
+    Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');
+});
 
 
