@@ -10,8 +10,9 @@ if(!function_exists('getthemonth'))
 }
 if(!function_exists('encrypt'))
 {
-    function encrypt($data,$rand,$key)
+    function encrypt($data,$rand,$key='')
     {
+        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
         $ch = $chars[$rand];
         $mdKey = md5($key.$ch);
@@ -31,6 +32,7 @@ if(!function_exists('decrypt'))
 {
     function decrypt($data,$key)
     {
+        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
         $txt = urldecode($data);
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
         $ch = $txt[0];
@@ -62,5 +64,43 @@ if(!function_exists('uuid'))
         $uuid .= substr($chars,16,4) . '-';
         $uuid .= substr($chars,20,12);
         return $prefix . $uuid;
+    }
+}
+if(!function_exists('httpGet'))
+{
+    function httpGet($url,$timeout=5)
+    {
+        $ch=curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch,CURLOPT_HEADER,false);
+        curl_setopt($ch, CURLOPT_TIMEOUT,(int)$timeout);
+        $output = curl_exec($ch);
+        if($output === false)
+        {
+            throw new Exception("CURL Error:".curl_error($ch));
+        }
+        curl_close($ch);
+        return json_decode($output);
+    }
+}
+if(!function_exists('httpPost'))
+{
+    function httpPost($url,$data=array(),$timeout=5)
+    {
+        $ch=curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_POST,true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch,CURLOPT_HEADER,false);
+        curl_setopt($ch, CURLOPT_TIMEOUT,(int)$timeout);
+        $output = curl_exec($ch);
+        if($output === false)
+        {
+            throw new Exception("CURL Error:".curl_error($ch));
+        }
+        curl_close($ch);
+        return json_decode($output);
     }
 }

@@ -1,6 +1,6 @@
 webpackJsonp([2],{
 
-/***/ 113:
+/***/ 110:
 /***/ (function(module, exports) {
 
 module.exports = "/images/vendor/vue-ztree/src/ztree/zTreeStandard.png?2155096c99a3cc089a4262647e45dd02";
@@ -33,7 +33,7 @@ var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = __webpack_require__(125)
 /* template */
-var __vue_template__ = __webpack_require__(133)
+var __vue_template__ = __webpack_require__(134)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -460,9 +460,9 @@ function injectStyle (ssrContext) {
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(131)
+var __vue_script__ = __webpack_require__(132)
 /* template */
-var __vue_template__ = __webpack_require__(132)
+var __vue_template__ = __webpack_require__(133)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -538,7 +538,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n\n\t/*ul.ztree {background: #ffffff;width:100%;height:auto;overflow-y:scroll;overflow-x:auto;}*/\n.ztree * {padding:0; margin:0; font-size:15px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif\n}\n.ztree {margin:0; padding:5px; color:#333 ;\n}\n.ztree li{position: relative; padding:0; margin:0; list-style:none; line-height:24px; text-align:left; white-space:nowrap; outline:0\n}\n.ztree li ul{ margin:0; padding:0 0 0 18px\n}\n\t/*.ztree li ul.line{ background:url('../images/ztree/line_conn.gif') 0 0 repeat-y;}*/\n.ztree li a {padding:1px 3px 0 5px; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;\n\t\ttext-decoration:none; vertical-align:top; display: inline-block\n}\n.ztree li a:hover {text-decoration:underline;color:blue;\n}\n.ztree li a.curSelectedNode {padding-top:0px; background-color:#191d22; color:#fff; height:24px; border:1px #191d22 solid; opacity:0.8;\n}\n.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;\n}\n.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:16px; border:1px #316AC5 solid;\n\t\topacity:0.8; filter:alpha(opacity=80)\n}\n.ztree li a.tmpTargetNode_prev {\n}\n.ztree li a.tmpTargetNode_next {\n}\n.ztree li a input.rename {height:14px; width:80px; padding:0; margin:0;\n\t\tfont-size:12px; border:1px #7EC4CC solid; *border:0px\n}\n.ztree li span {line-height:16px; margin-right:2px; top: 3px; display: inline-block;\n}\n.ztree li span.button {line-height:0; margin:0; width:16px; height:16px; display: inline-block; vertical-align:middle;\n\t\tborder:0 none; cursor: pointer;outline:none;\n\t\tbackground-color:transparent; background-repeat:no-repeat; background-attachment: scroll;\n\t\tbackground-image:url(" + escape(__webpack_require__(113)) + "); *background-image:url(" + escape(__webpack_require__(114)) + ")\n}\n.ztree li span.button.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto\n}\n.ztree li span.button.chk.checkbox_false_full {background-position:0 0\n}\n.ztree li span.button.chk.checkbox_false_full_focus {background-position:0 -14px\n}\n.ztree li span.button.chk.checkbox_false_part {background-position:0 -28px\n}\n.ztree li span.button.chk.checkbox_false_part_focus {background-position:0 -42px\n}\n.ztree li span.button.chk.checkbox_false_disable {background-position:0 -56px\n}\n.ztree li span.button.chk.checkbox_true_full {background-position:-14px 0\n}\n.ztree li span.button.chk.checkbox_true_full_focus {background-position:-14px -14px\n}\n.ztree li span.button.chk.checkbox_true_part {background-position:-14px -28px\n}\n.ztree li span.button.chk.checkbox_true_part_focus {background-position:-14px -42px\n}\n.ztree li span.button.chk.checkbox_true_disable {background-position:-14px -56px\n}\n.ztree li span.button.chk.radio_false_full {background-position:-28px 0\n}\n.ztree li span.button.chk.radio_false_full_focus {background-position:-28px -14px\n}\n.ztree li span.button.chk.radio_false_part {background-position:-28px -28px\n}\n.ztree li span.button.chk.radio_false_part_focus {background-position:-28px -42px\n}\n.ztree li span.button.chk.radio_false_disable {background-position:-28px -56px\n}\n.ztree li span.button.chk.radio_true_full {background-position:-42px 0\n}\n.ztree li span.button.chk.radio_true_full_focus {background-position:-42px -14px\n}\n.ztree li span.button.chk.radio_true_part {background-position:-42px -28px\n}\n.ztree li span.button.chk.radio_true_part_focus {background-position:-42px -42px\n}\n.ztree li span.button.chk.radio_true_disable {background-position:-42px -56px\n}\n.ztree li span.button.switch {width:18px; height:18px\n}\n.ztree li span.button.root_open{background-position:-92px -54px\n}\n.ztree li span.button.root_close{background-position:-74px -54px\n}\n.ztree li span.button.roots_open{background-position:-92px 0\n}\n.ztree li span.button.roots_close{background-position:-74px 0\n}\n.ztree li span.button.center_open{background-position:-92px -18px\n}\n.ztree li span.button.center_close{background-position:-74px -18px\n}\n.ztree li span.button.bottom_open{background-position:-92px -36px\n}\n.ztree li span.button.bottom_close{background-position:-74px -36px\n}\n.ztree li span.button.noline_open{background-position:-92px -72px\n}\n.ztree li span.button.noline_close{background-position:-74px -72px\n}\n.ztree li span.button.root_docu{ background:none;\n}\n.ztree li span.button.roots_docu{background-position:-56px 0\n}\n.ztree li span.button.center_docu{background-position:-56px -18px\n}\n.ztree li span.button.bottom_docu{background-position:-56px -36px\n}\n.ztree li span.button.noline_docu{ background:none;\n}\n.ztree li span.button.ico_open{margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.ico_close{margin-right:2px; background-position:-110px 0; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.ico_docu{margin-right:2px; background-position:-110px -32px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.edit {margin-right:2px; background-position:-110px -48px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.remove {margin-right:2px; background-position:-110px -64px; vertical-align:top; *vertical-align:middle\n}\n\n\t/*.ztree li span.button.ico_loading{margin-right:2px; background:url('../images/ztree/loading.gif') no-repeat scroll 0 0 transparent; \n\t            vertical-align:top; *vertical-align:middle}*/\nul.tmpTargetzTree {background-color:#FFE6B0; opacity:0.8; filter:alpha(opacity=80)\n}\nspan.tmpzTreeMove_arrow {width:16px; height:16px; display: inline-block; padding:0; margin:2px 0 0 1px; border:0 none; position:absolute;\n\t\tbackground-color:white; background-repeat:no-repeat; background-attachment: scroll;\n\t\tbackground-position:-110px -80px; background-image:url(" + escape(__webpack_require__(113)) + "); *background-image:url(" + escape(__webpack_require__(114)) + ")\n}\nul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; \n\t             background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)\n}\n.zTreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute\n}\n.loadSyncNode {\n\t\twidth: 16px;\n        height: 16px;\n        position: relative;\n        display: inline-block;\n\t\tbackground-image:url(\"data:image/gif;base64,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\")\n}\n", ""]);
+exports.push([module.i, "\ndiv.ztree_content_wrap {height:380px;\n}\ndiv.ztree_content_wrap div.left{float: left;width: 100%;\n}\ndiv.zTreeDemoBackground {width:100%;height:500px;text-align:left;\n}\n.expendIcon {\n\t\tbackground-position: -74px -36px;\n\t\tline-height: 0;\n\t    margin: 0;\n\t    width: 16px;\n\t    height: 16px;\n\t    display: inline-block;\n\t    vertical-align: middle;\n\t    border: 0 none;\n\t    cursor: pointer;\n\t    outline: none;\n\t    position: absolute;\n\t    top:4px;\n\t    background-color: transparent;\n\t    background-repeat: no-repeat;\n\t    background-attachment: scroll;\n\t    background-image: url(" + escape(__webpack_require__(110)) + ");\n}\nul.ztree {border:1px solid #ddd;background: #ffffff;width:100%;height:auto;overflow-y:scroll;overflow-x:auto;\n}\n.ztree * {padding:0; margin:0; font-size:15px; font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif\n}\n.ztree {margin:0; padding:5px; color:#333 ;\n}\n.ztree li{position: relative; padding:0; margin:0; list-style:none; line-height:24px; text-align:left; white-space:nowrap; outline:0\n}\n.ztree li ul{ margin:0; padding:0 0 0 18px\n}\n.ztree li ul.line{ background:url(" + escape(__webpack_require__(131)) + ") 0 0 repeat-y;\n}\n.ztree li a {padding:1px 3px 0 5px; margin:0; cursor:pointer; height:17px; color:#333; background-color: transparent;\n\t\ttext-decoration:none; vertical-align:top; display: inline-block\n}\n.ztree li a:hover {text-decoration:underline;color:blue;\n}\n.ztree li a.curSelectedNode {padding-top:0px; background-color:#191d22; color:#fff; height:24px; border:1px #191d22 solid; opacity:0.8;\n}\n.ztree li a.curSelectedNode_Edit {padding-top:0px; background-color:#FFE6B0; color:black; height:16px; border:1px #FFB951 solid; opacity:0.8;\n}\n.ztree li a.tmpTargetNode_inner {padding-top:0px; background-color:#316AC5; color:white; height:16px; border:1px #316AC5 solid;\n\t\topacity:0.8; filter:alpha(opacity=80)\n}\n.ztree li a.tmpTargetNode_prev {\n}\n.ztree li a.tmpTargetNode_next {\n}\n.ztree li a input.rename {height:14px; width:80px; padding:0; margin:0;\n\t\tfont-size:12px; border:1px #7EC4CC solid; *border:0px\n}\n.ztree li span {line-height:16px; margin-right:2px; top: 3px; display: inline-block;\n}\n.ztree li span.button {line-height:0; margin:0; width:16px; height:16px; display: inline-block; vertical-align:middle;\n\t\tborder:0 none; cursor: pointer;outline:none;\n\t\tbackground-color:transparent; background-repeat:no-repeat; background-attachment: scroll;\n\t\tbackground-image:url(" + escape(__webpack_require__(110)) + "); *background-image:url(" + escape(__webpack_require__(114)) + ")\n}\n.ztree li span.button.chk {width:13px; height:13px; margin:0 3px 0 0; cursor: auto\n}\n.ztree li span.button.chk.checkbox_false_full {background-position:0 0\n}\n.ztree li span.button.chk.checkbox_false_full_focus {background-position:0 -14px\n}\n.ztree li span.button.chk.checkbox_false_part {background-position:0 -28px\n}\n.ztree li span.button.chk.checkbox_false_part_focus {background-position:0 -42px\n}\n.ztree li span.button.chk.checkbox_false_disable {background-position:0 -56px\n}\n.ztree li span.button.chk.checkbox_true_full {background-position:-14px 0\n}\n.ztree li span.button.chk.checkbox_true_full_focus {background-position:-14px -14px\n}\n.ztree li span.button.chk.checkbox_true_part {background-position:-14px -28px\n}\n.ztree li span.button.chk.checkbox_true_part_focus {background-position:-14px -42px\n}\n.ztree li span.button.chk.checkbox_true_disable {background-position:-14px -56px\n}\n.ztree li span.button.chk.radio_false_full {background-position:-28px 0\n}\n.ztree li span.button.chk.radio_false_full_focus {background-position:-28px -14px\n}\n.ztree li span.button.chk.radio_false_part {background-position:-28px -28px\n}\n.ztree li span.button.chk.radio_false_part_focus {background-position:-28px -42px\n}\n.ztree li span.button.chk.radio_false_disable {background-position:-28px -56px\n}\n.ztree li span.button.chk.radio_true_full {background-position:-42px 0\n}\n.ztree li span.button.chk.radio_true_full_focus {background-position:-42px -14px\n}\n.ztree li span.button.chk.radio_true_part {background-position:-42px -28px\n}\n.ztree li span.button.chk.radio_true_part_focus {background-position:-42px -42px\n}\n.ztree li span.button.chk.radio_true_disable {background-position:-42px -56px\n}\n.ztree li span.button.switch {width:18px; height:18px\n}\n.ztree li span.button.root_open{background-position:-92px -54px\n}\n.ztree li span.button.root_close{background-position:-74px -54px\n}\n.ztree li span.button.roots_open{background-position:-92px 0\n}\n.ztree li span.button.roots_close{background-position:-74px 0\n}\n.ztree li span.button.center_open{background-position:-92px -18px\n}\n.ztree li span.button.center_close{background-position:-74px -18px\n}\n.ztree li span.button.bottom_open{background-position:-92px -36px\n}\n.ztree li span.button.bottom_close{background-position:-74px -36px\n}\n.ztree li span.button.noline_open{background-position:-92px -72px\n}\n.ztree li span.button.noline_close{background-position:-74px -72px\n}\n.ztree li span.button.root_docu{ background:none;\n}\n.ztree li span.button.roots_docu{background-position:-56px 0\n}\n.ztree li span.button.center_docu{background-position:-56px -18px\n}\n.ztree li span.button.bottom_docu{background-position:-56px -36px\n}\n.ztree li span.button.noline_docu{ background:none;\n}\n.ztree li span.button.ico_open{margin-right:2px; background-position:-110px -16px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.ico_close{margin-right:2px; background-position:-110px 0; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.ico_docu{margin-right:2px; background-position:-110px -32px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.edit {margin-right:2px; background-position:-110px -48px; vertical-align:top; *vertical-align:middle\n}\n.ztree li span.button.remove {margin-right:2px; background-position:-110px -64px; vertical-align:top; *vertical-align:middle\n}\n\n\t/*.ztree li span.button.ico_loading{margin-right:2px; background:url('../images/ztree/loading.gif') no-repeat scroll 0 0 transparent; \n\t            vertical-align:top; *vertical-align:middle}*/\nul.tmpTargetzTree {background-color:#FFE6B0; opacity:0.8; filter:alpha(opacity=80)\n}\nspan.tmpzTreeMove_arrow {width:16px; height:16px; display: inline-block; padding:0; margin:2px 0 0 1px; border:0 none; position:absolute;\n\t\tbackground-color:white; background-repeat:no-repeat; background-attachment: scroll;\n\t\tbackground-position:-110px -80px; background-image:url(" + escape(__webpack_require__(110)) + "); *background-image:url(" + escape(__webpack_require__(114)) + ")\n}\nul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height:auto;overflow:hidden; \n\t             background-color:#cfcfcf; border:1px #00B83F dotted; opacity:0.8; filter:alpha(opacity=80)\n}\n.zTreeMask {z-index:10000; background-color:#cfcfcf; opacity:0.0; filter:alpha(opacity=0); position:absolute\n}\n.loadSyncNode {\n\t\twidth: 16px;\n        height: 16px;\n        position: relative;\n        display: inline-block;\n\t\tbackground-image:url(\"data:image/gif;base64,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\")\n}\n", ""]);
 
 // exports
 
@@ -546,12 +546,41 @@ exports.push([module.i, "\n\n\t/*ul.ztree {background: #ffffff;width:100%;height
 /***/ }),
 
 /***/ 131:
+/***/ (function(module, exports) {
+
+module.exports = "/images/vendor/vue-ztree/src/ztree/line_conn.gif?a2649b0b087ae0f894092a090d95d3e2";
+
+/***/ }),
+
+/***/ 132:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -714,24 +743,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // 递归操作，增加删除一些属性。比如: 展开/收起
       var recurrenceFunc = function recurrenceFunc(data) {
         data.forEach(function (m) {
-
           if (!m.hasOwnProperty("clickNode")) {
             m.clickNode = m.hasOwnProperty("clickNode") ? m.clickNode : false;
           }
 
-          m.nodes = m.nodes || [];
+          m.children = m.children || [];
 
           if (!m.hasOwnProperty("isFolder")) {
-            m.isFolder = m.hasOwnProperty("expand") ? m.expand : _this.isOpen;
+            m.isFolder = m.hasOwnProperty("open") ? m.open : _this.isOpen;
           }
 
           if (!m.hasOwnProperty("isExpand")) {
-            m.isExpand = m.hasOwnProperty("expand") ? m.expand : _this.isOpen;
+            m.isExpand = m.hasOwnProperty("open") ? m.open : _this.isOpen;
           }
 
           m.loadNode = 0;
 
-          recurrenceFunc(m.nodes);
+          recurrenceFunc(m.children);
         });
       };
 
@@ -784,11 +812,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           // 查找点击的子节点
           var recurFunc = function recurFunc(data, list) {
             data.forEach(function (i) {
-              if (!m.nodes.length) {
-                i.clickNode = true;
-              }
               if (i.id == m.id) {
-                // i.clickNode = true;
+                i.clickNode = true;
 
                 if (typeof _this2.callback == "function") {
                   _this2.callback.call(null, m, list, _this2.trees);
@@ -797,8 +822,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 i.clickNode = false;
               }
 
-              if (i.nodes) {
-                recurFunc(i.nodes, i);
+              if (i.children) {
+                recurFunc(i.children, i);
               }
             });
           };
@@ -829,12 +854,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           // 根判断
           if (this.root == '0') {
 
-            strRootClass = this.num == 0 && this.model.nodes.length == 0 ? "roots_docu" : this.nodes == 1 || this.num == 0 && this.nodes != this.num + 1 ? "root_" : this.nodes == this.num + 1 ? "bottom_" : "center_";
+            strRootClass = this.num == 0 && this.model.children.length == 0 ? "roots_docu" : this.nodes == 1 || this.num == 0 && this.nodes != this.num + 1 ? "root_" : this.nodes == this.num + 1 ? "bottom_" : "center_";
 
             // 子树判断
           } else if (this.root == '1') {
 
-            strRootClass = this.nodes > 1 && this.model.nodes.length > 0 && this.nodes != this.num + 1 ? "center_" : this.num == 0 && this.nodes > 1 || this.nodes != this.num + 1 ? "center_docu" : this.nodes == 1 && this.num != 0 || this.nodes == this.num + 1 && this.model.nodes.length > 0 ? "bottom_" : "bottom_docu";
+            strRootClass = this.nodes > 1 && this.model.children.length > 0 && this.nodes != this.num + 1 ? "center_" : this.num == 0 && this.nodes > 1 || this.nodes != this.num + 1 ? "center_docu" : this.nodes == 1 && this.num != 0 || this.nodes == this.num + 1 && this.model.children.length > 0 ? "bottom_" : "bottom_docu";
           }
 
           return strRootClass;
@@ -856,7 +881,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
           }
 
-          if (this.model.nodes.length == 0 && this.rootClass.indexOf("docu") == -1) {
+          if (this.model.children.length == 0 && this.rootClass.indexOf("docu") == -1) {
             returnChar = 'docu';
           }
 
@@ -872,10 +897,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           return this.model.clickNode ? "level" + this.num + ' curSelectedNode' : "level" + this.num;
         },
         ulClassVal: function ulClassVal() {
-          return this.isChildren && this.model.nodes.length > 0 ? "level" + this.num + ' line' : "level" + this.num;
+          return this.isChildren && this.model.children.length > 0 ? "level" + this.num + ' line' : "level" + this.num;
         }
       },
-      template: '<li :class="liClassVal">\n\t\t\t\t<span :class="spanClassVal" @click=\'open(model)\'></span>\n\t\t\t\t<a :class="aClassVal" @click=\'Func(model),open(model)\' @contextmenu.prevent=\'cxtmenufunc(model)\'>\n\t\t\t\t    <span :class="{loadSyncNode:model.loadNode==1}" v-if=\'model.loadNode==1\'></span>\n\t\t\t\t    <span :class=\'model.iconClass\' v-show=\'model.iconClass\' v-else></span>\n\t\t\t\t\t<span class="node_name">{{model.title}}</span>\n\t\t\t\t</a>\n\t\t\t\t<ul :class="ulClassVal" v-show=\'model.isFolder\'>\n\t\t\t\t\t<ztree-item v-for="(item,i) in model.nodes" :key=\'i\' :callback=\'callback\' :expandfunc=\'expandfunc\' :cxtmenufunc=\'cxtmenufunc\' :model.sync="item" :num.sync=\'i\' root=\'1\' :nodes.sync=\'model.nodes.length\' :trees.sync=\'trees\'></ztree-item>\n\t\t\t\t</ul>\n\t\t\t</li>'
+      template: '<li :class="liClassVal">\n\t\t\t\t<span :class="spanClassVal" @click=\'open(model)\'></span>\n\t\t\t\t<a :class="aClassVal" @click=\'Func(model)\' @contextmenu.prevent=\'cxtmenufunc(model)\'>\n\t\t\t\t    <span :class="{loadSyncNode:model.loadNode==1}" v-if=\'model.loadNode==1\'></span>\n\t\t\t\t    <span :class=\'model.iconClass\' v-show=\'model.iconClass\' v-else></span>\n\t\t\t\t\t<span class="node_name">{{model.name}}</span>\n\t\t\t\t</a>\n\t\t\t\t<ul :class="ulClassVal" v-show=\'model.isFolder\'>\n\t\t\t\t\t<ztree-item v-for="(item,i) in model.children" :key=\'i\' :callback=\'callback\' :expandfunc=\'expandfunc\' :cxtmenufunc=\'cxtmenufunc\' :model.sync="item" :num.sync=\'i\' root=\'1\' :nodes.sync=\'model.children.length\' :trees.sync=\'trees\'></ztree-item>\n\t\t\t\t</ul>\n\t\t\t</li>'
     }
   },
   update: function update() {
@@ -892,7 +917,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 132:
+/***/ 133:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -900,39 +925,43 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.treeDataSource.length > 0
-    ? _c(
-        "ul",
-        { staticClass: "ztree" },
-        _vm._l(_vm.treeDataSource, function(m, i) {
-          return _c("ztree-item", {
-            key: i,
-            attrs: {
-              model: m,
-              num: i,
-              root: "0",
-              nodes: _vm.treeDataSource.length,
-              callback: _vm.func,
-              expandfunc: _vm.expand,
-              cxtmenufunc: _vm.contextmenu,
-              trees: _vm.treeDataSource
-            },
-            on: {
-              "update:model": function($event) {
-                m = $event
-              },
-              "update:num": function($event) {
-                i = $event
-              },
-              "update:nodes": function($event) {
-                _vm.$set(_vm.treeDataSource, "length", $event)
-              },
-              "update:trees": function($event) {
-                _vm.treeDataSource = $event
-              }
-            }
-          })
-        })
-      )
+    ? _c("div", { staticClass: "ztree_content_wrap" }, [
+        _c("div", { staticClass: "zTreeDemoBackground left" }, [
+          _c(
+            "ul",
+            { staticClass: "ztree" },
+            _vm._l(_vm.treeDataSource, function(m, i) {
+              return _c("ztree-item", {
+                key: i,
+                attrs: {
+                  model: m,
+                  num: i,
+                  root: "0",
+                  nodes: _vm.treeDataSource.length,
+                  callback: _vm.func,
+                  expandfunc: _vm.expand,
+                  cxtmenufunc: _vm.contextmenu,
+                  trees: _vm.treeDataSource
+                },
+                on: {
+                  "update:model": function($event) {
+                    m = $event
+                  },
+                  "update:num": function($event) {
+                    i = $event
+                  },
+                  "update:nodes": function($event) {
+                    _vm.$set(_vm.treeDataSource, "length", $event)
+                  },
+                  "update:trees": function($event) {
+                    _vm.treeDataSource = $event
+                  }
+                }
+              })
+            })
+          )
+        ])
+      ])
     : _vm._e()
 }
 var staticRenderFns = []
@@ -947,7 +976,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 133:
+/***/ 134:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -1218,15 +1247,15 @@ if (false) {
 
 /***/ }),
 
-/***/ 134:
+/***/ 135:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(135)
+var __vue_script__ = __webpack_require__(136)
 /* template */
-var __vue_template__ = __webpack_require__(136)
+var __vue_template__ = __webpack_require__(137)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -1266,7 +1295,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 135:
+/***/ 136:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1360,7 +1389,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /***/ }),
 
-/***/ 136:
+/***/ 137:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -1640,7 +1669,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 137:
+/***/ 138:
 /***/ (function(module, exports) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -1756,21 +1785,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /***/ }),
 
-/***/ 140:
+/***/ 141:
 /***/ (function(module, exports) {
 
 module.exports = "/images/search.png?9172a5e68298dd0d398023fef91acd94";
 
 /***/ }),
 
-/***/ 141:
+/***/ 142:
 /***/ (function(module, exports) {
 
 module.exports = "/images/singleq_fnish_bg.png?f306a790fcb45ba567ccaaeeb0247eae";
 
 /***/ }),
 
-/***/ 145:
+/***/ 146:
 /***/ (function(module, exports) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -2421,13 +2450,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /***/ }),
 
-/***/ 181:
+/***/ 182:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(182);
+var content = __webpack_require__(183);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -2448,7 +2477,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 182:
+/***/ 183:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -2456,20 +2485,20 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.m-no-main[data-v-67830934] {\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  width: 1200px;\n  height: 770px;\n  background: #fff;\n  margin: 0 auto;\n  padding: 282px 0 0 334px;\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon[data-v-67830934] {\n    float: left;\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt[data-v-67830934] {\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p[data-v-67830934] {\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1[data-v-67830934] {\n      font-size: 30px;\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2[data-v-67830934] {\n      font-size: 20px;\n      color: #999999;\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a[data-v-67830934] {\n      display: inline-block;\n      width: 160px;\n      height: 45px;\n      line-height: 45px;\n      text-align: center;\n      border-radius: 5px;\n      background: #5D9CEC;\n      color: #fff;\n}\n", ""]);
+exports.push([module.i, "\n.m-no-main[data-v-67830934] {\r\n  -webkit-box-sizing: border-box;\r\n          box-sizing: border-box;\r\n  width: 1200px;\r\n  height: 770px;\r\n  background: #fff;\r\n  margin: 0 auto;\r\n  padding: 282px 0 0 334px;\r\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon[data-v-67830934] {\r\n    float: left;\r\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt[data-v-67830934] {\r\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p[data-v-67830934] {\r\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1[data-v-67830934] {\r\n      font-size: 30px;\r\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2[data-v-67830934] {\r\n      font-size: 20px;\r\n      color: #999999;\r\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a[data-v-67830934] {\r\n      display: inline-block;\r\n      width: 160px;\r\n      height: 45px;\r\n      line-height: 45px;\r\n      text-align: center;\r\n      border-radius: 5px;\r\n      background: #5D9CEC;\r\n      color: #fff;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 183:
+/***/ 184:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(184);
+var content = __webpack_require__(185);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -2490,7 +2519,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 184:
+/***/ 185:
 /***/ (function(module, exports, __webpack_require__) {
 
 var escape = __webpack_require__(19);
@@ -2499,25 +2528,25 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n@charset \"UTF-8\";\ni[data-v-67830934] {\n  font-style: normal;\n}\n.m-main[data-v-67830934] {\n  position: relative;\n  width: 1200px;\n  min-height: 700px;\n  margin: 0 auto;\n}\n.m-main .paper-detail[data-v-67830934] {\n    position: relative;\n    z-index: 2;\n    float: left;\n    width: 722px;\n    min-height: 700px;\n    padding: 18px 39px 0 39px;\n    background-color: #fff;\n    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n    overflow: auto;\n}\n.m-main .paper-detail .grades-select[data-v-67830934] {\n      font-size: 0;\n      margin-bottom: 21px;\n}\n.m-main .paper-detail .grades-select .radio-inline__input[data-v-67830934] {\n        clip: rect(1px, 1px, 1px, 1px);\n        position: absolute;\n}\n.m-main .paper-detail .grades-select .radio-inline__label[data-v-67830934] {\n        display: inline-block;\n        width: 161px;\n        height: 22px;\n        line-height: 22px;\n        margin: 6px 17px 0 0;\n        border-radius: 5px;\n        border: 1px solid #eeeeee;\n        font-size: 14px;\n        text-align: center;\n        color: #0f0f0f;\n        cursor: pointer;\n}\n.m-main .paper-detail .grades-select .radio-inline__label.active[data-v-67830934] {\n        background: #5d9cec;\n        border: 1px solid #eeeeee;\n        color: #fff;\n}\n.m-main .paper-detail .paper-content[data-v-67830934] {\n      margin-bottom: 25px;\n      color: #0f0f0f;\n      position: relative;\n}\n.m-main .paper-detail .paper-content .move[data-v-67830934] {\n        position: relative;\n}\n.m-main .paper-detail .paper-content .select-option[data-v-67830934] {\n        margin-top: 15px;\n        font-size: 0;\n}\n.m-main .paper-detail .paper-content .select-option .option[data-v-67830934] {\n          font-size: 14px;\n          margin-right: 53px;\n}\n.m-main .paper-detail .paper-content .hide-answer[data-v-67830934] {\n        display: block;\n        margin: 16px 0 12px 11px;\n        color: #169BD5;\n        font-size: 14px;\n        cursor: pointer;\n}\n.m-main .paper-detail .paper-content .paper-answer[data-v-67830934] {\n        display: none;\n        width: 686px;\n        min-height: 48px;\n        padding: 14px 10px 5px 10px;\n        margin-bottom: 15px;\n        background-color: #f2f2f2;\n}\n.m-main .paper-detail .paper-content .paper-answer .answer[data-v-67830934] {\n          margin-bottom: 20px;\n          font-size: 14px;\n}\n.m-main .paper-detail .paper-content .paper-answer .answer[data-v-67830934]:last-child {\n          margin-bottom: 0;\n}\n.m-main .paper-detail .paper-content .judge-paper-id[data-v-67830934] {\n        position: relative;\n        margin-bottom: 30px;\n}\n.m-main .paper-detail .paper-content .judge-paper-id .id-search[data-v-67830934] {\n          width: 130px;\n          height: 24px;\n          border-radius: 5px;\n          border: 1px solid #ddd;\n          text-indent: 5px;\n          float: right;\n          padding-right: 25px;\n}\n.m-main .paper-detail .paper-content .judge-paper-id .search-icon[data-v-67830934] {\n          background: url(" + escape(__webpack_require__(140)) + ") no-repeat;\n          background-size: cover;\n          width: 14px;\n          height: 14px;\n          position: absolute;\n          right: 10px;\n          top: 6px;\n}\n.m-main .paper-detail .paper-content .hide-answer[data-v-67830934] {\n        position: relative;\n        left: 6px;\n        color: #169BD5;\n        font-size: 14px;\n        cursor: pointer;\n}\n.m-main .paper-detail .paper-content .paper-answer[data-v-67830934] {\n        margin-top: 17px;\n        width: 700px;\n        min-height: 70px;\n        background-color: #f2f2f2;\n}\n.m-main .paper-detail .paper-content .paper-id[data-v-67830934] {\n        font-size: 14px;\n        color: #5D9CEC;\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label[data-v-67830934] {\n          height: 25px;\n          line-height: 25px;\n          margin-left: 40px;\n          padding: 5px 20px 5px 10px;\n          background-color: #f68411;\n          border-radius: 20px;\n          font-size: 13px;\n          -webkit-box-shadow: 0 0 4px rgba(235, 99, 0, 0.3);\n                  box-shadow: 0 0 4px rgba(235, 99, 0, 0.3);\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label i[data-v-67830934] {\n            color: #fff;\n            margin-right: 12px;\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label i[data-v-67830934]:last-child {\n            margin-right: 0;\n}\n.m-main .paper-detail .paper-content .paper-info[data-v-67830934] {\n        font-size: 14px;\n}\n.m-main .paper-detail .paper-content .paper-info .title[data-v-67830934] {\n          margin-bottom: 15px;\n          color: #5d9cec;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label[data-v-67830934] {\n          display: inline-block;\n          height: 25px;\n          line-height: 25px;\n          padding: 0 20px;\n          margin-right: 20px;\n          border-radius: 13px;\n          border: 1px solid #5D9CEC;\n          background-color: #fff;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i[data-v-67830934] {\n            color: #000;\n            margin-right: 15px;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i[data-v-67830934]:last-child {\n              margin-right: 0;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i.diff[data-v-67830934] {\n            color: #5D9CEC;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label[data-v-67830934]:last-child {\n          margin-right: 0;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label[data-v-67830934] {\n        display: inline-block;\n        height: 25px;\n        line-height: 25px;\n        padding: 0 20px;\n        margin-top: 10px;\n        margin-right: 15px;\n        border-radius: 13px;\n        background-color: #fff;\n        border: 1px solid #f68411;\n        font-size: 14px;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label i[data-v-67830934] {\n          color: #000;\n          margin-right: 15px;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label i[data-v-67830934]:last-child {\n            margin-right: 0;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label .diffrence[data-v-67830934] {\n          color: #f68411;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label[data-v-67830934]:last-child {\n        margin-right: 0;\n}\n.paper-btn[data-v-67830934] {\n  position: relative;\n  padding: 30px 0 20px 0px;\n  width: 642px;\n  text-align: center;\n}\n.paper-btn .btn[data-v-67830934] {\n    width: 121px;\n    height: 41px;\n    border: 0;\n    border-radius: 10px;\n    outline: none;\n}\n.paper-btn .btn.paper-error[data-v-67830934] {\n    float: left;\n    border: 1px solid #f68411;\n    font-size: 16px;\n    color: #f68411;\n    background-color: #fff;\n}\n.paper-btn .btn.paper-error[data-v-67830934]:hover {\n    box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\n    -webkit-box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\n    -moz-box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\n    color: #fff;\n    background-color: #f68411;\n}\n.paper-btn .btn.paper-save[data-v-67830934] {\n    float: right;\n    border: 1px solid #4b89de;\n    font-size: 16px;\n    color: #fff;\n    text-align: center;\n    background-color: #4b89de;\n}\n.paper-btn .btn.paper-save[data-v-67830934]:hover,\n  .paper-btn .btn.paper-slip[data-v-67830934]:hover {\n    box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\n    -webkit-box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\n    -moz-box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\n    color: #fff;\n    background-color: #4b89de;\n}\n.paper-btn .btn.paper-slip[data-v-67830934] {\n    border: 1px solid #4b89de;\n    font-size: 16px;\n    color: #4b89de;\n    text-align: center;\n    background-color: #fff;\n}\n@media screen and (max-width: 1600px) {\n.paper-btn[data-v-67830934] {\n    padding: 30px 0 20px 250px;\n}\n}\n@media screen and (max-width: 1500px) {\n.paper-btn[data-v-67830934] {\n    padding: 30px 0 20px 110px;\n}\n}\n\n/* 单题完成 */\n.fnish-main[data-v-67830934] {\n  width: 1200px;\n  min-height: 700px;\n  margin: 0 auto;\n  background-color: #ffffff;\n}\n.fnish-main .count-wrapper[data-v-67830934] {\n    height: 50px;\n    line-height: 50px;\n    padding-left: 40px;\n    font-size: 0;\n}\n.fnish-main .count-wrapper .text[data-v-67830934] {\n      margin-right: 14px;\n      font-size: 14px;\n      color: #333333;\n}\n.fnish-main .count-wrapper .number[data-v-67830934] {\n      margin: 0 5px;\n      font-size: 16px;\n}\n.fnish-main .count-wrapper .number.n1[data-v-67830934] {\n      color: #5d9cec;\n}\n.fnish-main .count-wrapper .number.n2[data-v-67830934] {\n      font-weight: bold;\n      color: #f68411;\n}\n.fnish-main .sign[data-v-67830934] {\n    position: relative;\n    top: 99px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    width: 502px;\n    height: 348px;\n    background: url(" + escape(__webpack_require__(141)) + ") no-repeat;\n    background-size: 100%;\n}\n", ""]);
+exports.push([module.i, "\n@charset \"UTF-8\";\ni[data-v-67830934] {\r\n  font-style: normal;\n}\n.m-main[data-v-67830934] {\r\n  position: relative;\r\n  width: 1200px;\r\n  min-height: 700px;\r\n  margin: 0 auto;\n}\n.m-main .paper-detail[data-v-67830934] {\r\n    position: relative;\r\n    z-index: 2;\r\n    float: left;\r\n    width: 722px;\r\n    min-height: 700px;\r\n    padding: 18px 39px 0 39px;\r\n    background-color: #fff;\r\n    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n    overflow: auto;\n}\n.m-main .paper-detail .grades-select[data-v-67830934] {\r\n      font-size: 0;\r\n      margin-bottom: 21px;\n}\n.m-main .paper-detail .grades-select .radio-inline__input[data-v-67830934] {\r\n        clip: rect(1px, 1px, 1px, 1px);\r\n        position: absolute;\n}\n.m-main .paper-detail .grades-select .radio-inline__label[data-v-67830934] {\r\n        display: inline-block;\r\n        width: 161px;\r\n        height: 22px;\r\n        line-height: 22px;\r\n        margin: 6px 17px 0 0;\r\n        border-radius: 5px;\r\n        border: 1px solid #eeeeee;\r\n        font-size: 14px;\r\n        text-align: center;\r\n        color: #0f0f0f;\r\n        cursor: pointer;\n}\n.m-main .paper-detail .grades-select .radio-inline__label.active[data-v-67830934] {\r\n        background: #5d9cec;\r\n        border: 1px solid #eeeeee;\r\n        color: #fff;\n}\n.m-main .paper-detail .paper-content[data-v-67830934] {\r\n      margin-bottom: 25px;\r\n      color: #0f0f0f;\r\n      position: relative;\n}\n.m-main .paper-detail .paper-content .move[data-v-67830934] {\r\n        position: relative;\n}\n.m-main .paper-detail .paper-content .select-option[data-v-67830934] {\r\n        margin-top: 15px;\r\n        font-size: 0;\n}\n.m-main .paper-detail .paper-content .select-option .option[data-v-67830934] {\r\n          font-size: 14px;\r\n          margin-right: 53px;\n}\n.m-main .paper-detail .paper-content .hide-answer[data-v-67830934] {\r\n        display: block;\r\n        margin: 16px 0 12px 11px;\r\n        color: #169BD5;\r\n        font-size: 14px;\r\n        cursor: pointer;\n}\n.m-main .paper-detail .paper-content .paper-answer[data-v-67830934] {\r\n        display: none;\r\n        width: 686px;\r\n        min-height: 48px;\r\n        padding: 14px 10px 5px 10px;\r\n        margin-bottom: 15px;\r\n        background-color: #f2f2f2;\n}\n.m-main .paper-detail .paper-content .paper-answer .answer[data-v-67830934] {\r\n          margin-bottom: 20px;\r\n          font-size: 14px;\n}\n.m-main .paper-detail .paper-content .paper-answer .answer[data-v-67830934]:last-child {\r\n          margin-bottom: 0;\n}\n.m-main .paper-detail .paper-content .judge-paper-id[data-v-67830934] {\r\n        position: relative;\r\n        margin-bottom: 30px;\n}\n.m-main .paper-detail .paper-content .judge-paper-id .id-search[data-v-67830934] {\r\n          width: 130px;\r\n          height: 24px;\r\n          border-radius: 5px;\r\n          border: 1px solid #ddd;\r\n          text-indent: 5px;\r\n          float: right;\r\n          padding-right: 25px;\n}\n.m-main .paper-detail .paper-content .judge-paper-id .search-icon[data-v-67830934] {\r\n          background: url(" + escape(__webpack_require__(141)) + ") no-repeat;\r\n          background-size: cover;\r\n          width: 14px;\r\n          height: 14px;\r\n          position: absolute;\r\n          right: 10px;\r\n          top: 6px;\n}\n.m-main .paper-detail .paper-content .hide-answer[data-v-67830934] {\r\n        position: relative;\r\n        left: 6px;\r\n        color: #169BD5;\r\n        font-size: 14px;\r\n        cursor: pointer;\n}\n.m-main .paper-detail .paper-content .paper-answer[data-v-67830934] {\r\n        margin-top: 17px;\r\n        width: 700px;\r\n        min-height: 70px;\r\n        background-color: #f2f2f2;\n}\n.m-main .paper-detail .paper-content .paper-id[data-v-67830934] {\r\n        font-size: 14px;\r\n        color: #5D9CEC;\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label[data-v-67830934] {\r\n          height: 25px;\r\n          line-height: 25px;\r\n          margin-left: 40px;\r\n          padding: 5px 20px 5px 10px;\r\n          background-color: #f68411;\r\n          border-radius: 20px;\r\n          font-size: 13px;\r\n          -webkit-box-shadow: 0 0 4px rgba(235, 99, 0, 0.3);\r\n                  box-shadow: 0 0 4px rgba(235, 99, 0, 0.3);\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label i[data-v-67830934] {\r\n            color: #fff;\r\n            margin-right: 12px;\n}\n.m-main .paper-detail .paper-content .paper-id .paper-label i[data-v-67830934]:last-child {\r\n            margin-right: 0;\n}\n.m-main .paper-detail .paper-content .paper-info[data-v-67830934] {\r\n        font-size: 14px;\n}\n.m-main .paper-detail .paper-content .paper-info .title[data-v-67830934] {\r\n          margin-bottom: 15px;\r\n          color: #5d9cec;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label[data-v-67830934] {\r\n          display: inline-block;\r\n          height: 25px;\r\n          line-height: 25px;\r\n          padding: 0 20px;\r\n          margin-right: 20px;\r\n          border-radius: 13px;\r\n          border: 1px solid #5D9CEC;\r\n          background-color: #fff;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i[data-v-67830934] {\r\n            color: #000;\r\n            margin-right: 15px;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i[data-v-67830934]:last-child {\r\n              margin-right: 0;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label i.diff[data-v-67830934] {\r\n            color: #5D9CEC;\n}\n.m-main .paper-detail .paper-content .paper-info .paper-label[data-v-67830934]:last-child {\r\n          margin-right: 0;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label[data-v-67830934] {\r\n        display: inline-block;\r\n        height: 25px;\r\n        line-height: 25px;\r\n        padding: 0 20px;\r\n        margin-top: 10px;\r\n        margin-right: 15px;\r\n        border-radius: 13px;\r\n        background-color: #fff;\r\n        border: 1px solid #f68411;\r\n        font-size: 14px;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label i[data-v-67830934] {\r\n          color: #000;\r\n          margin-right: 15px;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label i[data-v-67830934]:last-child {\r\n            margin-right: 0;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label .diffrence[data-v-67830934] {\r\n          color: #f68411;\n}\n.m-main .paper-detail .paper-content .judge-label-wrapper .judge-label[data-v-67830934]:last-child {\r\n        margin-right: 0;\n}\n.paper-btn[data-v-67830934] {\r\n  position: relative;\r\n  padding: 30px 0 20px 0px;\r\n  width: 642px;\r\n  text-align: center;\n}\n.paper-btn .btn[data-v-67830934] {\r\n    width: 121px;\r\n    height: 41px;\r\n    border: 0;\r\n    border-radius: 10px;\r\n    outline: none;\n}\n.paper-btn .btn.paper-error[data-v-67830934] {\r\n    float: left;\r\n    border: 1px solid #f68411;\r\n    font-size: 16px;\r\n    color: #f68411;\r\n    background-color: #fff;\n}\n.paper-btn .btn.paper-error[data-v-67830934]:hover {\r\n    box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\r\n    -webkit-box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\r\n    -moz-box-shadow: 1px 2px 8px rgba(235, 99, 0, 0.56);\r\n    color: #fff;\r\n    background-color: #f68411;\n}\n.paper-btn .btn.paper-save[data-v-67830934] {\r\n    float: right;\r\n    border: 1px solid #4b89de;\r\n    font-size: 16px;\r\n    color: #fff;\r\n    text-align: center;\r\n    background-color: #4b89de;\n}\n.paper-btn .btn.paper-save[data-v-67830934]:hover,\r\n  .paper-btn .btn.paper-slip[data-v-67830934]:hover {\r\n    box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\r\n    -webkit-box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\r\n    -moz-box-shadow: 1px 2px 8px rgba(75, 137, 222, 0.56);\r\n    color: #fff;\r\n    background-color: #4b89de;\n}\n.paper-btn .btn.paper-slip[data-v-67830934] {\r\n    border: 1px solid #4b89de;\r\n    font-size: 16px;\r\n    color: #4b89de;\r\n    text-align: center;\r\n    background-color: #fff;\n}\n@media screen and (max-width: 1600px) {\n.paper-btn[data-v-67830934] {\r\n    padding: 30px 0 20px 250px;\n}\n}\n@media screen and (max-width: 1500px) {\n.paper-btn[data-v-67830934] {\r\n    padding: 30px 0 20px 110px;\n}\n}\r\n\r\n/* 单题完成 */\n.fnish-main[data-v-67830934] {\r\n  width: 1200px;\r\n  min-height: 700px;\r\n  margin: 0 auto;\r\n  background-color: #ffffff;\n}\n.fnish-main .count-wrapper[data-v-67830934] {\r\n    height: 50px;\r\n    line-height: 50px;\r\n    padding-left: 40px;\r\n    font-size: 0;\n}\n.fnish-main .count-wrapper .text[data-v-67830934] {\r\n      margin-right: 14px;\r\n      font-size: 14px;\r\n      color: #333333;\n}\n.fnish-main .count-wrapper .number[data-v-67830934] {\r\n      margin: 0 5px;\r\n      font-size: 16px;\n}\n.fnish-main .count-wrapper .number.n1[data-v-67830934] {\r\n      color: #5d9cec;\n}\n.fnish-main .count-wrapper .number.n2[data-v-67830934] {\r\n      font-weight: bold;\r\n      color: #f68411;\n}\n.fnish-main .sign[data-v-67830934] {\r\n    position: relative;\r\n    top: 99px;\r\n    left: 50%;\r\n    -webkit-transform: translateX(-50%);\r\n            transform: translateX(-50%);\r\n    width: 502px;\r\n    height: 348px;\r\n    background: url(" + escape(__webpack_require__(142)) + ") no-repeat;\r\n    background-size: 100%;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 185:
+/***/ 186:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_ztree_js_jquery_ztree_core_min_js__ = __webpack_require__(145);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_ztree_js_jquery_ztree_core_min_js__ = __webpack_require__(146);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_ztree_js_jquery_ztree_core_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_ztree_js_jquery_ztree_core_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_icheck_icheck_min_js__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_icheck_icheck_min_js__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_icheck_icheck_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_icheck_icheck_min_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_QuestionOptions__ = __webpack_require__(120);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_QuestionOptions___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_QuestionOptions__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_QuestionError__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_QuestionError__ = __webpack_require__(135);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_QuestionError___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_QuestionError__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_vuex__ = __webpack_require__(9);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2841,7 +2870,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /***/ }),
 
-/***/ 186:
+/***/ 187:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -3117,14 +3146,14 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(181)
-  __webpack_require__(183)
+  __webpack_require__(182)
+  __webpack_require__(184)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(185)
+var __vue_script__ = __webpack_require__(186)
 /* template */
-var __vue_template__ = __webpack_require__(186)
+var __vue_template__ = __webpack_require__(187)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */

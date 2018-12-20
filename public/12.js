@@ -6,13 +6,13 @@ webpackJsonp([12],{
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(227)
+  __webpack_require__(228)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
 var __vue_script__ = null
 /* template */
-var __vue_template__ = __webpack_require__(229)
+var __vue_template__ = __webpack_require__(230)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -59,13 +59,13 @@ module.exports = "/images/no-task-icon.png?2a161c5fa5dddf76607ab374235c44ad";
 
 /***/ }),
 
-/***/ 227:
+/***/ 228:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(228);
+var content = __webpack_require__(229);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -86,7 +86,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 228:
+/***/ 229:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -94,14 +94,14 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.m-no-main {\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  width: 1200px;\n  height: 770px;\n  background: #fff;\n  margin: 0 auto;\n  padding: 282px 0 0 334px;\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon {\n    float: left;\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt {\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p {\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1 {\n      font-size: 30px;\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2 {\n      font-size: 20px;\n      color: #999999;\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a {\n      display: inline-block;\n      width: 160px;\n      height: 45px;\n      line-height: 45px;\n      text-align: center;\n      border-radius: 5px;\n      background: #5D9CEC;\n      color: #fff;\n}\n", ""]);
+exports.push([module.i, "\n.m-no-main {\r\n  -webkit-box-sizing: border-box;\r\n          box-sizing: border-box;\r\n  width: 1200px;\r\n  height: 770px;\r\n  background: #fff;\r\n  margin: 0 auto;\r\n  padding: 282px 0 0 334px;\r\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon {\r\n    float: left;\r\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt {\r\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p {\r\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1 {\r\n      font-size: 30px;\r\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2 {\r\n      font-size: 20px;\r\n      color: #999999;\r\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a {\r\n      display: inline-block;\r\n      width: 160px;\r\n      height: 45px;\r\n      line-height: 45px;\r\n      text-align: center;\r\n      border-radius: 5px;\r\n      background: #5D9CEC;\r\n      color: #fff;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 229:
+/***/ 230:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {

@@ -421,7 +421,7 @@ module.exports = "/images/minimal@2x.png?70a48613bab335e8229fbc13d2e8083e";
 
 /***/ }),
 
-/***/ 137:
+/***/ 138:
 /***/ (function(module, exports) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -537,15 +537,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /***/ }),
 
-/***/ 142:
+/***/ 143:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(143)
+var __vue_script__ = __webpack_require__(144)
 /* template */
-var __vue_template__ = __webpack_require__(144)
+var __vue_template__ = __webpack_require__(145)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -585,7 +585,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 143:
+/***/ 144:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -604,7 +604,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 144:
+/***/ 145:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -625,13 +625,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 164:
+/***/ 165:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(165);
+var content = __webpack_require__(166);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -652,7 +652,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 165:
+/***/ 166:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -660,20 +660,20 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\ni[data-v-b968cb3c] {\n  font-style: normal;\n}\n*[data-v-b968cb3c]{\n  -webkit-box-sizing:content-box;\n          box-sizing:content-box\n}\n.m-main[data-v-b968cb3c] {\n  max-width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding-bottom: 49px;\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-main .paper-count-wrapper[data-v-b968cb3c] {\n    min-width: 300px;\n    height: 47px;\n    line-height: 47px;\n    padding-left: 39px;\n    border-bottom: 1px solid #eeeeee;\n    font-size: 14px;\n}\n.m-main .paper-count-wrapper .paper-remain-count[data-v-b968cb3c], .m-main .paper-count-wrapper .paper-complete-count[data-v-b968cb3c] {\n      font-size: 18px;\n      font-weight: bold;\n      color: #f68411;\n}\n.m-main .grades-select-wrapper[data-v-b968cb3c] {\n    min-width: 1122px;\n    padding: 12px 39px;\n    border-bottom: 1px solid #eeeeee;\n}\n.m-main .grades-select-wrapper .m-sele[data-v-b968cb3c] {\n    margin-top: 8px;\n}\n.m-main .grades-select-wrapper .m-sele .m-label[data-v-b968cb3c] {\n    position: relative;\n    top: 8px;\n    left: -12px;\n    z-index: 1;\n    display: inline-block;\n}\n.m-main .grades-select-wrapper .m-sele p.grades-select[data-v-b968cb3c] {\n    z-index: 2;\n    margin: -30px -17px 0 40px;\n    font-size: 0;\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__input[data-v-b968cb3c] {\n        position: absolute;\n        clip: rect(1px, 1px, 1px, 1px);\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__label[data-v-b968cb3c] {\n        display: inline-block;\n        width: 161px;\n        height: 22px;\n        line-height: 22px;\n        margin: 6px 17px 0 0;\n        border-radius: 5px;\n        border: 1px solid #eeeeee;\n        font-size: 14px;\n        text-align: center;\n        color: #0f0f0f;\n        cursor: pointer;\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__label.active[data-v-b968cb3c]{\n        background: #5d9cec;\n        border: 1px solid transparent;\n        color: #fff;\n}\n.m-main .m-paper-list .m-paper-amount[data-v-b968cb3c] {\n    height: 30px;\n    line-height: 30px;\n    padding-left: 39px;\n    font-size: 14px;\n    color: #999999;\n}\n.m-main .m-paper-list .paper-box[data-v-b968cb3c] {\n    min-width: 1110px;\n    height: 53px;\n    padding: 17px 45px 19px 45px;\n    border-bottom: 1px dashed #f0f0f0;\n}\n.m-main .m-paper-list .paper-box .icon-image[data-v-b968cb3c] {\n      float: left;\n      width: 32px;\n      height: 38px;\n      margin: 6px 29px 0 0;\n}\n.m-main .m-paper-list .paper-box .icon-image img[data-v-b968cb3c] {\n        width: 100%;\n        height: 100%;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail[data-v-b968cb3c] {\n      float: left;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title[data-v-b968cb3c] {\n        max-width: 1042px;\n        white-space: nowrap;\n        text-overflow: ellipsis;\n        overflow: hidden;\n        margin-bottom: 17px;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title .title[data-v-b968cb3c] {\n          font-size: 18px;\n          color: #0b0b0b;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title .title.wc[data-v-b968cb3c] {\n          color: #666666;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc[data-v-b968cb3c] {\n        font-size: 0;\n        color: #999999;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info[data-v-b968cb3c] {\n          margin-right: 19px;\n          font-size: 14px;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info-data[data-v-b968cb3c] {\n          color: #3671cf;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info-data.red[data-v-b968cb3c] {\n          color: red;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc.wc[data-v-b968cb3c] {\n        color: #999999;\n}\n", ""]);
+exports.push([module.i, "\ni[data-v-b968cb3c] {\r\n  font-style: normal;\n}\n*[data-v-b968cb3c]{\r\n  -webkit-box-sizing:content-box;\r\n          box-sizing:content-box\n}\n.m-main[data-v-b968cb3c] {\r\n  max-width: 1200px;\r\n  background-color: #fff;\r\n  margin: 0 auto;\r\n  padding-bottom: 49px;\r\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-main .paper-count-wrapper[data-v-b968cb3c] {\r\n    min-width: 300px;\r\n    height: 47px;\r\n    line-height: 47px;\r\n    padding-left: 39px;\r\n    border-bottom: 1px solid #eeeeee;\r\n    font-size: 14px;\n}\n.m-main .paper-count-wrapper .paper-remain-count[data-v-b968cb3c], .m-main .paper-count-wrapper .paper-complete-count[data-v-b968cb3c] {\r\n      font-size: 18px;\r\n      font-weight: bold;\r\n      color: #f68411;\n}\n.m-main .grades-select-wrapper[data-v-b968cb3c] {\r\n    min-width: 1122px;\r\n    padding: 12px 39px;\r\n    border-bottom: 1px solid #eeeeee;\n}\n.m-main .grades-select-wrapper .m-sele[data-v-b968cb3c] {\r\n    margin-top: 8px;\n}\n.m-main .grades-select-wrapper .m-sele .m-label[data-v-b968cb3c] {\r\n    position: relative;\r\n    top: 8px;\r\n    left: -12px;\r\n    z-index: 1;\r\n    display: inline-block;\n}\n.m-main .grades-select-wrapper .m-sele p.grades-select[data-v-b968cb3c] {\r\n    z-index: 2;\r\n    margin: -30px -17px 0 40px;\r\n    font-size: 0;\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__input[data-v-b968cb3c] {\r\n        position: absolute;\r\n        clip: rect(1px, 1px, 1px, 1px);\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__label[data-v-b968cb3c] {\r\n        display: inline-block;\r\n        width: 161px;\r\n        height: 22px;\r\n        line-height: 22px;\r\n        margin: 6px 17px 0 0;\r\n        border-radius: 5px;\r\n        border: 1px solid #eeeeee;\r\n        font-size: 14px;\r\n        text-align: center;\r\n        color: #0f0f0f;\r\n        cursor: pointer;\n}\n.m-main .grades-select-wrapper p.grades-select .radio-inline__label.active[data-v-b968cb3c]{\r\n        background: #5d9cec;\r\n        border: 1px solid transparent;\r\n        color: #fff;\n}\n.m-main .m-paper-list .m-paper-amount[data-v-b968cb3c] {\r\n    height: 30px;\r\n    line-height: 30px;\r\n    padding-left: 39px;\r\n    font-size: 14px;\r\n    color: #999999;\n}\n.m-main .m-paper-list .paper-box[data-v-b968cb3c] {\r\n    min-width: 1110px;\r\n    height: 53px;\r\n    padding: 17px 45px 19px 45px;\r\n    border-bottom: 1px dashed #f0f0f0;\n}\n.m-main .m-paper-list .paper-box .icon-image[data-v-b968cb3c] {\r\n      float: left;\r\n      width: 32px;\r\n      height: 38px;\r\n      margin: 6px 29px 0 0;\n}\n.m-main .m-paper-list .paper-box .icon-image img[data-v-b968cb3c] {\r\n        width: 100%;\r\n        height: 100%;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail[data-v-b968cb3c] {\r\n      float: left;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title[data-v-b968cb3c] {\r\n        max-width: 1042px;\r\n        white-space: nowrap;\r\n        text-overflow: ellipsis;\r\n        overflow: hidden;\r\n        margin-bottom: 17px;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title .title[data-v-b968cb3c] {\r\n          font-size: 18px;\r\n          color: #0b0b0b;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .paper-title .title.wc[data-v-b968cb3c] {\r\n          color: #666666;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc[data-v-b968cb3c] {\r\n        font-size: 0;\r\n        color: #999999;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info[data-v-b968cb3c] {\r\n          margin-right: 19px;\r\n          font-size: 14px;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info-data[data-v-b968cb3c] {\r\n          color: #3671cf;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc .info-data.red[data-v-b968cb3c] {\r\n          color: red;\n}\n.m-main .m-paper-list .paper-box .m-paper-detail .m-paper-desc.wc[data-v-b968cb3c] {\r\n        color: #999999;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 166:
+/***/ 167:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(167);
+var content = __webpack_require__(168);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -694,7 +694,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 167:
+/***/ 168:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -702,20 +702,20 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\n.m-no-main[data-v-b968cb3c] {\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  width: 1200px;\n  height: 770px;\n  background: #fff;\n  margin: 0 auto;\n  padding: 282px 0 0 334px;\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon[data-v-b968cb3c] {\n    float: left;\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt[data-v-b968cb3c] {\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p[data-v-b968cb3c] {\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1[data-v-b968cb3c] {\n      font-size: 30px;\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2[data-v-b968cb3c] {\n      font-size: 20px;\n      color: #999999;\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a[data-v-b968cb3c] {\n      display: inline-block;\n      width: 160px;\n      height: 45px;\n      line-height: 45px;\n      text-align: center;\n      border-radius: 5px;\n      background: #5D9CEC;\n      color: #fff;\n}\n", ""]);
+exports.push([module.i, "\n.m-no-main[data-v-b968cb3c] {\r\n  -webkit-box-sizing: border-box;\r\n          box-sizing: border-box;\r\n  width: 1200px;\r\n  height: 770px;\r\n  background: #fff;\r\n  margin: 0 auto;\r\n  padding: 282px 0 0 334px;\r\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-no-main .m-no-icon[data-v-b968cb3c] {\r\n    float: left;\r\n    margin-right: 61px;\n}\n.m-no-main .m-no-txt[data-v-b968cb3c] {\r\n    padding-top: 15px;\n}\n.m-no-main .m-no-txt p[data-v-b968cb3c] {\r\n      margin-bottom: 17px;\n}\n.m-no-main .m-no-txt .line1[data-v-b968cb3c] {\r\n      font-size: 30px;\r\n      color: #5D9CEC;\n}\n.m-no-main .m-no-txt .line2[data-v-b968cb3c] {\r\n      font-size: 20px;\r\n      color: #999999;\r\n      margin-bottom: 29px;\n}\n.m-no-main .m-no-txt a[data-v-b968cb3c] {\r\n      display: inline-block;\r\n      width: 160px;\r\n      height: 45px;\r\n      line-height: 45px;\r\n      text-align: center;\r\n      border-radius: 5px;\r\n      background: #5D9CEC;\r\n      color: #fff;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 168:
+/***/ 169:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(169);
+var content = __webpack_require__(170);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -736,7 +736,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 169:
+/***/ 170:
 /***/ (function(module, exports, __webpack_require__) {
 
 var escape = __webpack_require__(19);
@@ -745,21 +745,21 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "/* iCheck plugin Minimal skin, black\n----------------------------------- */\n.icheckbox_minimal,\n.iradio_minimal {\n    display: inline-block;\n    *display: inline;\n    vertical-align: middle;\n    margin: 0;\n    padding: 0;\n    width: 18px;\n    height: 18px;\n    background: url(" + escape(__webpack_require__(118)) + ") no-repeat;\n    border: none;\n    cursor: pointer;\n}\n.icheckbox_minimal {\n    background-position: 0 0;\n}\n.icheckbox_minimal.hover {\n        background-position: -20px 0;\n}\n.icheckbox_minimal.checked {\n        background-position: -40px 0;\n}\n.icheckbox_minimal.disabled {\n        background-position: -60px 0;\n        cursor: default;\n}\n.icheckbox_minimal.checked.disabled {\n        background-position: -80px 0;\n}\n.iradio_minimal {\n    background-position: -100px 0;\n}\n.iradio_minimal.hover {\n        background-position: -120px 0;\n}\n.iradio_minimal.checked {\n        background-position: -140px 0;\n}\n.iradio_minimal.disabled {\n        background-position: -160px 0;\n        cursor: default;\n}\n.iradio_minimal.checked.disabled {\n        background-position: -180px 0;\n}\n\n/* HiDPI support */\n@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi), (min-resolution: 1.25dppx) {\n.icheckbox_minimal,\n    .iradio_minimal {\n        background-image: url(" + escape(__webpack_require__(119)) + ");\n        background-size: 200px 20px;\n}\n}", ""]);
+exports.push([module.i, "/* iCheck plugin Minimal skin, black\r\n----------------------------------- */\n.icheckbox_minimal,\r\n.iradio_minimal {\r\n    display: inline-block;\r\n    *display: inline;\r\n    vertical-align: middle;\r\n    margin: 0;\r\n    padding: 0;\r\n    width: 18px;\r\n    height: 18px;\r\n    background: url(" + escape(__webpack_require__(118)) + ") no-repeat;\r\n    border: none;\r\n    cursor: pointer;\n}\n.icheckbox_minimal {\r\n    background-position: 0 0;\n}\n.icheckbox_minimal.hover {\r\n        background-position: -20px 0;\n}\n.icheckbox_minimal.checked {\r\n        background-position: -40px 0;\n}\n.icheckbox_minimal.disabled {\r\n        background-position: -60px 0;\r\n        cursor: default;\n}\n.icheckbox_minimal.checked.disabled {\r\n        background-position: -80px 0;\n}\n.iradio_minimal {\r\n    background-position: -100px 0;\n}\n.iradio_minimal.hover {\r\n        background-position: -120px 0;\n}\n.iradio_minimal.checked {\r\n        background-position: -140px 0;\n}\n.iradio_minimal.disabled {\r\n        background-position: -160px 0;\r\n        cursor: default;\n}\n.iradio_minimal.checked.disabled {\r\n        background-position: -180px 0;\n}\r\n\r\n/* HiDPI support */\n@media (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi), (min-resolution: 1.25dppx) {\n.icheckbox_minimal,\r\n    .iradio_minimal {\r\n        background-image: url(" + escape(__webpack_require__(119)) + ");\r\n        background-size: 200px 20px;\n}\n}", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 170:
+/***/ 171:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_icheck_icheck_min_js__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_icheck_icheck_min_js__ = __webpack_require__(138);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_icheck_icheck_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_icheck_icheck_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Breadcrumb__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Breadcrumb__ = __webpack_require__(143);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Breadcrumb___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Breadcrumb__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Pagination__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Pagination___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Pagination__);
@@ -963,7 +963,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /***/ }),
 
-/***/ 171:
+/***/ 172:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -1220,7 +1220,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", { staticClass: "icon-image" }, [
-      _c("img", { attrs: { src: __webpack_require__(172) } })
+      _c("img", { attrs: { src: __webpack_require__(173) } })
     ])
   },
   function() {
@@ -1250,7 +1250,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 172:
+/***/ 173:
 /***/ (function(module, exports) {
 
 module.exports = "/images/paper-no.png?fc374cc78f73cc08ce66592f09becf7c";
@@ -1263,15 +1263,15 @@ module.exports = "/images/paper-no.png?fc374cc78f73cc08ce66592f09becf7c";
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(164)
-  __webpack_require__(166)
-  __webpack_require__(168)
+  __webpack_require__(165)
+  __webpack_require__(167)
+  __webpack_require__(169)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(170)
+var __vue_script__ = __webpack_require__(171)
 /* template */
-var __vue_template__ = __webpack_require__(171)
+var __vue_template__ = __webpack_require__(172)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */

@@ -18,6 +18,7 @@ class paperController extends Controller
         try{
             if($request->isMethod('post')){
                 $searchArgs['userId']=$request->userId;
+                $searchArgs['agencyId']=$request->agencyId;
                 $searchArgs['paperType']=$request->paperType;
                 $searchArgs['image']=$request->image;
                 $searchArgs['subjectId']=$request->subjectId;
@@ -26,6 +27,9 @@ class paperController extends Controller
                 $searchArgs['cityId']=$request->cityId;
                 if(intval($searchArgs['userId']) <= 0){
                     throw new \Exception('缺少用户id');
+                }
+                if(intval($searchArgs['agencyId']) <= 0){
+                    throw new \Exception('缺少机构id');
                 }
                 if(intval($searchArgs['subjectId']) <=0 ){
                     throw new \Exception('缺少科目id');
@@ -53,6 +57,7 @@ class paperController extends Controller
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
+                    'agency_id'=>$searchArgs['agencyId'],
                     'subject_id'=>$searchArgs['subjectId'],
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],

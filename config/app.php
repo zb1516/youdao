@@ -250,5 +250,6 @@ return [
         '3' => '难',
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
-    'AGENCY_UPLOAD_NUMBER'=>20
+    'AGENCY_UPLOAD_NUMBER'=>20,
+    'AUTH_KEY'=>'wx_mini_program'
 ];

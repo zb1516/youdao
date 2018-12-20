@@ -1,14 +1,14 @@
 webpackJsonp([10],{
 
-/***/ 142:
+/***/ 143:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(143)
+var __vue_script__ = __webpack_require__(144)
 /* template */
-var __vue_template__ = __webpack_require__(144)
+var __vue_template__ = __webpack_require__(145)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 143:
+/***/ 144:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -67,7 +67,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 144:
+/***/ 145:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -88,13 +88,13 @@ if (false) {
 
 /***/ }),
 
-/***/ 160:
+/***/ 161:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(161);
+var content = __webpack_require__(162);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -115,7 +115,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 161:
+/***/ 162:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -123,19 +123,19 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "\np[data-v-74a57dc6] {\n  margin: 10px 0;\n}\n.fl[data-v-74a57dc6] {\n  float: left;\n}\n.fr[data-v-74a57dc6] {\n  float: right;\n}\n.m-main[data-v-74a57dc6] {\n  max-width: 1200px;\n  min-height: 739px;\n  padding-top: 20px;\n  margin: 0 auto;\n  background: #ffffff;\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-main .m-wrapper[data-v-74a57dc6] {\n    padding: 0 33px;\n    border-bottom: 1px solid #eee;\n}\n.m-main .m-cateory[data-v-74a57dc6], .m-main .m-subject[data-v-74a57dc6] {\n    font-size: 0;\n}\n.m-main .m-cateory .title-box .return-task[data-v-74a57dc6], .m-main .m-subject .title-box .return-task[data-v-74a57dc6] {\n      display: inline-block;\n      right: 20px;\n      top: 15px;\n      font-size: 16px;\n      color: #5d9cec;\n}\n.m-main .m-cateory .title-box[data-v-74a57dc6]:after, .m-main .m-subject .title-box[data-v-74a57dc6]:after {\n      display: block;\n      content: ' ';\n      clear: both;\n      overflow: hidden;\n      visibility: hidden;\n}\n.m-main .m-cateory .m-title[data-v-74a57dc6], .m-main .m-subject .m-title[data-v-74a57dc6] {\n      margin-bottom: 16px;\n      font-size: 16px;\n      color: #5d9cec;\n}\n.m-main .m-cateory .label-list .label-list[data-v-74a57dc6], .m-main .m-subject .label-list .label-list[data-v-74a57dc6] {\n      margin-right: -18px;\n}\n.m-main .m-cateory .label-list .box[data-v-74a57dc6], .m-main .m-subject .label-list .box[data-v-74a57dc6] {\n      max-width: 1000px;\n}\n.m-main .m-cateory .label-list .label[data-v-74a57dc6], .m-main .m-subject .label-list .label[data-v-74a57dc6] {\n      display: inline-block;\n      -webkit-box-sizing: border-box;\n              box-sizing: border-box;\n      width: 161px;\n      height: 32px;\n      color:#5e5d5d;\n      line-height: 32px;\n      font-weight: normal;\n      padding:0;\n      margin: 0 18px 14px 0;\n      border: 1px solid transparent;\n      font-size: 16px;\n      text-align: center;\n      cursor: pointer;\n}\n.m-main .m-cateory .label-list .label.checked[data-v-74a57dc6], .m-main .m-subject .label-list .label.checked[data-v-74a57dc6] {\n      display: inline-block;\n      -webkit-box-sizing: border-box;\n              box-sizing: border-box;\n      width: 161px;\n      height: 32px;\n      line-height: 32px;\n      text-align: center;\n      border-radius: 5px;\n      border: 1px solid #5d9cec;\n      color: #5d9cec;\n}\n.m-main .btn-get-task[data-v-74a57dc6], .m-main .inactive[data-v-74a57dc6] {\n    display: block;\n    width: 141px;\n    height: 43px;\n    margin: 119px auto;\n    border: 0;\n    border-radius: 10px;\n    font-size: 18px;\n    color: #fff;\n    outline: none;\n}\n.m-main .btn-get-task[data-v-74a57dc6] {\n    background-color: #5D9CEC;\n    cursor: pointer;\n}\n.m-main .btn-get-task[data-v-74a57dc6]:hover {\n    box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\n    -webkit-box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\n    -moz-box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\n}\n.m-main .inactive[data-v-74a57dc6] {\n    background-color: #959595;\n    cursor: auto;\n}\n", ""]);
+exports.push([module.i, "\np[data-v-74a57dc6] {\r\n  margin: 10px 0;\n}\n.fl[data-v-74a57dc6] {\r\n  float: left;\n}\n.fr[data-v-74a57dc6] {\r\n  float: right;\n}\n.m-main[data-v-74a57dc6] {\r\n  max-width: 1200px;\r\n  min-height: 739px;\r\n  padding-top: 20px;\r\n  margin: 0 auto;\r\n  background: #ffffff;\r\n  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\r\n  -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.13);\n}\n.m-main .m-wrapper[data-v-74a57dc6] {\r\n    padding: 0 33px;\r\n    border-bottom: 1px solid #eee;\n}\n.m-main .m-cateory[data-v-74a57dc6], .m-main .m-subject[data-v-74a57dc6] {\r\n    font-size: 0;\n}\n.m-main .m-cateory .title-box .return-task[data-v-74a57dc6], .m-main .m-subject .title-box .return-task[data-v-74a57dc6] {\r\n      display: inline-block;\r\n      right: 20px;\r\n      top: 15px;\r\n      font-size: 16px;\r\n      color: #5d9cec;\n}\n.m-main .m-cateory .title-box[data-v-74a57dc6]:after, .m-main .m-subject .title-box[data-v-74a57dc6]:after {\r\n      display: block;\r\n      content: ' ';\r\n      clear: both;\r\n      overflow: hidden;\r\n      visibility: hidden;\n}\n.m-main .m-cateory .m-title[data-v-74a57dc6], .m-main .m-subject .m-title[data-v-74a57dc6] {\r\n      margin-bottom: 16px;\r\n      font-size: 16px;\r\n      color: #5d9cec;\n}\n.m-main .m-cateory .label-list .label-list[data-v-74a57dc6], .m-main .m-subject .label-list .label-list[data-v-74a57dc6] {\r\n      margin-right: -18px;\n}\n.m-main .m-cateory .label-list .box[data-v-74a57dc6], .m-main .m-subject .label-list .box[data-v-74a57dc6] {\r\n      max-width: 1000px;\n}\n.m-main .m-cateory .label-list .label[data-v-74a57dc6], .m-main .m-subject .label-list .label[data-v-74a57dc6] {\r\n      display: inline-block;\r\n      -webkit-box-sizing: border-box;\r\n              box-sizing: border-box;\r\n      width: 161px;\r\n      height: 32px;\r\n      color:#5e5d5d;\r\n      line-height: 32px;\r\n      font-weight: normal;\r\n      padding:0;\r\n      margin: 0 18px 14px 0;\r\n      border: 1px solid transparent;\r\n      font-size: 16px;\r\n      text-align: center;\r\n      cursor: pointer;\n}\n.m-main .m-cateory .label-list .label.checked[data-v-74a57dc6], .m-main .m-subject .label-list .label.checked[data-v-74a57dc6] {\r\n      display: inline-block;\r\n      -webkit-box-sizing: border-box;\r\n              box-sizing: border-box;\r\n      width: 161px;\r\n      height: 32px;\r\n      line-height: 32px;\r\n      text-align: center;\r\n      border-radius: 5px;\r\n      border: 1px solid #5d9cec;\r\n      color: #5d9cec;\n}\n.m-main .btn-get-task[data-v-74a57dc6], .m-main .inactive[data-v-74a57dc6] {\r\n    display: block;\r\n    width: 141px;\r\n    height: 43px;\r\n    margin: 119px auto;\r\n    border: 0;\r\n    border-radius: 10px;\r\n    font-size: 18px;\r\n    color: #fff;\r\n    outline: none;\n}\n.m-main .btn-get-task[data-v-74a57dc6] {\r\n    background-color: #5D9CEC;\r\n    cursor: pointer;\n}\n.m-main .btn-get-task[data-v-74a57dc6]:hover {\r\n    box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\r\n    -webkit-box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\r\n    -moz-box-shadow: 0 0 8px rgba(93, 156, 236, 0.56);\n}\n.m-main .inactive[data-v-74a57dc6] {\r\n    background-color: #959595;\r\n    cursor: auto;\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
 
-/***/ 162:
+/***/ 163:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Breadcrumb__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Breadcrumb__ = __webpack_require__(143);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Breadcrumb___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Breadcrumb__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(9);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -469,7 +469,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /***/ }),
 
-/***/ 163:
+/***/ 164:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -893,13 +893,13 @@ if (false) {
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(160)
+  __webpack_require__(161)
 }
 var normalizeComponent = __webpack_require__(5)
 /* script */
-var __vue_script__ = __webpack_require__(162)
+var __vue_script__ = __webpack_require__(163)
 /* template */
-var __vue_template__ = __webpack_require__(163)
+var __vue_template__ = __webpack_require__(164)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
