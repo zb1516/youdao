@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WxSmallProgram;
+namespace App\Http\Controllers\WxProgram;
 
 use E421083458\Wxxcx\Wxxcx;
 use Illuminate\Http\Request;

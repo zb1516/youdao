@@ -93,14 +93,14 @@ Route::post('label/manage/taskSort', 'Label\ManageController@taskSort');
 
 
 
-Route::group(['prefix'=>'WxSmallProgram'],function($router){
-    $router->post('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
-    $router->get('/addPaperImage','WxSmallProgram\PaperController@addPaperImage');
+Route::group(['prefix'=>'WxProgram'],function($router){
+    $router->post('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('/addPaperImage','WxProgram\PaperController@addPaperImage');
 });
 
 
