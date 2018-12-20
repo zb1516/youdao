@@ -3,9 +3,11 @@
 /public/storage
 /storage/*.key
 /vendor
+/vendor.bak
 /.idea/*
 /.vagrant
 Homestead.json
+composer.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log

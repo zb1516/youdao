@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb268f6271404e0a032f649e7ace48993
+class ComposerStaticInitc25fe21de67a98617919f64582d42d92
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -12,12 +12,12 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
-        'a31000009db36fa1075c15a2888b4a27' => __DIR__ . '/..' . '/hprose/hprose/Hprose.php',
-        '4378f255c67b62a024d3295602369ebf' => __DIR__ . '/..' . '/johnlui/aliyun-oss/src/AliyunOSS.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        'a31000009db36fa1075c15a2888b4a27' => __DIR__ . '/..' . '/hprose/hprose/Hprose.php',
+        '4378f255c67b62a024d3295602369ebf' => __DIR__ . '/..' . '/johnlui/aliyun-oss/src/AliyunOSS.php',
         'ff086428ca04349ca1a7b01ea2d9a650' => __DIR__ . '/../..' . '/app/Helper/function.php',
     );
 
@@ -87,6 +87,7 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         ),
         'J' => 
         array (
+            'Jenssegers\\Model\\' => 17,
             'JakubOnderka\\PhpConsoleHighlighter\\' => 35,
             'JakubOnderka\\PhpConsoleColor\\' => 29,
         ),
@@ -98,6 +99,10 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'H' => 
         array (
             'Hprose\\' => 7,
+        ),
+        'G' => 
+        array (
+            'GeneaLabs\\LaravelCaffeine\\' => 26,
         ),
         'F' => 
         array (
@@ -129,8 +134,8 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'app\\Libs\\' => 
         array (
@@ -260,6 +265,10 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
         ),
+        'Jenssegers\\Model\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jenssegers/model/src',
+        ),
         'JakubOnderka\\PhpConsoleHighlighter\\' => 
         array (
             0 => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src',
@@ -279,6 +288,10 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'Hprose\\' => 
         array (
             0 => __DIR__ . '/..' . '/hprose/hprose/Hprose',
+        ),
+        'GeneaLabs\\LaravelCaffeine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src',
         ),
         'Fideloper\\Proxy\\' => 
         array (
@@ -374,7 +387,10 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'App\\Http\\Controllers\\Label\\QuestionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Label/QuestionController.php',
         'App\\Http\\Controllers\\Label\\TaskController' => __DIR__ . '/../..' . '/app/Http/Controllers/Label/TaskController.php',
         'App\\Http\\Controllers\\Label\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Label/UserController.php',
-        'App\\Http\\Controllers\\WxSmallProgram\\paperController' => __DIR__ . '/../..' . '/app/Http/Controllers/WxSmallProgram/paperController.php',
+        'App\\Http\\Controllers\\WxProgram\\MessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/WxProgram/MessageController.php',
+        'App\\Http\\Controllers\\WxProgram\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/WxProgram/UserController.php',
+        'App\\Http\\Controllers\\WxProgram\\WxController' => __DIR__ . '/../..' . '/app/Http/Controllers/WxProgram/WxController.php',
+        'App\\Http\\Controllers\\WxProgram\\paperController' => __DIR__ . '/../..' . '/app/Http/Controllers/WxProgram/paperController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -997,6 +1013,11 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'GeneaLabs\\LaravelCaffeine\\Console\\Commands\\Publish' => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src/Console/Commands/Publish.php',
+        'GeneaLabs\\LaravelCaffeine\\Dripper' => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src/Dripper.php',
+        'GeneaLabs\\LaravelCaffeine\\Http\\Controllers\\Drip' => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src/Http/Controllers/Drip.php',
+        'GeneaLabs\\LaravelCaffeine\\Http\\Middleware\\LaravelCaffeineDripMiddleware' => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src/Http/Middleware/LaravelCaffeineDripMiddleware.php',
+        'GeneaLabs\\LaravelCaffeine\\Providers\\Service' => __DIR__ . '/..' . '/genealabs/laravel-caffeine/src/Providers/Service.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
         'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',
@@ -1879,6 +1900,8 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
         'JakubOnderka\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/ConsoleColor.php',
         'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/InvalidStyleException.php',
         'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/Highlighter.php',
+        'Jenssegers\\Model\\MassAssignmentException' => __DIR__ . '/..' . '/jenssegers/model/src/MassAssignmentException.php',
+        'Jenssegers\\Model\\Model' => __DIR__ . '/..' . '/jenssegers/model/src/Model.php',
         'JsonSerializable' => __DIR__ . '/..' . '/nesbot/carbon/src/JsonSerializable.php',
         'Laravel\\Tinker\\ClassAliasAutoloader' => __DIR__ . '/..' . '/laravel/tinker/src/ClassAliasAutoloader.php',
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',
@@ -4113,11 +4136,11 @@ class ComposerStaticInitb268f6271404e0a032f649e7ace48993
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb268f6271404e0a032f649e7ace48993::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb268f6271404e0a032f649e7ace48993::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInitb268f6271404e0a032f649e7ace48993::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb268f6271404e0a032f649e7ace48993::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb268f6271404e0a032f649e7ace48993::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc25fe21de67a98617919f64582d42d92::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc25fe21de67a98617919f64582d42d92::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitc25fe21de67a98617919f64582d42d92::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc25fe21de67a98617919f64582d42d92::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitc25fe21de67a98617919f64582d42d92::$classMap;
 
         }, null, ClassLoader::class);
     }
