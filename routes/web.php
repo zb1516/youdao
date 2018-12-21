@@ -19,10 +19,6 @@ Route::get('/', function () {
 });
 Route::get('label/tag/index', 'Label\TagController@index');
 
-
-
-
-
 $router->group(['prefix' => 'label', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Label\UserController@getUserInfo');
 
@@ -80,36 +76,36 @@ Route::post('label/manage/teacherEmptyingTask', 'Label\ManageController@teacherE
 Route::post('label/manage/taskSort', 'Label\ManageController@taskSort');
 
 
-
+//小程序接口
 Route::group(['prefix'=>'wxprogram'],function($router){
-    $router->get('/wx/login','WxProgram\WxController@login');
-    $router->post('/paper/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('/paper/getUploadCount','WxProgram\PaperController@getUploadCount');
-    $router->get('/paper/getUserUploadMonthCount','WxProgram\PaperController@getUserUploadMonthCount');
-    $router->get('/paper/getYDPaperCount','WxProgram\PaperController@getYDPaperCount');
-    $router->get('/paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
-    $router->get('/paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
-    $router->get('/paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
-    $router->post('/paper/editPaperImage','WxProgram\PaperController@editPaperImage');
-    $router->get('/message/getMessageCount','WxProgram\MessageController@getMessageCount');
-    $router->get('/message/getMessageList','WxProgram\MessageController@getMessageList');
-    $router->get('/user/login','WxProgram\UserController@login');
-
+    $router->get('wx/login','WxProgram\WxController@login');
+    $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount');
+    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
+    $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
+    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
+    $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
+    $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
+    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
+    $router->get('user/login','WxProgram\UserController@login');
 });
 
 
 //以下为4.0路由
 
 //获取公有信息
+Route::group(['prefix'=>'common'],function($router){
+    $router->get('common/getYear', 'Common\CommonController@getYear');
+    $router->get('common/getPaperSourceAjaxSearch', 'Common\CommonController@getPaperSourceAjaxSearch');
+    $router->get('common/getQuestionTypeAjaxSearch', 'Common\CommonController@getQuestionTypeAjaxSearch');
+    $router->get('common/getMonthTime', 'Common\CommonController@getMonthTime');
+    $router->get('common/getAllGrade', 'Common\CommonController@getAllGrade');
+    $router->get('common/getPaperCitysAjaxSearch', 'Common\CommonController@getPaperCitysAjaxSearch');
+    $router->get('common/getSubjects', 'Common\CommonController@getSubjects');
+    $router->get('common/getProvince', 'Common\CommonController@getProvince');
+    $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD');
+});
 
-Route::get('common/common/getYear', 'Common\CommonController@getYear');
-Route::get('common/common/getPaperSourceAjaxSearch', 'Common\CommonController@getPaperSourceAjaxSearch');
-Route::get('common/common/getQuestionTypeAjaxSearch', 'Common\CommonController@getQuestionTypeAjaxSearch');
-Route::get('common/common/getMonthTime', 'Common\CommonController@getMonthTime');
-Route::get('common/common/getAllGrade', 'Common\CommonController@getAllGrade');
-Route::get('common/common/getPaperCitysAjaxSearch', 'Common\CommonController@getPaperCitysAjaxSearch');
-Route::get('common/common/getSubjects', 'Common\CommonController@getSubjects');
-Route::get('common/common/getProvince', 'Common\CommonController@getProvince');
 
 $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');

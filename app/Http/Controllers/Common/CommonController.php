@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Clients\KlibSubjectClient;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\KmsSubjects;
@@ -173,5 +174,21 @@ class CommonController extends BaseController
         return response()->json($arr);
     }
 
+    /**
+     * 获取有道学科
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function getSubjectYD(Request $request)
+    {
+        try{
+            $searchArgs['userId']=$request->userId;
+            $searchArgs['token']=$request->token;
+            $result=KlibSubjectClient::getSubject($searchArgs['userId'],$searchArgs['token']);
+            return response()->json($result);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
 
 }

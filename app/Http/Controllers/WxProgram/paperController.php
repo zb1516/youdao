@@ -282,52 +282,39 @@ class paperController extends Controller
     }
 
     /**
-     * 获取试卷上传月统计
+     * 获取试卷统计
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserUploadMonthCount(Request $request)
+    public function getPaperCount(Request $request)
     {
         try{
             $searchArgs['userId']=$request->userId;
+            $searchArgs['agencyId']=$request->agencyId;
             if(intval($searchArgs['userId']) <=0 ){
                 throw new \Exception('缺少用户id');
             }
+            if(intval($searchArgs['agencyId']) <= 0){
+                throw new \Exception('缺少机构id');
+            }
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $count=$vipYoudaoExaminedModel->count(['DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
-            $count=intval($count)>0?$count:0;
-            return response()->json(['status'=>200,'count'=>$count]);
-        }catch (\Exception $e){
-            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
-        }
-    }
-
-    /**
-     * 统计有道题目入库数
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getYDPaperCount(Request $request)
-    {
-        try{
-            $searchArgs['userId']=$request->userId;
-            if(intval($searchArgs['userId']) <= 0)
-            {
-                throw new \Exception('缺少用户id');
-            }
-            //查询创建的任务
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $examinedIdsList=$vipYoudaoExaminedModel->findAll(['create_uid'=>$searchArgs['userId']],['upload_time','desc'],['paper_id']);
-            $examinedIds=[];
-            foreach ($examinedIdsList as $key => $val)
-            {
-                $examinedIds[]=$val['paper_id'];
-            }
-            //统计本月入库的有道套卷数
-            $vipPaperModel=new VipPaper();
-            $count=$vipPaperModel->count(['id'=>['in'=>$examinedIds],'paper_type'=>2]);
-            return response()->json(['status'=>200,'count'=>$count]);
+            $paperMonthCount=$vipYoudaoExaminedModel->count(['DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
+            $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
+            //统计入库的有道套卷数
+            $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$searchArgs['userId'],'paper_examined_status'=>3]);
+            //获取本月上传试卷数
+            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$searchArgs['agencyId'],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
+            $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
+            //获取上传额度，先从配置文件中获取上传额度
+            $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
+            $paperSurplusCount=intval($paperUploadTotalCount-$useCount)>0?$paperUploadTotalCount-$useCount:0;       //计算剩余上传额
+            return response()->json(['status'=>200,'data'=>[
+                'paperMonthCount'=>$paperMonthCount,                //本月上传数
+                'paperCount'=>$paperCount,                          //本月入库数
+                'paperSurplusCount'=>$paperSurplusCount,            //上传剩余额度
+                'paperUploadTotalCount'=>$paperUploadTotalCount     //上传总额度
+            ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -362,28 +349,6 @@ class paperController extends Controller
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time','desc'],['id','image_url','image_type']);
             return response()->json(['status'=>200,'data'=>$list]);
-        }catch (\Exception $e){
-            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
-        }
-    }
-
-    /**
-     * 获取上传额度
-     * @param Request $request
-     */
-    public function getUploadCount(Request $request)
-    {
-        try{
-            $searchArgs['agencyId']=$request->agencyId;
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
-            //获取本月上传次数
-            $count=$vipYoudaoExaminedModel->count(['agency_id'=>$searchArgs['agencyId'],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
-            $count=intval($count)>0?$count:0;           //本月已上传次数
-            //获取上传额度，先从配置文件中获取上传额度
-            $uploadCount=config('app.AGENCY_UPLOAD_NUMBER');
-            $residualUploadCount=intval($uploadCount-$count)>0?$uploadCount-$count:0;       //计算剩余上传额度
-            return response(['status'=>200,'count'=>$residualUploadCount]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
