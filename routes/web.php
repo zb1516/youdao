@@ -109,6 +109,7 @@ Route::group(['prefix'=>'common'],function($router){
 
 $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');
+    Route::get('paper/paperList', 'Youdao\PaperController@paperList');
 });
 
 
