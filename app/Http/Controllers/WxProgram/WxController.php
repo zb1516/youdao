@@ -6,6 +6,7 @@ use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
 
 class WxController extends Controller
 {
@@ -29,30 +30,14 @@ class WxController extends Controller
             if(!$result['openid']){
                 throw new \Exception($result['code']);
             }
-            //通过用户openid查询数据库中的记录
-            $model=new WxToken();
-            $userInfo=$model->where(['openid'=>$result['openid']])->first();
-            $rand = rand(0,64);
-            $token=encrypt($result,$rand,'wx_mini_program');
-            if(!$userInfo){
-                //把数据存到数据库中
-                $model->session_key=$result['session_key'];
-                $model->openid=$result['openid'];
-                $model->token=$token;
-                $model->expire_time=time()+86400;
-                $result=$model->save();
-            }else{
-                $model=WxToken::find($userInfo['id']);
-                $model->id=$userInfo['id'];
-                $model->session_key=$result['session_key'];
-                $model->token=$token;
-                $model->expire_time=time()+86400;
-                $result=$model->save();
-            }
-            if($result === false){
-                throw new \Exception('获取openid失败');
-            }
-            return response()->json(['status'=>200,'data'=>$token]);
+            $token=encrypt($result);
+            //把token存入redis中
+            Redis::set($token,json_encode([
+                'session_key'=>$result['session_key'],
+                'openid'=>$result['openid'],
+                'expire_time'=>time()+86400
+            ]));
+            return response()->json(['status'=>200,'token'=>$token]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

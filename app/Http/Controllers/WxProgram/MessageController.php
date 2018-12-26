@@ -15,11 +15,14 @@ class MessageController extends Controller
     public function getMessageList(Request $request)
     {
         try{
+            $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
             $searchArgs['page']=$request->page>0?$request->page:1;
             $searchArgs['pageSize']=$request->pageSize;
+            //获取用户openid
+            $openId=WxService::getOpenId($searchArgs['token']);
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
-            $list=$vipMessageRemindModel->findAll([],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
             return response()->json(['status'=>200,'data'=>$list]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
@@ -38,9 +41,12 @@ class MessageController extends Controller
             if(intval($searchArgs['userId']) <= 0){
                 throw new \Exception('缺少用户id');
             }
+            $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
+            //获取用户openid
+            $openId=WxService::getOpenId($searchArgs['token']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
-            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$searchArgs['userId']],['addtime','desc'],['message_id']);
+            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$searchArgs['userId'],'open_id'=>$openId],['addtime','desc'],['message_id']);
             $messageIds=[];
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];

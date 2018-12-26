@@ -1,4 +1,5 @@
 <?php
+//返回指定日期的第一天和最后一天
 if(!function_exists('getthemonth'))
 {
     function getthemonth($date)
@@ -8,12 +9,14 @@ if(!function_exists('getthemonth'))
         return [$firstday,$lastday];
     }
 }
+//加密
 if(!function_exists('encrypt'))
 {
-    function encrypt($data,$rand,$key='')
+    function encrypt($data,$key='')
     {
         $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
         $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
+        $rand = rand(0,64);
         $ch = $chars[$rand];
         $mdKey = md5($key.$ch);
         $mdKey = substr($mdKey,$rand%8, $rand%8+7);
@@ -28,6 +31,7 @@ if(!function_exists('encrypt'))
         return urlencode($ch.$tmp);
     }
 }
+//解密
 if(!function_exists('decrypt'))
 {
     function decrypt($data,$key)
@@ -66,6 +70,7 @@ if(!function_exists('uuid'))
         return $prefix . $uuid;
     }
 }
+//curl_get请求
 if(!function_exists('httpGet'))
 {
     function httpGet($url,$timeout=5)
@@ -84,6 +89,7 @@ if(!function_exists('httpGet'))
         return json_decode($output);
     }
 }
+//curl_post请求
 if(!function_exists('httpPost'))
 {
     function httpPost($url,$data=array(),$timeout=5)
@@ -102,5 +108,13 @@ if(!function_exists('httpPost'))
         }
         curl_close($ch);
         return json_decode($output);
+    }
+}
+//数组元素倒序返回
+if(!function_exists('arrayReverse'))
+{
+    function arrayReverse($data)
+    {
+        return array_reverse($data);
     }
 }
