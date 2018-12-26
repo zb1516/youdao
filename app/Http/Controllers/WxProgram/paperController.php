@@ -186,7 +186,9 @@ class paperController extends Controller
                 }
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
-                    foreach ($searchArgs['questionImage'] as $key => $val) {
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
@@ -199,7 +201,9 @@ class paperController extends Controller
                         }
                     }
                 } else {
-                    foreach ($searchArgs['questionImage'] as $key => $val) {
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
@@ -211,7 +215,9 @@ class paperController extends Controller
                             throw new \Exception('上传试卷失败');
                         }
                     }
-                    foreach ($searchArgs['answerImage'] as $key => $val) {
+                    $answerImage=explode(',',$searchArgs['answerImage']);
+                    $answerImage=arrayReverse($answerImage);
+                    foreach ($answerImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
