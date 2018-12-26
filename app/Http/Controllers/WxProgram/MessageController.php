@@ -18,6 +18,10 @@ class MessageController extends Controller
             $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
             $searchArgs['page']=$request->page>0?$request->page:1;
             $searchArgs['pageSize']=$request->pageSize;
+            if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+            {
+                throw new \Exception('缺少用户token');
+            }
             //获取用户openid
             $openId=WxService::getOpenId($searchArgs['token']);
             //获取模板消息
@@ -42,6 +46,10 @@ class MessageController extends Controller
                 throw new \Exception('缺少用户id');
             }
             $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
+            if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+            {
+                throw new \Exception('缺少用户token');
+            }
             //获取用户openid
             $openId=WxService::getOpenId($searchArgs['token']);
             //查询出当前用户已读消息

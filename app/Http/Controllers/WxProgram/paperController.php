@@ -68,7 +68,7 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择城市');
                 }
-                if(empty($searchArgs['token']))
+                if(!isset($searchArgs['token']) || empty($searchArgs['token']))
                 {
                     throw new \Exception('缺少用户token');
                 }
