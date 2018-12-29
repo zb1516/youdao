@@ -1,17 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: xiecuiping
- * Date: 2018/12/29
- * Time: 14:33
- */
+
 namespace App\Models;
+
+use App\Models\Model;
 
 class VipYoudaoExamined extends Model
 {
-    protected $table="vip_youdao_examined";
-    protected $connection='mysql_kms';
-    public $timestamps=false;
+    protected $table='vip_youdao_examined';
+    protected $connection = "mysql_kms";
+    public $timestamps = false;
 
     public function getPaperInfo($taskId){
         $condition = array(
@@ -66,6 +63,5 @@ class VipYoudaoExamined extends Model
     public function paperList($searchArgs, $currentPage = 1, $pageSize = 20){
 
     }
-
 }
 

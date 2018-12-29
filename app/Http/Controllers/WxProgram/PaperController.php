@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Models\VipPaperImage;
+use App\Models\VipYoudaoExamined;
+use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class paperController extends Controller
 {
@@ -26,6 +30,7 @@ class paperController extends Controller
                 $searchArgs['gradeId']=$request->gradeId;
                 $searchArgs['provId']=$request->provId;
                 $searchArgs['cityId']=$request->cityId;
+                $searchArgs['token']=$request->token;       //小程序登陆以后生成的唯一标识
                 if(intval($searchArgs['userId']) <= 0){
                     throw new \Exception('缺少用户id');
                 }
@@ -66,9 +71,16 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择城市');
                 }
+                if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+                {
+                    throw new \Exception('缺少用户token');
+                }
+                //获取用户openid
+                $openId=WxService::getOpenId($searchArgs['token']);
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
+                    'open_id'=>$openId,
                     'agency_id'=>$searchArgs['agencyId'],
                     'subject_id'=>$searchArgs['subjectId'],
                     'grade'=>$searchArgs['gradeId'],
@@ -84,7 +96,9 @@ class paperController extends Controller
                 //如果创建任务成功，上传图片
                 //判断是分离样式还是混合样式
                 if($searchArgs['paperType'] == 1){
-                    foreach($searchArgs['questionImage'] as $key => $val)
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
                             'task_id'=>$taskId,
@@ -98,7 +112,9 @@ class paperController extends Controller
                         }
                     }
                 }else{
-                    foreach($searchArgs['questionImage'] as $key => $val)
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
                             'task_id'=>$taskId,
@@ -111,7 +127,9 @@ class paperController extends Controller
                             throw new \Exception('上传试卷失败');
                         }
                     }
-                    foreach($searchArgs['answerImage'] as $key => $val)
+                    $answerImage=explode(',',$searchArgs['answerImage']);
+                    $answerImage=arrayReverse($answerImage);
+                    foreach($answerImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
                             'task_id'=>$taskId,
@@ -171,7 +189,9 @@ class paperController extends Controller
                 }
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
-                    foreach ($searchArgs['questionImage'] as $key => $val) {
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
@@ -184,7 +204,9 @@ class paperController extends Controller
                         }
                     }
                 } else {
-                    foreach ($searchArgs['questionImage'] as $key => $val) {
+                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=arrayReverse($questionImage);
+                    foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
@@ -196,7 +218,9 @@ class paperController extends Controller
                             throw new \Exception('上传试卷失败');
                         }
                     }
-                    foreach ($searchArgs['answerImage'] as $key => $val) {
+                    $answerImage=explode(',',$searchArgs['answerImage']);
+                    $answerImage=arrayReverse($answerImage);
+                    foreach ($answerImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
@@ -266,7 +290,7 @@ class paperController extends Controller
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $vipPaperImageModel=new VipPaperImage();
             //创建子查询sql语句
-            $sub=$vipPaperImageModel->where(['is_delete'=>0])->orderBy(["create_time","asc"])->groupBy("task_id")->first();
+            $sub=$vipPaperImageModel->where(['is_delete'=>0])->orderBy(["create_time","asc"])->groupBy("task_id");
             //创建查询条件
             $where=['vip_youdao_examined.task_id'=>['sub'=>["table"=>"vip_paper_image","where"=>"vip_youdao_examined.task_id=vip_paper_image.task_id","select"=>DB::raw("({$sub->toSql()}) as sub")]]];
             //获取图片审核列表

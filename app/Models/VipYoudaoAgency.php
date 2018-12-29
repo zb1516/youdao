@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Models\Model;
 
-class VipPaperImage extends Model
+class VipYoudaoAgency extends Model
 {
-    protected $table='vip_paper_image';
+    protected $table='vip_youdao_agency';
     protected $connection = "mysql_kms";
     public $timestamps=false;
 }

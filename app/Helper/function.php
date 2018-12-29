@@ -1,4 +1,5 @@
 <?php
+//返回指定日期的第一天和最后一天
 if(!function_exists('getthemonth'))
 {
     function getthemonth($date)
@@ -8,47 +9,16 @@ if(!function_exists('getthemonth'))
         return [$firstday,$lastday];
     }
 }
+//加密
 if(!function_exists('encrypt'))
 {
-    function encrypt($data,$rand,$key='')
+    function encrypt($data)
     {
-        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
-        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
-        $ch = $chars[$rand];
-        $mdKey = md5($key.$ch);
-        $mdKey = substr($mdKey,$rand%8, $rand%8+7);
-        $txt = base64_encode($data);
-        $tmp = '';
-        $i=0;$j=0;$k = 0;
-        for ($i=0; $i<strlen($txt); $i++) {
-            $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = ($rand+strpos($chars,$txt[$i])+ord($mdKey[$k++]))%64;
-            $tmp .= $chars[$j];
-        }
-        return urlencode($ch.$tmp);
-    }
-}
-if(!function_exists('decrypt'))
-{
-    function decrypt($data,$key)
-    {
-        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
-        $txt = urldecode($data);
-        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
-        $ch = $txt[0];
-        $nh = strpos($chars,$ch);
-        $mdKey = md5($key.$ch);
-        $mdKey = substr($mdKey,$nh%8, $nh%8+7);
-        $txt = substr($txt,1);
-        $tmp = '';
-        $i=0;$j=0; $k = 0;
-        for ($i=0; $i<strlen($txt); $i++) {
-            $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = strpos($chars,$txt[$i])-$nh - ord($mdKey[$k++]);
-            while ($j<0) $j+=64;
-            $tmp .= $chars[$j];
-        }
-        return base64_decode($tmp);
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $rand=rand(0,32);
+        $txt=$strPol[$rand];
+        $param=http_build_query($data);
+        return sha1($param.date('Y-m-d').$txt);
     }
 }
 //生成uuid
@@ -66,6 +36,7 @@ if(!function_exists('uuid'))
         return $prefix . $uuid;
     }
 }
+//curl_get请求
 if(!function_exists('httpGet'))
 {
     function httpGet($url,$timeout=5)
@@ -84,6 +55,7 @@ if(!function_exists('httpGet'))
         return json_decode($output);
     }
 }
+//curl_post请求
 if(!function_exists('httpPost'))
 {
     function httpPost($url,$data=array(),$timeout=5)
@@ -102,5 +74,13 @@ if(!function_exists('httpPost'))
         }
         curl_close($ch);
         return json_decode($output);
+    }
+}
+//数组元素倒序返回
+if(!function_exists('arrayReverse'))
+{
+    function arrayReverse($data)
+    {
+        return array_reverse($data);
     }
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Models\Model;
 
-class VipPaperImage extends Model
+class VipMessageViewLog extends Model
 {
-    protected $table='vip_paper_image';
+    protected $table='vip_message_view_log';
     protected $connection = "mysql_kms";
     public $timestamps=false;
 }
