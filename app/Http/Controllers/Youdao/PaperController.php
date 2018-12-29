@@ -10,6 +10,9 @@ namespace App\http\Controllers\Youdao;
 
 use App\Http\Controllers\BaseController;
 use App\Models\User;
+use App\Models\VipYoudaoExamined;
+use Illuminate\Http\Request;
+
 
 class PaperController extends BaseController
 {
@@ -19,17 +22,52 @@ class PaperController extends BaseController
         parent::__construct();
         $this->user = new User;
         //$this->getUserKey = $this->userKey;
+        $this->vipYoudaoExamined = new VipYoudaoExamined();
+
     }
 
 
-    //套卷审核列表
-    public function paperList(){
+    /**
+     * 套卷审核列表
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperList(Request $request){
         try{
-            $userInfo = $this->user->getUserInfo($this->userKey);
-            print_r($userInfo);exit;
+            //$userInfo = $this->user->getUserInfo($this->userKey);
+            $currentPage = abs($request->get('currentPage', 1));
+            $pageSize = abs($request->get('pageSize', 15));
+            $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
+            $result = $this->vipYoudaoExamined->getPaperList($searchArgs, $currentPage, $pageSize);
+            return response()->json($result);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
 
+    }
+
+
+    /**
+     * 试卷详情
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperInfo(Request $request){
+        try{
+            $taskId = abs($request->taskId);
+            if($taskId){
+                $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
+                /**
+                 * 调用有道接口。获取有道处理的试卷详情
+                 */
+                $paperInfo['info'] = array();
+                return response()->json($paperInfo);
+            }else{
+                return response()->json(['errorMsg' => '任务id不能为空']);
+            }
+
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
     }
 }

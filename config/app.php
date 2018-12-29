@@ -251,5 +251,7 @@ return [
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
     'AGENCY_UPLOAD_NUMBER'=>20,
-    'AUTH_KEY'=>'wx_mini_program'
+    'AUTH_KEY'=>'wx_mini_program',
+    'PAPER_AUDITOR'=>'试卷审核人',
+    'IMG_AUDITOR'=>'图片审核人'
 ];

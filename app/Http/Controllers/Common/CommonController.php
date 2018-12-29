@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Common;
 
 use App\Clients\KlibSubjectClient;
 use App\Http\Controllers\BaseController;
+use App\Models\SysRoles;
+use App\Models\SysUsers;
 use Illuminate\Http\Request;
 use App\Models\KmsSubjects;
 use App\Models\Province;
@@ -33,6 +35,10 @@ class CommonController extends BaseController
         $this->vipDictQuestionType = new VipDictQuestionType;
 
         $this->city = new City;
+
+        $this->sysRoles = new SysRoles();
+        $this->sysUsers = new SysUsers();
+
     }
 
     //获取用户学科信息
@@ -186,6 +192,48 @@ class CommonController extends BaseController
             $searchArgs['token']=$request->token;
             $result=KlibSubjectClient::getSubject($searchArgs['userId'],$searchArgs['token']);
             return response()->json($result);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * 获取试卷审核状态
+     */
+    public static function getPaperStatus()
+    {
+        $status = array(
+            '0'=>'待审核',
+            '1'=>'已通过',
+            '-1'=>'已退回',
+        );
+        return response()->json($status);
+    }
+
+
+    /**
+     * 获取图片审核状态
+     */
+    public static function getImageStatus()
+    {
+        $status = array(
+            '0'=>'待审核',
+            '1'=>'已通过',
+            '-1'=>'已退回',
+            '-2'=>'试卷重复',
+        );
+        return response()->json($status);
+    }
+
+
+    public  function getAuditors(Request $request)
+    {
+        try{
+            $roleName = $request->roleName;
+            $roleId = $this->sysRoles->getRoleId($roleName);
+            $auditors = $this->sysUsers->getUserNames($roleId);
+            return response()->json($auditors);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }

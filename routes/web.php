@@ -104,12 +104,16 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getSubjects', 'Common\CommonController@getSubjects');
     $router->get('common/getProvince', 'Common\CommonController@getProvince');
     $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD');
+    $router->get('common/getPaperStatus', 'Common\CommonController@getPaperStatus');
+    $router->get('common/getImageStatus', 'Common\CommonController@getImageStatus');
+    $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
 });
 
 
 $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');
     Route::get('paper/paperList', 'Youdao\PaperController@paperList');
+    Route::get('paper/paperInfo', 'Youdao\PaperController@paperInfo');
 });
 
 
