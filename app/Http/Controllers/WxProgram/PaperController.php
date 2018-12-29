@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Models\VipPaperImage;
+use App\Models\VipYoudaoExamined;
 use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class paperController extends Controller
 {
@@ -287,7 +290,7 @@ class paperController extends Controller
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $vipPaperImageModel=new VipPaperImage();
             //创建子查询sql语句
-            $sub=$vipPaperImageModel->where(['is_delete'=>0])->orderBy(["create_time","asc"])->groupBy("task_id")->first();
+            $sub=$vipPaperImageModel->where(['is_delete'=>0])->orderBy(["create_time","asc"])->groupBy("task_id");
             //创建查询条件
             $where=['vip_youdao_examined.task_id'=>['sub'=>["table"=>"vip_paper_image","where"=>"vip_youdao_examined.task_id=vip_paper_image.task_id","select"=>DB::raw("({$sub->toSql()}) as sub")]]];
             //获取图片审核列表

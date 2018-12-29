@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class VipRepeatPaperRecord extends Model
 {
     protected $table='vip_repeat_paper_record';
+    protected $connection = "mysql_kms";
     public $timestamps=false;
 }

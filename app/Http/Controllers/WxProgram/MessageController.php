@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Models\VipMessageRemind;
+use App\Models\VipMessageViewLog;
+use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

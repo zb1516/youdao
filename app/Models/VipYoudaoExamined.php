@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class VipYoudaoExamined extends Model
 {
     protected $table='vip_youdao_examined';
+    protected $connection = "mysql_kms";
     public $timestamps = false;
 }

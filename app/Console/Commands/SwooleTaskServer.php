@@ -43,11 +43,16 @@ class SwooleTaskServer extends Command
 
     protected function start()
     {
-        $this->serv=new \swoole_server('127.0.0.1',9503);
-        $this->serv->on('connect',[$this,'onConnect']);
-        $this->serv->on('receive',[$this,'onReceive']);
-        $this->serv->on('task',[$this,'onTask']);
-        $this->serv->on('finish',[$this,'onFinish']);
+        $this->serv=new \swoole_server('0.0.0.0',9502);
+        $this->serv->set([
+            'reactor_num' => 2,
+            'task_worker_num'=>1,
+            'worker_num' => 4
+        ]);
+        $this->serv->on('Connect',[$this,'onConnect']);
+        $this->serv->on('Receive',[$this,'onReceive']);
+        $this->serv->on('Task',[$this,'onTask']);
+        $this->serv->on('Finish',[$this,'onFinish']);
         $this->serv->start();
     }
 
@@ -56,7 +61,7 @@ class SwooleTaskServer extends Command
      * @param $serv
      * @param $fd
      */
-    protected function onConnect($serv,$fd)
+    public function onConnect($serv,$fd)
     {
         echo "client:connect \n";
     }
@@ -68,9 +73,9 @@ class SwooleTaskServer extends Command
      * @param $from_id
      * @param $data
      */
-    protected function onReceive($serv,$fd,$from_id,$data)
+    public function onReceive($serv,$fd,$from_id,$data)
     {
-        $this->task($data);
+          $serv->task($data);
     }
 
     /**
@@ -80,10 +85,11 @@ class SwooleTaskServer extends Command
      * @param $from_id
      * @param $data
      */
-    protected function onTask($serv,$task_id,$from_id,$data)
+    public function onTask($serv,$task_id,$from_id,$data)
     {
-        $this->sernd();         //发送数据
-        $this->onFinish($data);
+        echo "New AsyncTask[id=$task_id]".PHP_EOL;
+        //返回任务执行的结果
+        $serv->finish("$data -> OK");
     }
 
     /**
@@ -93,8 +99,8 @@ class SwooleTaskServer extends Command
      * @param $data
      * @return string
      */
-    protected function onFinish($serv,$task_id,$data)
+    public function onFinish($serv,$task_id,$data)
     {
-        return "发送成功";
+        return "success";//这里告诉任务结束，于是上面的on('finish', array($this, 'onFinish'))就会执
     }
 }

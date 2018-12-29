@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
 
 class VipMessageViewLog extends Model
 {
     protected $table='vip_message_view_log';
+    protected $connection = "mysql_kms";
     public $timestamps=false;
 }

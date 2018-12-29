@@ -16,8 +16,8 @@ class TaskService
      */
     public  function connect()
     {
-        if(!$this->client->connection('127.0.0.1',9503)){
-            throw new \Exception("client:connection \n");
+        if(!$this->client->connect('127.0.0.1',9502)){
+            throw new \Exception("client:connect \n");
         }
     }
 
@@ -27,11 +27,11 @@ class TaskService
      */
     public  function send($data)
     {
-        if($this->client->isCoonected())
+        if($this->client->isConnected())
         {
             if(!is_string($data))
             {
-                $data=json_decode($data,true);
+                $data=json_encode($data);
             }
             $this->client->send($data);
         }else{
