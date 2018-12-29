@@ -177,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         E421083458\Wxxcx\WxxcxServiceProvider::class,
+        SwooleTW\Http\LaravelServiceProvider::class,
     ],
 
     /*
@@ -250,6 +251,5 @@ return [
         '3' => '难',
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
-    'AGENCY_UPLOAD_NUMBER'=>20,
-    'AUTH_KEY'=>'wx_mini_program'
+    'AGENCY_UPLOAD_NUMBER'=>20
 ];

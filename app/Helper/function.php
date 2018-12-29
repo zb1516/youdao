@@ -12,47 +12,13 @@ if(!function_exists('getthemonth'))
 //加密
 if(!function_exists('encrypt'))
 {
-    function encrypt($data,$key='')
+    function encrypt($data)
     {
-        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
-        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
-        $rand = rand(0,64);
-        $ch = $chars[$rand];
-        $mdKey = md5($key.$ch);
-        $mdKey = substr($mdKey,$rand%8, $rand%8+7);
-        $txt = base64_encode($data);
-        $tmp = '';
-        $i=0;$j=0;$k = 0;
-        for ($i=0; $i<strlen($txt); $i++) {
-            $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = ($rand+strpos($chars,$txt[$i])+ord($mdKey[$k++]))%64;
-            $tmp .= $chars[$j];
-        }
-        return urlencode($ch.$tmp);
-    }
-}
-//解密
-if(!function_exists('decrypt'))
-{
-    function decrypt($data,$key)
-    {
-        $key=empty($key)?config('app.AUTH_KEY'):$key;               //加密key
-        $txt = urldecode($data);
-        $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-=+";
-        $ch = $txt[0];
-        $nh = strpos($chars,$ch);
-        $mdKey = md5($key.$ch);
-        $mdKey = substr($mdKey,$nh%8, $nh%8+7);
-        $txt = substr($txt,1);
-        $tmp = '';
-        $i=0;$j=0; $k = 0;
-        for ($i=0; $i<strlen($txt); $i++) {
-            $k = $k == strlen($mdKey) ? 0 : $k;
-            $j = strpos($chars,$txt[$i])-$nh - ord($mdKey[$k++]);
-            while ($j<0) $j+=64;
-            $tmp .= $chars[$j];
-        }
-        return base64_decode($tmp);
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $rand=rand(0,32);
+        $txt=$strPol[$rand];
+        $param=http_build_query($data);
+        return sha1($param.date('Y-m-d').$txt);
     }
 }
 //生成uuid
