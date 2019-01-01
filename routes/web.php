@@ -88,6 +88,7 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
     $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
     $router->get('user/login','WxProgram\UserController@login');
+    $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
 });
 
 

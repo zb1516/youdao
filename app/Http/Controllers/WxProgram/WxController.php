@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Models\VipPaperImage;
 use App\Services\TaskService;
 use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
@@ -89,6 +90,35 @@ class WxController extends Controller
                 throw new \Exception($result->errmsg);
             }
             return response()->json(['status'=>200,'errorMsg'=>'发送成功']);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 获取分享模板内容
+     * @param Request $request
+     */
+    public function getShareTemplate(Request $request)
+    {
+        try{
+            $searchArgs['taskId']=$request->taskId;
+            if(intval($searchArgs['taskId']) <= 0)
+            {
+                throw new \Exception('缺少试卷任务id');
+            }
+            $vipPaperImageModel=new VipPaperImage();
+            //获取第一张图片
+            $paperInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'asc'],['image_url']);
+            return response()->json([
+                'status'=>200,
+                'data'=>[
+                    'title'=>'',
+                    'path'=>'',
+                    'desc'=>'',
+                    'imageUrl'=>$paperInfo['image_url'],
+                ]
+            ]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

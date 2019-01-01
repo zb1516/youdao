@@ -26,7 +26,7 @@ class MessageController extends Controller
                 throw new \Exception('缺少用户token');
             }
             //获取用户openid
-            $openId=WxService::getOpenId($searchArgs['token']);
+            $openId=111;//WxService::getOpenId($searchArgs['token']);
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
             $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
@@ -54,10 +54,10 @@ class MessageController extends Controller
                 throw new \Exception('缺少用户token');
             }
             //获取用户openid
-            $openId=WxService::getOpenId($searchArgs['token']);
+            $openId=111;//WxService::getOpenId($searchArgs['token']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
-            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$searchArgs['userId'],'open_id'=>$openId],['addtime','desc'],['message_id']);
+            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$searchArgs['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
             $messageIds=[];
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];
