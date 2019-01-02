@@ -87,9 +87,14 @@ class SwooleTaskServer extends Command
      */
     public function onTask($serv,$task_id,$from_id,$data)
     {
-        echo "New AsyncTask[id=$task_id]".PHP_EOL;
-        //返回任务执行的结果
-        $serv->finish("$data -> OK");
+        if(!empty($data) && is_string($data))
+        {
+            $data=json_decode($data,true);
+        }
+        //执行任务
+        $result=httpPost($data['url'],$data['data']);
+        $result=json_decode($result,true);
+        return $result;
     }
 
     /**

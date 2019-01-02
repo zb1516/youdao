@@ -52,7 +52,7 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' =>false,
-            'engine' => null,
+            'engine' => null
         ],
         'mysql_enroll' => [
             'driver' => 'mysql',
