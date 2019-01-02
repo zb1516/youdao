@@ -72,10 +72,12 @@ class PaperController extends BaseController
             $taskId = abs($request->taskId);
             if($taskId){
                 $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
-                /**
-                 * 调用有道接口。获取有道处理的试卷详情
-                 */
-                $paperInfo['info'] = array();
+
+                //调用有道接口。获取有道处理的试卷详情
+                $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
+                $postData['data']['taskId'] = $taskId;
+                $paperInfo['info'] = $this->getYoudaoTask($postUrl, $postData, 2);
+
                 return response()->json($paperInfo);
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
@@ -86,5 +88,17 @@ class PaperController extends BaseController
         }
     }
 
+
+    /**
+     * 试卷导出
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperExport(){
+        try{
+
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
 
 }

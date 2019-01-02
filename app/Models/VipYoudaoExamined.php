@@ -51,6 +51,7 @@ class VipYoudaoExamined extends Model
         if(isset($formData['city'])){
             $searchArgs['city'] = trim($formData['city']);
         }
+        //有道最终处理日期
         if (isset($formData['beginDate'])) {
             $searchArgs['beginDate'] = $formData['beginDate'];
         }
@@ -66,6 +67,16 @@ class VipYoudaoExamined extends Model
         if(isset($formData['paperName'])){
             $searchArgs['paperName'] = trim($searchArgs['paperName']);
         }
+        if(isset($formData['auditorId'])){//审核人
+            $searchArgs['auditorId'] = abs($searchArgs['auditorId']);
+        }
+        //试卷审核日期
+        if (isset($formData['auditBeginDate'])) {
+            $searchArgs['auditBeginDate'] = $formData['auditBeginDate'];
+        }
+        if (isset($formData['auditEndDate'])) {
+            $searchArgs['auditEndDate'] = $formData['auditEndDate'];
+        }
         return $searchArgs;
     }
 
@@ -76,6 +87,7 @@ class VipYoudaoExamined extends Model
      */
     public function paperCondition($searchArgs){
         $condition = [];
+        //有道最终处理日期
         if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
             $condition['final_processing_time'] = array('lt' => strtotime ($searchArgs['endDate'].' 23:59:59'));
         }
@@ -104,7 +116,20 @@ class VipYoudaoExamined extends Model
             $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
         }
         if (!empty($searchArgs['paperName'])) {
-            $condition['paper_name'] = array('like' => "%" . $searchArgs['paperName'] . "%");;
+            $condition['paper_name'] = array('like' => "%" . $searchArgs['paperName'] . "%");
+        }
+        if (!empty($searchArgs['auditorId'])) {
+            $condition['paper_examined_auditor_id'] = $searchArgs['auditorId'];
+        }
+        //试卷最终审核日期
+        if (empty($searchArgs['auditBeginDate']) && !empty($searchArgs['auditEndDate'])) {
+            $condition['paper_examined_time'] = array('lt' => strtotime ($searchArgs['auditEndDate'].' 23:59:59'));
+        }
+        if (!empty($searchArgs['auditBeginDate']) && empty($searchArgs['auditEndDate'])) {
+            $condition['paper_examined_time'] = array('gt' => strtotime ($searchArgs['auditBeginDate'].' 00:00:01'));
+        }
+        if (!empty($searchArgs['auditBeginDate']) && !empty($searchArgs['auditEndDate'])) {
+            $condition['paper_examined_time'] = array('between' => array(strtotime ($searchArgs['auditBeginDate'].' 00:00:01'),strtotime ($searchArgs['auditEndDate'].' 23:59:59')));
         }
         return $condition;
     }
