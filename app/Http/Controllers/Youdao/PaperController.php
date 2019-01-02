@@ -48,6 +48,21 @@ class PaperController extends BaseController
 
 
     /**
+     * 套卷统计
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperStatistic(Request $request){
+        try{
+            $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
+            $result = $this->vipYoudaoExamined->paperStatistic($searchArgs);
+            return response()->json($result);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
      * 试卷详情
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

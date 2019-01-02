@@ -116,11 +116,13 @@ class VipYoudaoExamined extends Model
             return array('rows' => [], 'total' => $recordCount);
         }
         $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '',[],$currentPage,$pageSize);
-        if($list){
-
-        }
 
         return array('rows' => $list, 'total' => $recordCount);
+    }
+
+
+    public function paperStatistic($searchArgs){
+
     }
 }
 
