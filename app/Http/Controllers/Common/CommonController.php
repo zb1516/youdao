@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Common;
 
 use App\Clients\KlibSubjectClient;
+use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
@@ -188,12 +189,17 @@ class CommonController extends BaseController
     public static function getSubjectYD(Request $request)
     {
         try{
-            $searchArgs['userId']=$request->userId;
-            $searchArgs['token']=$request->token;
-            $result=KlibSubjectClient::getSubject($searchArgs['userId'],$searchArgs['token']);
-            return response()->json($result);
+            $searchArgs['userToken']=$request->header('userToken');
+            if(!isset($searchArgs['userToken']))
+            {
+                throw new \Exception('缺少登陆用户token');
+            }
+            //获取登陆用户uid
+            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $result=KlibSubjectClient::getSubject($userInfo['userId'],$searchArgs['userToken']);
+            return response()->json(['status'=>200,'data'=>$result]);
         }catch (\Exception $e){
-            return response()->json(['errorMsg' => $e->getMessage()]);
+            return response()->json(['status'=>0,'errorMsg' => $e->getMessage()]);
         }
     }
 
