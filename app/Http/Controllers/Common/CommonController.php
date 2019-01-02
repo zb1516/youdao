@@ -239,4 +239,20 @@ class CommonController extends BaseController
         }
     }
 
+    /**
+     * 获取省市
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCitys(Request $request)
+    {
+        try{
+            $provinceModel=new Province();
+            $list=$provinceModel->getCitys();
+            return response()->json(['status'=>200,'data'=>$list]);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
 }

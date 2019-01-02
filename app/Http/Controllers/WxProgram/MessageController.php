@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Clients\KlibTeacherClient;
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
 use App\Services\WxService;
@@ -18,12 +19,12 @@ class MessageController extends Controller
     public function getMessageList(Request $request)
     {
         try{
-            $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
-            $searchArgs['page']=$request->page>0?$request->page:1;
-            $searchArgs['pageSize']=$request->pageSize;
-            if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+            $searchArgs['token']=$request->header('token');         //小程序登陆以后生成的唯一标识
+            $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
+            $searchArgs['pageSize']=$request->input('pageSize');
+            if(!isset($searchArgs['token']))
             {
-                throw new \Exception('缺少用户token');
+                throw new \Exception('缺少微信用户token');
             }
             //获取用户openid
             $openId=111;//WxService::getOpenId($searchArgs['token']);
@@ -44,20 +45,22 @@ class MessageController extends Controller
     public function getMessageCount(Request $request)
     {
         try{
-            $searchArgs['userId']=$request->userId;
-            if(intval($searchArgs['userId']) <= 0){
-                throw new \Exception('缺少用户id');
+            $searchArgs['userToken']=$request->header('userToken');
+            if(!isset($searchArgs['userToken'])){
+                throw new \Exception('缺少登陆用户token');
             }
-            $searchArgs['token']=$request->token;         //小程序登陆以后生成的唯一标识
-            if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+            $searchArgs['token']=$request->header('token');         //小程序登陆以后生成的唯一标识
+            if(!isset($searchArgs['token']))
             {
-                throw new \Exception('缺少用户token');
+                throw new \Exception('缺少微信用户token');
             }
             //获取用户openid
             $openId=111;//WxService::getOpenId($searchArgs['token']);
+            //获取用户id
+            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
-            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$searchArgs['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
+            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
             $messageIds=[];
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];
@@ -66,6 +69,47 @@ class MessageController extends Controller
             $vipMessageRemindModel=new VipMessageRemind();
             $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds]]);
             return response()->json(['status'=>200,'count'=>$messageCount]);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 设置已读消息接口
+     * @param Request $request
+     */
+    public function setReadMessage(Request $request)
+    {
+        try{
+            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['token']=$request->header('token');
+            $searchArgs['messageId']=$request->input('messageId');
+            if(intval($searchArgs['messageId']) <= 0){
+                throw new \Exception('缺少消息id');
+            }
+            if(!isset($searchArgs['token']))
+            {
+                throw new \Exception('缺少微信用户token信息');
+            }
+            if(!isset($searchArgs['userToken']))
+            {
+                throw new \Exception('缺少用户token信息');
+            }
+            //获取用户openId;
+            $openId=WxService::getOpenId($searchArgs['token']);
+            //获取用户id
+            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $vipMessageViewLogModel=new VipMessageViewLog();
+            $info=$vipMessageViewLogModel->findOne(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId']]);
+            if(!$info)
+            {
+                $result=$vipMessageViewLogModel->add(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId'],'addtime'=>time()]);
+                if($result === false)
+                {
+                    throw new \Exception('操作失败');
+                }
+            }
+            return response()->json(['status'=>200,'errorMsg'=>'操作成功']);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

@@ -27,7 +27,7 @@ class WxController extends Controller
     public function login(Request $request)
     {
         try{
-            $searchArgs['code']=$request->code;
+            $searchArgs['code']=$request->input('code');
             $result=$this->wx->getLoginInfo($searchArgs['code']);
             if(!$result['openid']){
                 throw new \Exception($result['code']);
@@ -102,7 +102,7 @@ class WxController extends Controller
     public function getShareTemplate(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->taskId;
+            $searchArgs['taskId']=$request->input('taskId');
             if(intval($searchArgs['taskId']) <= 0)
             {
                 throw new \Exception('缺少试卷任务id');

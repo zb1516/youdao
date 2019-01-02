@@ -26,5 +26,19 @@ class Province extends Model
         return $result;
     }
 
+    /**
+     * 获取所有数据
+     * @return mixed
+     */
+    public function getCitys()
+    {
+        $condition = array('oneid' => ['gt' => 0],'twoid' =>['eq' => 0], 'threeid' =>['eq' => 0]);
+        $list = $this->findAll($condition, $order=[], ['id','oneid', 'city']);
+        foreach($list as $key => $val)
+        {
+            $list[$key]['children']=$this->findAll(['oneid'=>$val['id'],'twoid'=>['neq'=>0], 'threeid' => ['eq' => 0]]);
+        }
+        return $list;
+    }
 
 }
