@@ -75,7 +75,7 @@ class VipYoudaoExamined extends Model
      * @return array
      */
     public function paperCondition($searchArgs){
-        $condition = array();
+        $condition = [];
         if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
             $condition['final_processing_time'] = array('lt' => strtotime ($searchArgs['endDate'].' 23:59:59'));
         }
@@ -85,25 +85,25 @@ class VipYoudaoExamined extends Model
         if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
             $condition['final_processing_time'] = array('between' => array(strtotime ($searchArgs['beginDate'].' 00:00:01'),strtotime ($searchArgs['endDate'].' 23:59:59')));
         }
-        if ($searchArgs['subjectId']) {
+        if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
         }
-        if ($searchArgs['gradeId']) {
+        if (!empty($searchArgs['gradeId'])) {
             $condition['grade'] = array('eq' => $searchArgs['gradeId']);
         }
-        if ($searchArgs['province']) {
+        if (!empty($searchArgs['province'])) {
             $condition['province'] = array('eq' => $searchArgs['province']);
         }
-        if ($searchArgs['city']) {
+        if (!empty($searchArgs['city'])) {
             $condition['city'] = array('eq' => $searchArgs['city']);
         }
-        if ($searchArgs['status']) {
+        if (!empty($searchArgs['status'])) {
             $condition['paper_examined_status'] = array('eq' => $searchArgs['status']);
         }
-        if ($searchArgs['agencyId']) {
+        if (!empty($searchArgs['agencyId'])) {
             $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
         }
-        if ($searchArgs['paperName']) {
+        if (!empty($searchArgs['paperName'])) {
             $condition['paper_name'] = array('like' => "%" . $searchArgs['paperName'] . "%");;
         }
         return $condition;
@@ -115,6 +115,7 @@ class VipYoudaoExamined extends Model
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => $recordCount);
         }
+
         $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '',[],$currentPage,$pageSize);
 
         return array('rows' => $list, 'total' => $recordCount);
@@ -122,7 +123,33 @@ class VipYoudaoExamined extends Model
 
 
     public function paperStatistic($searchArgs){
-
+        $condition = $this->paperCondition($searchArgs);
+        $recordCount = $this->count($condition);
+        if (0 == abs($recordCount)) {
+            return array('rows' => [], 'total' => $recordCount);
+        }
+        $list = $this->findAll($condition, [], ['paper_examined_status'], '',[],null);
+        $totalCount = $waitCount = $passCount = $returnCount = 0;
+        if($list){
+            foreach ($list as $row){
+                $totalCount++;
+                if($row['paper_examined_status'] == 2){
+                    $waitCount++;
+                }
+                if($row['paper_examined_status'] == 3){
+                    $passCount++;
+                }
+                if($row['paper_examined_status'] == 4){
+                    $returnCount++;
+                }
+            }
+        }
+        return array(
+                'totalCount'=>$totalCount,
+                'waitCount'=>$waitCount,
+                'passCount'=>$passCount,
+                'returnCount'=>$returnCount
+            );
     }
 }
 
