@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Common\CommonController;
 use App\Models\Model;
 
 class VipYoudaoExamined extends Model
@@ -142,7 +143,7 @@ class VipYoudaoExamined extends Model
         }
 
         $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '',[],$currentPage,$pageSize);
-
+        $list = $this->formatPaperList($list);
         return array('rows' => $list, 'total' => $recordCount);
     }
 
@@ -175,6 +176,27 @@ class VipYoudaoExamined extends Model
                 'passCount'=>$passCount,
                 'returnCount'=>$returnCount
             );
+    }
+
+
+    /**
+     * 获取试卷辅助信息
+     * @param $list
+     * @return mixed
+     */
+    public function formatPaperList($list){
+        if($list){
+            $vipYoudaoAgency = new VipYoudaoAgency;
+            foreach ($list as &$row){
+                //获取机构名称
+                if($row['agency_id']){
+                    $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']),[],['agency_name']);
+                    $row['agency_name'] = $agencyInfo['agency_name'];
+                }
+
+            }
+        }
+        return $list;
     }
 }
 
