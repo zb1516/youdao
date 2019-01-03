@@ -14,7 +14,7 @@ class User extends Model
         $condition = [
             'user_key' => $userKey
         ];
-        $result = $this->findOne($condition, $order=[], ['user_name','user_realname']);
+        $result = $this->findOne($condition, $order=[], ['id','user_name','user_realname']);
         $result['agency_id'] = 384;
         $result['agency_name'] = '高思VIP';
         return $result;
@@ -31,6 +31,16 @@ class User extends Model
         }
         return $userNames;
     }
-
+    public function getIdsUserNamesByUserKeys($userKeys)
+    {
+        if(empty($userKeys)) return [];
+        $condition['user_key'] = array('in' => $userKeys);
+        $res = $this->findAll($condition, $order=[], ['id','user_key', 'user_realname']);
+        $userNames = [];
+        foreach ($res as $v) {
+            $userNames[$v['id']] = $v['user_realname'];
+        }
+        return $userNames;
+    }
 
 }
