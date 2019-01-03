@@ -87,7 +87,9 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
     $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
     $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
-    $router->get('user/login','WxProgram\UserController@login');
+    $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
+    $router->post('user/login','WxProgram\UserController@login');
+    $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
 });
 
 
@@ -106,12 +108,19 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD');
     $router->get('common/getYoudaoTask', 'Common\CommonController@getYoudaoTask');
     $router->get('common/getYoudaoAgency', 'Common\CommonController@getYoudaoAgency');
+    $router->get('common/getPaperStatus', 'Common\CommonController@getPaperStatus');
+    $router->get('common/getImageStatus', 'Common\CommonController@getImageStatus');
+    $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
+    $router->get('common/getCitys','Common\CommonController@getCitys');
 
 });
 
 
 $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');
+    Route::get('paper/paperList', 'Youdao\PaperController@paperList');
+    Route::get('paper/paperStatistic', 'Youdao\PaperController@paperStatistic');
+    Route::get('paper/paperInfo', 'Youdao\PaperController@paperInfo');
 });
 
 

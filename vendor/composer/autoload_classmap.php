@@ -86,6 +86,7 @@ return array(
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Services\\TaskService' => $baseDir . '/app/Services/TaskService.php',
     'App\\Services\\WxService' => $baseDir . '/app/Services/WxService.php',
+    'App\\http\\Controllers\\Youdao\\PaperController' => $baseDir . '/app/Http/Controllers/Youdao/PaperController.php',
     'ArithmeticError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
     'AssertionError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
     'Carbon\\Carbon' => $vendorDir . '/nesbot/carbon/src/Carbon/Carbon.php',

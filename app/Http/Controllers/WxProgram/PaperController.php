@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Clients\KlibTeacherClient;
 use App\Models\VipPaperImage;
+use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
 use App\Services\WxService;
 use Illuminate\Http\Request;
@@ -21,18 +23,19 @@ class paperController extends Controller
         $vipYoudaoExaminedModel->beginTransaction();
         try{
             if($request->isMethod('post')){
-                $searchArgs['userId']=$request->userId;
-                $searchArgs['agencyId']=$request->agencyId;
-                $searchArgs['paperType']=$request->paperType;
-                $searchArgs['questionImage']=$request->questionImage;
-                $searchArgs['answerImage']=$request->answerImage;
-                $searchArgs['subjectId']=$request->subjectId;
-                $searchArgs['gradeId']=$request->gradeId;
-                $searchArgs['provId']=$request->provId;
-                $searchArgs['cityId']=$request->cityId;
-                $searchArgs['token']=$request->token;       //小程序登陆以后生成的唯一标识
-                if(intval($searchArgs['userId']) <= 0){
-                    throw new \Exception('缺少用户id');
+                $searchArgs['userToken']=$request->header('userToken');
+                $searchArgs['token']=$request->header('token');       //小程序登陆以后生成的唯一标识
+                $searchArgs['agencyId']=$request->input('agencyId');
+                $searchArgs['agencyName']=$request->input('agencyName');
+                $searchArgs['paperType']=$request->input('paperType');
+                $searchArgs['questionImage']=$request->input('questionImage');
+                $searchArgs['answerImage']=$request->input('answerImage');
+                $searchArgs['subjectId']=$request->input('subjectId');
+                $searchArgs['gradeId']=$request->input('gradeId');
+                $searchArgs['provId']=$request->input('provId');
+                $searchArgs['cityId']=$request->input('cityId');
+                if(!isset($searchArgs['userToken']) <= 0){
+                    throw new \Exception('缺少登陆用户token');
                 }
                 if(intval($searchArgs['agencyId']) <= 0){
                     throw new \Exception('缺少机构id');
@@ -71,16 +74,19 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择城市');
                 }
-                if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+                if(!isset($searchArgs['token']))
                 {
-                    throw new \Exception('缺少用户token');
+                    throw new \Exception('缺少微信用户token');
                 }
                 //获取用户openid
-                $openId=WxService::getOpenId($searchArgs['token']);
+                $openId=111;//WxService::getOpenId($searchArgs['token']);
+                //获取登陆用户uid
+                $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
                     'open_id'=>$openId,
+                    'create_uid'=>$userInfo['userId'],
                     'agency_id'=>$searchArgs['agencyId'],
                     'subject_id'=>$searchArgs['subjectId'],
                     'grade'=>$searchArgs['gradeId'],
@@ -143,6 +149,17 @@ class paperController extends Controller
                         }
                     }
                 }
+                //如果提交成功，查询机构是否记录
+                $vipYoudaoAgencyModel=new VipYoudaoAgency();
+                $info=$vipYoudaoAgencyModel->findOne(['agency_id'=>$searchArgs['agencyId']]);
+                if(!$info)
+                {
+                    $result=$vipYoudaoAgencyModel->add(['agency_id'=>$searchArgs['agencyId'],'agency_name'=>$searchArgs['agencyName'],'create_time'=>date('Y-m-d H:i:s')]);
+                    if($result === false)
+                    {
+                        throw new \Exception('上传试卷失败');
+                    }
+                }
                 $vipYoudaoExaminedModel->commit();
                 return response()->json(['status'=>200,'errorMsg'=>'上传试卷成功']);
             }else{
@@ -165,10 +182,10 @@ class paperController extends Controller
         $vipPaperImageModel->beginTransaction();
         try{
             if($request->isMethod('post')) {
-                $searchArgs['taskId'] = $request->taskId;
-                $searchArgs['paperType'] = $request->paperType;
-                $searchArgs['questionImage'] = $request->questionImage;
-                $searchArgs['answerImage'] = $request->answerImage;
+                $searchArgs['taskId'] = $request->input('taskId');
+                $searchArgs['paperType'] = $request->input('paperType');
+                $searchArgs['questionImage'] = $request->input('questionImage');
+                $searchArgs['answerImage'] = $request->input('answerImage');
                 if (intval($searchArgs['taskId']) <= 0) {
                     throw new \Exception('缺少任务id');
                 }
@@ -257,13 +274,13 @@ class paperController extends Controller
     public function getPaperFirstImage(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->taskId;
-            if(intval($searchArgs['taskId']) <= 0){
+            $searchArgs['taskId']=$request->input('taskId');
+            if(empty($searchArgs['taskId'])){
                 throw new \Exception('缺少任务id');
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
-            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time','desc'],['image_url'])->first();
+            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'desc'],['image_url'])->first();
             //取一条任务信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']])->first();
@@ -285,19 +302,28 @@ class paperController extends Controller
     public function getPaperExaminedList(Request $request)
     {
         try{
-            $searchArgs['page']=$request->page>0?$request->page:1;
-            $searchArgs['pageSize']=$request->pageSize;
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $vipPaperImageModel=new VipPaperImage();
+            $searchArgs['token']=$request->header('token');
+            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
+            $searchArgs['pageSize']=$request->input('pageSize');
+            if(!isset($searchArgs['userToken']))
+            {
+                throw new \Exception('缺少登陆用户token');
+            }
+            if(!isset($searchArgs['token']))
+            {
+                throw new \Exception('缺少微信用户token');
+            }
+            //获取登陆用户uid
+            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            //获取用户openId;
+            $openId=1111;  //WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sub=$vipPaperImageModel->where(['is_delete'=>0])->orderBy(["create_time","asc"])->groupBy("task_id");
-            //创建查询条件
-            $where=['vip_youdao_examined.task_id'=>['sub'=>["table"=>"vip_paper_image","where"=>"vip_youdao_examined.task_id=vip_paper_image.task_id","select"=>DB::raw("({$sub->toSql()}) as sub")]]];
-            //获取图片审核列表
-            $list=$vipYoudaoExaminedModel->findAll($where,['id','desc'],["vip_youdao_examined.task_id,vip_youdao_examined.paper_name,vip_youdao_examined.upload_time,vip_youdao_examined.image_examined_status,vip_youdao_examined.image_error_type,vip_paper_image.image_url"],"",[],$searchArgs['page'],$searchArgs['pageSize']);
+            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." open_id='".$openId."'  order by id desc ) cc");
+            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'',$searchArgs['page']);
             foreach($list as $key => $val){
-                $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
-                $list[$key]=$val;
+                $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
+                $list[$key]=(array)$val;
             }
             return response()->json(['status'=>200,'data'=>$list]);
         }catch (\Exception $e){
@@ -313,22 +339,24 @@ class paperController extends Controller
     public function getPaperCount(Request $request)
     {
         try{
-            $searchArgs['userId']=$request->userId;
-            $searchArgs['agencyId']=$request->agencyId;
-            if(intval($searchArgs['userId']) <=0 ){
-                throw new \Exception('缺少用户id');
+            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['agencyId']=1;//$request->input('agencyId');
+            if(!isset($searchArgs['userToken'])){
+                throw new \Exception('缺少登陆用户token');
             }
             if(intval($searchArgs['agencyId']) <= 0){
                 throw new \Exception('缺少机构id');
             }
+            //获取用户id
+            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperMonthCount=$vipYoudaoExaminedModel->count(['DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
+            $paperMonthCount=$vipYoudaoExaminedModel->count(['upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
             //统计入库的有道套卷数
-            $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$searchArgs['userId'],'paper_examined_status'=>3]);
+            $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$userInfo['userId'],'paper_examined_status'=>3]);
             //获取本月上传试卷数
-            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$searchArgs['agencyId'],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['egt'=>$dayData[0]],'DATE_FORMAT(upload_time,"%Y-%m-%d")'=>['elt'=>$dayData[1]]]);
+            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$searchArgs['agencyId'],'upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
             $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
             //获取上传额度，先从配置文件中获取上传额度
             $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
@@ -352,8 +380,8 @@ class paperController extends Controller
     public function getPaperImageList(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->taskId;                 //任务id
-            $searchArgs['paperType']=$request->paperType;           //试卷类型
+            $searchArgs['taskId']=$request->input('taskId');                 //任务id
+            $searchArgs['paperType']=$request->input('paperType');           //试卷类型
             if(intval($searchArgs['taskId']) <=0 )
             {
                 throw new \Exception('缺少任务id');
@@ -371,7 +399,7 @@ class paperController extends Controller
                 $where['image_type']=['neq'=>3];
             }
             $vipPaperImageModel=new VipPaperImage();
-            $list=$vipPaperImageModel->findAll($where,['create_time','desc'],['id','image_url','image_type']);
+            $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
             return response()->json(['status'=>200,'data'=>$list]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);

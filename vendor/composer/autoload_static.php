@@ -457,6 +457,7 @@ class ComposerStaticInitc25fe21de67a98617919f64582d42d92
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Services\\TaskService' => __DIR__ . '/../..' . '/app/Services/TaskService.php',
         'App\\Services\\WxService' => __DIR__ . '/../..' . '/app/Services/WxService.php',
+        'App\\http\\Controllers\\Youdao\\PaperController' => __DIR__ . '/../..' . '/app/Http/Controllers/Youdao/PaperController.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',

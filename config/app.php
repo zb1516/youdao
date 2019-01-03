@@ -261,6 +261,9 @@ return [
         '3' => '退回',
         '4' => '试卷重复',
     ],
-
+    'AUTH_KEY'=>'wx_mini_program',
+    'PAPER_AUDITOR'=>'试卷审核人',
+    'IMG_AUDITOR'=>'图片审核人',
+    'YOUDAO_TASK_RESULT_URL' => '/api/gaosi/taskResult'
 
 ];
