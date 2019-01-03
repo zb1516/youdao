@@ -278,7 +278,7 @@ class CommonController extends BaseController
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
             return response()->json($result);
@@ -343,6 +343,25 @@ class CommonController extends BaseController
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
+    }
+
+    /**
+     * 根据省份Id获取区域area
+     */
+    public function getPaperAreasAjaxSearch(Request $request)
+    {
+        try {
+            $areas = [];
+            $provinceId = abs($request->post('provinceId', ''));
+            $twoId = abs($request->post('twoId', ''));
+            if ($provinceId) {
+                $areas = $this->city->getAreaCitys($provinceId,$twoId);
+            }
+            return response()->json($areas);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+
     }
 
 }

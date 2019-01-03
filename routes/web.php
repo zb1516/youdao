@@ -112,6 +112,9 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getImageStatus', 'Common\CommonController@getImageStatus');
     $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
     $router->get('common/getCitys','Common\CommonController@getCitys');
+    $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
+
+
 
 });
 
@@ -122,5 +125,5 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('paper/paperStatistic', 'Youdao\PaperController@paperStatistic');
     Route::get('paper/paperInfo', 'Youdao\PaperController@paperInfo');
 });
-
+Route::get('youdao/imagePaper/paperList', 'Youdao\ImagePaperController@paperList');
 

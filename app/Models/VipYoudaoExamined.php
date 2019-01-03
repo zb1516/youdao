@@ -413,5 +413,79 @@ class VipYoudaoExamined extends Model
         }
         return $list;
     }
+    /**
+     * 保存套卷标签
+     */
+    public function youdaoPaperNameInsert($searchArgs)
+    {
+        if(!isset($searchArgs['taskId']))
+        {
+            throw new \Exception('缺少taskId');
+        }
+        $condition = [
+            'task_id' => $searchArgs['taskId']
+        ];
+        $result = $this->findOne($condition, $order=[], ['agency_id']);
+        $agencyId = $result['agency_id'];
+        $common = new Common();
+        $allSubjectNames = $common->getAllSubjectNames();
+        $subjectName = isset($allSubjectNames[$searchArgs['subject_id']]) ? $allSubjectNames[$searchArgs['subject_id']] : '';
+        $str = $this->stringTransformation($subjectName);
+        $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
+        $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
+        $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
+        $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
+        $country = isset($searchArgs['country']) ? $searchArgs['country'] : '';
+        $school = isset($searchArgs['school']) ? $searchArgs['school'] : '';
+        $year = isset($searchArgs['yeer']) ? $searchArgs['yeer'] : 0;
+        $semester = isset($searchArgs['semester']) ? $searchArgs['semester'] : '';
+        $source = isset($searchArgs['source']) ? $searchArgs['source'] : '';
+        $duration = isset($searchArgs['duration']) ? $searchArgs['duration'] : 0;
+        $score = isset($searchArgs['score']) ? $searchArgs['score'] : 0;
+        $questionNumber = isset($searchArgs['questionNumber']) ? $searchArgs['questionNumber'] : 0;
+        $other1 = isset($searchArgs['other1']) ? $searchArgs['other1'] : '';
+        $other2 = isset($searchArgs['other2']) ? $searchArgs['other2'] : '';
+        //0-套卷VIP-学部-学科-年份-省份-市-区-学校-年级-学期-考试类型-其他信息1-其他信息2-考试时长-考试满分-题目数量
+        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$province.'-'.$city.'-'.$country.'-'.$school.'-'.$grade.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+        $data = [
+            'subject_id' => $subjectId,
+            'grade' => $grade,
+            'province' => $province,
+            'city' => $city,
+            'country' => $country,
+            'school' => $school,
+            'year' => $year,
+            'semester' => $semester,
+            'source' => $source,
+            'examination_length' => $duration,
+            'examination_score' => $score,
+            'question_number' => $questionNumber,
+            'other_information_one' => $other1,
+            'other_information_two' => $other2,
+            'paper_name' => $paperName,
+        ];
+        $condition = array(
+            'task_id' => $searchArgs['taskId']
+        );
+        $result = $this->edit($data, $condition);
+        if($result === false)
+        {
+            throw new \Exception('保存标签失败');
+        }
+    }
+    /**
+     * 字符串转换
+     */
+    public function stringTransformation($subjectName)
+    {
+        $str = str_replace("初中","初中-",$subjectName);
+        $str = str_replace("小学","小学-",$str);
+        $str = str_replace("高中","高中-",$str);
+        $str = str_replace("国际课程","国际课程-",$str);
+        $str = str_replace("创新思维","创新思维-",$str);
+        return $str;
+    }
+
+
 }
 

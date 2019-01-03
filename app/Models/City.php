@@ -22,10 +22,12 @@ class City extends Model
     public function getAjaxCitys($provinceId)
     {
         $condition = array('id' => array('neq' => $provinceId), 'oneid' => array('eq' => $provinceId), 'threeid' => array('eq' => 0));
-        $result = $this->findAll($condition, $order=[], ['id', 'oneid', 'city']);
+        $result = $this->findAll($condition, $order=[], ['id', 'oneid', 'twoid', 'city']);
         $list = [];
         foreach ($result as $item) {
             $list[$item['id']]['id'] = $item['id'];
+            $list[$item['id']]['oneid'] = $item['oneid'];
+            $list[$item['id']]['twoid'] = $item['twoid'];
             $list[$item['id']]['city'] = $item['city'];
         }
         return $list;
@@ -47,4 +49,40 @@ class City extends Model
         ksort($list);
         return $list;
     }
+    /**
+     * 获取区
+     * @param $provinceIds
+     * @return array
+     */
+    public function getIdAreas($provinceIds)
+    {
+        if(empty($provinceIds)) return [];
+        $condition = array('id' => array('not in' => $provinceIds), 'oneid' => array('in' => $provinceIds), 'threeid' => array('neq' => 0));
+        $result = $this->findAll($condition, $order=[], ['id', 'oneid', 'city']);
+        $list = [];
+        foreach ($result as $item) {
+            $list[$item['id']] = $item['city'];
+        }
+        ksort($list);
+        return $list;
+    }
+
+    /**
+     * 获取区域area
+     * @param $provinceId
+     * @param $twoId
+     * @return array
+     */
+    public function getAreaCitys($provinceId,$twoId)
+    {
+        $condition = array('id' => array('neq' => $provinceId), 'oneid' => array('eq' => $provinceId), 'twoid' => array('eq' => $twoId), 'threeid' => array('neq' => 0));
+        $result = $this->findAll($condition, $order=[], ['id', 'oneid', 'city']);
+        $list = [];
+        foreach ($result as $item) {
+            $list[$item['id']]['id'] = $item['id'];
+            $list[$item['id']]['city'] = $item['city'];
+        }
+        return $list;
+    }
+
 }
