@@ -43,4 +43,12 @@ class User extends Model
         return $userNames;
     }
 
+
+    public function getUserRealNameById($userId){
+        $condition = [
+            'id' => $userId
+        ];
+        $result = $this->findOne($condition, $order=[], ['user_realname']);
+        return $result['user_realname'];
+    }
 }

@@ -265,6 +265,7 @@ return [
     'PAPER_AUDITOR'=>'试卷审核人',
     'IMG_AUDITOR'=>'图片审核人',
     'YOUDAO_TASK_RESULT_URL' => '/api/gaosi/taskResult',
+    'YOUDAO_FEEDBACK_URL'=>'/api/gaosi/feedback',
     'PAPER_EXAMINED_STATUS'=> [
         '1' => '处理中',
         '2' => '待审核',
