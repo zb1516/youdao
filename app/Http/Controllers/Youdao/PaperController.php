@@ -9,6 +9,7 @@
 namespace App\http\Controllers\Youdao;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Controllers\Common\CommonController;
 use App\Models\User;
 use App\Models\VipYoudaoExamined;
 use Illuminate\Http\Request;
@@ -76,7 +77,8 @@ class PaperController extends BaseController
                 //调用有道接口。获取有道处理的试卷详情
                 $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
                 $postData['data']['taskId'] = $taskId;
-                $paperInfo['info'] = $this->getYoudaoTask($postUrl, $postData, 2);
+                $common = new CommonController;
+                $paperInfo['info'] = $common->getYoudaoTask($postUrl, $postData, 2);
 
                 return response()->json($paperInfo);
             }else{
@@ -88,6 +90,10 @@ class PaperController extends BaseController
         }
     }
 
+
+    public function paperExamin(){
+
+    }
 
     /**
      * 试卷导出
