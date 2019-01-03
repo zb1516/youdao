@@ -252,8 +252,18 @@ return [
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
     'AGENCY_UPLOAD_NUMBER'=>20,
+    'TEST_APP_KEY' => 'zhudytest123',
+    'TEST_APP_SECRET' => 'IoyvG6Zb98nEUA4nIGwkEPUXILBYgrGs',
+    'TEST_YOUDAO_URL' => ' test-s4eu.youdao.com',
+    'IMAGE_EXAMINED_STATUS'=> [
+        '1' => '待审核',
+        '2' => '已通过',
+        '3' => '退回',
+        '4' => '试卷重复',
+    ],
     'AUTH_KEY'=>'wx_mini_program',
     'PAPER_AUDITOR'=>'试卷审核人',
     'IMG_AUDITOR'=>'图片审核人',
     'YOUDAO_TASK_RESULT_URL' => '/api/gaosi/taskResult'
+
 ];

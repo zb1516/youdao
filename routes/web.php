@@ -106,10 +106,13 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getSubjects', 'Common\CommonController@getSubjects');
     $router->get('common/getProvince', 'Common\CommonController@getProvince');
     $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD');
+    $router->get('common/getYoudaoTask', 'Common\CommonController@getYoudaoTask');
+    $router->get('common/getYoudaoAgency', 'Common\CommonController@getYoudaoAgency');
     $router->get('common/getPaperStatus', 'Common\CommonController@getPaperStatus');
     $router->get('common/getImageStatus', 'Common\CommonController@getImageStatus');
     $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
     $router->get('common/getCitys','Common\CommonController@getCitys');
+
 });
 
 
