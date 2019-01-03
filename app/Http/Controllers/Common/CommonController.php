@@ -13,6 +13,7 @@ use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Models\KmsSubjects;
 use App\Models\Province;
@@ -142,9 +143,10 @@ class CommonController extends BaseController
     {
         try {
             $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
-            return response()->json($allGrade);
+            return response()->json(['status'=>200,'data'=>$allGrade]);
         } catch (\Exception $e) {
             return [
+                'status'=>0,
                 'errorMsg' => $e->getMessage(),
             ];
         }
