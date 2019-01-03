@@ -143,7 +143,7 @@ class CommonController extends BaseController
     {
         try {
             $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
-            return response()->json(['status'=>200,'data'=>$allGrade]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$allGrade]]);
         } catch (\Exception $e) {
             return [
                 'status'=>0,
@@ -201,7 +201,7 @@ class CommonController extends BaseController
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
-            return response()->json(['status'=>200,'data'=>$result]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$result]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg' => $e->getMessage()]);
         }
@@ -341,7 +341,7 @@ class CommonController extends BaseController
         try{
             $provinceModel=new Province();
             $list=$provinceModel->getCitys();
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

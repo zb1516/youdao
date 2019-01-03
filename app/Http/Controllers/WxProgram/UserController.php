@@ -96,7 +96,7 @@ class UserController extends Controller
                     throw new \Exception('退出失败');
                 }
             }
-            return response()->json(['status'=>200,'errorMsg'=>'退出成功']);
+            return response()->json(['status'=>200,'data'=>[],'errorMsg'=>'退出成功']);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

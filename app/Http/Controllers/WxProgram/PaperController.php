@@ -161,7 +161,7 @@ class paperController extends Controller
                     }
                 }
                 $vipYoudaoExaminedModel->commit();
-                return response()->json(['status'=>200,'errorMsg'=>'上传试卷成功']);
+                return response()->json(['status'=>200,'data'=>[],'errorMsg'=>'上传试卷成功']);
             }else{
                 throw new \Exception('请求方式不允许');
             }
@@ -257,7 +257,7 @@ class paperController extends Controller
                     throw new \Exception('上传试卷失败');
                 }
                 $vipPaperImageModel->commit();
-                return response()->json(['status' => 200, 'errorMsg' => '上传试卷成功']);
+                return response()->json(['status' => 200,'data'=>[], 'errorMsg' => '上传试卷成功']);
             }else{
                 throw new \Exception('请求方式不允许');
             }
@@ -325,7 +325,7 @@ class paperController extends Controller
                 $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
                 $list[$key]=(array)$val;
             }
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -400,7 +400,7 @@ class paperController extends Controller
             }
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
