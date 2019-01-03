@@ -12,6 +12,7 @@ use App\Models\VipYoudaoExamined;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
 use App\Libs\Export;
+use App\Models\Paper;
 use DB;
 
 
@@ -21,6 +22,7 @@ class ImagePaperController extends BaseController
     public function __construct() {
         $this->sysRoles = new SysRoles;
         $this->sysUsers = new SysUsers;
+        $this->paper = new Paper;
         $this->vipYoudaoExamined = new VipYoudaoExamined;
 
     }
@@ -86,6 +88,22 @@ class ImagePaperController extends BaseController
             ];
             Export::export ('图片审核统计', $headerArr, $data);
 
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * 试卷列表
+     */
+    public function paperList(Request $request)
+    {
+        try {
+            $currentPage = abs($request->get('currentPage', 1));
+            $pageSize = abs($request->get('pageSize', 15));
+            $searchArgs = $this->paper->imagePaperSearchArgs($_GET);
+            $result = $this->paper->getImagePaperList($searchArgs, $currentPage, $pageSize);
+            return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
