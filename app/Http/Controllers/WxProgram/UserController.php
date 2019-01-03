@@ -18,58 +18,60 @@ class UserController extends Controller
             $searchArgs['password']=$request->input('password');
             $searchArgs['agencyId']=$request->input('agencyId');
             $searchArgs['token']=$request->header('token');
-            //通过token获取用户openid
-            $openId=111;//WxService::getOpenId($searchArgs['token']);
-            $userToken=md5($openId);          //根据微信openid生成一个绑定的token，这个token是唯一标识
-            //调用微服务接口，进行用户登陆
-            $microToken=KlibTeacherClient::getToken([
-                'userName'=>$searchArgs['userName'],
-                'passWord'=>$searchArgs['password'],
-                'agencyId'=>$searchArgs['agencyId']
-            ]);
-            //获取登陆用户信息
-            $authUserInfo=KlibTeacherClient::getAuthInfo($microToken);
-            //获取教师信息
-            $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
-            //添加用户绑定登陆记录
-            $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
-            if(!$userInfo)
-            {
-                $result=$vipYoudaoUserLoginLogModel->add([
-                    'userName'=>$searchArgs['userName'],
-                    'password'=>$searchArgs['password'],
-                    'agencyId'=>$searchArgs['agencyId'],
-                    'userId'=>$authUserInfo['userId'],
-                    'realName'=>$teacherInfo['realName'],
-                    'open_id'=>$openId,
-                    'micro_token'=>$microToken,
-                    'user_token'=>$userToken,
-                    'login_time'=>time()
-                ]);
-            }else{
-                $result=$vipYoudaoUserLoginLogModel->edit([
-                    'userName'=>$searchArgs['userName'],
-                    'password'=>$searchArgs['password'],
-                    'agencyId'=>$searchArgs['agencyId'],
-                    'userId'=>$authUserInfo['userId'],
-                    'realName'=>$teacherInfo['realName'],
-                    'open_id'=>$openId,
-                    'micro_token'=>$microToken,
-                    'user_token'=>$userToken,
-                    'login_time'=>time()
-                ],['user_token'=>$userToken,'is_delete'=>0]);
-            }
+//            //通过token获取用户openid
+//            $openId=111;//WxService::getOpenId($searchArgs['token']);
+//            $userToken=md5($openId);          //根据微信openid生成一个绑定的token，这个token是唯一标识
+//            //调用微服务接口，进行用户登陆
+//            $microToken=KlibTeacherClient::getToken([
+//                'userName'=>$searchArgs['userName'],
+//                'passWord'=>$searchArgs['password'],
+//                'agencyId'=>$searchArgs['agencyId']
+//            ]);
+//            //获取登陆用户信息
+//            $authUserInfo=KlibTeacherClient::getAuthInfo($microToken);
+//            //获取教师信息
+//            $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
+//            //添加用户绑定登陆记录
+//            $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
+//            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
+//            if(!$userInfo)
+//            {
+//                $result=$vipYoudaoUserLoginLogModel->add([
+//                    'userName'=>$searchArgs['userName'],
+//                    'password'=>$searchArgs['password'],
+//                    'agencyId'=>$searchArgs['agencyId'],
+//                    'userId'=>$authUserInfo['userId'],
+//                    'realName'=>$teacherInfo['realName'],
+//                    'open_id'=>$openId,
+//                    'micro_token'=>$microToken,
+//                    'user_token'=>$userToken,
+//                    'login_time'=>time()
+//                ]);
+//            }else{
+//                $result=$vipYoudaoUserLoginLogModel->edit([
+//                    'userName'=>$searchArgs['userName'],
+//                    'password'=>$searchArgs['password'],
+//                    'agencyId'=>$searchArgs['agencyId'],
+//                    'userId'=>$authUserInfo['userId'],
+//                    'realName'=>$teacherInfo['realName'],
+//                    'open_id'=>$openId,
+//                    'micro_token'=>$microToken,
+//                    'user_token'=>$userToken,
+//                    'login_time'=>time()
+//                ],['user_token'=>$userToken,'is_delete'=>0]);
+//            }
+//
+//            if($result === false)
+//            {
+//                throw new \Exception('登陆失败');
+//            }
+            $userToken='698d51a19d8a121ce581499d7b701668';
 
-            if($result === false)
-            {
-                throw new \Exception('登陆失败');
-            }
             return response()->json([
                 'status'=>200,
                 'data'=>[
                     'token'=>$userToken,
-                    'userName'=>$teacherInfo['realName']
+                    'userName'=>'xxx'//$teacherInfo['realName']
                 ]
             ]);
         }catch (\Exception $e){

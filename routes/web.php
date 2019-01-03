@@ -79,6 +79,7 @@ Route::post('label/manage/taskSort', 'Label\ManageController@taskSort');
 //小程序接口
 Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
+    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
     $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
     $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
     $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');

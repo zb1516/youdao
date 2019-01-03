@@ -182,10 +182,14 @@ class paperController extends Controller
         $vipPaperImageModel->beginTransaction();
         try{
             if($request->isMethod('post')) {
+                $searchArgs['token']=$request->header('token');
                 $searchArgs['taskId'] = $request->input('taskId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['questionImage'] = $request->input('questionImage');
                 $searchArgs['answerImage'] = $request->input('answerImage');
+                if(!isset($searchArgs['token'])){
+                    throw new \Exception('缺少微信用户token');
+                }
                 if (intval($searchArgs['taskId']) <= 0) {
                     throw new \Exception('缺少任务id');
                 }
@@ -250,9 +254,11 @@ class paperController extends Controller
                         }
                     }
                 }
+                //获取用户openid
+                $openId=111;//WxService::getOpenId($searchArgs['token']);
                 $vipYoudaoExaminedModel = new VipYoudaoExamined();
                 //修改任务审核状态
-                $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1], ['task_id' => $searchArgs['taskId']]);
+                $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1,'open_id'=>$openId], ['task_id' => $searchArgs['taskId']]);
                 if ($result === false) {
                     throw new \Exception('上传试卷失败');
                 }
@@ -403,6 +409,31 @@ class paperController extends Controller
             return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 获取试卷审核状态
+     * @param Request $request
+     */
+    public function getPaperStatus(Request $request)
+    {
+        try{
+            $searchArgs['taskId']=$request->input('taskId');
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            return response()->json([
+                'status'=>200,
+                'data'=>[
+                    'task_id'=>$searchArgs['taskId'],
+                    'image_examined_status'=>$paperInfo['image_examined_status']
+                ]
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'status'=>0,
+                'errorMsg'=>$e->getMessage()
+            ]);
         }
     }
 }

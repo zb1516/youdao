@@ -43,7 +43,7 @@ class UserService
                 }
                 return true;
             }else{
-                throw new \Exception($e->getMessage());
+                throw new \Exception($errorCode);
             }
         }
     }
