@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WxProgram;
 
 use App\Models\VipPaperImage;
+use App\Models\VipYoudaoExamined;
 use App\Services\TaskService;
 use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
@@ -50,12 +51,13 @@ class WxController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendTemplate(Request $request)
+    public function sendTemplate(Request $request,$data)
     {
         try{
-            $searchArgs['openId']=$request->openId;
-            $searchArgs['type']=$request->type;
-            $searchArgs['formId']=$request->formId;
+            $searchArgs['taskId']=$data['taskId'];
+            $searchArgs['openId']=$data['openId'];
+            $searchArgs['type']=$data['type'];
+            $searchArgs['formId']=$data['formId'];
             if(intval($searchArgs['openId']) <= 0)
             {
                 throw new \Exception('缺少openid');
@@ -68,23 +70,25 @@ class WxController extends Controller
             {
                 throw new \Exception('缺少');
             }
+            //查询任务id
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $taskInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             //判断完成还是退回消息
             if($searchArgs['type'] == 1){
-                $data=[
-                    'keyword1'  => ['value'=>'','color'=>'#000000'],
-                    'keyword2'  => ['value'=>'','color'=>'#000000'],
-                    'keyword3'  => ['value'=>'','color'=>'#000000'],
-                    'keyword4'  => ['value'=>'','color'=>'#000000'],
+                $templateData=[
+                    'keyword1'  => ['value'=>'被退回通知','color'=>'#000000'],
+                    'keyword2'  => ['value'=>'试卷名称:'.$taskInfo['paper_name'],'color'=>'#000000'],
+                    'keyword3'  => ['value'=>'上传时间:'.$taskInfo['upload_time'],'color'=>'#000000'],
+                    'keyword4'  => ['value'=>'被退回原因:'.$taskInfo['image_error_type'],'color'=>'#000000'],
                 ];
             }else{
-                $data=[
-                    'keyword1'  => ['value'=>'','color'=>'#000000'],
-                    'keyword2'  => ['value'=>'','color'=>'#000000'],
-                    'keyword3'  => ['value'=>'','color'=>'#000000'],
-                    'keyword4'  => ['value'=>'','color'=>'#000000'],
+                $templateData=[
+                    'keyword1'  => ['value'=>'试卷加工完成通知','color'=>'#000000'],
+                    'keyword2'  => ['value'=>'试卷名称:'.$taskInfo['paper_name'],'color'=>'#000000'],
+                    'keyword3'  => ['value'=>'试卷状态:已加工完成，请到私库中查看','color'=>'#000000'],
                 ];
             }
-            $result=WxService::SendTemplate($searchArgs['openId'],$searchArgs['formId'],$data);
+            $result=WxService::SendTemplate($searchArgs['openId'],$searchArgs['formId'],$templateData);
             if($result->errcode != 0)
             {
                 throw new \Exception($result->errmsg);
