@@ -213,11 +213,7 @@ class CommonController extends BaseController
      */
     public static function getPaperStatus()
     {
-        $status = array(
-            '0'=>'待审核',
-            '1'=>'已通过',
-            '-1'=>'已退回',
-        );
+        $status = config('app.IMAGE_EXAMINED_STATUS');
         return response()->json($status);
     }
 
@@ -227,12 +223,7 @@ class CommonController extends BaseController
      */
     public static function getImageStatus()
     {
-        $status = array(
-            '0'=>'待审核',
-            '1'=>'已通过',
-            '-1'=>'已退回',
-            '-2'=>'试卷重复',
-        );
+        $status = config('app.IMAGE_EXAMINED_STATUS');
         return response()->json($status);
     }
 

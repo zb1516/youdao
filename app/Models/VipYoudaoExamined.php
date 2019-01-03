@@ -189,7 +189,43 @@ class VipYoudaoExamined extends Model
                     $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']),[],['agency_name']);
                     $row['agency_name'] = $agencyInfo['agency_name'];
                 }
-
+                //获取学科名称
+                if($row['subject_id']){
+                    $kmsSubject = new KmsSubjects;
+                    $row['subject_name'] = $kmsSubject->getSubjectName($row['subject_id']);
+                }
+                //获取年级
+                if($row['grade']){
+                    $vipDict = new VipDict;
+                    $gradeInfo = $vipDict->findOne(array('id'=>$row['grade'],'category'=>'GRADE'));
+                    $row['grade_name'] = $gradeInfo['title'];
+                }
+                //获取省、市、区
+                $city = new City;
+                if($row['province']){
+                    $cityInfo = $city->findOne(array('id'=>$row['province']),[],['city']);
+                    $row['province_name'] = $cityInfo['city'];
+                }
+                if($row['city']){
+                    $cityInfo = $city->findOne(array('id'=>$row['city']),[],['city']);
+                    $row['city_name'] = $cityInfo['city'];
+                }
+                if($row['area']){
+                    $cityInfo = $city->findOne(array('id'=>$row['area']),[],['city']);
+                    $row['area_name'] = $cityInfo['city'];
+                }
+                //获取图片审核人姓名
+                $user = new User;
+                if($row['image_examined_auditor_id']){
+                    $row['image_examined_auditor_name'] = $user->getUserRealNameById($row['image_examined_auditor_id']);
+                }
+                //获取试卷审核人姓名
+                if($row['paper_examined_auditor_id']){
+                    $row['paper_examined_auditor_name'] = $user->getUserRealNameById($row['paper_examined_auditor_id']);
+                }
+                if($row['paper_examined_auditor_id']==0 && !empty($row['paper_examined_time'])){
+                    $row['paper_examined_auditor_name'] = '自动审核';
+                }
             }
         }
         return $list;
@@ -413,6 +449,7 @@ class VipYoudaoExamined extends Model
         }
         return $list;
     }
+
     /**
      * 保存套卷标签
      */
@@ -487,5 +524,25 @@ class VipYoudaoExamined extends Model
     }
 
 
+    /**
+     * 试卷导出
+     * @param $searchArgs
+     * @return array
+     */
+    public function paperAll($searchArgs){
+        $list = [];
+        $condition = $this->paperCondition($searchArgs);
+        $recordCount = $this->count($condition);
+        $limit = 1000;
+        $max = ceil($recordCount/$limit);
+        for($i=1;$i<=$max;$i++){
+            $result = $this->findAll($condition,['upload_time'=>'asc'],['*'],'',[],$i,$limit);
+            if($result){
+
+                array_merge($list,$result);
+            }
+        }
+        return $list;
+    }
 }
 
