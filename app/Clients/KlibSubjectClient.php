@@ -15,8 +15,12 @@ class KlibSubjectClient{
      */
     public static function getSubject($userId,$token,$isKms=true)
     {
-        $user = new Client(env('KLIB_ATF_API_SERVICE_HOST') . ':' . env('KLIB_ATF_API_SERVICE_PORT') . '/teachingService/system', false);
-        $res = $user->getSubjectListYd($userId,$token,$isKms);
-        return $res;
+        try{
+            $user = new Client(env('KLIB_ATF_API_SERVICE_HOST') . ':' . env('KLIB_ATF_API_SERVICE_PORT') . '/teachingService/system', false);
+            $res = $user->getSubjectListYd($userId,$token,$isKms);
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
     }
 }
