@@ -305,7 +305,7 @@ class CommonController extends BaseController
     public function getYoudaoInput($url)
     {
         $INPUT_LENGTH_LIMIT = 20;
-        $length = $url.length();
+        $length = strlen($url);
         if ($length <= $INPUT_LENGTH_LIMIT) {
             return $url;
         }

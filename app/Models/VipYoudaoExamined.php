@@ -201,7 +201,7 @@ class VipYoudaoExamined extends Model
     public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 15)
     {
         $sysUsers = new SysUsers();
-        $imgNames = $sysUsers->getUserNames($searchArgs['IMG_AUDITOR']);//获取判定人角色下的所有教师名称
+        $imgNames = $sysUsers->getUserNames($searchArgs['IMG_AUDITOR']);//图片审核角色
         $province = new Province();
         $provinces = $province->getProvince();//获取省份
         $provinceIds = [];
