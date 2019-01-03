@@ -35,7 +35,7 @@ class TaskService
             }
             $this->client->send($data);
         }else{
-            throw new \Exception('swoole server does not connected');
+            throw new \Exception('服务未启动');
         }
     }
 

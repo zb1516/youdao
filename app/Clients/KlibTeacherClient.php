@@ -12,9 +12,14 @@ class KlibTeacherClient
      */
     public static function getToken($data)
     {
-        $client = new Client(env('MICRO_API_SERVICE_HOST') .'/authService/TeacherAuth', false);
-        $res = $client->getToken($data);
-        return $res;
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/authService/TeacherAuth', false);
+            $res = $client->getToken($data);
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+
     }
 
     /**
@@ -23,10 +28,15 @@ class KlibTeacherClient
      */
     public static function getAuthInfo($token)
     {
-        $client = new Client(env('MICRO_API_SERVICE_HOST') .'/authService/TeacherAuth', false);
-        $client->setHeader('X-USER-TOKEN',$token);
-        $client->setHeader('X-REQUEST-TIME',time());
-        $res = $client->getAuthInfo();
-        return $res;
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/authService/TeacherAuth', false);
+            $client->setHeader('X-USER-TOKEN',$token);
+            $client->setHeader('X-REQUEST-TIME',time());
+            $res = $client->getAuthInfo();
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+
     }
 }
