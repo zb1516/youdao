@@ -197,8 +197,8 @@ class CommonController extends BaseController
                 throw new \Exception('缺少登陆用户token');
             }
             //获取登陆用户uid
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
-            $result=KlibSubjectClient::getSubject($userInfo['userId'],$searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
             return response()->json(['status'=>200,'data'=>$result]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg' => $e->getMessage()]);

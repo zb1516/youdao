@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WxProgram;
 use App\Clients\KlibTeacherClient;
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
+use App\Services\UserService;
 use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -57,7 +58,7 @@ class MessageController extends Controller
             //获取用户openid
             $openId=111;//WxService::getOpenId($searchArgs['token']);
             //获取用户id
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
             $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
@@ -98,7 +99,7 @@ class MessageController extends Controller
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);
             //获取用户id
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             $vipMessageViewLogModel=new VipMessageViewLog();
             $info=$vipMessageViewLogModel->findOne(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId']]);
             if(!$info)

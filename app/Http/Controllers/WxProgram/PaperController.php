@@ -6,6 +6,7 @@ use App\Clients\KlibTeacherClient;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
+use App\Services\UserService;
 use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -80,8 +81,7 @@ class paperController extends Controller
                 }
                 //获取用户openid
                 $openId=111;//WxService::getOpenId($searchArgs['token']);
-                //获取登陆用户uid
-                $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+                $userInfo=UserService::getUserInfo($searchArgs['userToken']);
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
@@ -315,7 +315,7 @@ class paperController extends Controller
                 throw new \Exception('缺少微信用户token');
             }
             //获取登陆用户uid
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             //获取用户openId;
             $openId=1111;  //WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
@@ -348,7 +348,7 @@ class paperController extends Controller
                 throw new \Exception('缺少机构id');
             }
             //获取用户id
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperMonthCount=$vipYoudaoExaminedModel->count(['upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
