@@ -13,6 +13,7 @@ use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Models\KmsSubjects;
 use App\Models\Province;
@@ -142,9 +143,10 @@ class CommonController extends BaseController
     {
         try {
             $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
-            return response()->json($allGrade);
+            return response()->json(['status'=>200,'data'=>['rows'=>$allGrade]]);
         } catch (\Exception $e) {
             return [
+                'status'=>0,
                 'errorMsg' => $e->getMessage(),
             ];
         }
@@ -197,9 +199,9 @@ class CommonController extends BaseController
                 throw new \Exception('缺少登陆用户token');
             }
             //获取登陆用户uid
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
-            $result=KlibSubjectClient::getSubject($userInfo['userId'],$searchArgs['userToken']);
-            return response()->json(['status'=>200,'data'=>$result]);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
+            return response()->json(['status'=>200,'data'=>['rows'=>$result]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg' => $e->getMessage()]);
         }
@@ -330,7 +332,7 @@ class CommonController extends BaseController
         try{
             $provinceModel=new Province();
             $list=$provinceModel->getCitys();
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
