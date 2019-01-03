@@ -6,6 +6,7 @@ use App\Clients\KlibTeacherClient;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
+use App\Services\UserService;
 use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -80,8 +81,7 @@ class paperController extends Controller
                 }
                 //获取用户openid
                 $openId=111;//WxService::getOpenId($searchArgs['token']);
-                //获取登陆用户uid
-                $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+                $userInfo=UserService::getUserInfo($searchArgs['userToken']);
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
@@ -161,7 +161,7 @@ class paperController extends Controller
                     }
                 }
                 $vipYoudaoExaminedModel->commit();
-                return response()->json(['status'=>200,'errorMsg'=>'上传试卷成功']);
+                return response()->json(['status'=>200,'data'=>[],'errorMsg'=>'上传试卷成功']);
             }else{
                 throw new \Exception('请求方式不允许');
             }
@@ -182,10 +182,14 @@ class paperController extends Controller
         $vipPaperImageModel->beginTransaction();
         try{
             if($request->isMethod('post')) {
+                $searchArgs['token']=$request->header('token');
                 $searchArgs['taskId'] = $request->input('taskId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['questionImage'] = $request->input('questionImage');
                 $searchArgs['answerImage'] = $request->input('answerImage');
+                if(!isset($searchArgs['token'])){
+                    throw new \Exception('缺少微信用户token');
+                }
                 if (intval($searchArgs['taskId']) <= 0) {
                     throw new \Exception('缺少任务id');
                 }
@@ -250,14 +254,16 @@ class paperController extends Controller
                         }
                     }
                 }
+                //获取用户openid
+                $openId=111;//WxService::getOpenId($searchArgs['token']);
                 $vipYoudaoExaminedModel = new VipYoudaoExamined();
                 //修改任务审核状态
-                $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1], ['task_id' => $searchArgs['taskId']]);
+                $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1,'open_id'=>$openId], ['task_id' => $searchArgs['taskId']]);
                 if ($result === false) {
                     throw new \Exception('上传试卷失败');
                 }
                 $vipPaperImageModel->commit();
-                return response()->json(['status' => 200, 'errorMsg' => '上传试卷成功']);
+                return response()->json(['status' => 200,'data'=>[], 'errorMsg' => '上传试卷成功']);
             }else{
                 throw new \Exception('请求方式不允许');
             }
@@ -315,7 +321,7 @@ class paperController extends Controller
                 throw new \Exception('缺少微信用户token');
             }
             //获取登陆用户uid
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             //获取用户openId;
             $openId=1111;  //WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
@@ -325,7 +331,7 @@ class paperController extends Controller
                 $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
                 $list[$key]=(array)$val;
             }
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -348,7 +354,7 @@ class paperController extends Controller
                 throw new \Exception('缺少机构id');
             }
             //获取用户id
-            $userInfo=KlibTeacherClient::getAuthInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperMonthCount=$vipYoudaoExaminedModel->count(['upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
@@ -400,9 +406,34 @@ class paperController extends Controller
             }
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
-            return response()->json(['status'=>200,'data'=>$list]);
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 获取试卷审核状态
+     * @param Request $request
+     */
+    public function getPaperStatus(Request $request)
+    {
+        try{
+            $searchArgs['taskId']=$request->input('taskId');
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            return response()->json([
+                'status'=>200,
+                'data'=>[
+                    'task_id'=>$searchArgs['taskId'],
+                    'image_examined_status'=>$paperInfo['image_examined_status']
+                ]
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'status'=>0,
+                'errorMsg'=>$e->getMessage()
+            ]);
         }
     }
 }

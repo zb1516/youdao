@@ -39,4 +39,23 @@ class KlibTeacherClient
         }
 
     }
+
+    /**
+     * 获取教师信息
+     * @param $userId
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function getTeacherInfo($userId,$token)
+    {
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/userService/teacher', false);
+            $client->setHeader('X-USER-TOKEN',$token);
+            $client->setHeader('X-REQUEST-TIME',time());
+            $res = $client->getTeacherInfo(['id'=>$userId]);
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+    }
 }
