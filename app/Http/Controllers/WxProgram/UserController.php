@@ -17,7 +17,7 @@ class UserController extends Controller
             $searchArgs['userName']=$request->input('userName');
             $searchArgs['password']=$request->input('password');
             $searchArgs['agencyId']=$request->input('agencyId');
-            $searchArgs['token']=$request->header('token');
+            $searchArgs['token']=$request->input('token');
             //通过token获取用户openid
             $openId=111;//WxService::getOpenId($searchArgs['token']);
             $userToken=md5($openId.'wx');          //根据微信openid生成一个绑定的token，这个token是唯一标识
@@ -85,7 +85,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['userToken']=$request->input('userToken');
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$searchArgs['userToken']]);
             if($userInfo)
@@ -97,6 +97,29 @@ class UserController extends Controller
                 }
             }
             return response()->json(['status'=>200,'data'=>[],'errorMsg'=>'退出成功']);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 通过手机号获取机构列表
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAgencyList(Request $request)
+    {
+        try{
+            $searchArgs['userName']=$request->input('userName');
+            //调用微服务获取机构列表
+            $agencyList=KlibTeacherClient::getTeaOrEmpAgencyList($searchArgs['userName'],'teacher');
+            $list=[];
+            foreach($agencyList as $key => $val)
+            {
+                $list[$key]=$val['agencyId'];
+                $list[$key]=$val['name'];
+            }
+            return response()->json(['status'=>200,'data'=>['rows'=>$agencyList]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

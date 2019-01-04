@@ -84,6 +84,7 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
     $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
     $router->post('user/login','WxProgram\UserController@login');
+    $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
 });
 

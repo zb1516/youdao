@@ -58,4 +58,24 @@ class KlibTeacherClient
             throw new \Exception($e->getMessage());
         }
     }
+
+    /**
+     * 通过教师手机号获取机构列表
+     * @param $mobile
+     * @param $type
+     * @return mixed
+     */
+    public static function getTeaOrEmpAgencyList($mobile,$type)
+    {
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/userService/agency', false);
+            $result=$client->getTeaOrEmpAgencyList(array(
+                'mobile'=>$mobile,
+                'type'=>$type,
+                'page'=>1,
+                'pageSize'=>20
+            ));
+            return $result;
+        }catch (\Exception $e){}
+    }
 }

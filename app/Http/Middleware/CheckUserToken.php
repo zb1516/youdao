@@ -17,7 +17,7 @@ class CheckUserToken
     public function handle($request, Closure $next)
     {
         try{
-            $userToken=$request->header('userToken');
+            $userToken=$request->input('userToken');
             $result=true;//UserService::checkUserStatus($userToken);
             if($result === false)
             {

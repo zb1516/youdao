@@ -20,7 +20,7 @@ class MessageController extends Controller
     public function getMessageList(Request $request)
     {
         try{
-            $searchArgs['token']=$request->header('token');         //小程序登陆以后生成的唯一标识
+            $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize');
             if(!isset($searchArgs['token']))
@@ -46,11 +46,11 @@ class MessageController extends Controller
     public function getMessageCount(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['userToken']=$request->input('userToken');
             if(!isset($searchArgs['userToken'])){
                 throw new \Exception('缺少登陆用户token');
             }
-            $searchArgs['token']=$request->header('token');         //小程序登陆以后生成的唯一标识
+            $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
             if(!isset($searchArgs['token']))
             {
                 throw new \Exception('缺少微信用户token');
@@ -69,7 +69,7 @@ class MessageController extends Controller
             //统计当前用户下
             $vipMessageRemindModel=new VipMessageRemind();
             $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds]]);
-            return response()->json(['status'=>200,'data'=>[$messageCount]]);
+            return response()->json(['status'=>200,'data'=>['count'=>$messageCount]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -82,8 +82,8 @@ class MessageController extends Controller
     public function setReadMessage(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->header('userToken');
-            $searchArgs['token']=$request->header('token');
+            $searchArgs['userToken']=$request->input('userToken');
+            $searchArgs['token']=$request->input('token');
             $searchArgs['messageId']=$request->input('messageId');
             if(intval($searchArgs['messageId']) <= 0){
                 throw new \Exception('缺少消息id');

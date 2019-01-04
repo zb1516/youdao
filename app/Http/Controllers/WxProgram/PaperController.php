@@ -24,8 +24,8 @@ class paperController extends Controller
         $vipYoudaoExaminedModel->beginTransaction();
         try{
             if($request->isMethod('post')){
-                $searchArgs['userToken']=$request->header('userToken');
-                $searchArgs['token']=$request->header('token');       //小程序登陆以后生成的唯一标识
+                $searchArgs['userToken']=$request->input('userToken');
+                $searchArgs['token']=$request->input('token');       //小程序登陆以后生成的唯一标识
                 $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['agencyName']=$request->input('agencyName');
                 $searchArgs['paperType']=$request->input('paperType');
@@ -182,7 +182,7 @@ class paperController extends Controller
         $vipPaperImageModel->beginTransaction();
         try{
             if($request->isMethod('post')) {
-                $searchArgs['token']=$request->header('token');
+                $searchArgs['token']=$request->input('token');
                 $searchArgs['taskId'] = $request->input('taskId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['questionImage'] = $request->input('questionImage');
@@ -308,8 +308,8 @@ class paperController extends Controller
     public function getPaperExaminedList(Request $request)
     {
         try{
-            $searchArgs['token']=$request->header('token');
-            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['token']=$request->input('token');
+            $searchArgs['userToken']=$request->input('userToken');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize');
             if(!isset($searchArgs['userToken']))
@@ -345,7 +345,7 @@ class paperController extends Controller
     public function getPaperCount(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->header('userToken');
+            $searchArgs['userToken']=$request->input('userToken');
             $searchArgs['agencyId']=1;//$request->input('agencyId');
             if(!isset($searchArgs['userToken'])){
                 throw new \Exception('缺少登陆用户token');
