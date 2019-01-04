@@ -13,6 +13,7 @@ use App\Http\Controllers\Common\CommonController;
 use App\Libs\Export;
 use App\Models\User;
 use App\Models\VipYoudaoExamined;
+use App\Models\VipYoudaoQuestion;
 use Illuminate\Http\Request;
 
 
@@ -105,25 +106,26 @@ class PaperController extends BaseController
             $data = [];
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $list = $this->vipYoudaoExamined->paperAll($searchArgs);
+
             if($list){
                 foreach ($list as $key=>$row){
                     $data[$key]['id'] = $key+1;
                     $data[$key]['paper_id'] = $row['paper_id'];
                     $data[$key]['paper_name'] = $row['paper_name'];
-                    $data[$key]['subject_name'] = $row['subject_name'];
-                    $data[$key]['grade_name'] = $row['grade_name'];
-                    $data[$key]['province_name'] = $row['province_name'];
-                    $data[$key]['city_name'] = $row['city_name'];
-                    $data[$key]['area_name'] = $row['area_name'];
+                    $data[$key]['subject_name'] = isset($row['subject_name'])?$row['subject_name']:'';
+                    $data[$key]['grade_name'] = isset($row['grade_name'])?$row['grade_name']:'';
+                    $data[$key]['province_name'] = $row['province'];
+                    $data[$key]['city_name'] = $row['city'];
+                    $data[$key]['area_name'] = $row['area'];
                     $data[$key]['agency_id'] = $row['agency_id'];
-                    $data[$key]['agency_name'] = $row['agency_name'];
+                    $data[$key]['agency_name'] = isset($row['agency_name'])?$row['agency_name']:'';
                     $data[$key]['upload_time'] = $row['upload_time'];
                     $data[$key]['image_examined_time'] = $row['image_examined_time'];
                     $data[$key]['final_youdao_receive_time'] = $row['final_youdao_receive_time'];
                     $data[$key]['final_processing_time'] = $row['final_processing_time'];
                     $data[$key]['paper_examined_time'] = $row['paper_examined_time'];
-                    $data[$key]['image_examined_auditor_name'] = $row['image_examined_auditor_name'];
-                    $data[$key]['paper_examined_auditor_name'] = $row['paper_examined_auditor_name'];
+                    $data[$key]['image_examined_auditor_name'] = isset($row['image_examined_auditor_name'])?$row['image_examined_auditor_name']:'';
+                    $data[$key]['paper_examined_auditor_name'] = isset($row['paper_examined_auditor_name'])?$row['paper_examined_auditor_name']:'';
                     $data[$key]['image_processing_days'] = $row['image_processing_days'];
                     $data[$key]['final_processing_days'] = $row['final_processing_days'];
                     //todo：计算试卷审核时间-有道最终处理时间所用工作日天数
@@ -167,7 +169,38 @@ class PaperController extends BaseController
      */
     public function questionExport(){
         try{
+            $data = [];
+            $searchArgs = $this->vipYoudaoExamined->paperSearchArgs(array('subjectId'=>4));
+            $vipYoudaoQuestion = new VipYoudaoQuestion;
+            $list = $vipYoudaoQuestion->questionAll($searchArgs);
+            if($list){
+                foreach ($list as $key=>$row){
+                    $data[$key]['id'] = $key+1;
+                    $data[$key]['paper_id'] = $row['paper_id'];
+                    $data[$key]['paper_name'] = $row['paper_name'];
+                    $data[$key]['question_id'] = $row['question_id'];
+                    $data[$key]['many_times'] = $row['many_times'];
+                    $data[$key]['youdao_receive_time'] = $row['youdao_receive_time'];
+                    $data[$key]['youdao_processing_time'] = $row['youdao_processing_time'];
+                    $data[$key]['processing_days'] = $row['processing_days'];
+                    $data[$key]['paper_examined_time'] = $row['paper_examined_time'];
+                    $data[$key]['return_reason'] = $row['return_reason_content1'].' '.$row['return_reason_content2'].' '.$row['return_reason_answer1'].' '.$row['return_reason_answer2'].' '.$row['return_reason_analysis1'].' '.$row['return_reason_analysis2'];
+                }
 
+                $headerArr = [
+                    '序号',
+                    '试卷ID',
+                    '试卷名称',
+                    '试题ID',
+                    '第几次',
+                    '有道接收时间',
+                    '有道处理时间',
+                    '有道加工工作日',
+                    '试卷审核通过时间',
+                    '退回原因'
+                ];
+            }
+            Export::export('试题列表', $headerArr, $data);
         }catch(\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }

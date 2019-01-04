@@ -86,13 +86,13 @@ class VipYoudaoExamined extends Model
         $condition = [];
         //有道最终处理日期
         if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['final_processing_time'] = array('lt' => strtotime ($searchArgs['endDate'].' 23:59:59'));
+            $condition['final_processing_time'] = array('lt' => $searchArgs['endDate'].' 23:59:59');
         }
         if (!empty($searchArgs['beginDate']) && empty($searchArgs['endDate'])) {
-            $condition['final_processing_time'] = array('gt' => strtotime ($searchArgs['beginDate'].' 00:00:01'));
+            $condition['final_processing_time'] = array('gt' => $searchArgs['beginDate'].' 00:00:01');
         }
         if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['final_processing_time'] = array('between' => array(strtotime ($searchArgs['beginDate'].' 00:00:01'),strtotime ($searchArgs['endDate'].' 23:59:59')));
+            $condition['final_processing_time'] = array('between' => array($searchArgs['beginDate'].' 00:00:01',$searchArgs['endDate'].' 23:59:59'));
         }
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
@@ -120,13 +120,13 @@ class VipYoudaoExamined extends Model
         }
         //试卷最终审核日期
         if (empty($searchArgs['auditBeginDate']) && !empty($searchArgs['auditEndDate'])) {
-            $condition['paper_examined_time'] = array('lt' => strtotime ($searchArgs['auditEndDate'].' 23:59:59'));
+            $condition['paper_examined_time'] = array('lt' => $searchArgs['auditEndDate'].' 23:59:59');
         }
         if (!empty($searchArgs['auditBeginDate']) && empty($searchArgs['auditEndDate'])) {
-            $condition['paper_examined_time'] = array('gt' => strtotime ($searchArgs['auditBeginDate'].' 00:00:01'));
+            $condition['paper_examined_time'] = array('gt' => $searchArgs['auditBeginDate'].' 00:00:01');
         }
         if (!empty($searchArgs['auditBeginDate']) && !empty($searchArgs['auditEndDate'])) {
-            $condition['paper_examined_time'] = array('between' => array(strtotime ($searchArgs['auditBeginDate'].' 00:00:01'),strtotime ($searchArgs['auditEndDate'].' 23:59:59')));
+            $condition['paper_examined_time'] = array('between' => array($searchArgs['auditBeginDate'].' 00:00:01',$searchArgs['auditEndDate'].' 23:59:59'));
         }
         return $condition;
     }
@@ -200,6 +200,7 @@ class VipYoudaoExamined extends Model
                     $gradeInfo = $vipDict->findOne(array('id'=>$row['grade'],'category'=>'GRADE'));
                     $row['grade_name'] = $gradeInfo['title'];
                 }
+                /*
                 //获取省、市、区
                 $city = new City;
                 if($row['province']){
@@ -213,7 +214,7 @@ class VipYoudaoExamined extends Model
                 if($row['area']){
                     $cityInfo = $city->findOne(array('id'=>$row['area']),[],['city']);
                     $row['area_name'] = $cityInfo['city'];
-                }
+                }*/
                 //获取图片审核人姓名
                 $user = new User;
                 if($row['image_examined_auditor_id']){
@@ -537,12 +538,18 @@ class VipYoudaoExamined extends Model
         $max = ceil($recordCount/$limit);
         for($i=1;$i<=$max;$i++){
             $result = $this->findAll($condition,['upload_time'=>'asc'],['*'],'',[],$i,$limit);
-            if($result){
-
-                array_merge($list,$result);
+            $result = json_decode(json_encode($result), true);
+            if($result['data']){
+                foreach ($result['data'] as $key=>$row){
+                    $list[] = $row;
+                }
             }
         }
+        $list = $this->formatPaperList($list);
         return $list;
     }
+
+
+
 }
 
