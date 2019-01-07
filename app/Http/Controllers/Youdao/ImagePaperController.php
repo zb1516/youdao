@@ -141,11 +141,12 @@ class ImagePaperController extends BaseController
         try {
             $taskId = $request->get('taskId', '');
             $paperId = abs($request->get('paperId', 0));
+            $userKey = $request->get('userKey', '');
             if(empty($taskId))
             {
                 throw new \Exception('缺少taskId');
             }
-            $result = $this->vipRepeatPaperRecord->repeatPaperRecord($taskId, $paperId);
+            $result = $this->vipRepeatPaperRecord->repeatPaperRecord($taskId, $paperId,$userKey);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -165,7 +166,7 @@ class ImagePaperController extends BaseController
             {
                 throw new \Exception('缺少taskId');
             }
-            $result = $this->vipRepeatPaperRecord->paperReturn($taskId,$imageErrorType,$userKey);
+            $result = $this->vipPaperImage->paperReturn($taskId,$imageErrorType,$userKey);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -179,7 +180,7 @@ class ImagePaperController extends BaseController
         try {
             $isSort = 1;
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
-            $result = $this->vipRepeatPaperRecord->paperPass($searchArgs);
+            $result = $this->vipPaperImage->paperPass($searchArgs);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

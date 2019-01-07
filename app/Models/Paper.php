@@ -161,6 +161,9 @@ class Paper extends Model
             if (isset($formData['paperType'])) {
                 $searchArgs['paperType'] = $formData['paperType'];
             }
+            if (isset($formData['userKey'])) {
+                $searchArgs['userKey'] = $formData['userKey'];
+            }
         }
         return $searchArgs;
     }
