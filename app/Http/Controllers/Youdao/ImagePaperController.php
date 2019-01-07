@@ -13,6 +13,7 @@ use App\Models\SysRoles;
 use App\Models\SysUsers;
 use App\Libs\Export;
 use App\Models\Paper;
+use App\Models\VipPaperImage;
 use DB;
 
 
@@ -24,6 +25,7 @@ class ImagePaperController extends BaseController
         $this->sysUsers = new SysUsers;
         $this->paper = new Paper;
         $this->vipYoudaoExamined = new VipYoudaoExamined;
+        $this->vipPaperImage = new VipPaperImage;
 
     }
 
@@ -103,6 +105,25 @@ class ImagePaperController extends BaseController
             $pageSize = abs($request->get('pageSize', 15));
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET);
             $result = $this->paper->getImagePaperList($searchArgs, $currentPage, $pageSize);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * 图片审核列表详情
+     */
+    public function imagePaperDetail(Request $request)
+    {
+        try {
+            $taskId = abs($request->get('taskId', ''));
+            $paperType = abs($request->get('paperType', 1));
+            if(empty($taskId))
+            {
+                throw new \Exception('缺少taskId');
+            }
+            $result = $this->vipPaperImage->getImagePaperDetail($taskId, $paperType);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
