@@ -13,6 +13,8 @@ use App\Models\SysRoles;
 use App\Models\SysUsers;
 use App\Libs\Export;
 use App\Models\Paper;
+use App\Models\VipPaperImage;
+use App\Models\VipRepeatPaperRecord;
 use DB;
 
 
@@ -24,6 +26,9 @@ class ImagePaperController extends BaseController
         $this->sysUsers = new SysUsers;
         $this->paper = new Paper;
         $this->vipYoudaoExamined = new VipYoudaoExamined;
+        $this->vipPaperImage = new VipPaperImage;
+        $this->vipRepeatPaperRecord = new VipRepeatPaperRecord;
+
 
     }
 
@@ -103,6 +108,79 @@ class ImagePaperController extends BaseController
             $pageSize = abs($request->get('pageSize', 15));
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET);
             $result = $this->paper->getImagePaperList($searchArgs, $currentPage, $pageSize);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * 图片审核列表详情
+     */
+    public function imagePaperDetail(Request $request)
+    {
+        try {
+            $taskId = $request->get('taskId', '');
+            $paperType = abs($request->get('paperType', 1));
+            if(empty($taskId))
+            {
+                throw new \Exception('缺少taskId');
+            }
+            $result = $this->vipPaperImage->getImagePaperDetail($taskId, $paperType);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * 重复试卷记录表
+     */
+    public function repeatPaperRecord(Request $request)
+    {
+        try {
+            $taskId = $request->get('taskId', '');
+            $paperId = abs($request->get('paperId', 0));
+            $userKey = $request->get('userKey', '');
+            if(empty($taskId))
+            {
+                throw new \Exception('缺少taskId');
+            }
+            $result = $this->vipRepeatPaperRecord->repeatPaperRecord($taskId, $paperId,$userKey);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * 图片退回
+     */
+    public function paperReturn(Request $request)
+    {
+        try {
+            $taskId = $request->get('taskId', '');
+            $imageErrorType = $request->get('image_error_type', '');
+            $userKey = $request->get('userKey', '');
+            if(empty($taskId))
+            {
+                throw new \Exception('缺少taskId');
+            }
+            $result = $this->vipPaperImage->paperReturn($taskId,$imageErrorType,$userKey);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+    /**
+     * 图片通过
+     */
+    public function paperPass(Request $request)
+    {
+        try {
+            $isSort = 1;
+            $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
+            $result = $this->vipPaperImage->paperPass($searchArgs);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

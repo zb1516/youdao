@@ -103,9 +103,10 @@ class Paper extends Model
     /**
      * 转换套卷查询参数
      * @param $formData array
+     * @param $isSort 是否有排序的参数
      * @return array
      */
-    public function imagePaperSearchArgs($formData)
+    public function imagePaperSearchArgs($formData,$isSort=0)
     {
         $searchArgs = [];
         if (isset($formData['taskId'])) {
@@ -152,6 +153,17 @@ class Paper extends Model
         }
         if (isset($formData['other2'])) {
             $searchArgs['other2'] = $formData['other2'];
+        }
+        if($isSort){
+            if (isset($formData['sortTaskId'])) {
+                $searchArgs['sortTaskId'] = $formData['sortTaskId'];
+            }
+            if (isset($formData['paperType'])) {
+                $searchArgs['paperType'] = $formData['paperType'];
+            }
+            if (isset($formData['userKey'])) {
+                $searchArgs['userKey'] = $formData['userKey'];
+            }
         }
         return $searchArgs;
     }
