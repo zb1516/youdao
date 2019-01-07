@@ -134,6 +134,12 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
     Route::get('paper/paperExport', 'Youdao\PaperController@paperExport');
     Route::get('paper/questionExport', 'Youdao\PaperController@questionExport');
+    Route::get('imagePaper/imagePaperDetail', 'Youdao\ImagePaperController@imagePaperDetail');
+    Route::get('imagePaper/repeatPaperRecord', 'Youdao\ImagePaperController@repeatPaperRecord');
+    Route::get('imagePaper/paperReturn', 'Youdao\ImagePaperController@paperReturn');
+    Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
+
+
 });
 
 
