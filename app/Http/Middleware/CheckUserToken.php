@@ -17,8 +17,8 @@ class CheckUserToken
     public function handle($request, Closure $next)
     {
         try{
-            $searchArgs['$token']=$request->input('$token');
-            $result=true;//UserService::checkUserStatus($searchArgs['$token']);
+            $searchArgs['token']=$request->input('token');
+            $result=true;//UserService::checkUserStatus($searchArgs['token']);
             if($result === false)
             {
                 throw new \Exception('登陆已过期，请重新登陆');

@@ -340,12 +340,8 @@ class paperController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');
-            $searchArgs['agencyId']=1;//$request->input('agencyId');
-            if(!isset($searchArgs['userToken'])){
-                throw new \Exception('缺少登陆用户token');
-            }
-            if(intval($searchArgs['agencyId']) <= 0){
-                throw new \Exception('缺少机构id');
+            if(!isset($searchArgs['token'])){
+                throw new \Exception('缺少微信用户token');
             }
             //获取用户id
             $userInfo=UserService::getUserInfo($searchArgs['token']);
@@ -356,7 +352,7 @@ class paperController extends Controller
             //统计入库的有道套卷数
             $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$userInfo['userId'],'paper_examined_status'=>3]);
             //获取本月上传试卷数
-            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$searchArgs['agencyId'],'upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
+            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$userInfo['agencyId'],'upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
             $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
             //获取上传额度，先从配置文件中获取上传额度
             $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
