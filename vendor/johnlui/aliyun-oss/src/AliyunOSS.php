@@ -1,289 +1,67 @@
 <?php
 
-namespace JohnLui;
+ public function exportHistoryList($data, $filename,$myTeacherId,$myAgencyId)
+    {
+        $redis = Redis::getRedis();
+        try {
+            require_once dirname(__FILE__) . '../../Libs/Classes/PHPExcel.php';
+            require_once dirname(__FILE__) . '../../Libs/Classes/PHPExcel/IOFactory.php';
+            require_once dirname(__FILE__) . '../../Libs/Classes/PHPExcel.php';
+            require_once dirname(__FILE__) . '../../Libs/Classes/PHPExcel/Writer/Excel2007.php';
 
-require_once __DIR__.'/oss/aliyun.php';
+            $header_arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 
-use Aliyun\OSS\OSSClient;
-use Aliyun\OSS\Models\OSSOptions;
+            $objPHPExcel = new \PHPExcel();                        //初始化PHPExcel(),不使用模板
+//        $template = dirname(__FILE__).'/template.xls';   //使用模板
+//        $objPHPExcel = \PHPExcel_IOFactory::load($template);   //加载excel文件,设置模板
 
-use Exception;
+            $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);    //设置保存版本格式
 
-/**
- * \JohnLui\AliyunOSS
- * 唯一的 manager 类
- */
-class AliyunOSS
-{
-  protected $city;
-  protected $networkType;
-  protected $ossClient;
-  protected $bucket;
+            //接下来就是写数据到表格里面去
+            $objActSheet = $objPHPExcel->getActiveSheet();
+            $objActSheet->setCellValue('A1', "学员");
+            $objActSheet->setCellValue('B1', "时间");
+            $objActSheet->setCellValue('C1', "上课教师");
+            $objActSheet->setCellValue('D1', "考勤");
+            $objActSheet->setCellValue('E1', "评价状态");
+            $objActSheet->setCellValue('F1', "学科");
+            $objActSheet->setCellValue('G1', "课程名称");
+            $objActSheet->setCellValue('H1', "时长");
+            $objActSheet->setCellValue('I1', "课时");
+            $i = 2;
+            foreach ($data as $key => $item) {
+                $j = 0;
+                foreach ($item as $v) {
+                    $objActSheet->setCellValue($header_arr[$j] . $i, $v);
+                    $j++;
+                }
+                $i++;
+            }
+//            $objActSheet->setCellValue('A2',  "活动名称：江南极客");
+//            $objActSheet->setCellValue('C2',  "导出时间：".date('Y-m-d H:i:s'));
+//            $i = 4;
+//            $list=[1=>1,2=>2,3=>3,4=>4];
+//            $indexKey=array();
+//            foreach ($list as $row) {
+//                foreach ($indexKey as $key => $value){
+//                    //这里是设置单元格的内容
+//                    $objActSheet->setCellValue($header_arr[$key].$i,$row[$value]);
+//                }
+//                $i++;
+//            }
+            // 1.保存至本地Excel表格
+            if(false == is_dir("/tmp/atf_upload")) {
+                mkdir("/tmp/atf_upload", 0777, true);
+            }
+            $objWriter->save('/tmp/atf_upload/' . $filename . '.xls');
+            $ossPATH="YKT_V2/".$myAgencyId."/"."$myTeacherId"."/";
+            $res = Bucket::uploadFile( OFFICE_DOCUMENT_BUCKET,'/tmp/atf_upload/' . $filename . '.xls',$ossPATH.$filename . '.xls',false,"历史课节导出.xls");
+            unlink('/tmp/atf_upload/' . $filename . '.xls');
+            $redis->set($filename, $res["info"]["url"],7200);
 
-  protected $CityURLArray = [
-    '杭州' => 'oss-cn-hangzhou',
-    '上海' => 'oss-cn-shanghai',
-    '青岛' => 'oss-cn-qingdao',
-    '北京' => 'oss-cn-beijing',
-    '张家口' => 'oss-cn-zhangjiakou',
-    '深圳' => 'oss-cn-shenzhen',
-    '香港' => 'oss-cn-hongkong',
-    '硅谷' => 'oss-us-west-1',
-    '弗吉尼亚' => 'oss-us-east-1',
-    '新加坡' => 'oss-ap-southeast-1',
-    '悉尼' => 'oss-ap-southeast-2',
-    '日本' => 'oss-ap-northeast-1',
-    '法兰克福' => 'oss-eu-central-1',
-    '迪拜' => 'oss-me-east-1',
-  ];
+        } catch (\Exception $e) {
+            $redis->set($filename, -1,7200);
+        }
 
-  protected $CityURLArrayForVPC = [
-    '杭州' => 'vpc100-oss-cn-hangzhou',
-    '上海' => 'vpc100-oss-cn-shanghai',
-    '青岛' => 'vpc100-oss-cn-qingdao',
-    '北京' => 'vpc100-oss-cn-beijing',
-    '张家口' => 'oss-cn-zhangjiakou-internal',
-    '深圳' => 'vpc100-oss-cn-shenzhen',
-    '硅谷' => 'vpc100-oss-us-west-1',
-    '弗吉尼亚' => 'oss-us-east-1-internal',
-    '新加坡' => 'vpc100-oss-ap-southeast-1',
-    '悉尼' => 'vpc100-oss-ap-southeast-2',
-    '日本' => 'oss-ap-northeast-1-internal',
-    '法兰克福' => 'oss-eu-central-1-internal',
-    '迪拜' => 'oss-me-east-1-internal',
-  ];
-
-  public function __construct($city, $networkType, $isInternal, $AccessKeyId, $AccessKeySecret)
-  {
-    $this->city = $city;
-    $this->networkType = $networkType;
-
-    $serverAddress = 'http://';
-    if ($networkType == '经典网络') {
-      if (!array_key_exists($city, $this->CityURLArray)) {
-        throw new Exception("城市不存在");
-      }
-      $serverAddress .= $this->CityURLArray[$city];
-      $serverAddress .= $isInternal ? '-internal' : '';
-    } else if ($networkType == 'VPC') {
-      if (!array_key_exists($city, $this->CityURLArrayForVPC)) {
-        throw new Exception("城市不存在");
-      }
-      $serverAddress .= $this->CityURLArrayForVPC[$city];
-    } else {
-      throw new Exception("\$networkType 必须是 '经典网络' 或 'VPC'");
+        return 1;
     }
-    $serverAddress .= '.aliyuncs.com';
-
-    $this->ossClient = OSSClient::factory([
-      OSSOptions::ENDPOINT => $serverAddress,
-      'AccessKeyId'  => $AccessKeyId,
-      'AccessKeySecret' => $AccessKeySecret,
-    ]);
-  }
-
-  public static function boot($city, $networkType, $isInternal, $AccessKeyId, $AccessKeySecret)
-  {
-    return new self($city, $networkType, $isInternal, $AccessKeyId, $AccessKeySecret);
-  }
-
-  public function setBucket($bucket)
-  {
-    $this->bucket = $bucket;
-
-    return $this;
-  }
-
-  public function uploadFile($key, $file, $options = [])
-  {
-    $handle = fopen($file, 'r');
-    $value  = $this->ossClient->putObject(array_merge([
-      'Bucket'        => $this->bucket,
-      'Key'           => $key,
-      'Content'       => $handle,
-      'ContentLength' => filesize($file),
-    ], $options));
-    fclose($handle);
-
-    return $value;
-  }
-
-  public function uploadContent($key, $content, $options = [])
-  {
-    return $this->ossClient->putObject(array_merge([
-      'Bucket'        => $this->bucket,
-      'Key'           => $key,
-      'Content'       => $content,
-      'ContentLength' => strlen($content),
-    ], $options));
-  }
-
-  public function getPublicUrl($key)
-  {
-    if ($this->networkType == 'VPC') {
-      throw new Exception("经典网络才能获取公开 api");
-    }
-
-    if (!array_key_exists($this->city, $this->CityURLArray)) {
-      throw new Exception("城市不存在");
-    }
-
-    return 'http://'.$this->bucket.'.'.$this->CityURLArray[$this->city].'.aliyuncs.com'.'/'.$key;
-  }
-
-  public function getUrl($key, $expire_time)
-  {
-    return $this->ossClient->generatePresignedUrl([
-      'Bucket'  => $this->bucket,
-      'Key'     => $key,
-      'Expires' => $expire_time,
-    ]);
-  }
-
-  public function createBucket($bucketName)
-  {
-    return $this->ossClient->createBucket(['Bucket' => $bucketName]);
-  }
-
-  public function getAllObjectKey($bucketName)
-  {
-    $objectListing = $this->ossClient->listObjects([
-      'Bucket' => $bucketName,
-    ]);
-
-    $objectKeys = [];
-    foreach ($objectListing->getObjectSummarys() as $objectSummary) {
-      $objectKeys[] = $objectSummary->getKey();
-    }
-
-    return $objectKeys;
-  }
-
-  /**
-   * 获取指定文件夹下的所有文件
-   *
-   * @param string $bucketName 存储容器名称
-   * @param string $folder_name 文件夹名
-   * @return 指定文件夹下的所有文件
-   */
-  public function getAllObjectKeyWithPrefix($bucketName, $folder_name, $nextMarker = '')
-  {
-    $objectKeys = [];
-
-    while (true) {
-      $objectListing = $this->ossClient->listObjects([
-        'Bucket'  => $bucketName,
-        'Prefix'  => $folder_name,
-        'MaxKeys' => 1000,
-        'Marker'  => $nextMarker,
-      ]);
-
-      foreach ($objectListing->getObjectSummarys() as $objectSummary) {
-        $objectKeys[] = $objectSummary->getKey();
-      }
-
-      $nextMarker = $objectListing->getNextMarker();
-      if ($nextMarker === '' || is_null($nextMarker)) {
-        break;
-      }
-    }
-
-    return $objectKeys;
-  }
-
-  /**
-   * 删除阿里云中存储的文件
-   *
-   * @param string $bucketName 存储容器名称
-   * @param string $key 存储key（文件的路径和文件名）
-   * @return void
-   */
-  public function deleteObject($bucketName, $key)
-  {
-    if ($bucketName === null) {
-      $bucketName = $this->bucket;
-    }
-
-    return $this->ossClient->deleteObject([
-      'Bucket' => $bucketName,
-      'Key'    => $key,
-    ]);
-  }
-
-  /**
-   * 复制存储在阿里云OSS中的Object
-   *
-   * @param string $sourceBuckt 复制的源Bucket
-   * @param string $sourceKey - 复制的的源Object的Key
-   * @param string $destBucket - 复制的目的Bucket
-   * @param string $destKey - 复制的目的Object的Key
-   * @return Models\CopyObjectResult
-   */
-  public function copyObject($sourceBuckt, $sourceKey, $destBucket, $destKey)
-  {
-    if ($sourceBuckt === null) {
-      $sourceBuckt = $this->bucket;
-    }
-    if ($destBucket === null) {
-      $destBucket = $this->bucket;
-    }
-
-    return $this->ossClient->copyObject([
-      'SourceBucket' => $sourceBuckt,
-      'SourceKey'    => $sourceKey,
-      'DestBucket'   => $destBucket,
-      'DestKey'      => $destKey,
-    ]);
-  }
-
-  /**
-   * 移动存储在阿里云OSS中的Object
-   *
-   * @param string $sourceBuckt 复制的源Bucket
-   * @param string $sourceKey - 复制的的源Object的Key
-   * @param string $destBucket - 复制的目的Bucket
-   * @param string $destKey - 复制的目的Object的Key
-   * @return Models\CopyObjectResult
-   */
-  public function moveObject($sourceBuckt, $sourceKey, $destBucket, $destKey)
-  {
-    if ($sourceBuckt === null) {
-      $sourceBuckt = $this->bucket;
-    }
-    if ($destBucket === null) {
-      $destBucket = $this->bucket;
-    }
-
-    $result = $this->ossClient->copyObject([
-      'SourceBucket' => $sourceBuckt,
-      'SourceKey'    => $sourceKey,
-      'DestBucket'   => $destBucket,
-      'DestKey'      => $destKey,
-    ]);
-
-    if (is_object($result) && $result->getETag()) {
-      $this->deleteObject($sourceBuckt, $sourceKey);
-    }
-
-    return $result;
-  }
-
-  /**
-   * 获取指定存储容器下的某个文件的元信息
-   *
-   * @param string $bucketName 存储容器名称
-   * @param string $key 存储key（文件的路径和文件名）
-   * @return
-   */
-  public function getObjectMeta($bucketName, $key)
-  {
-    if ($bucketName === null) {
-      $bucketName = $this->bucket;
-    }
-
-    return $this->ossClient->getObjectMetadata([
-      'Bucket' => $bucketName,
-      'Key' => $key,
-    ]);
-  }
-}

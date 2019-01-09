@@ -272,4 +272,11 @@ return [
         '3' => '已审核',
         '4' => '已退回',
     ],
+    'OFFICE_DOCUMENT_BUCKET'=>'atf-document',
+    'GRADE_NAME'=> [
+        '1' => '小学',
+        '2' => '初中',
+        '3' => '高中',
+    ],
+    'YOUDAO_DELIVER_TASK'=>'/api/gaosi/deliverTask',
 ];
