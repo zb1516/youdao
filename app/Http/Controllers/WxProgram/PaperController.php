@@ -24,7 +24,6 @@ class paperController extends Controller
         $vipYoudaoExaminedModel->beginTransaction();
         try{
             if($request->isMethod('post')){
-                $searchArgs['userToken']=$request->input('userToken');
                 $searchArgs['token']=$request->input('token');       //小程序登陆以后生成的唯一标识
                 $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['agencyName']=$request->input('agencyName');
@@ -80,8 +79,8 @@ class paperController extends Controller
                     throw new \Exception('缺少微信用户token');
                 }
                 //获取用户openid
-                $openId=111;//WxService::getOpenId($searchArgs['token']);
-                $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+                $openId=WxService::getOpenId($searchArgs['token']);
+                $userInfo=UserService::getUserInfo($searchArgs['token']);
                 $taskId=uuid();     //生成任务id
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
@@ -255,7 +254,7 @@ class paperController extends Controller
                     }
                 }
                 //获取用户openid
-                $openId=111;//WxService::getOpenId($searchArgs['token']);
+                $openId=WxService::getOpenId($searchArgs['token']);
                 $vipYoudaoExaminedModel = new VipYoudaoExamined();
                 //修改任务审核状态
                 $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1,'open_id'=>$openId], ['task_id' => $searchArgs['taskId']]);
@@ -309,21 +308,16 @@ class paperController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');
-            $searchArgs['userToken']=$request->input('userToken');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize');
-            if(!isset($searchArgs['userToken']))
-            {
-                throw new \Exception('缺少登陆用户token');
-            }
             if(!isset($searchArgs['token']))
             {
                 throw new \Exception('缺少微信用户token');
             }
             //获取登陆用户uid
-            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
             //获取用户openId;
-            $openId=1111;  //WxService::getOpenId($searchArgs['token']);
+            $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
             $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." open_id='".$openId."'  order by id desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'',$searchArgs['page']);
@@ -345,7 +339,7 @@ class paperController extends Controller
     public function getPaperCount(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->input('userToken');
+            $searchArgs['token']=$request->input('token');
             $searchArgs['agencyId']=1;//$request->input('agencyId');
             if(!isset($searchArgs['userToken'])){
                 throw new \Exception('缺少登陆用户token');
@@ -354,7 +348,7 @@ class paperController extends Controller
                 throw new \Exception('缺少机构id');
             }
             //获取用户id
-            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperMonthCount=$vipYoudaoExaminedModel->count(['upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);

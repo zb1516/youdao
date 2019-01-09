@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WxProgram;
 
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoExamined;
+use App\Models\VipYoudaoUserLoginLog;
 use App\Services\TaskService;
 use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
@@ -33,14 +34,24 @@ class WxController extends Controller
             if(!$result['openid']){
                 throw new \Exception($result['code']);
             }
-            $token=encrypt($result);
+            $token=encryptMd5($result);
             //把token存入redis中
             Redis::set($token,json_encode([
                 'session_key'=>$result['session_key'],
                 'openid'=>$result['openid'],
                 'expire_time'=>time()+86400
             ]));
-            return response()->json(['status'=>200,'token'=>$token]);
+            //通过用户openid获取登陆信息
+            $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
+            $wxInfo=$vipYoudaoUserLoginLogModel->findOne(['open_id'=>$result['openid']]);
+            if($wxInfo){
+                //如果存在，更新用户登陆绑定信息
+                $result=$vipYoudaoUserLoginLogModel->edit(['wx_token'=>$token],['open_id'=>$result['openid'],'userName'=>$wxInfo['userName']]);
+                if($result === false){
+                    throw new \Exception('缺少绑定信息');
+                }
+            }
+            return response()->json(['status'=>200,'data'=>['token'=>$token]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

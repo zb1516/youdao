@@ -28,7 +28,7 @@ class MessageController extends Controller
                 throw new \Exception('缺少微信用户token');
             }
             //获取用户openid
-            $openId=111;//WxService::getOpenId($searchArgs['token']);
+            $openId=WxService::getOpenId($searchArgs['token']);
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
             $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
@@ -46,19 +46,15 @@ class MessageController extends Controller
     public function getMessageCount(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->input('userToken');
-            if(!isset($searchArgs['userToken'])){
-                throw new \Exception('缺少登陆用户token');
-            }
             $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
             if(!isset($searchArgs['token']))
             {
                 throw new \Exception('缺少微信用户token');
             }
             //获取用户openid
-            $openId=111;//WxService::getOpenId($searchArgs['token']);
+            $openId=WxService::getOpenId($searchArgs['token']);
             //获取用户id
-            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
             $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
@@ -82,7 +78,6 @@ class MessageController extends Controller
     public function setReadMessage(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->input('userToken');
             $searchArgs['token']=$request->input('token');
             $searchArgs['messageId']=$request->input('messageId');
             if(intval($searchArgs['messageId']) <= 0){
@@ -92,14 +87,10 @@ class MessageController extends Controller
             {
                 throw new \Exception('缺少微信用户token信息');
             }
-            if(!isset($searchArgs['userToken']))
-            {
-                throw new \Exception('缺少用户token信息');
-            }
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);
             //获取用户id
-            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
             $vipMessageViewLogModel=new VipMessageViewLog();
             $info=$vipMessageViewLogModel->findOne(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId']]);
             if(!$info)
