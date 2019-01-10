@@ -31,9 +31,13 @@ class paperController extends Controller
                 $searchArgs['questionImage']=$request->input('questionImage');
                 $searchArgs['answerImage']=$request->input('answerImage');
                 $searchArgs['subjectId']=$request->input('subjectId');
+                $searchArgs['subjectName']=$request->input('subjectName');
                 $searchArgs['gradeId']=$request->input('gradeId');
+                $searchArgs['gradeName']=$request->input('gradeName');
                 $searchArgs['provId']=$request->input('provId');
+                $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
+                $searchArgs['cityName']=$request->input('cityName');
                 if(!isset($searchArgs['userToken']) <= 0){
                     throw new \Exception('缺少登陆用户token');
                 }
@@ -91,6 +95,7 @@ class paperController extends Controller
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],
                     'city'=>$searchArgs['cityId'],
+                    'paper_name'=> $searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$searchArgs['subjectName'].'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
                     'paper_type'=>$searchArgs['paperType'],
                     'upload_time'=>date('Y-m-d H:i:s')
                 ]);
@@ -319,8 +324,8 @@ class paperController extends Controller
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." open_id='".$openId."'  order by id desc ) cc");
-            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'',$searchArgs['page']);
+            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
+            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page']);
             foreach($list as $key => $val){
                 $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
                 $list[$key]=(array)$val;
