@@ -54,11 +54,14 @@ class VipPaperImage extends Model
         $vipYoudaoExamined = new VipYoudaoExamined();
         $result = $vipYoudaoExamined->findOne($condition);
         if($result){
+            $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
+            $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
                 'mage_examined_status' => 3,
                 'image_error_type' => $imageErrorType,
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
+                'image_processing_days' => $diffDays,
             ];
             $result = $vipYoudaoExamined->edit($data,$condition);
             if($result === false)
@@ -99,11 +102,16 @@ class VipPaperImage extends Model
             'task_id' => $searchArgs['taskId'],
         );
         $result = $vipYoudaoExamined->findOne($condition);
+        $filename = $this->createFileName($searchArgs);
         if($result){
+            $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
+            $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
                 'mage_examined_status' => 2,
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
+                'image_processing_days' => $diffDays,
+                'paper_name' => $filename,
             ];
             $result = $vipYoudaoExamined->edit($data,$condition);
             if($result === false)
@@ -159,7 +167,7 @@ class VipPaperImage extends Model
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $this->createFileName($searchArgs).$dateTime.$rand;
+            $filename = $filename.$dateTime.$rand;
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
             $questionUrl = $resultUrl['info']['url'];
@@ -199,7 +207,7 @@ class VipPaperImage extends Model
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $this->createFileName($searchArgs).$dateTime.$rand.'question';
+            $filename = $filename.$dateTime.$rand.'question';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
             $questionUrl = $resultUrl['info']['url'];
@@ -235,7 +243,7 @@ class VipPaperImage extends Model
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $this->createFileName($searchArgs).$dateTime.$rand.'answer';
+            $filename = $filename.$dateTime.$rand.'answer';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
             $answerUrl = $resultUrl['info']['url'];
