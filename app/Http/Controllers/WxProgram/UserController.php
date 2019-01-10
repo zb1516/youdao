@@ -18,22 +18,20 @@ class UserController extends Controller
             $searchArgs['password']=$request->input('password');
             $searchArgs['agencyId']=$request->input('agencyId');
             $searchArgs['token']=$request->input('token');
-            //通过token获取用户openid
-            $openId=111;//WxService::getOpenId($searchArgs['token']);
-            $userToken=md5($openId.'wx');          //根据微信openid生成一个绑定的token，这个token是唯一标识
             //调用微服务接口，进行用户登陆
             $microToken=KlibTeacherClient::getToken([
                 'userName'=>$searchArgs['userName'],
                 'passWord'=>$searchArgs['password'],
                 'agencyId'=>$searchArgs['agencyId']
             ]);
+            $openId=WxService::getOpenId($searchArgs['token']);
             //获取登陆用户信息
             $authUserInfo=KlibTeacherClient::getAuthInfo($microToken);
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
             //添加用户绑定登陆记录
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
             if(!$userInfo)
             {
                 $result=$vipYoudaoUserLoginLogModel->add([
@@ -44,7 +42,7 @@ class UserController extends Controller
                     'realName'=>$teacherInfo['realName'],
                     'open_id'=>$openId,
                     'micro_token'=>$microToken,
-                    'user_token'=>$userToken,
+                    'wx_token'=>$searchArgs['token'],
                     'login_time'=>time()
                 ]);
             }else{
@@ -56,9 +54,9 @@ class UserController extends Controller
                     'realName'=>$teacherInfo['realName'],
                     'open_id'=>$openId,
                     'micro_token'=>$microToken,
-                    'user_token'=>$userToken,
+                    'wx_token'=>$searchArgs['token'],
                     'login_time'=>time()
-                ],['user_token'=>$userToken,'is_delete'=>0]);
+                ],['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
             }
 
             if($result === false)
@@ -68,8 +66,8 @@ class UserController extends Controller
             return response()->json([
                 'status'=>200,
                 'data'=>[
-                    'token'=>$userToken,
-                    'userName'=>$teacherInfo['realName']
+                    'token'=>$searchArgs['token'],
+                    'realName'=>$teacherInfo['realName']
                 ]
             ]);
         }catch (\Exception $e){
@@ -85,12 +83,12 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         try{
-            $searchArgs['userToken']=$request->input('userToken');
+            $searchArgs['token']=$request->input('token');
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$searchArgs['userToken']]);
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['token'=>$searchArgs['userToken']]);
             if($userInfo)
             {
-                $result=$vipYoudaoUserLoginLogModel->edit(['is_delete'=>1],['user_token'=>$searchArgs['userToken']]);
+                $result=$vipYoudaoUserLoginLogModel->edit(['is_delete'=>1],['wx_token'=>$searchArgs['token']]);
                 if($result === false)
                 {
                     throw new \Exception('退出失败');

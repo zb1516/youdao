@@ -76,10 +76,6 @@ class WxService
     {
         $token=Redis::get($token);
         $json=json_decode($token);
-        if($json->expire_time <= time())
-        {
-            throw new \Exception('用户登陆已过期');
-        }
         return $json->openid;
     }
 }
