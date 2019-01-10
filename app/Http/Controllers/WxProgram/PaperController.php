@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WxProgram;
 
 use App\Clients\KlibTeacherClient;
+use App\Models\Common;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
@@ -31,9 +32,13 @@ class paperController extends Controller
                 $searchArgs['questionImage']=$request->input('questionImage');
                 $searchArgs['answerImage']=$request->input('answerImage');
                 $searchArgs['subjectId']=$request->input('subjectId');
+                $searchArgs['subjectName']=$request->input('subjectName');
                 $searchArgs['gradeId']=$request->input('gradeId');
+                $searchArgs['gradeName']=$request->input('gradeName');
                 $searchArgs['provId']=$request->input('provId');
+                $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
+                $searchArgs['cityName']=$request->input('cityName');
                 if(!isset($searchArgs['userToken']) <= 0){
                     throw new \Exception('缺少登陆用户token');
                 }
@@ -82,6 +87,8 @@ class paperController extends Controller
                 $openId=WxService::getOpenId($searchArgs['token']);
                 $userInfo=UserService::getUserInfo($searchArgs['token']);
                 $taskId=uuid();     //生成任务id
+                $commonModel=new Common();
+                $subjectName=$commonModel->stringTransformation($searchArgs['subjectName']);
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
                     'open_id'=>$openId,
@@ -91,6 +98,7 @@ class paperController extends Controller
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],
                     'city'=>$searchArgs['cityId'],
+                    'paper_name'=> $searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$subjectName.'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
                     'paper_type'=>$searchArgs['paperType'],
                     'upload_time'=>date('Y-m-d H:i:s')
                 ]);
@@ -309,7 +317,7 @@ class paperController extends Controller
         try{
             $searchArgs['token']=$request->input('token');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
-            $searchArgs['pageSize']=$request->input('pageSize');
+            $searchArgs['pageSize']=$request->input('pageSize')>0?$request->input('pageSize'):20;
             if(!isset($searchArgs['token']))
             {
                 throw new \Exception('缺少微信用户token');
@@ -319,13 +327,20 @@ class paperController extends Controller
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." open_id='".$openId."'  order by id desc ) cc");
-            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'',$searchArgs['page']);
-            foreach($list as $key => $val){
-                $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
-                $list[$key]=(array)$val;
+            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
+            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
+            $result=[];
+            foreach($list['data'] as $key => $val){
+                $val=(array)$val;
+                $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
+                $list['data'][$key]=$val;
             }
-            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
+            return response()->json(['status'=>200,'data'=>[
+                'current_page'=>$list['current_page'],
+                'per_page'=>$list['per_page'],
+                'total'=>$list['total'],
+                'rows'=>$list['data']
+            ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -396,7 +411,9 @@ class paperController extends Controller
             }
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
-            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
+            return response()->json(['status'=>200,'data'=>[
+                'rows'=>$list
+            ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

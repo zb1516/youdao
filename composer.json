@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "aliyuncs/oss-sdk-php": "^2.3",
         "e421083458/wxxcx": "^1.1",
         "fideloper/proxy": "~3.3",
         "genealabs/laravel-caffeine": "^0.7.1",

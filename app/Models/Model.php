@@ -25,7 +25,7 @@ class Model extends BaseModel
         $db=$db->select($field);
         if(isset($page) && !empty($page))
         {
-            $result=$db->paginate($pageSize,['*'],'page',$page);
+            $result=$db->paginate($pageSize,['*'],'page',$page)->toArray();
         }else{
             $result=$db->get()->toArray();
         }
