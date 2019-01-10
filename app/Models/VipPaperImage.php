@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Model;
 use App\Services\Bucket;
-use App\Http\Controllers\Common\CommonController;
+use App\Services\YoudaoService;
 
 class VipPaperImage extends Model
 {
@@ -354,7 +354,7 @@ class VipPaperImage extends Model
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
         $paperType = isset($searchArgs['pageType']) ? $searchArgs['pageType'] : 0;
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
-        $common = new CommonController();
+        $youdaoService = new YoudaoService();
         $postData = [
             'taskId' => $searchArgs['taskId'],
             'name' => $filename,
@@ -364,6 +364,7 @@ class VipPaperImage extends Model
             'education' => isset($gradeName[$grade]) ? $gradeName[$grade] : '',
             'subject' => $subjectId,
         ];
-        return $common->getYoudaoTask($url,$postData);
+        return $youdaoService->getYoudaoTask($url,$postData);
+
     }
 }
