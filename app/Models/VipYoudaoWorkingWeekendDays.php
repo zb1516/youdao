@@ -23,7 +23,7 @@ class VipYoudaoWorkingWeekendDays extends Model
         $result = $this->findAll($condition=[], $order=[], ['date_working_weekend']);
         $list = [];
         foreach($result as $v){
-            $list[] = strtotime($v['date_working_weekend']);
+            $list[] = strtotime(date('Y-m-d',strtotime($v['date_working_weekend'])));
         }
         $count = 1;
         $startTimeStamp = strtotime(date('Y-m-d',strtotime($startTime)));
