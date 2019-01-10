@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 
 
 class PaperController extends BaseController
@@ -74,14 +75,7 @@ class PaperController extends BaseController
         try{
             $taskId = abs($request->taskId);
             if($taskId){
-                $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
-
-                //调用有道接口。获取有道处理的试卷详情
-                $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
-                $postData['data']['taskId'] = $taskId;
-                $common = new CommonController;
-                $paperInfo['info'] = $common->getYoudaoTask($postUrl, $postData, 2);
-
+                $paperInfo = $this->getPaperInfo($taskId);
                 return response()->json($paperInfo);
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
@@ -93,9 +87,21 @@ class PaperController extends BaseController
     }
 
 
-    public function paperExamin(){
 
+    protected function getPaperInfo($taskId){
+        $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
+        //调用有道接口。获取有道处理的试卷详情
+        $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
+        $postData['data']['taskId'] = $taskId;
+        $common = new CommonController;
+        $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        if($result['code']== 200){
+            $paperInfo['youdao_info'] = $result['data'];
+        }
+        return $paperInfo;
     }
+
+
 
     /**
      * 试卷导出
@@ -170,7 +176,7 @@ class PaperController extends BaseController
     public function questionExport(){
         try{
             $data = [];
-            $searchArgs = $this->vipYoudaoExamined->paperSearchArgs(array('subjectId'=>4));
+            $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $vipYoudaoQuestion = new VipYoudaoQuestion;
             $list = $vipYoudaoQuestion->questionAll($searchArgs);
             if($list){
@@ -202,6 +208,124 @@ class PaperController extends BaseController
             }
             Export::export('试题列表', $headerArr, $data);
         }catch(\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+
+    /**
+     * 试卷审核第一步：题干，答案，解析审核
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperExaminOne(Request $request){
+        try{
+            $taskId = $request->post('taskId',0);
+            /**
+             * todo:组装提交数据
+             */
+            $data = array(
+                'task_id'=>$taskId,
+                'list'=>array(
+                    array(
+                        'number'=>2,
+                        'content'=>'题干不完整，题干错误',
+                        'answer'=>'答案不完整',
+                        'analysis'=>'解析不完整'
+                    ),
+                    array(
+                        'number'=>5,
+                        'content'=>'题干错误',
+                        'answer'=>'答案不完整',
+                        'analysis'=>'解析错误'
+                    ),
+                )
+            );
+            session($taskId,$data);
+            $status = 1;
+            return response()->json(['status' => $status]);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+
+    public function paperExaminTwo(Request $request){
+        try{
+            $taskId = $request->post('taskId',0);
+            $isPaperError = $request->post('isPaperError',0);
+            $paperErrorDesc = $request->post('paperErrorDesc','');
+            $data = $request->session()->get($taskId);
+            if(empty($data) && $isPaperError == 0){
+                //试卷通过审核
+                $paperInfo = $this->getPaperInfo($taskId);
+                $result = $this->vipYoudaoExamined->paperExamin($paperInfo);
+                /**
+                 * todo:审核通过后给有道反馈：/api/gaosi/feedback
+                 */
+                return response()->json(['status' => $result]);
+            }else{
+                $data['isPaperError'] = $isPaperError;
+                $data['paperErrorDesc'] = $paperErrorDesc;
+                session($taskId,$data);
+                /**
+                 * todo:试卷未通过审核处理
+                 */
+                /**
+                 * todo:审核不通过反馈:/api/gaosi/feedback
+                 */
+
+            }
+            $error = [];
+            if(!empty($data['list'])){
+                $error[] = '题目问题';
+            }
+            if($isPaperError == 1){
+                $error[] = '试卷问题';
+            }
+
+            return response()->json(['status' => 0, 'error'=>$error]);
+
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * 有道处理问题试题后的回调地址
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function questionError(Request $request){
+        try{
+
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * 有道加工试卷成功后的回调地址
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paperExamined(Request $request){
+        try{
+            $code = $request->post('code',0);
+            $message = $request->post('message','');
+            $data = $request->post('data','');
+            $status = 0;
+            if($code == 200){
+                $return = json_decode($data,true);
+                //更新任务的有道接收、处理时间
+                $status = $this->vipYoudaoExamined->updateYouDaoTime($return);
+            }
+            return response()->json(['status'=>$status]);
+        }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
