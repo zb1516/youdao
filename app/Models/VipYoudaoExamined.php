@@ -468,7 +468,10 @@ class VipYoudaoExamined extends Model
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
         $subjectName = isset($allSubjectNames[$searchArgs['subject_id']]) ? $allSubjectNames[$searchArgs['subject_id']] : '';
-        $str = $this->stringTransformation($subjectName);
+        $str = '';
+        if($subjectName){
+            $str = $common->stringTransformation($subjectName);
+        }
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
         $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
@@ -511,18 +514,7 @@ class VipYoudaoExamined extends Model
             throw new \Exception('保存标签失败');
         }
     }
-    /**
-     * 字符串转换
-     */
-    public function stringTransformation($subjectName)
-    {
-        $str = str_replace("初中","初中-",$subjectName);
-        $str = str_replace("小学","小学-",$str);
-        $str = str_replace("高中","高中-",$str);
-        $str = str_replace("国际课程","国际课程-",$str);
-        $str = str_replace("创新思维","创新思维-",$str);
-        return $str;
-    }
+
 
 
     /**

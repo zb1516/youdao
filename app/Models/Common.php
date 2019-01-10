@@ -31,6 +31,18 @@ class Common extends Model
         }
         return $subjectNamesArray;
     }
+    /**
+     * 字符串转换
+     */
+    public function stringTransformation($subjectName)
+    {
+        $str = str_replace("初中","初中-",$subjectName);
+        $str = str_replace("小学","小学-",$str);
+        $str = str_replace("高中","高中-",$str);
+        $str = str_replace("国际课程","国际课程-",$str);
+        $str = str_replace("创新思维","创新思维-",$str);
+        return $str;
+    }
 }
 
 

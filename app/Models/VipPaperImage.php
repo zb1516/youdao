@@ -292,7 +292,10 @@ class VipPaperImage extends Model
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
         $subjectName = isset($allSubjectNames[$searchArgs['subject_id']]) ? $allSubjectNames[$searchArgs['subject_id']] : '';
-        $str = $this->stringTransformation($subjectName);
+        $str = '';
+        if($subjectName){
+            $str = $common->stringTransformation($subjectName);
+        }
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
         $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
         $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
