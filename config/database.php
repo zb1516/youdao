@@ -68,6 +68,20 @@ return [
             'strict' => false,
             'engine' => null,
         ],
+        'mysql_enroll_oss' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_ENROLL_OSS'),
+            'port' => env('DB_PORT_ENROLL_OSS'),
+            'database' => env('DB_DATABASE_ENROLL_OSS'),
+            'username' => env('DB_USERNAME_ENROLL_OSS'),
+            'password' => env('DB_PASSWORD_ENROLL_OSS'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

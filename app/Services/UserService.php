@@ -11,12 +11,12 @@ class UserService
      * @param $userToken
      * @return bool
      */
-    public static function checkUserStatus($userToken)
+    public static function checkUserStatus($token)
     {
         try{
             //验证userToken是否过期
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
             if(!$userInfo){
                 throw new \Exception('未检测到用户登陆信息');
             }
@@ -29,14 +29,14 @@ class UserService
             if($errorCode == 1001){
                 $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
                 //查询用户
-                $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
+                $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
                 //调用微服务接口，进行用户登陆
                 $microToken=KlibTeacherClient::getToken([
                     'userName'=>$userInfo['userName'],
                     'passWord'=>$userInfo['password'],
                     'agencyId'=>$userInfo['agencyId']
                 ]);
-                $result=$vipYoudaoUserLoginLogModel->edit(['micro_token'=>$microToken],['user_token'=>$userToken,'is_delete'=>0]);
+                $result=$vipYoudaoUserLoginLogModel->edit(['micro_token'=>$microToken],['wx_token'=>$token,'is_delete'=>0]);
                 if($result ===  false)
                 {
                     return false;
@@ -53,11 +53,11 @@ class UserService
      * @param $userToken
      * @return mixed
      */
-    public static function getUserInfo($userToken)
+    public static function getUserInfo($token)
     {
         try{
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['user_token'=>$userToken,'is_delete'=>0]);
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
             if(!$userInfo){
                 throw new \Exception('用户信息不存在');
             }

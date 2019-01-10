@@ -22,6 +22,7 @@ use App\Models\City;
 use App\Models\VipDictQuestionType;
 use App\Models\VipDict;
 use App\Models\VipYoudaoAgency;
+use App\Services\YoudaoService;
 use DB;
 
 
@@ -37,11 +38,10 @@ class CommonController extends BaseController
         $this->vipDict = new VipDict;
         $this->vipDictQuestionType = new VipDictQuestionType;
         $this->vipYoudaoAgency = new VipYoudaoAgency;
-
         $this->city = new City;
-
         $this->sysRoles = new SysRoles();
         $this->sysUsers = new SysUsers();
+        $this->youdaoService = new YoudaoService();
 
     }
 
@@ -193,13 +193,13 @@ class CommonController extends BaseController
     public static function getSubjectYD(Request $request)
     {
         try{
-//            $searchArgs['userToken']=$request->input('userToken');
-//            if(!isset($searchArgs['userToken']))
+//            $searchArgs['token']=$request->input('token');
+//            if(!isset($searchArgs['token']))
 //            {
-//                throw new \Exception('缺少登陆用户token');
+//                throw new \Exception('缺少微信用户token');
 //            }
 //            //获取登陆用户uid
-//            $userInfo=UserService::getUserInfo($searchArgs['userToken']);
+//            $userInfo=UserService::getUserInfo($searchArgs['token']);
 //            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
             $json='{"code":0,"message":"\u64cd\u4f5c\u6210\u529f","data":{"rows":[{"id":38,"name":"\u5c0f\u5b66\u6570\u5b66","type":"1"},{"id":2,"name":"\u5c0f\u5b66\u8bed\u6587","type":"1"},{"id":1,"name":"\u5c0f\u5b66\u601d\u7ef4","type":"1"},{"id":3,"name":"\u5c0f\u5b66\u82f1\u8bed","type":"1"},{"id":58,"name":"\u5c0f\u5b66\u827a\u672f","type":"1"},{"id":35,"name":"\u521d\u4e2d\u751f\u7269","type":"2"},{"id":47,"name":"\u521d\u4e2d\u5730\u7406","type":"2"},{"id":39,"name":"\u521d\u4e2d\u5386\u53f2","type":"2"},{"id":5,"name":"\u521d\u4e2d\u8bed\u6587","type":"2"},{"id":4,"name":"\u521d\u4e2d\u6570\u5b66","type":"2"},{"id":6,"name":"\u521d\u4e2d\u82f1\u8bed","type":"2"},{"id":7,"name":"\u521d\u4e2d\u7269\u7406","type":"2"},{"id":8,"name":"\u521d\u4e2d\u5316\u5b66","type":"2"},{"id":48,"name":"\u521d\u4e2d\u653f\u6cbb","type":"2"},{"id":60,"name":"\u521d\u4e2d\u79d1\u5b66","type":"2"},{"id":57,"name":"\u521d\u4e2d\u827a\u672f","type":"2"},{"id":11,"name":"\u9ad8\u4e2d\u8bed\u6587","type":"3"},{"id":25,"name":"\u9ad8\u4e2d\u6570\u5b66","type":"3"},{"id":12,"name":"\u9ad8\u4e2d\u82f1\u8bed","type":"3"},{"id":13,"name":"\u9ad8\u4e2d\u7269\u7406","type":"3"},{"id":14,"name":"\u9ad8\u4e2d\u5316\u5b66","type":"3"},{"id":50,"name":"\u9ad8\u4e2d\u653f\u6cbb","type":"3"},{"id":40,"name":"\u9ad8\u4e2d\u751f\u7269","type":"3"},{"id":49,"name":"\u9ad8\u4e2d\u5730\u7406","type":"3"},{"id":41,"name":"\u9ad8\u4e2d\u5386\u53f2","type":"3"},{"id":56,"name":"\u9ad8\u4e2d\u827a\u672f","type":"3"}]}}';
             $jsonArr=json_decode($json,true);
@@ -252,62 +252,9 @@ class CommonController extends BaseController
      */
     public function getYoudaoTask($url,$postData,$type=1)
     {
-        try{
-            $appKey = config('app.TEST_APP_KEY');
-            $appSecret = config('app.TEST_APP_SECRET');
-            $url = config('app.TEST_YOUDAO_URL').$url;
-            $salt = rand(1,1000);
-            $time = time();
-            if($type == 1){
-                $sign = $this->getYoudaoSign($appKey,$postData['questionUrl'],$salt,$time,$appSecret);
-            }else{
-                $sign = $this->getYoudaoSign($appKey,$postData['data']['taskId'],$salt,$time,$appSecret);
-            }
-            $postData = array(
-                'appKey' => $appKey,
-                'salt' => $salt,
-                'curtime' => $time,
-                'sign' => $sign,
-                'type' => 1,
-            );
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
-            $result = curl_exec($ch);//有道返回的内容
-            curl_close($ch);
-            return response()->json($result);
-        }catch (\Exception $e){
-            return response()->json(['errorMsg' => $e->getMessage()]);
-        }
+        return $this->youdaoService->getYoudaoTask($url,$postData,$type);
     }
 
-    /**
-     * 获取有道签名认证
-     * @return array
-     */
-    public function getYoudaoSign($appKey,$url,$salt,$time,$appSecret)
-    {
-        $str = $this->getYoudaoInput($url);
-        $base64_encode_str = $appKey.base64_encode($str).$salt.$time.$appSecret;
-        $result = hash('sha256', $base64_encode_str, true);
-        return bin2hex($result);
-    }
-    /**
-     * 获取有道input值
-     * @return array
-     */
-    public function getYoudaoInput($url)
-    {
-        $INPUT_LENGTH_LIMIT = 20;
-        $length = strlen($url);
-        if ($length <= $INPUT_LENGTH_LIMIT) {
-            return $url;
-        }
-        $str = substr($url,0,10).$length.substr($url,$length-10,$length);
-        return $str;
-    }
     //获取有道机构列表
     public function getYoudaoAgency()
     {
@@ -357,7 +304,6 @@ class CommonController extends BaseController
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
-
     }
 
 }

@@ -10,15 +10,15 @@ if(!function_exists('getthemonth'))
     }
 }
 //加密
-if(!function_exists('encrypt'))
+if(!function_exists('encryptMd5'))
 {
-    function encrypt($data)
+    function encryptMd5($data)
     {
         $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
         $rand=rand(0,32);
         $txt=$strPol[$rand];
         $param=http_build_query($data);
-        return sha1($param.date('Y-m-d').$txt);
+        return md5($param.date('Y-m-d').$txt);
     }
 }
 //生成uuid
