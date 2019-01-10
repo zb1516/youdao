@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Model;
-use App\Services\Bucket;
+use App\Services\BucketService;
 use App\Services\YoudaoService;
 
 class VipPaperImage extends Model
@@ -350,7 +350,7 @@ class VipPaperImage extends Model
     public function uploadOssPackage($filename,$ossPATH)
     {
         $bucketName = config('app.OFFICE_DOCUMENT_BUCKET');
-        $res = Bucket::uploadFile( $bucketName,'/ossImages' . $filename . '.zip',$ossPATH.$filename . '.zip',false,'压缩包.zip');
+        $res = BucketService::uploadFile( $bucketName,'/ossImages' . $filename . '.zip',$ossPATH.$filename . '.zip',false,'压缩包.zip');
         unlink('/ossImages' . $filename . '.zip');
         return $res;
     }
