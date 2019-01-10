@@ -550,6 +550,167 @@ class VipYoudaoExamined extends Model
     }
 
 
+    /**
+     * 试卷审核成功处理
+     * @param $data
+     * @return int
+     */
+    public function paperExamin($data){
+        $status = 0;
+        if($data){
+            $time = time();
+            $question = new Question;
+            $paper = new Paper;
+            $paperInfo = array(
+                'grade_id'=>$data['grade'],
+                'subject_id'=>$data['subject_id'],
+                'name'=>$data['source'],
+                'source'=>$data['source'],
+                'year'=>$data['year'],
+                'province'=>$data['province'],
+                'city'=>$data['city'],
+                'country'=>$data['area'],
+                'school'=>$data['school'],
+                'grades'=>$data['grade'],
+                'term'=>$data['semester'],
+                'duration'=>$data['examination_length'],
+                'score'=>$data['examination_score'],
+                'question_number'=>$data['question_number'],
+                'created_time'=>$time,
+                'file_name'=>$data['paper_name'],
+                'file_name_md5'=>md5($data['paper_name']),
+                'show_name'=>$data['youdao_info']['paper_name'],
+                'agency_id'=>$data['agency_id'],
+                'paper_type'=>2,//1教研，2有道
+            );
+            $paper->beginTransaction();
+            $paperId = $paper->add($paperInfo);
+            if(!$paperId){
+                $this->rollback();
+                throw new \Exception('套卷添加失败');
+            }
+            //更新vip_youdao_examined表paper_id字段
+            $result = $this->edit(array('paper_id'=>$paperId),array('task_id'=>$data['task_id']));
+            if(!$result){
+                $this->rollback();
+                throw new \Exception('更新套卷数据失败');
+            }
 
+            if(!empty($data['youdao_info']['questions'])){
+                $ques = new Question;
+                $opt = new VipQuestionOption;
+                $ans = new VipQuestionAnswer;
+                foreach ($data['youdao_info']['questions'] as $key=>$q){
+                    $question['number'] = $q['quesNumber'];
+                    $question['yd_question_type'] = $q['quesType'];
+                    $question['content'] = $q['quesLatextContent']['content'];
+                    $question['content_text'] = strip_tags($q['quesLatextContent']['content']);
+                    $question['analysis'] = $q['quesLatextAnalysis']['content'];
+                    $question['analysis_text'] = strip_tags($q['quesLatextAnalysis']['content']);
+                    $question['paper_id'] = $paperId;
+                    $question['created_time'] = $time;
+                    $question['sdate'] = date('Ym');
+                    $question['source'] = $data['source'];
+                    $question['grade_id'] = $data['grade'];
+                    $question['subject_id'] = $data['subject_id'];
+                    $question['school'] = $data['school'];
+                    $question['province'] = $data['province'];
+                    $question['city'] = $data['city'];
+                    $question['country'] = $data['area'];
+                    $question['year'] = $data['year'];
+                    $question['term'] = $data['semester'];
+                    $question['name'] = $data['source'];
+                    $question['agency_id'] = $data['agency_id'];
+                    $question['yd_question_type'] = $q['quesType'];
+                    $newQuesId = $ques->add($question);
+                    if(!$newQuesId){
+                        $this->rollback();
+                        throw new \Exception('试题添加失败');
+                    }
+
+                    //选项录入
+                    if($q['hasOptions'] == 1){
+                        foreach ($q['options'] as $k=>$o){
+                            $option['question_id'] = $newQuesId;
+                            $option['content'] = $o['latexContent'];
+                            $option['content_text'] = strip_tags($o['latexContent']);
+                            switch ($o['label']){
+                                case 'A':
+                                    $option['sort'] = 1;
+                                    break;
+                                case 'B':
+                                    $option['sort'] = 2;
+                                    break;
+                                case 'C':
+                                    $option['sort'] = 3;
+                                    break;
+                                case 'D':
+                                    $option['sort'] = 4;
+                                    break;
+                                case 'E':
+                                    $option['sort'] = 5;
+                                    break;
+                                case 'F':
+                                    $option['sort'] = 6;
+                                    break;
+                                case 'G':
+                                    $option['sort'] = 7;
+                                    break;
+                                case 'H':
+                                    $option['sort'] = 8;
+                                    break;
+                                case 'I':
+                                    $option['sort'] = 9;
+                                    break;
+                            }
+                            $option['is_answer'] = ($o['isAnswer']==1)?1:0;
+                            $newOptionId = $opt->add($option);
+                            if(!$newOptionId){
+                                $this->rollback();
+                                throw new \Exception('试题选项添加失败');
+                            }
+                        }
+
+                    }else{
+                        $answer['question_id'] = $newQuesId;
+                        $answer['content'] = $q['quesLatextAnswer']['content'];
+                        $answer['content_text'] = $q['quesLatextAnswer']['content'];
+                        $newAnswerId = $ans->add($answer);
+                        if(!$newAnswerId){
+                            $this->rollback();
+                            throw new \Exception('试题答案添加失败');
+                        }
+                    }
+
+                    //更新vip_youdao_question_details表question_id字段
+                    $ydQuesDetail = new VipYoudaoQuestionDetails;
+                    $count = $ydQuesDetail->count(array('task_id'=>$data['task_id'],'quesNumber'=>$q['quesNumber']));
+                    if($count > 0){
+                        $result = $ydQuesDetail->edit(array('question_id'=>$newQuesId),array('task_id'=>$data['task_id'],'quesNumber'=>$q['quesNumber']));
+                        if(!$result){
+                            $this->rollback();
+                            throw new \Exception('试题ID更新失败');
+                        }
+                    }
+
+                }
+            }
+            $this->commit();
+            $status = 1;
+        }
+        return $status;
+    }
+
+
+
+    public function updateYouDaoTime($data){
+
+        $row = array(
+            'first_youdao_receive_time'=>$data['youdaoReceiveTime'],
+            'first_processing_time'=>$data['youdaoProcessingTime'],
+            'first_processing_days'=>''
+        );
+        return $this->edit($row,array('task_id'=>$data['taskId']));
+    }
 }
 
