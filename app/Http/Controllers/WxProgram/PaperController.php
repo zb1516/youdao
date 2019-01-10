@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WxProgram;
 
 use App\Clients\KlibTeacherClient;
+use App\Models\Common;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
@@ -86,6 +87,8 @@ class paperController extends Controller
                 $openId=WxService::getOpenId($searchArgs['token']);
                 $userInfo=UserService::getUserInfo($searchArgs['token']);
                 $taskId=uuid();     //生成任务id
+                $commonModel=new Common();
+                $subjectName=$commonModel->stringTransformation($searchArgs['subjectName']);
                 $result=$vipYoudaoExaminedModel->add([
                     'task_id'=>$taskId,
                     'open_id'=>$openId,
@@ -95,7 +98,7 @@ class paperController extends Controller
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],
                     'city'=>$searchArgs['cityId'],
-                    'paper_name'=> $searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$searchArgs['subjectName'].'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
+                    'paper_name'=> $searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$subjectName.'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
                     'paper_type'=>$searchArgs['paperType'],
                     'upload_time'=>date('Y-m-d H:i:s')
                 ]);
@@ -314,7 +317,7 @@ class paperController extends Controller
         try{
             $searchArgs['token']=$request->input('token');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
-            $searchArgs['pageSize']=$request->input('pageSize');
+            $searchArgs['pageSize']=$request->input('pageSize')>0?$request->input('pageSize'):20;
             if(!isset($searchArgs['token']))
             {
                 throw new \Exception('缺少微信用户token');
