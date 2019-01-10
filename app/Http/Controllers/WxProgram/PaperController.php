@@ -333,7 +333,12 @@ class paperController extends Controller
                 $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
                 $list[$key]=(array)$val;
             }
-            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
+            return response()->json(['status'=>200,'data'=>[
+                'current_page'=>$list->currentPage(),
+                'per_page'=>$list->perPage(),
+                'total'=>$list->total(),
+                'rows'=>$list
+            ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -404,7 +409,12 @@ class paperController extends Controller
             }
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
-            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
+            return response()->json(['status'=>200,'data'=>[
+                'current_page'=>$list->currentPage(),
+                'per_page'=>$list->perPage(),
+                'total'=>$list->total(),
+                'rows'=>$list
+            ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
