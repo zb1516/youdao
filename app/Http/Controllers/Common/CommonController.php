@@ -304,7 +304,6 @@ class CommonController extends BaseController
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
-
     }
 
 }

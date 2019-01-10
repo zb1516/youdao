@@ -45,6 +45,7 @@ class YoudaoService
             curl_close($ch);
             return response()->json($result);
         }catch (\Exception $e){
+
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }

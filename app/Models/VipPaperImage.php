@@ -365,5 +365,6 @@ class VipPaperImage extends Model
             'subject' => $subjectId,
         ];
         return $youdaoService->getYoudaoTask($url,$postData);
+
     }
 }
