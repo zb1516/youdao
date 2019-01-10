@@ -328,16 +328,18 @@ class paperController extends Controller
             $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
             $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
-            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page']);
-            foreach($list as $key => $val){
-                $val->image_error_type=!empty($val->image_error_type)?explode(',',$val->image_error_type):array();
-                $list[$key]=(array)$val;
+            $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
+            $result=[];
+            foreach($list['data'] as $key => $val){
+                $val=(array)$val;
+                $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
+                $list['data'][$key]=$val;
             }
             return response()->json(['status'=>200,'data'=>[
-                'current_page'=>$list->currentPage(),
-                'per_page'=>$list->perPage(),
-                'total'=>$list->total(),
-                'rows'=>$list
+                'current_page'=>$list['current_page'],
+                'per_page'=>$list['per_page'],
+                'total'=>$list['total'],
+                'rows'=>$list['data']
             ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
@@ -410,9 +412,6 @@ class paperController extends Controller
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
             return response()->json(['status'=>200,'data'=>[
-                'current_page'=>$list->currentPage(),
-                'per_page'=>$list->perPage(),
-                'total'=>$list->total(),
                 'rows'=>$list
             ]]);
         }catch (\Exception $e){

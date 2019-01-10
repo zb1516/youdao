@@ -33,10 +33,10 @@ class MessageController extends Controller
             $vipMessageRemindModel=new VipMessageRemind();
             $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
             return response()->json(['status'=>200,'data'=>[
-                'current_page'=>$list->currentPage(),
-                'per_page'=>$list->perPage(),
-                'total'=>$list->total(),
-                'rows'=>$list
+                'current_page'=>$list['current_page'],
+                'per_page'=>$list['per_page'],
+                'total'=>$list['total'],
+                'rows'=>$list['data']
             ]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
