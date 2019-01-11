@@ -10,6 +10,7 @@ namespace App\http\Controllers\Youdao;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Common\CommonController;
+use App\Http\Controllers\WxProgram\WxController;
 use App\Libs\Export;
 use App\Models\User;
 use App\Models\VipYoudaoExamined;
@@ -134,8 +135,7 @@ class PaperController extends BaseController
                     $data[$key]['paper_examined_auditor_name'] = isset($row['paper_examined_auditor_name'])?$row['paper_examined_auditor_name']:'';
                     $data[$key]['image_processing_days'] = $row['image_processing_days'];
                     $data[$key]['final_processing_days'] = $row['final_processing_days'];
-                    //todo：计算试卷审核时间-有道最终处理时间所用工作日天数
-                    $data[$key]['paper_examined_days'] = strtotime($row['paper_examined_time'])-strtotime($row['final_processing_time']);
+                    $data[$key]['paper_examined_days'] = $this->vipYoudaoExamined->getDiffDaysCount($row['final_processing_time'], $row['paper_examined_time']);//审核试卷工作日
 
                 }
 
@@ -242,7 +242,7 @@ class PaperController extends BaseController
                     ),
                 )
             );
-            session($taskId,$data);
+            $request->session()->put($taskId,$data);
             $status = 1;
             return response()->json(['status' => $status]);
         }catch (\Exception $e){
@@ -255,16 +255,26 @@ class PaperController extends BaseController
     public function paperExaminTwo(Request $request){
         try{
             $taskId = $request->post('taskId',0);
-            $isPaperError = $request->post('isPaperError',0);
+            $isPaperError = $request->post('isPaperError',0);//试卷是否有问题
             $paperErrorDesc = $request->post('paperErrorDesc','');
-            $data = $request->session()->get($taskId);
+            $formId = $request->post('formId',0);
+            $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
+            $paperInfo = $this->getPaperInfo($taskId);
             if(empty($data) && $isPaperError == 0){
                 //试卷通过审核
-                $paperInfo = $this->getPaperInfo($taskId);
                 $result = $this->vipYoudaoExamined->paperExamin($paperInfo);
                 /**
-                 * todo:审核通过后给有道反馈：/api/gaosi/feedback
+                 * todo:审核通过后给有道反馈：有道暂时还没更新
                  */
+
+                //审核通过需要给小程序发模版消息
+                $this->sendWxTemplate(array(
+                    'taskId'=>$taskId,
+                    'openId'=>$paperInfo['open_id'],
+                    'type'=>0,
+                    'formId'=>$formId
+                ));
+
                 return response()->json(['status' => $result]);
             }else{
                 $data['isPaperError'] = $isPaperError;
@@ -277,16 +287,25 @@ class PaperController extends BaseController
                  * todo:审核不通过反馈:/api/gaosi/feedback
                  */
 
-            }
-            $error = [];
-            if(!empty($data['list'])){
-                $error[] = '题目问题';
-            }
-            if($isPaperError == 1){
-                $error[] = '试卷问题';
+                //审核不通过需要给小程序发模版消息
+                $this->sendWxTemplate(array(
+                    'taskId'=>$taskId,
+                    'openId'=>$paperInfo['open_id'],
+                    'type'=>1,
+                    'formId'=>$formId
+                ));
+
+                $error = [];
+                if(!empty($data['list'])){
+                    $error[] = '题目问题';
+                }
+                if($isPaperError == 1){
+                    $error[] = '试卷问题';
+                }
+
+                return response()->json(['status' => 0, 'error'=>$error]);
             }
 
-            return response()->json(['status' => 0, 'error'=>$error]);
 
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -295,13 +314,22 @@ class PaperController extends BaseController
 
 
     /**
-     * 有道处理问题试题后的回调地址
+     * 有道第n次处理问题试题成功后的回调地址
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function questionError(Request $request){
         try{
-
+            $code = $request->post('code',0);
+            $message = $request->post('message','');
+            $data = $request->post('data','');
+            $status = 0;
+            if($code == 200){
+                $postData = json_decode($data,true);
+                //更新问题任务的有道接收、处理时间
+                $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
+            }
+            return response()->json(['status'=>$status]);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
@@ -309,7 +337,7 @@ class PaperController extends BaseController
 
 
     /**
-     * 有道加工试卷成功后的回调地址
+     * 有道第一次处理试卷成功后的回调地址
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -320,13 +348,51 @@ class PaperController extends BaseController
             $data = $request->post('data','');
             $status = 0;
             if($code == 200){
-                $return = json_decode($data,true);
+                $postData = json_decode($data,true);
                 //更新任务的有道接收、处理时间
-                $status = $this->vipYoudaoExamined->updateYouDaoTime($return);
+                $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($postData);
             }
             return response()->json(['status'=>$status]);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+
+
+    /**
+     * 发送微信模版消息
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendWxTemplate($data){
+        $wxTemplate = new WxController;
+        $wxTemplateData =  array(
+            'taskId'=>$data['taskId'],
+            'openId'=>$data['openId'],
+            'type'=>$data['type'],
+            'formId'=>$data['formId']
+        );
+        return $wxTemplate->sendTemplate($wxTemplateData);
+    }
+
+
+    /**
+     * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function batchPaperExamin(){
+        try{
+            /**
+             * todo:有道处理超过9个工作日未反馈的批量审核通过
+             */
+            /**
+             * todo:批量发送微信模版消息
+             */
+            $status = 1;
+            return response()->json(['status'=>$status]);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
 }

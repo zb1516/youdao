@@ -588,6 +588,9 @@ class VipYoudaoExamined extends Model
                 throw new \Exception('更新套卷数据失败');
             }
 
+            /**
+             * todo:套卷的latex内容文件是否需要上传到oss
+             */
             if(!empty($data['youdao_info']['questions'])){
                 $ques = new Question;
                 $opt = new VipQuestionOption;
@@ -685,6 +688,10 @@ class VipYoudaoExamined extends Model
                         }
                     }
 
+                    /**
+                     * todo:试题的题干、选项、答案、解析latex内容文件是否需要上传到oss
+                     */
+
                 }
             }
             $this->commit();
@@ -695,14 +702,93 @@ class VipYoudaoExamined extends Model
 
 
 
-    public function updateYouDaoTime($data){
+    public function updateFirstYouDaoTime($data){
+        if($data['taskId']){
+            $taskInfo = $this->findOne(array('task_id'=>$data['taskId']));
+            if($taskInfo['first_youdao_receive_time']){
+                $first_youdao_receive_time =  $taskInfo['first_youdao_receive_time'];
+            }else{
+                $first_youdao_receive_time = $data['youdaoReceiveTime'];
+            }
+            $first_processing_days = $this->getDiffDaysCount($first_youdao_receive_time, $data['youdaoProcessingTime']);
+            $row = array(
+                'first_processing_time'=>$data['youdaoProcessingTime'],
+                'first_processing_days'=>$first_processing_days
+            );
 
-        $row = array(
-            'first_youdao_receive_time'=>$data['youdaoReceiveTime'],
-            'first_processing_time'=>$data['youdaoProcessingTime'],
-            'first_processing_days'=>''
-        );
-        return $this->edit($row,array('task_id'=>$data['taskId']));
+            $result = $this->edit($row,array('task_id'=>$data['taskId']));
+            if($result){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    public function updateErrorYouDaoTime($data){
+        if($data['taskId']){
+            $vip_paper_examined_details = new VipPaperExaminedDetails;
+            $vip_youdao_paper = new VipYoudaoPaper;
+            $vip_youdao_question =  new VipYoudaoQuestion;
+            $vip_youdao_question_details =  new VipYoudaoQuestionDetails;
+            $lastPaperExaminedDetail = $vip_paper_examined_details->findOne(array('task_id'=>$data['taskId']),['id'=>'desc']);
+            $this->beginTransaction();
+            $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'],$data['youdaoProcessingTime']);
+            $newData = array(
+                'youdao_processing_time'=>$data['youdaoProcessingTime'],
+                'processing_days'=>$processing_days
+            );
+            $result = $vip_paper_examined_details->edit(array($newData),array('id'=>$lastPaperExaminedDetail['id']));
+            if($data['list']){
+                foreach ($data['list'] as $key=>$q){
+                    //更新vip_youdao_question表
+                    $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'],'number'=>$q['number']),['id'=>'desc']);
+                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'],$data['youdaoProcessingTime']);
+                    $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'],'number'=>$q['number']));
+                    $newData = array(
+                        'youdao_processing_time'=>$data['youdaoProcessingTime'],
+                        'processing_days'=>$processing_days,
+                        'many_times'=>$count
+                    );
+                    $result = $vip_youdao_question->edit($newData, array('id'=>$lastYoudaoQuestion['id']));
+                    if(!$result){
+                        $this->rollback();
+                        throw new \Exception('更新试题有道处理时间失败');
+                    }
+
+                    //更新vip_youdao_question_details表
+                    $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'],'number'=>$q['number']),['id'=>'desc']);
+                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'],$data['youdaoProcessingTime']);
+                    $newData = array(
+                        'youdao_processing_time'=>$data['youdaoProcessingTime'],
+                        'processing_days'=>$processing_days
+                    );
+                    $result = $vip_youdao_question_details->edit($newData, array('id'=>$lastYoudaoQuestionDetail['id']));
+                    if(!$result){
+                        $this->rollback();
+                        throw new \Exception('更新试题有道处理时间失败');
+                    }
+                }
+
+            }
+            $this->commit();
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 计算有道加工工作日数
+     * @param $startTime
+     * @param $endTime
+     * @return count
+     */
+    public function getDiffDaysCount($startTime, $endTime){
+        $vipYoudaoWorkingWeekendDays =  new VipYoudaoWorkingWeekendDays;
+        return $vipYoudaoWorkingWeekendDays->getDiffDaysCount($startTime, $endTime);
     }
 }
 

@@ -149,7 +149,9 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
 
 //不需要登录验证的路由
 $router->group(['prefix' => 'youdao'], function () use ($router) {
-    Route::get('paper/paperExamined', 'Youdao\PaperController@paperExamined');
+    Route::get('paper/paperExamined', 'Youdao\PaperController@paperExamined');//有道第一次处理成功回调地址
+    Route::get('paper/questionError', 'Youdao\PaperController@questionError');//有道处理问题试题成功后回调地址
+    Route::get('paper/batchPaperExamin', 'Youdao\PaperController@batchPaperExamin');//计划任务批处理通过审核
 });
 
 
