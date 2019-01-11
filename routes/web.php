@@ -86,6 +86,7 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
+    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
 });
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
@@ -95,7 +96,7 @@ Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($ro
     $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
     $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
     $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
-    $router->post('user/logout','WxProgram\UserController@logout');
+    $router->get('user/logout','WxProgram\UserController@logout');
 });
 
 //以下为4.0路由
