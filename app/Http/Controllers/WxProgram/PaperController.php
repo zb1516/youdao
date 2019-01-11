@@ -327,16 +327,15 @@ class paperController extends Controller
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select *,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
-            $result=[];
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
                 $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
-                $val['upload_time']=transTime(strtotime($val['upload_time']));
+                //判断是否是退回状态如果是退回状态，取审核时间，如果不是退回状态，取上传时间
+                $val['upload_time']=intval($val['image_examined_status'])==3?formatDate(strtotime($val['image_examined_time'])):formatDate(strtotime($val['upload_time']));
                 $list['data'][$key]=$val;
             }
-            var_dump($list['data']);exit;
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
                 'per_page'=>$list['per_page'],

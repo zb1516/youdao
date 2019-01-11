@@ -4,7 +4,7 @@ use App\Models\OssBuckets;
 use App\Models\OssConfigs;
 use OSS\OssClient;
 use OSS\Core\OssException;
-class Bucket {
+class BucketService {
     // http://bucketName.bucketRegion(-internal).aliyuncs.com/filePath
     protected static $urlSuffix = 'aliyuncs.com';
     protected static $internalSuffix = '-internal';

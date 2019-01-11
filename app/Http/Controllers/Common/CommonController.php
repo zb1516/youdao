@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Common;
 
+use App\Clients\KlibQuestionClient;
 use App\Clients\KlibSubjectClient;
 use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
@@ -23,6 +24,7 @@ use App\Models\VipDictQuestionType;
 use App\Models\VipDict;
 use App\Models\VipYoudaoAgency;
 use App\Services\YoudaoService;
+use App\Clients\KlibPaperClient;
 use DB;
 
 
@@ -301,6 +303,52 @@ class CommonController extends BaseController
                 $areas = $this->city->getAreaCitys($provinceId,$twoId);
             }
             return response()->json($areas);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+    /**
+     * 获取试卷详情
+     */
+    public function getPaperClient(Request $request)
+    {
+        try {
+            $paperId = abs($request->post('paperId', 0));
+            if(empty($paperId))
+            {
+                throw new \Exception('试卷Id不能为空');
+            }
+            $result = KlibPaperClient::getPaperClient($paperId);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+    /**
+     * 获取试题内容
+     */
+    public function getQuestionClient(Request $request)
+    {
+        try {
+            $questionIds = abs($request->post('questionIds', ''));
+            if(empty($questionIds))
+            {
+                throw new \Exception('试题Id不能为空');
+            }
+            $result = KlibQuestionClient::getQuestion($questionIds);
+            $detail = [];
+            $i = 1;
+            foreach ($result as $v) {
+                $detail[$v['ques_id']] = [
+                    'i' => $i,
+                    'questionId'       => $v['ques_id'],//试题ID
+                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
+                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
+                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
+                ];
+                $i++;
+            }
+            return response()->json(['rows' => $detail]);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
