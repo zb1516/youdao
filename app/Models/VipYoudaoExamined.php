@@ -588,6 +588,9 @@ class VipYoudaoExamined extends Model
                 throw new \Exception('更新套卷数据失败');
             }
 
+            /**
+             * todo:套卷的latex内容文件是否需要上传到oss
+             */
             if(!empty($data['youdao_info']['questions'])){
                 $ques = new Question;
                 $opt = new VipQuestionOption;
@@ -684,6 +687,10 @@ class VipYoudaoExamined extends Model
                             throw new \Exception('试题ID更新失败');
                         }
                     }
+
+                    /**
+                     * todo:试题的题干、选项、答案、解析latex内容文件是否需要上传到oss
+                     */
 
                 }
             }
