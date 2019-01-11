@@ -84,3 +84,26 @@ if(!function_exists('arrayReverse'))
         return array_reverse($data);
     }
 }
+
+if(!function_exists('transTime'))
+{
+    function transTime($ustime) {
+        $ytime = date("Y-m-d",$ustime);
+        $rtime = date("n月j日",$ustime);
+        $htime = date("H:i",$ustime);
+        $time = time() - $ustime;
+        $todaytime = strtotime("today");
+        $time1 = time() - $todaytime;
+        if($time < 60){
+            $str = '刚刚';
+        }else if($time < 60 * 60){
+            $min = floor($time/60);
+            $str = $min.'分钟前';
+        }else if($time < $time1){
+            $str = '今天'.$htime;
+        }else{
+            $str = $rtime;
+        }
+        return $str;
+    }
+}

@@ -333,8 +333,10 @@ class paperController extends Controller
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
                 $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
+                $val['upload_time']=transTime(strtotime($val['upload_time']));
                 $list['data'][$key]=$val;
             }
+            var_dump($list['data']);exit;
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
                 'per_page'=>$list['per_page'],
