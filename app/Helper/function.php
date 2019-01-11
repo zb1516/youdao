@@ -85,11 +85,11 @@ if(!function_exists('arrayReverse'))
     }
 }
 
-if(!function_exists('transTime'))
+if(!function_exists('formatDateTime'))
 {
-    function transTime($ustime) {
-        $ytime = date("Y-m-d",$ustime);
-        $rtime = date("n月j日",$ustime);
+    function formatDateTime($ustime) {
+        $ytime = date("Y-m-d H:i",$ustime);
+        $rtime = date("n月j日 H:i",$ustime);
         $htime = date("H:i",$ustime);
         $time = time() - $ustime;
         $todaytime = strtotime("today");
@@ -105,5 +105,13 @@ if(!function_exists('transTime'))
             $str = $rtime;
         }
         return $str;
+    }
+}
+
+if(!function_exists('formatDate'))
+{
+    function formatDate($ustime) {
+        $rtime = date("Y年n月j日",$ustime);
+        return $rtime;
     }
 }

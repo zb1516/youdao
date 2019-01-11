@@ -10,13 +10,13 @@ class WxService
      *
      * @return reposne
      */
-    public static function SendTemplate($openId,$formId,$data)
+    public static function SendTemplate($openId,$formId,$data,$type)
     {
         try{
-            $tempalte_id = 'lv9T-PcgWn-Rkhq-1MxwaxvotO2VU3prc-wk1';
+            $tempalteId=intval($type)==1?"am9CzBmTGUrjxN7oKY5qy0GetWPgq98_3WBqEbk4X0Y":"7G9-0evnvXdg_4mBU9cs83wg4jSjp8jK-rjSRzlar-w";
             $template =[
                 'touser' => $openId,
-                'template_id' => $tempalte_id,
+                'template_id' => $tempalteId,
                 'url' => 'pages/index/index',
                 'form_id'=>$formId,
                 'topcolor' =>'#7B68EE',

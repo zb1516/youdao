@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Models\VipMessageRemind;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoUserLoginLog;
@@ -65,44 +66,56 @@ class WxController extends Controller
     public function sendTemplate(Request $request,$data)
     {
         try{
-            $searchArgs['taskId']=$data['taskId'];
-            $searchArgs['openId']=$data['openId'];
-            $searchArgs['type']=$data['type'];
-            $searchArgs['formId']=$data['formId'];
-            if(intval($searchArgs['openId']) <= 0)
+            if(intval($data['openId']) <= 0)
             {
                 throw new \Exception('缺少openid');
             }
-            if(intval($searchArgs['type']) <= 0)
+            if(intval($data['type']) <= 0)
             {
                 throw new \Exception('缺少类型');
             }
-            if(intval($searchArgs['formId']) <= 0)
+            if(intval($data['userId']) <= 0){
+                throw new \Exception('缺少用户id');
+            }
+            if(intval($data['formId']) <= 0)
             {
-                throw new \Exception('缺少');
+                throw new \Exception('缺少表单id');
             }
             //查询任务id
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $taskInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $taskInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$data['taskId']]);
             //判断完成还是退回消息
-            if($searchArgs['type'] == 1){
+            if($data['type'] == 1){
                 $templateData=[
-                    'keyword1'  => ['value'=>'被退回通知','color'=>'#000000'],
-                    'keyword2'  => ['value'=>'试卷名称:'.$taskInfo['paper_name'],'color'=>'#000000'],
-                    'keyword3'  => ['value'=>'上传时间:'.$taskInfo['upload_time'],'color'=>'#000000'],
-                    'keyword4'  => ['value'=>'被退回原因:'.$taskInfo['image_error_type'],'color'=>'#000000'],
+                    'keyword1'  => ['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
+                    'keyword2'  => ['value'=>$taskInfo['upload_time'],'color'=>'#000000'],
+                    'keyword3'  => ['value'=>$taskInfo['image_error_type'],'color'=>'#000000'],
                 ];
             }else{
                 $templateData=[
-                    'keyword1'  => ['value'=>'试卷加工完成通知','color'=>'#000000'],
-                    'keyword2'  => ['value'=>'试卷名称:'.$taskInfo['paper_name'],'color'=>'#000000'],
-                    'keyword3'  => ['value'=>'试卷状态:已加工完成，请到私库中查看','color'=>'#000000'],
+                    'keyword1'  => ['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
+                    'keyword2'  => ['value'=>'试卷加工已完成，请到私库中查看','color'=>'#000000'],
                 ];
             }
-            $result=WxService::SendTemplate($searchArgs['openId'],$searchArgs['formId'],$templateData);
+            $result=WxService::SendTemplate($data['openId'],$data['formId'],$templateData,$data['type']);
             if($result->errcode != 0)
             {
                 throw new \Exception($result->errmsg);
+            }
+            //添加发送消息记录
+            $messageModel=new VipMessageRemind();
+            $result=$messageModel->add([
+                'uid'=>$data['userId'],
+                'task_id'=>$data['taskId'],
+                'open_id'=>$data['openId'],
+                'message_content'=>htmlspecialchars($data['content']),
+                'message_status'=>$data['type'],
+                'message_type'=>1,
+                'addtime'=>time()
+            ]);
+            if($result === false)
+            {
+                throw new \Exception('添加消息记录失败');
             }
             return response()->json(['status'=>200,'errorMsg'=>'发送成功']);
         }catch (\Exception $e){
