@@ -16,7 +16,8 @@
         "monolog/monolog": "^1.24",
         "predis/predis": "^1.1",
         "swooletw/laravel-swoole": "^2.5",
-        "symfony/translation": "^4.2"
+        "symfony/translation": "^4.2",
+        "aliyuncs/oss-sdk-php": "~2.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
