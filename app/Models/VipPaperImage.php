@@ -182,6 +182,11 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $this->youdaoDataHandle($searchArgs,$filename,$questionUrl);
+            $result = json_decode($result,true);
+            $data = [
+                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+            ];
+            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
         }else{
             //第三方oss调用
             $condition = array(
@@ -257,7 +262,12 @@ class VipPaperImage extends Model
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $this->youdaoDataHandle($searchArgs,$filename,$questionUrl,$answerUrl);
+            $result = $this->youdaoDataHandle($searchArgs,$filename,$questionUrl,$answerUrl);
+            $result = json_decode($result,true);
+            $data = [
+                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+            ];
+            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
 
         }
         $this->commit();

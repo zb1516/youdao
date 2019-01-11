@@ -118,6 +118,8 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
     $router->get('common/getCitys','Common\CommonController@getCitys');
     $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
+    $router->get('common/getQuestionClient', 'Common\CommonController@getQuestionClient');
+    $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');
 
 
 
