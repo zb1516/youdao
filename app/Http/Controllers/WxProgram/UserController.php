@@ -85,7 +85,7 @@ class UserController extends Controller
         try{
             $searchArgs['token']=$request->input('token');
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['token'=>$searchArgs['token'],'is_delete'=>0]);
             if($userInfo)
             {
                 $result=$vipYoudaoUserLoginLogModel->edit(['is_delete'=>1],['wx_token'=>$searchArgs['token']]);

@@ -2,7 +2,6 @@
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
 /vendor.bak
 /.idea/*
 /.vagrant
@@ -11,5 +10,5 @@ composer.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/.env
+.env
 
