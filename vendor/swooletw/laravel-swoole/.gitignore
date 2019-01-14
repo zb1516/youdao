@@ -1,0 +1,8 @@
+# Files
+.DS_Store
+phpunit.xml
+composer.lock
+
+# Folders
+vendor
+.idea
