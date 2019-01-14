@@ -33,7 +33,7 @@ class WxController extends Controller
             $searchArgs['code']=$request->input('code');
             $result=$this->wx->getLoginInfo($searchArgs['code']);
             if(!$result['openid']){
-                throw new \Exception("错误：".$result['code']);
+                throw new \Exception($result['code']);
             }
             $token=encryptMd5($result);
             //把token存入redis中
