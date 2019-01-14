@@ -48,6 +48,7 @@ class BucketService {
      * @throws \Exception
      */
     public static function getBucketConfig($bucketName, $withConfigInfo=true) {
+
         if(is_array($bucketName)) {
             $bucketInfo = $bucketName;
         } else {
@@ -70,6 +71,7 @@ class BucketService {
             'bucketRegion'=>$bucketInfo['bucket_region'],
             'bucketDomain'=>$bucketInfo['bucket_domain']
         ));
+
     }
 
     /**
@@ -120,7 +122,6 @@ class BucketService {
             'Timestamp' => date('Y-m-d').'T'.date('H:i:s').'Z',
             'Version' => '2015-04-01',
         ];
-
         $params = '';
         $signatureStrStart = 'GET&%2F&';
         $signatureStr = '';
@@ -128,10 +129,8 @@ class BucketService {
             $params .= $k.'='.urlencode($v).'&';
             $signatureStr .= $k.'='.$v.'&';
         }
-
         $signature = $signatureStrStart.urlencode(substr($params,0,-1));
         $signature = base64_encode(hash_hmac('sha1', $signature, $accessKeySecret.'&', true));
-
         $url = 'https://sts.aliyuncs.com?'.$params.'&Signature='.$signature;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -168,23 +167,13 @@ class BucketService {
             );
         }
         try{
+            $localImageUrl = config('app.LOCAL_IMAGE_URL');
             $ossClient = new OssClient($bucketInfo['accessId'], $bucketInfo['accessSecret'], $endpoint);
-
-            $res= $ossClient->uploadFile($bucketName, $ossPath, $localFilePath,$options);
+            $res = $ossClient->uploadFile($bucketName, $ossPath, $localImageUrl.$localFilePath,$options);
             return $res;
         } catch(OssException $e) {
             throw $e;
         }
     }
 
-//    public static function getFileUrl($originUrl, $bucketConfig, $internal=false) {
-//        $urlInfo = parse_url($originUrl);
-//        if(preg_match('#aliyuncs#', $originUrl)) {
-//            if(false == $internal && $bucketConfig['bucketDomain']) {
-//
-//            }
-//        } else {
-//
-//        }
-//    }
 }

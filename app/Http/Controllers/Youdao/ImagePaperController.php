@@ -35,7 +35,7 @@ class ImagePaperController extends BaseController
     /**
      * 图片审核列表
      */
-    public function imagePaper(Request $request)
+    public function imagePaper1(Request $request)
     {
         try {
             $currentPage = abs($request->get('currentPage', 1));
@@ -179,6 +179,25 @@ class ImagePaperController extends BaseController
     {
         try {
             $isSort = 1;
+            $_GET['paperType'] = 2;
+//            $_GET['sortTaskId'] = [
+//                '1' => [
+//                    'http://www.jansonvue.org/images/002.jpg',
+//                    'http://www.jansonvue.org/images/001.jpg'
+//                ]
+//            ];
+            $_GET['sortTaskId']= [
+            '1' => [
+                'question' => [
+                    'http://www.jansonvue.org/images/002.jpg',
+                    'http://www.jansonvue.org/images/001.jpg'
+                ],
+                'answer' => [
+                    'http://www.jansonvue.org/images/003.png',
+                    'http://www.jansonvue.org/images/004.png'
+                ],
+            ]
+        ];
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
             $result = $this->vipPaperImage->paperPass($searchArgs);
             return response()->json($result);
