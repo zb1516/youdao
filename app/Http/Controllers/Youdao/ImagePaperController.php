@@ -35,7 +35,7 @@ class ImagePaperController extends BaseController
     /**
      * 图片审核列表
      */
-    public function imagePaper1(Request $request)
+    public function imagePaper(Request $request)
     {
         try {
             $currentPage = abs($request->get('currentPage', 1));
