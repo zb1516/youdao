@@ -259,14 +259,12 @@ class PaperController extends BaseController
             $paperErrorDesc = $request->post('paperErrorDesc','');
             $formId = $request->post('formId',0);
             $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
+            $userInfo = $this->user->getUserInfo($this->userKey);
+            $data['author_info'] = $userInfo;
             $paperInfo = $this->getPaperInfo($taskId);
             if(empty($data) && $isPaperError == 0){
-                //试卷通过审核
+                //试卷通过审核，通知有道
                 $result = $this->vipYoudaoExamined->paperExamin($paperInfo);
-                /**
-                 * todo:审核通过后给有道反馈：有道暂时还没更新
-                 */
-
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -279,13 +277,9 @@ class PaperController extends BaseController
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
-                session($taskId,$data);
-                /**
-                 * todo:试卷未通过审核处理
-                 */
-                /**
-                 * todo:审核不通过反馈:/api/gaosi/feedback
-                 */
+                //session($taskId,$data);
+                //试卷审核不通过，退回有道
+                $this->vipYoudaoExamined->paperError($data,$paperInfo);
 
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
