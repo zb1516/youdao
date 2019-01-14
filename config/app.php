@@ -264,6 +264,7 @@ return [
     'AUTH_KEY'=>'wx_mini_program',
     'PAPER_AUDITOR'=>'试卷审核人',
     'IMG_AUDITOR'=>'图片审核人',
+    'DATA_MANAGER'=>'数据统计管理人',
     'YOUDAO_TASK_RESULT_URL' => '/api/gaosi/taskResult',
     'YOUDAO_FEEDBACK_URL'=>'/api/gaosi/feedback',
     'PAPER_EXAMINED_STATUS'=> [

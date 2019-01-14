@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Clients\KlibPaperClient;
+use App\Clients\KlibQuestionClient;
 use App\Clients\KlibTeacherClient;
 use App\Models\Common;
 use App\Models\VipPaperImage;
@@ -442,6 +444,37 @@ class paperController extends Controller
                 'status'=>0,
                 'errorMsg'=>$e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * 试卷详情
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPaperInfo(Request $request)
+    {
+        try{
+            $searchArgs['taskId']=$request->input('taskId');
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
+            $detail = [];
+            $i = 1;
+            foreach ($result as $v) {
+                $detail[$v['ques_id']] = [
+                    'i' => $i,
+                    'questionId'       => $v['ques_id'],//试题ID
+                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
+                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
+                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
+                ];
+                $i++;
+            }
+            return response()->json(['status'=>200,'data'=>['rows' => $detail]]);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
     }
 }
