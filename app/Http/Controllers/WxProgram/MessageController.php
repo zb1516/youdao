@@ -31,12 +31,12 @@ class MessageController extends Controller
             $openId=WxService::getOpenId($searchArgs['token']);
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
-            $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime','desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
-            foreach($list as $key => $val)
+            $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            foreach($list['data'] as $key => $val)
             {
                 $val['message_content']=htmlspecialchars_decode($val['message_content']);
                 $val['addtime']=formatDateTime($val['addtime']);
-                $list[$key]=$val;
+                $list['data'][$key]=$val;
             }
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
