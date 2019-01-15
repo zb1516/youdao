@@ -588,8 +588,8 @@ class VipYoudaoExamined extends Model
                                         'paper_examined_auditor_id'=>$data['author_info']['id'],
                                         'paper_examined_time'=>date('Y-m-d H:i:s'),
                                         'final_youdao_receive_time'=>$lastYoudaoTime['last_receive_time'],
-                                        'last_processing_time'=>$lastYoudaoTime['youdao_processing_time'],
-                                        'last_processing_days'=>$lastYoudaoTime['processing_days']),
+                                        'final_processing_time'=>$lastYoudaoTime['youdao_processing_time'],
+                                        'final_processing_days'=>$lastYoudaoTime['processing_days']),
                                 array('task_id'=>$data['task_id'])
             );
             if(!$result){
@@ -739,12 +739,31 @@ class VipYoudaoExamined extends Model
                 'first_processing_days'=>$first_processing_days,
                 'paper_examined_status'=>2
             );
-
+            $this->beginTransaction();
             $result = $this->edit($row,array('task_id'=>$data['taskId']));
-            if($result){
-                return true;
+            if(!$result){
+                $this->rollback();
+                throw new \Exception('有道第一次处理成功回调处理失败');
             }
-            return false;
+            $newPaperExaminedDetail = array(
+                'task_id'=>$data['taskId'],
+                'youdao_receive_time'=>$first_youdao_receive_time,
+                'youdao_processing_time'=>$data['youdaoProcessingTime'],
+                'processing_days'=>$first_processing_days
+            );
+            $vip_paper_examined_details = new VipPaperExaminedDetails;
+            $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
+            if($lastPaperExaminedDetail['youdao_processing_time'] == ''){
+                $result = $vip_paper_examined_details->edit($newPaperExaminedDetail,array('id'=>$lastPaperExaminedDetail['id']));
+            }else{
+                $result = $vip_paper_examined_details->add($newPaperExaminedDetail);
+            }
+            if(!$result){
+                $this->rollback();
+                throw new \Exception('有道第一次处理成功回调处理失败2');
+            }
+            $this->commit();
+            return true;
         }
         return false;
     }
@@ -841,23 +860,23 @@ class VipYoudaoExamined extends Model
     public function paperError($data, $paperInfo){
         $this->beginTransaction();
         $nowTime = date('Y-m-d H:i:s');
-        /**
-         * todo:审核不通过反馈:/api/gaosi/feedback，如果有道返回code不为200，则所有事务回滚
-         */
-        $result = $this->edit(array('paper_examined_status'=>4,'paper_examined_auditor_id'=>$data['author_info']['user_id'],'paper_examined_time'=>$nowTime),array('task_id'=>$data['task_id']));
+        //更新套卷审核状态、审核时间、审核人
+        $result = $this->edit(array('paper_examined_status'=>4,'paper_examined_time'=>$nowTime,'paper_examined_auditor_id'=>$data['author_info']['id']),array('task_id'=>$data['task_id']));
         if(!$result){
             $this->rollback();
-            throw new \Exception('套卷审核状态、审核时间、审核人更新失败');
+            throw new \Exception('套卷审核状态更新失败');
         }
         //更新最后一次有道处理记录的审核结果
         $vip_youdao_examined_details = new VipPaperExaminedDetails;
         $lastYoudaoPaperDetail = $vip_youdao_examined_details->findOne(array('task_id'=>$data['task_id']),['id'=>'desc']);
-        $result = $vip_youdao_examined_details->edit(array('author_id'=>$data['author_info']['id'],'audit_time'=>date('Y-m-d H:i:s'),'audit_status'=>2),array('id'=>$lastYoudaoPaperDetail['id']));
+        $result = $vip_youdao_examined_details->edit(array('author_id'=>$data['author_info']['id'],'audit_time'=>date('Y-m-d H:i:s'),'audit_status'=>2,'return_reason'=>json_encode($data)),array('id'=>$lastYoudaoPaperDetail['id']));
         if(!$result){
             $this->rollback();
             throw new \Exception('更新有道处理记录审核结果失败');
         }
-
+        /**
+         * todo:审核不通过反馈:/api/gaosi/feedback，如果有道返回code不为200，则所有事务回滚
+         */
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(
             'task_id'=>$data['task_id'],
@@ -883,11 +902,17 @@ class VipYoudaoExamined extends Model
         }
         if(count($data['list']) > 0){//如果有问题试题
             $vip_youdao_question = new VipYoudaoQuestion;
+            $vip_youdao_question_details = new VipYoudaoQuestionDetails;
             foreach ($data['list'] as $key=>$error){
+                $return_times = $vip_youdao_question->count(array('task_id'=>$data['task_id'],'quesNumber'=>$error['number']));
                 $newErrorQuestion = array(
-                    'task_id'=>$data['task_id'],
-                    'quesNumber'=>$error['number'],
-                    'youdao_receive_time'=>$nowTime,
+                        'task_id'=>$data['task_id'],
+                        'quesNumber'=>$error['number'],
+                        'youdao_receive_time'=>$nowTime,
+                        'many_times'=>$return_times+1,
+                        'return_reason_content1'=>$error['content'],
+                        'return_reason_answer1'=>$error['answer'],
+                        'return_reason_analysis1'=>$error['analysis']
                 );
 
                 $newErrorQuestionId = $vip_youdao_question->add($newErrorQuestion);
@@ -896,23 +921,19 @@ class VipYoudaoExamined extends Model
                     throw new \Exception('试题退回有道接收记录添加失败');
                 }
 
-                $vip_youdao_question_details = new VipYoudaoQuestionDetails;
-                $return_times = $vip_youdao_question_details->count(array('task_id'=>$data['task_id'],'quesNumber'=>$error['number']));
                 $newQuestionDetail = array(
-                    'task_id'=>$data['task_id'],
-                    'quesNumber'=>$error['number'],
-                    'youdao_receive_time'=>$nowTime,
-                    'return_times'=>$return_times+1,
-                    'money'=>0,
-                    'return_reason_content1'=>$error['content'],
-                    'return_reason_answer1'=>$error['answer'],
-                    'return_reason_analysis1'=>$error['analysis'],
-                );
-                $newQuestionDetailId = $vip_youdao_question_details->add($newQuestionDetail);
-                if(!$newQuestionDetailId){
-                    $this->rollback();
-                    throw new \Exception('试题退回有道详细原因记录添加失败');
-                }
+                        'task_id'=>$data['task_id'],
+                        'quesNumber'=>$error['number'],
+                        'youdao_receive_time'=>$nowTime,
+                        'return_times'=>$return_times+1,
+                        'money'=>0,
+                    );
+                    $newQuestionDetailId = $vip_youdao_question_details->add($newQuestionDetail);
+                    if(!$newQuestionDetailId){
+                        $this->rollback();
+                        throw new \Exception('试题退回有道详细原因记录添加失败');
+                    }
+
 
             }
 
