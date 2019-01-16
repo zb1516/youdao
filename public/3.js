@@ -403,7 +403,7 @@ if (false) {
 /***/ 115:
 /***/ (function(module, exports) {
 
-module.exports = "/images/no-task-icon.png?2a161c5fa5dddf76607ab374235c44ad";
+// module.exports = "/images/no-task-icon.png?2a161c5fa5dddf76607ab374235c44ad";
 
 /***/ }),
 

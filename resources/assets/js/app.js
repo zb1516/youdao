@@ -9,25 +9,20 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import App from './App.vue'
-import qs from 'qs'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
-import index from './routes'
-import teacher from './teacher'
-import manage from './manage'
-import error from './error'
+import imagePaper from './imagePaper'
 import "./http"
-import Message from 'vue-multiple-message'
+//
+// import "./static/js/jquery.min.js"
 
-Vue.prototype.$message = Message
-Vue.prototype.$qs=qs;
+
+//import "./static/js/pagination/pagination.min.js"
+
 Vue.use(VueRouter)
 const router=new VueRouter({
     routes: [
-        ...index,
-        ...teacher,
-        ...manage,
-        ...error
+        ...imagePaper,
     ]
 })
 //路由拦截器
@@ -41,12 +36,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('setUserKeyMutations',userKey);  //设置userKey
         store.dispatch('setUserMutations');             //设置用户信息
     }
-    //判断学科是否存在
-    if(Object.keys(store.state.subjectList).length<=0)
-    {
-        //获取学科
-        store.dispatch('setSubjectMutations');
-    }
+
     next();
 })
 
