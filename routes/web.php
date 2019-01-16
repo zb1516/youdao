@@ -63,7 +63,12 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
     $router->get('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
     $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');//获取试卷信息
+
+
+
 });
+
+
 $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function () use ($router) {
     Route::get('user/getUserInfo', 'Youdao\UserController@getUserInfo');
     Route::get('paper/paperList', 'Youdao\PaperController@paperList');
@@ -80,6 +85,8 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
     Route::get('paper/paperExaminOne', 'Youdao\PaperController@paperExaminOne');
     Route::get('paper/paperExaminTwo', 'Youdao\PaperController@paperExaminTwo');
+
+
 });
 
 //不需要登录验证的路由

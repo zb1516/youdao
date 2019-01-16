@@ -4,13 +4,13 @@ export default {
     },
     getUserKey(state){
         return state.userKey;
-    },
-    getPaperId(state)
-    {
-        return state.paperId;
-    },
-    getSubject(state)
-    {
-        return state.subjectList;
     }
+    // getPaperId(state)
+    // {
+    //     return state.paperId;
+    // },
+    // getSubject(state)
+    // {
+    //     return state.subjectList;
+    // }
 }

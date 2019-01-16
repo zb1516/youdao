@@ -17,6 +17,4 @@
     }
 </script>
 
-<style scoped>
-
-</style>
+<style src="../static/css/youdao.css"></style>

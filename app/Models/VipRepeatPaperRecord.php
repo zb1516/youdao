@@ -25,7 +25,7 @@ class VipRepeatPaperRecord extends Model
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
             $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
-                'mage_examined_status' => 4,
+                'image_examined_status' => 4,
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,

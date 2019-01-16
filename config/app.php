@@ -280,4 +280,5 @@ return [
         '3' => '高中',
     ],
     'YOUDAO_DELIVER_TASK'=>'/api/gaosi/deliverTask',
+    'LOCAL_IMAGE_URL'=>'G:/jansonyoudao/youdao/public/',
 ];

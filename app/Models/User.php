@@ -15,6 +15,7 @@ class User extends Model
             'user_key' => $userKey
         ];
         $result = $this->findOne($condition, $order=[], ['id','user_name','user_realname']);
+        $result['id'] = $result['id'];
         $result['agency_id'] = 384;
         $result['agency_name'] = '高思VIP';
         return $result;

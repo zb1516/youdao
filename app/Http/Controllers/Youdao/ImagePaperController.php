@@ -179,6 +179,25 @@ class ImagePaperController extends BaseController
     {
         try {
             $isSort = 1;
+            $_GET['paperType'] = 2;
+//            $_GET['sortTaskId'] = [
+//                '1' => [
+//                    'http://www.jansonvue.org/images/002.jpg',
+//                    'http://www.jansonvue.org/images/001.jpg'
+//                ]
+//            ];
+            $_GET['sortTaskId']= [
+            '1' => [
+                'question' => [
+                    'http://www.jansonvue.org/images/002.jpg',
+                    'http://www.jansonvue.org/images/001.jpg'
+                ],
+                'answer' => [
+                    'http://www.jansonvue.org/images/003.png',
+                    'http://www.jansonvue.org/images/004.png'
+                ],
+            ]
+        ];
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
             $result = $this->vipPaperImage->paperPass($searchArgs);
             return response()->json($result);

@@ -63,6 +63,7 @@ class CommonController extends BaseController
     //获取省份
     public function getProvince()
     {
+        //return 1;
         $result = $this->province->getProvince();
         return response()->json($result);
 
