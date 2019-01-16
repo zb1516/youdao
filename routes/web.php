@@ -28,6 +28,7 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
     $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
+    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
 });
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){

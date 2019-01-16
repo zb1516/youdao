@@ -7,6 +7,7 @@ use App\Models\VipPaperImage;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoUserLoginLog;
 use App\Services\TaskService;
+use App\Services\UserService;
 use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
 use Illuminate\Http\Request;
@@ -135,14 +136,18 @@ class WxController extends Controller
             {
                 throw new \Exception('缺少试卷任务id');
             }
+            //判断如果没有分享标识，需要登陆判断是否存在用户token
+            if($request->input()){}
             $vipPaperImageModel=new VipPaperImage();
             //获取第一张图片
-            $paperInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'asc'],['image_url']);
+            $paperInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId'],'is_delete'=>0],['create_time'=>'asc'],['image_url']);
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $examinedPaperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'show_name');
             return response()->json([
                 'status'=>200,
                 'data'=>[
-                    'title'=>'',
-                    'path'=>'',
+                    'title'=>$examinedPaperInfo['show_name'],
+                    'path'=>'/pages/message/photo/photo?task_id='.$searchArgs['taskId'].'is_share=1',
                     'desc'=>'',
                     'imageUrl'=>$paperInfo['image_url'],
                 ]
