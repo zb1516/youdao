@@ -496,7 +496,7 @@ class paperController extends Controller
         try{
             $searchArgs['taskId']=$request->input('taskId');
             $searchArgs['token']=$request->input('token');
-            $searchArgs['isShare']=$request->input('is_share');
+            $searchArgs['isShare']=$request->input('isShare');
 //            $vipYoudaoExaminedModel=new VipYoudaoExamined();
 //            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
 //            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
