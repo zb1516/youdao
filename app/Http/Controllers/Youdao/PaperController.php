@@ -89,7 +89,7 @@ class PaperController extends BaseController
 
 
 
-    protected function getPaperInfo($taskId){
+    public function getPaperInfo($taskId){
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
@@ -219,7 +219,7 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExaminOne(Request $request){
+    public function paperExaminedOne(Request $request){
         try{
             $taskId = $request->post('taskId',0);
             /**
@@ -252,7 +252,7 @@ class PaperController extends BaseController
 
 
 
-    public function paperExaminTwo(Request $request){
+    public function paperExaminedTwo(Request $request){
         try{
             $taskId = $request->post('taskId',0);
             $isPaperError = $request->post('isPaperError',0);//试卷是否有问题
@@ -260,11 +260,11 @@ class PaperController extends BaseController
             $formId = $request->post('formId',0);
             $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
             $userInfo = $this->user->getUserInfo($this->userKey);
-            $data['author_info'] = $userInfo;
             $paperInfo = $this->getPaperInfo($taskId);
+            $data['author_info'] = $userInfo;
             if(empty($data) && $isPaperError == 0){
                 //试卷通过审核，通知有道
-                $result = $this->vipYoudaoExamined->paperExamin($paperInfo);
+                $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -279,7 +279,7 @@ class PaperController extends BaseController
                 $data['paperErrorDesc'] = $paperErrorDesc;
                 //session($taskId,$data);
                 //试卷审核不通过，退回有道
-                $this->vipYoudaoExamined->paperError($data,$paperInfo);
+                $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
 
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
@@ -374,16 +374,25 @@ class PaperController extends BaseController
      * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过
      * @return \Illuminate\Http\JsonResponse
      */
-    public function batchPaperExamin(){
+    public function batchPaperExamined(){
         try{
             /**
-             * todo:有道处理超过9个工作日未反馈的批量审核通过
+             * todo:有道处理超过9个工作日未反馈的批量审核通过：未完,发送模版消息formID目前没有办法获取
              */
-            /**
-             * todo:批量发送微信模版消息
-             */
-            $status = 1;
-            return response()->json(['status'=>$status]);
+            $successTask = $this->vipYoudaoExamined->batchExamined();
+            //批量发送微信模版消息
+            if($successTask){
+                foreach ($successTask as $key=>$task){
+                    $this->sendWxTemplate(array(
+                        'taskId'=>$task['taskId'],
+                        'openId'=>$task['openId'],
+                        'type'=>$task['type'],
+                        'formId'=>$task['formId']
+                    ));
+                }
+            }
+            file_put_contents('/dev/shm/'.date('YmdHis').'.txt',json_encode($successTask));
+            return response()->json(['successTask'=>$successTask]);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }

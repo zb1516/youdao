@@ -38,4 +38,27 @@ class VipYoudaoWorkingWeekendDays extends Model
         return $num;
 
     }
+
+
+    public function getStartTime($autoAuditDays){
+        $result = $this->findAll($condition=[], $order=[], ['date_working_weekend']);
+        $list = [];
+        foreach($result as $v){
+            $list[] = strtotime(date('Y-m-d',strtotime($v['date_working_weekend'])));
+        }
+        $endTimeStamp = strtotime(date('Y-m-d',time()));
+        $count = 1;
+        $starTimeStamp = 0;
+        for($i=$endTimeStamp; $i>0; $i-=86400){
+            if(in_array($i,$list)){
+                continue;
+            }
+            $count++;
+            if($count == 11){
+                $starTimeStamp = date('Y-m-d H:i:s',$i);
+                break;
+            }
+        }
+        return $starTimeStamp;
+    }
 }
