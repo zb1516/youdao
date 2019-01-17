@@ -21,7 +21,6 @@ Route::get('/', function () {
 Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
     $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
-    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
     $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
     $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
     $router->post('user/login','WxProgram\UserController@login');
@@ -33,12 +32,14 @@ Route::group(['prefix'=>'wxprogram'],function($router){
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
     $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
     $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount');
     $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
     $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
     $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
     $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
     $router->get('user/logout','WxProgram\UserController@logout');
+    $router->post('upload/getSignature','WxProgram\UploadController@getSignature');
 });
 
 //以下为4.0路由

@@ -7,6 +7,7 @@ use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
 use App\Services\UserService;
 use App\Services\WxService;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,15 +24,11 @@ class MessageController extends Controller
             $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize');
-            if(!isset($searchArgs['token']))
-            {
-                throw new \Exception('缺少微信用户token');
-            }
-            //获取用户openid
-            $openId=WxService::getOpenId($searchArgs['token']);
+            //获取用户信息
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
-            $list=$vipMessageRemindModel->findAll(['open_id'=>$openId],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId']],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
             foreach($list['data'] as $key => $val)
             {
                 $val['message_content']=htmlspecialchars_decode($val['message_content']);
@@ -58,10 +55,6 @@ class MessageController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
-            if(!isset($searchArgs['token']))
-            {
-                throw new \Exception('缺少微信用户token');
-            }
             //获取用户openid
             $openId=WxService::getOpenId($searchArgs['token']);
             //获取用户id
@@ -93,10 +86,6 @@ class MessageController extends Controller
             $searchArgs['messageId']=$request->input('messageId');
             if(intval($searchArgs['messageId']) <= 0){
                 throw new \Exception('缺少消息id');
-            }
-            if(!isset($searchArgs['token']))
-            {
-                throw new \Exception('缺少微信用户token信息');
             }
             //获取用户openId;
             $openId=WxService::getOpenId($searchArgs['token']);

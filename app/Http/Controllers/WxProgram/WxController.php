@@ -146,9 +146,9 @@ class WxController extends Controller
             return response()->json([
                 'status'=>200,
                 'data'=>[
-                    'title'=>$examinedPaperInfo['show_name'],
-                    'path'=>'/pages/message/photo/photo?task_id='.$searchArgs['taskId'].'is_share=1',
-                    'desc'=>'',
+                    'title'=>'测试',
+                    'path'=>'/pages/message/detail/detail?task_id='.$searchArgs['taskId'].'&is_share=1',
+                    'desc'=>'测试',
                     'imageUrl'=>$paperInfo['image_url'],
                 ]
             ]);

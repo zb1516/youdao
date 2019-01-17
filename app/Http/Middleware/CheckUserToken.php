@@ -18,6 +18,10 @@ class CheckUserToken
     {
         try{
             $searchArgs['token']=$request->input('token');
+            if(!isset($searchArgs['token']))
+            {
+                throw new \Exception('缺少token信息');
+            }
             $result=UserService::checkUserStatus($searchArgs['token']);
             if($result === false)
             {
@@ -25,7 +29,7 @@ class CheckUserToken
             }
             return $next($request);
         }catch (\Exception $e){
-            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+            return response()->json(['status'=>1001,'errorMsg'=>$e->getMessage()]);
         }
     }
 }

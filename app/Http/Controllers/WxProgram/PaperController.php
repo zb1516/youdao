@@ -42,9 +42,6 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if(!isset($searchArgs['token']) <= 0){
-                    throw new \Exception('缺少登陆用户token');
-                }
                 if(intval($searchArgs['agencyId']) <= 0){
                     throw new \Exception('缺少机构id');
                 }
@@ -206,9 +203,6 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if(!isset($searchArgs['token'])){
-                    throw new \Exception('缺少微信用户token');
-                }
                 if (intval($searchArgs['taskId']) <= 0) {
                     throw new \Exception('缺少任务id');
                 }
@@ -359,16 +353,10 @@ class paperController extends Controller
             $searchArgs['token']=$request->input('token');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize')>0?$request->input('pageSize'):20;
-            if(!isset($searchArgs['token']))
-            {
-                throw new \Exception('缺少微信用户token');
-            }
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
-            //获取用户openId;
-            $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." order by id desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
@@ -397,9 +385,6 @@ class paperController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');
-            if(!isset($searchArgs['token'])){
-                throw new \Exception('缺少微信用户token');
-            }
             //获取用户id
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
@@ -434,6 +419,7 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');                 //任务id
+            $searchArgs['token']=$request->input('token');                 //任务id
             if(intval($searchArgs['taskId']) <=0 )
             {
                 throw new \Exception('缺少任务id');
@@ -494,22 +480,23 @@ class paperController extends Controller
     public function getPaperInfo(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->input('taskId');
-            $searchArgs['token']=$request->input('token');
-            $searchArgs['isShare']=$request->input('isShare');
+//            echo 1111;exit;
+//            $searchArgs['taskId']=$request->input('taskId');
+//            $searchArgs['token']=$request->input('token');
+//            $searchArgs['isShare']=$request->input('isShare');
 //            $vipYoudaoExaminedModel=new VipYoudaoExamined();
 //            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
 //            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
 //            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
-            if(!isset($searchArgs['isShare']))
-            {
-                //判断用户是否登陆
-                $result=UserService::checkUserStatus($searchArgs['token']);
-                if($result === false)
-                {
-                    throw new \Exception('未登陆，请登陆后查看');
-                }
-            }
+//            if(!isset($searchArgs['isShare']))
+//            {
+//                if(!isset($searchArgs['token']))
+//                {
+//                    return response()->json(['status'=>1001,'errorMsg'=>'您还没登陆，请登陆后查看']);
+//                }
+//                //判断用户是否登陆
+//                UserService::checkUserStatus($searchArgs['token']);
+//            }
             $result='{
     "status":200,
     "errorMsg":"操作成功",
@@ -544,20 +531,20 @@ class paperController extends Controller
         ]
     }
 }';
-            $jsonData=json_decode($result,true);
-            $detail = [];
-            $i = 1;
-            foreach ($jsonData['data']['rows'] as $v) {
-                $detail[$v['ques_id']] = [
-                    'i' => $i,
-                    'questionId'       => $v['ques_id'],//试题ID
-                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
-                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
-                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
-                ];
-                $i++;
-            }
-            return response()->json(['status'=>200,'data'=>['rows' => $detail]]);
+            return $result;
+//            $detail = [];
+//            $i = 1;
+//            foreach ($result['data'] as $v) {
+//                $detail[$v['ques_id']] = [
+//                    'i' => $i,
+//                    'questionId'       => $v['ques_id'],//试题ID
+//                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
+//                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
+//                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
+//                ];
+//                $i++;
+//            }
+//            return response()->json(['status'=>200,'data'=>['rows' => $result]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
