@@ -375,4 +375,9 @@ class CommonController extends BaseController
         return $this->youdaoService->doYoudaoFeedback($url, $data);
     }
 
+
+    public function uploadQuestionFile($data){
+
+    }
+
 }
