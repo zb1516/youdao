@@ -83,34 +83,35 @@
         <!-- list -->
         <div class="pic-list-wrapper">
             <div class="pic-number-wrapper">
-                <!--<span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>-->
-                <!--<span class="info-n vertify">待审核<span class="num yellow">-->
-                    <!--<template v-if="listCount['待审核']">{{listCount['待审核']}}</template><template v-else>0</template></span>套</span>-->
-                <!--<span class="info-n right">已通过<span class="num green">-->
-                    <!--<template v-if="listCount['已通过']">{{listCount['已通过']}}</template><template v-else>0</template></span>套</span>-->
-                <!--<span class="info-n pass">退回<span class="num red">-->
-                    <!--<template v-if="listCount['退回']">{{listCount['退回']}}</template><template v-else>0</template></span>套</span>-->
-                <!--<span class="info-n like">试卷重复<span class="num red">-->
-                    <!--<template v-if="listCount['试卷重复']">{{listCount['试卷重复']}}</template><template v-else>0</template>-->
-                <!--</span>套</span>-->
-                <!--<div class="search-wrapper">-->
-                    <!--<input type="text" class="s-input" value="" placeholder="试卷名称">-->
-                    <!--<span class="search-btn"></span>-->
-                <!--</div>-->
+                <span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>
+                <span class="info-n vertify">待审核<span class="num yellow">
+                    <template v-if="listCount['待审核']">{{listCount['待审核']}}</template><template v-else>0</template></span>套</span>
+                <span class="info-n right">已通过<span class="num green">
+                    <template v-if="listCount['已通过']">{{listCount['已通过']}}</template><template v-else>0</template></span>套</span>
+                <span class="info-n pass">退回<span class="num red">
+                    <template v-if="listCount['退回']">{{listCount['退回']}}</template><template v-else>0</template></span>套</span>
+                <span class="info-n like">试卷重复<span class="num red">
+                    <template v-if="listCount['试卷重复']">{{listCount['试卷重复']}}</template><template v-else>0</template>
+                </span>套</span>
+                <div class="search-wrapper">
+                    <input type="text" class="s-input" value="" placeholder="试卷名称">
+                    <span class="search-btn"></span>
+                </div>
             </div>
             <div class="pic-form-wrapper">
                 <table id="pic-form-box" class="pic-form-box dataTable no-footer" role="grid" style="width: 1400px;">
-                    <thead><tr role="row">
+                    <thead>
+                    <tr role="row">
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
-                        <th class="sorting" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;">上传时间</th>
-                        <th class="sorting" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;">审核时间</th>
+                        <th :class="isTrue?'sorting':(isShow?'sorting_desc':'sorting_asc')" id='uploadTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;" @click="selectGet">上传时间</th>
+                        <th class="sorting asc" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true">审核时间</th>
                         <th class="sorting" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;">审核状态</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
-                    </tr></thead>
+                    </tr>
+                    </thead>
                     <tbody>
-                    <template v-if="imagePaperList">
                     <template v-for="imagePaper in imagePaperList">
                         <tr role="row" class="odd">
                             <td class="sorting_1">{{imagePaper.number}}</td>
@@ -118,15 +119,26 @@
                             <td>{{imagePaper.agencyName}}</td>
                             <td>{{imagePaper.uploadTime}}</td>
                             <td>{{imagePaper.imageExaminedTime}}</td>
-                            <td><span class="status green">{{imagePaper.imageExaminedStatusName}}</span></td>
-                            <td></td>
+                            <td>
+                                <template v-if="imagePaper.imageExaminedStatusName == '已通过'">
+                                    <span class="status green">{{imagePaper.imageExaminedStatusName}}</span>
+                                </template>
+                                <template v-else-if="imagePaper.imageExaminedStatusName == '退回'">
+                                    <span class="status red">{{imagePaper.imageExaminedStatusName}}</span>
+                                </template>
+                                <template v-else>
+                                    <span class="status">{{imagePaper.imageExaminedStatusName}}</span>
+                                </template>
+                            </td>
+                            <td>
+                                <template v-if="imagePaper.imageExaminedStatusName == '待审核'">
+                                    <a href="reviewPic1.html" class="reviewBtn">审核</a>
+                                </template>
+                            </td>
                         </tr>
                     </template>
-</template>
-<template v-else>
-    暂时没有领取人
-</template>
-                        </tbody></table>
+                    </tbody>
+                </table>
                 <div id="paginationBox" class="m-pages"></div>
             </div>
         </div>
@@ -136,7 +148,7 @@
 <script>
     //
     import "../../static/js/jquery-1.12.2.min.js"
-  import "../../static/js/jquery.plugin.js"
+    import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery.dataTables.min.js"
     import "../../static/css/jquery.dataTables.min.css"
     import "../../static/js/pagination/pagination.css"
@@ -160,7 +172,10 @@
                 curGrade:'',
                 _total:0,
                 totalNum:0,
-                listCount:''
+                listCount:'',
+                isShow:0,
+                isTrue:1,
+                isSort:'desc'
 
             }
         },
@@ -170,10 +185,10 @@
             searchArgs: function () {
                 var that = this;
                 return {
-
                     grade: that.curGrade,
                     subjectId: that.subjectValue,
-                    pageSize:that.pageSize
+                    pageSize:that.pageSize,
+                    isSort: that.isSort,
                 };
             },
             ...mapGetters({
@@ -191,12 +206,9 @@
             searchArgs:function() {
                 var that = this;
                 that.currentPage = 1;
-
             },
-
             imagePaperList:function(){
                 var that = this;
-
                 that.jsPage();
             }
         },
@@ -208,12 +220,13 @@
                         that.$message.error(data.data.errorMsg);
                     } else {
                         that.optionsAgency = data.data;
+                        that.$nextTick(function() {
+                            $('#mechanism-select-box').selectpicker('refresh');
+                        });
                     }
-
                 })
             },
             subjectList(){
-                //alert(1)
                 var that = this;
                 axios.get('common/common/getSubjects',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
@@ -221,6 +234,9 @@
                     } else {
                         that.$nextTick(function(){
                             that.optionsSubject = data.data;
+                            that.$nextTick(function() {
+                                $('#subject-select-box').selectpicker('refresh');
+                            });
 
                         })
 
@@ -240,9 +256,9 @@
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
-                            alert(that.currentPage)
+                            //alert(that.currentPage)
                             that.pageSize = 5;
-                            alert(that.pageSize)
+                            //alert(that.pageSize)
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }
@@ -254,8 +270,8 @@
             doSearch(){
 
 
-                alert($(".drop-city-ul").html());
-                alert($(".drop-city-ul").find('.selected').attr('data-val'));
+                // alert($(".drop-city-ul").html());
+                // alert($(".drop-city-ul").find('.selected').attr('data-val'));
                 var that = this;
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
@@ -269,12 +285,31 @@
                             that.imagePaperList = data.data.rows;
                             that._total = data.data.total;
                             that.totalNum = data.data.totalNum;
-                            //that.listCount = data.data.listCount;
+                            that.listCount = data.data.listCount;
                             //that.jsPage();
                         });
                     }
                 })
-            }
+            },
+            selectGet: function () {
+
+                var that = this;
+that.doSearch();
+                that.isTrue = 0;
+                if(!that.isShow){
+                    //alert('down')
+                    that.isSort = 'desc';
+                    that.isShow = 1;
+                }else{
+                    //alert('up')
+                    that.isSort = 'asc';
+                    that.isShow = 0;
+                }
+
+
+                    // $('#isTag').hide();
+
+            },
         }
     }
 
