@@ -354,4 +354,25 @@ class CommonController extends BaseController
         }
     }
 
+
+    /**
+     * 审核通过，通知有道
+     * @param $url
+     * @param $taskId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function doYoudaoComplete($url, $taskId){
+        return $this->youdaoService->doYoudaoComplete($url, $taskId);
+    }
+
+
+    /** 审核不通过，退回有道
+     * @param $url
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function doYoudaoFeedback($url, $data){
+        return $this->youdaoService->doYoudaoFeedback($url, $data);
+    }
+
 }
