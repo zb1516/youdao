@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Http\Controllers\Common\CommonController;
 use App\http\Controllers\Youdao\PaperController;
 
 class VipYoudaoExamined extends Model
@@ -758,10 +759,15 @@ class VipYoudaoExamined extends Model
 
                 }
             }
-            /**
-             * todo:审核通过后给有道反馈：有道暂时还没更新（挪到model的事务里去）
-             */
 
+            //审核通过反馈给有道
+            $common = new CommonController;
+            $result = $common->doYoudaoComplete(config('YOUDAO_COMPLETE_URL'), $data['task_id']);
+            $result = json_decode($result, true);
+            if($result['code'] !== 200){
+                $this->rollback();
+                throw new \Exception('审核通过反馈失败:'.$result['message']);
+            }
             $this->commit();
             $status = 1;
         }
@@ -919,9 +925,16 @@ class VipYoudaoExamined extends Model
             $this->rollback();
             throw new \Exception('更新有道处理记录审核结果失败');
         }
-        /**
-         * todo:审核不通过反馈:/api/gaosi/feedback，如果有道返回code不为200，则所有事务回滚
-         */
+
+        //审核不通过反馈给有道
+        $common = new CommonController;
+        $result = $common->doYoudaoFeedback(config('YOUDAO_FEEDBACK_URL'), $data);
+        $result = json_decode($result, true);
+        if($result['code'] !== 200){
+            $this->rollback();
+            throw new \Exception('审核不通过反馈失败:'.$result['message']);
+        }
+
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(
             'task_id'=>$data['task_id'],

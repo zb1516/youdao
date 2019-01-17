@@ -282,4 +282,5 @@ return [
     'YOUDAO_DELIVER_TASK'=>'/api/gaosi/deliverTask',
     'LOCAL_IMAGE_URL'=>'G:/jansonyoudao/youdao/public/',
     'AUTO_AUDIT_DAYS'=>9,//套卷超过9个工作日自动审核通过
+    'YOUDAO_COMPLETE_URL'=>'/api/gaosi/complete',
 ];
