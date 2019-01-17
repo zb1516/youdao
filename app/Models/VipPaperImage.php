@@ -57,7 +57,7 @@ class VipPaperImage extends Model
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
             $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
-                'mage_examined_status' => 3,
+                'image_examined_status' => 3,
                 'image_error_type' => $imageErrorType,
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
@@ -107,7 +107,7 @@ class VipPaperImage extends Model
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
             $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
-                'mage_examined_status' => 2,
+                'image_examined_status' => 2,
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
@@ -149,30 +149,33 @@ class VipPaperImage extends Model
             );
             $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($result);
-            for($i=0;$i<$count;$i++){
-                $data = [
-                    'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']][$i],
-                    'is_delete' => 0,
-                ];
-                $condition = array(
-                    'id' => $result[$i]['id'],
-                );
-                $result = $this->edit($data,$condition);
-                if($result === false)
-                {
-                    $this->rollback();
-                    throw new \Exception('图片url编辑失败-混合');
+            if($result){
+                for($i=0;$i<$count;$i++){
+                    $data = [
+                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']][$i],
+                        'is_delete' => 0,
+                    ];
+                    $condition = array(
+                        'id' => $result[$i]['id'],
+                    );
+                    $result = $this->edit($data,$condition);
+                    if($result === false)
+                    {
+                        $this->rollback();
+                        throw new \Exception('图片url编辑失败-混合');
+                    }
                 }
             }
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $filename.$dateTime.$rand;
+            $filenameAll = $filename.$dateTime.$rand;
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
+            $resultUrl = $this->uploadOssPackage($filenameAll,$ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
                 'question_url' => $questionUrl,
+                'answer_url' => '',
             ];
             $result = $vipYoudaoExamined->edit($data,['task_id' => $searchArgs['taskId']]);
             if($result === false)
@@ -181,7 +184,7 @@ class VipPaperImage extends Model
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $this->youdaoDataHandle($searchArgs,$filename,$questionUrl);
+            $result = $this->youdaoDataHandle($searchArgs,$filename,$questionUrl);
             $result = json_decode($result,true);
             $data = [
                 'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
@@ -195,26 +198,28 @@ class VipPaperImage extends Model
             );
             $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($question);
-            for($i=0;$i<$count;$i++){
-                $data = [
-                    'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'][$i],
-                    'is_delete' => 0,
-                ];
-                $condition = array(
-                    'id' => $question[$i]['id'],
-                );
-                $result = $this->edit($data,$condition);
-                if($result === false)
-                {
-                    $this->rollback();
-                    throw new \Exception('图片url编辑失败-分离问题');
+            if($question){
+                for($i=0;$i<$count;$i++){
+                    $data = [
+                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'][$i],
+                        'is_delete' => 0,
+                    ];
+                    $condition = array(
+                        'id' => $question[$i]['id'],
+                    );
+                    $result = $this->edit($data,$condition);
+                    if($result === false)
+                    {
+                        $this->rollback();
+                        throw new \Exception('图片url编辑失败-分离问题');
+                    }
                 }
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
-            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $filename.$dateTime.$rand.'question';
+            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'question');
+            $filenameQuestion = $filename.$dateTime.$rand.'question';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
+            $resultUrl = $this->uploadOssPackage($filenameQuestion,$ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
                 'question_url' => $questionUrl,
@@ -231,26 +236,28 @@ class VipPaperImage extends Model
             );
             $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($answer);
-            for($i=0;$i<$count;$i++){
-                $data = [
-                    'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'][$i],
-                    'is_delete' => 0,
-                ];
-                $condition = array(
-                    'id' => $answer[$i]['id'],
-                );
-                $result = $this->edit($data,$condition);
-                if($result === false)
-                {
-                    $this->rollback();
-                    throw new \Exception('图片url编辑失败-分离答案');
+            if($answer){
+                for($i=0;$i<$count;$i++){
+                    $data = [
+                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'][$i],
+                        'is_delete' => 0,
+                    ];
+                    $condition = array(
+                        'id' => $answer[$i]['id'],
+                    );
+                    $result = $this->edit($data,$condition);
+                    if($result === false)
+                    {
+                        $this->rollback();
+                        throw new \Exception('图片url编辑失败-分离答案');
+                    }
                 }
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
-            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
-            $filename = $filename.$dateTime.$rand.'answer';
+            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'answer');
+            $filenameAnswer = $filename.$dateTime.$rand.'answer';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filename,$ossPATH);
+            $resultUrl = $this->uploadOssPackage($filenameAnswer,$ossPATH);
             $answerUrl = $resultUrl['info']['url'];
             $data = [
                 'answer_url' => $answerUrl,
@@ -276,8 +283,9 @@ class VipPaperImage extends Model
     /**
      * 下载图片保存到本地
      */
-    public function download($url,$j, $path = 'ossImages/')
+    public function download($url,$j,$type='')
     {
+        $path = 'ossImages/';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -285,7 +293,13 @@ class VipPaperImage extends Model
         $file = curl_exec($ch);
         curl_close($ch);
         //$filename = pathinfo($url, PATHINFO_BASENAME);
-        $resource = fopen($path . $j.'.jpg', 'a');
+
+        if($type){
+            $resource = fopen($path.$type.'/' . $j.'.jpg', 'a');
+        }else{
+            $resource = fopen($path. $j.'.jpg', 'a');
+        }
+
         fwrite($resource, $file);
         fclose($resource);
     }
@@ -297,11 +311,13 @@ class VipPaperImage extends Model
         $condition = [
             'task_id' => $searchArgs['taskId']
         ];
-        $result = $this->findOne($condition, $order=[], ['agency_id']);
+        $vipYoudaoExamined = new VipYoudaoExamined();
+        $result = $vipYoudaoExamined->findOne($condition, $order=[], ['agency_id']);
         $agencyId = $result['agency_id'];
+        $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
-        $subjectName = isset($allSubjectNames[$searchArgs['subject_id']]) ? $allSubjectNames[$searchArgs['subject_id']] : '';
+        $subjectName = isset($allSubjectNames[$subjectId]) ? $allSubjectNames[$subjectId] : '';
         $str = '';
         if($subjectName){
             $str = $common->stringTransformation($subjectName);
@@ -325,29 +341,44 @@ class VipPaperImage extends Model
     /**
      * 生成压缩包
      */
-    public function createPackage($searchArgs,$imagesUrl,$dateTime,$rand)
+    public function createPackage($searchArgs,$imagesUrl,$dateTime,$rand,$type='')
     {
         $j = 1;
         foreach ($imagesUrl as $url) {
             if($j < 10){
-                $this->download($url,'00'.$j);
+                $this->download($url,'00'.$j,$type);
             }
             if($j>=10 && $j<100){
-                $this->download($url,'0'.$j);
+                $this->download($url,'0'.$j,$type);
             }
             $j++;
         }
-        $zip = new ZipArchive(); //首先实例化这个类
-        $filename = $this->createFileName($searchArgs).$dateTime.$rand.'.zip';
-        if ($zip->open($filename,ZipArchive::OVERWRITE|ZipArchive::CREATE) === TRUE) { //然后查看是否存在test.zip这个压缩包
+        $zip = new \ZipArchive(); //首先实例化这个类
+        if($type){
+            $filename = $this->createFileName($searchArgs).$dateTime.$rand.$type.'.zip';
+        }else{
+            $filename = $this->createFileName($searchArgs).$dateTime.$rand.'.zip';
+        }
+
+        if ($zip->open($filename,\ZipArchive::OVERWRITE|\ZipArchive::CREATE) === TRUE) { //然后查看是否存在test.zip这个压缩包
             $count = count($imagesUrl);
             for($i=1;$i<=$count;$i++){
-                if($i<10){
-                    $zip->addFile('ossImages/'.'00'.$i.'.jpg');
+                if($type){
+                    if($i<10){
+                        $zip->addFile('ossImages/'.$type.'/'.'00'.$i.'.jpg');
+                    }
+                    if($i>=10 && $i<100){
+                        $zip->addFile('ossImages/'.$type.'/'.'0'.$i.'.jpg');
+                    }
+                }else{
+                    if($i<10){
+                        $zip->addFile('ossImages/'.'00'.$i.'.jpg');
+                    }
+                    if($i>=10 && $i<100){
+                        $zip->addFile('ossImages/'.'0'.$i.'.jpg');
+                    }
                 }
-                if($i>=10 && $i<100){
-                    $zip->addFile('ossImages/'.'0'.$i.'.jpg');
-                }
+
             }
             $zip->close(); //关闭
         } else {
@@ -360,8 +391,9 @@ class VipPaperImage extends Model
     public function uploadOssPackage($filename,$ossPATH)
     {
         $bucketName = config('app.OFFICE_DOCUMENT_BUCKET');
-        $res = BucketService::uploadFile( $bucketName,'/ossImages' . $filename . '.zip',$ossPATH.$filename . '.zip',false,'压缩包.zip');
-        unlink('/ossImages' . $filename . '.zip');
+        $localImageUrl = config('app.LOCAL_IMAGE_URL');
+        $res = BucketService::uploadFile( $bucketName,$filename . '.zip',$ossPATH.$filename . '.zip',false,'压缩包.zip');
+        unlink($localImageUrl . $filename . '.zip');
         return $res;
     }
 

@@ -5,13 +5,13 @@ export default {
     },
     setUserKeyMutations({commit},userKey){
         commit('setUserKey',userKey);
-    },
-    setPaperMutations({commit},paperId)
-    {
-        commit('setPaperId',paperId);
-    },
-    setSubjectMutations({commit})
-    {
-        commit('setSubject');
     }
+    // setPaperMutations({commit},paperId)
+    // {
+    //     commit('setPaperId',paperId);
+    // },
+    // setSubjectMutations({commit})
+    // {
+    //     commit('setSubject');
+    // }
 }

@@ -468,14 +468,14 @@ class VipYoudaoExamined extends Model
         ];
         $result = $this->findOne($condition, $order=[], ['agency_id']);
         $agencyId = $result['agency_id'];
+        $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
-        $subjectName = isset($allSubjectNames[$searchArgs['subject_id']]) ? $allSubjectNames[$searchArgs['subject_id']] : '';
+        $subjectName = isset($allSubjectNames[$subjectId]) ? $allSubjectNames[$subjectId] : '';
         $str = '';
         if($subjectName){
             $str = $common->stringTransformation($subjectName);
         }
-        $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
         $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
         $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
@@ -496,7 +496,7 @@ class VipYoudaoExamined extends Model
             'grade' => $grade,
             'province' => $province,
             'city' => $city,
-            'country' => $country,
+            'area' => $country,
             'school' => $school,
             'year' => $year,
             'semester' => $semester,

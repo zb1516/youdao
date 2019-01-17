@@ -108,6 +108,7 @@ class Paper extends Model
      */
     public function imagePaperSearchArgs($formData,$isSort=0)
     {
+        $formData['taskId'] = 1;
         $searchArgs = [];
         if (isset($formData['taskId'])) {
             $searchArgs['taskId'] = trim($formData['taskId']);
