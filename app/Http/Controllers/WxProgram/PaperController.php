@@ -203,8 +203,8 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if (intval($searchArgs['taskId']) <= 0) {
-                    throw new \Exception('缺少任务id');
+                if (!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])) {
+                    throw new \Exception('缺少任务ID');
                 }
                 if (intval($searchArgs['paperType']) <= 0) {
                     throw new \Exception('缺少试卷类型');
@@ -323,8 +323,8 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            if(empty($searchArgs['taskId'])){
-                throw new \Exception('缺少任务id');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])){
+                throw new \Exception('缺少任务ID');
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
@@ -418,11 +418,11 @@ class paperController extends Controller
     public function getPaperImageList(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->input('taskId');                 //任务id
-            $searchArgs['token']=$request->input('token');                 //任务id
-            if(intval($searchArgs['taskId']) <=0 )
+            $searchArgs['taskId']=$request->input('taskId');               //任务id
+            $searchArgs['token']=$request->input('token');                 //用户token
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
             {
-                throw new \Exception('缺少任务id');
+                throw new \Exception('缺少任务ID');
             }
             //查询任务
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
@@ -455,6 +455,10 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
+            {
+                throw new \Exception('缺少任务ID');
+            }
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             return response()->json([
@@ -559,8 +563,9 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            if(intval($searchArgs['taskId']) <= 0){
-                throw new \Exception('缺少任务id');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
+            {
+                throw new \Exception('缺少任务ID');
             }
             //获取信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();

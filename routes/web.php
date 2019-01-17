@@ -20,19 +20,19 @@ Route::get('/', function () {
 //小程序接口
 Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
-    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
-    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
-    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
-    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
-    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
 });
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
     $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage');
     $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
+    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
+    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
+    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
+    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
+    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
     $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount');
     $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
     $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');

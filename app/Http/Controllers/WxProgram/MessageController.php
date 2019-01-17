@@ -84,7 +84,8 @@ class MessageController extends Controller
         try{
             $searchArgs['token']=$request->input('token');
             $searchArgs['messageId']=$request->input('messageId');
-            if(intval($searchArgs['messageId']) <= 0){
+            if(intval($searchArgs['messageId']) <= 0)
+            {
                 throw new \Exception('缺少消息id');
             }
             //获取用户openId;
