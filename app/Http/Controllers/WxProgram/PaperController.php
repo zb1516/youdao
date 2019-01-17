@@ -31,6 +31,7 @@ class paperController extends Controller
                 $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['agencyName']=$request->input('agencyName');
                 $searchArgs['paperType']=$request->input('paperType');
+                $searchArgs['blendQuestionImage']=$request->input('blendQuestionImage');
                 $searchArgs['questionImage']=$request->input('questionImage');
                 $searchArgs['answerImage']=$request->input('answerImage');
                 $searchArgs['subjectId']=$request->input('subjectId');
@@ -41,7 +42,7 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if(!isset($searchArgs['userToken']) <= 0){
+                if(!isset($searchArgs['token']) <= 0){
                     throw new \Exception('缺少登陆用户token');
                 }
                 if(intval($searchArgs['agencyId']) <= 0){
@@ -55,7 +56,7 @@ class paperController extends Controller
                     throw new \Exception('请选择试卷样式');
                 }
                 if($searchArgs['paperType'] == 1){
-                    if(empty($searchArgs['questionImage']))
+                    if(empty($searchArgs['blendQuestionImage']))
                     {
                         throw new \Exception('请上传试卷照片');
                     }
@@ -111,7 +112,7 @@ class paperController extends Controller
                 //如果创建任务成功，上传图片
                 //判断是分离样式还是混合样式
                 if($searchArgs['paperType'] == 1){
-                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=explode(',',$searchArgs['blendQuestionImage']);
                     $questionImage=arrayReverse($questionImage);
                     foreach($questionImage as $key => $val)
                     {
@@ -194,8 +195,17 @@ class paperController extends Controller
                 $searchArgs['token']=$request->input('token');
                 $searchArgs['taskId'] = $request->input('taskId');
                 $searchArgs['paperType'] = $request->input('paperType');
+                $searchArgs['blendQuestionImage']=$request->input('blendQuestionImage');
                 $searchArgs['questionImage'] = $request->input('questionImage');
                 $searchArgs['answerImage'] = $request->input('answerImage');
+                $searchArgs['subjectId']=$request->input('subjectId');
+                $searchArgs['subjectName']=$request->input('subjectName');
+                $searchArgs['gradeId']=$request->input('gradeId');
+                $searchArgs['gradeName']=$request->input('gradeName');
+                $searchArgs['provId']=$request->input('provId');
+                $searchArgs['provName']=$request->input('provName');
+                $searchArgs['cityId']=$request->input('cityId');
+                $searchArgs['cityName']=$request->input('cityName');
                 if(!isset($searchArgs['token'])){
                     throw new \Exception('缺少微信用户token');
                 }
@@ -205,21 +215,39 @@ class paperController extends Controller
                 if (intval($searchArgs['paperType']) <= 0) {
                     throw new \Exception('缺少试卷类型');
                 }
-                if ($searchArgs['paperType'] == 1) {
-                    if (empty($searchArgs['questionImage'])) {
+                if($searchArgs['paperType'] == 1){
+                    if(empty($searchArgs['blendQuestionImage']))
+                    {
                         throw new \Exception('请上传试卷照片');
                     }
-                } else {
-                    if (empty($searchArgs['questionImage'])) {
+                }else{
+                    if(empty($searchArgs['questionImage']))
+                    {
                         throw new \Exception('请上传试卷题目照片');
                     }
-                    if (empty($searchArgs['answerImage'])) {
+                    if(empty($searchArgs['answerImage']))
+                    {
                         throw new \Exception('请上传试卷答案照片');
                     }
                 }
+                if(intval($searchArgs['subjectId']) <=0 ){
+                    throw new \Exception('缺少科目id');
+                }
+                if(intval($searchArgs['gradeId']) <= 0)
+                {
+                    throw new \Exception('请选择年级');
+                }
+                if(intval($searchArgs['provId']) <= 0)
+                {
+                    throw new \Exception('请选择省份');
+                }
+                if(intval($searchArgs['cityId']) <= 0)
+                {
+                    throw new \Exception('请选择城市');
+                }
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
-                    $questionImage=explode(',',$searchArgs['questionImage']);
+                    $questionImage=explode(',',$searchArgs['blendQuestionImage']);
                     $questionImage=arrayReverse($questionImage);
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
@@ -266,8 +294,19 @@ class paperController extends Controller
                 //获取用户openid
                 $openId=WxService::getOpenId($searchArgs['token']);
                 $vipYoudaoExaminedModel = new VipYoudaoExamined();
+                $commonModel=new Common();
+                $subjectName=$commonModel->stringTransformation($searchArgs['subjectName']);
                 //修改任务审核状态
-                $result = $vipYoudaoExaminedModel->edit(['image_examined_status' => 1,'open_id'=>$openId], ['task_id' => $searchArgs['taskId']]);
+                $result = $vipYoudaoExaminedModel->edit([
+                    'image_examined_status' => 1,
+                    'open_id'=>$openId,
+                    'subject_id'=>$searchArgs['subjectId'],
+                    'grade'=>$searchArgs['gradeId'],
+                    'province'=>$searchArgs['provId'],
+                    'city'=>$searchArgs['cityId'],
+                    'paper_name'=>$searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$subjectName.'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
+                    'upload_time'=>date('Y-m-d H:i:s'),
+                ], ['task_id' => $searchArgs['taskId']]);
                 if ($result === false) {
                     throw new \Exception('上传试卷失败');
                 }
@@ -395,28 +434,28 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');                 //任务id
-            $searchArgs['paperType']=$request->input('paperType');           //试卷类型
             if(intval($searchArgs['taskId']) <=0 )
             {
                 throw new \Exception('缺少任务id');
             }
-            if(intval($searchArgs['paperType']) <= 0)
-            {
-                throw new \Exception('缺少试卷类型');
-            }
+            //查询任务
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $exainedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'paper_type');
             $where=['task_id'=>$searchArgs['taskId'],'is_delete'=>0];
-            //判断试卷类型，1混合式2分离式
-            if($searchArgs['paperType'] == 1)
-            {
-                $where['image_type']=3;
-            }else{
-                $where['image_type']=['neq'=>3];
-            }
             $vipPaperImageModel=new VipPaperImage();
             $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
-            return response()->json(['status'=>200,'data'=>[
-                'rows'=>$list
-            ]]);
+            $result=['paper_type'=>$exainedInfo['paper_type']];
+            foreach($list as $key => $val)
+            {
+                if(intval($val['image_type']) == 1){
+                    $result['question_rows'][]=$val;
+                }elseif(intval($val['image_type']) == 2){
+                    $result['anster_rows'][]=$val;
+                }else{
+                    $result['rows'][]=$val;
+                }
+            }
+            return response()->json(['status'=>200,'data'=>$result]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -456,13 +495,59 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
-            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
+            $searchArgs['token']=$request->input('token');
+            $searchArgs['isShare']=$request->input('isShare');
+//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+//            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+//            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+//            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
+            if(!isset($searchArgs['isShare']))
+            {
+                //判断用户是否登陆
+                $result=UserService::checkUserStatus($searchArgs['token']);
+                if($result === false)
+                {
+                    throw new \Exception('未登陆，请登陆后查看');
+                }
+            }
+            $result='{
+    "status":200,
+    "errorMsg":"操作成功",
+    "data":{
+        "rows":[
+            {
+                "ques_id":"12619",
+                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
+                "ques_sdate":"201442",
+                "ques_subject_id":4,
+                "ques_subject_name":"",
+                "ques_type_id":1,
+                "ques_type_name":"单选题",
+                "paper_id":"465",
+                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
+                "ques_score":"4",
+                "ques_number":null,
+                "ques_difficulty":"1",
+                "ques_knowledge_id":"10301",
+                "ques_knowledge_name":"",
+                "ques_content":"",
+                "ques_analysis":"",
+                "ques_province":"",
+                "ques_city":"北京市",
+                "ques_year":"2008",
+                "ques_source":"真题",
+                "ques_grade":"小学二年级",
+                "ques_school":"",
+                "ques_answer":"B",
+                "ques_options":""
+            }
+        ]
+    }
+}';
+            $jsonData=json_decode($result,true);
             $detail = [];
             $i = 1;
-            foreach ($result as $v) {
+            foreach ($jsonData['data']['rows'] as $v) {
                 $detail[$v['ques_id']] = [
                     'i' => $i,
                     'questionId'       => $v['ques_id'],//试题ID
@@ -473,6 +558,40 @@ class paperController extends Controller
                 $i++;
             }
             return response()->json(['status'=>200,'data'=>['rows' => $detail]]);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 获取套卷审核信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPaperExaminedInfo(Request $request)
+    {
+        try{
+            $searchArgs['taskId']=$request->input('taskId');
+            if(intval($searchArgs['taskId']) <= 0){
+                throw new \Exception('缺少任务id');
+            }
+            //获取信息
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            //获取所有照片
+            $vipPpaerImageModel=new VipPaperImage();
+            //判断试卷类型
+            if($paperInfo['paper_type'] == 1)
+            {
+                $rows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>3,'is_delete'=>0]);
+                $paperInfo['rows']=!empty($rows)?$rows:[];
+            }else{
+                $questionRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>1,'is_delete'=>0]);
+                $paperInfo['question_rows']=!empty($questionRows)?$questionRows:[];
+                $ansterRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>2,'is_delete'=>0]);
+                $paperInfo['anster_rows']=!empty($ansterRows)?$ansterRows:[];
+            }
+            return response()->json(['status'=>200,'data'=>['rows'=>$paperInfo]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
