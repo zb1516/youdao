@@ -394,6 +394,7 @@ class PaperController extends BaseController
             file_put_contents('/dev/shm/'.date('YmdHis').'.txt',json_encode($successTask));
             return response()->json(['successTask'=>$successTask]);
         }catch (\Exception $e){
+            file_put_contents('/dev/shm/'.date('YmdHis').'.txt',$e->getMessage());
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
