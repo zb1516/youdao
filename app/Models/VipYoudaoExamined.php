@@ -286,11 +286,13 @@ class VipYoudaoExamined extends Model
         if (empty($condition)) {
             $condition = [];
         }
+        $statusStartValue = ['待审核' => 0,'已通过' => 0,'退回' => 0,'试卷重复' => 0];
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => $recordCount);
+            return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
         }
-        $result = $this->findAll($condition, ['upload_time' => 'desc'], ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
+        $result = $this->findAll($condition, ['upload_time' => $searchArgs['isSort']], ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
+
         $vipYoudaoAgency = new VipYoudaoAgency();
         $agencyResult = $vipYoudaoAgency->getYoudaoAgency();
         $listAgency = [];
@@ -302,7 +304,7 @@ class VipYoudaoExamined extends Model
         $allSubjectNames = $common->getAllSubjectNames();
         $list = [];
         $i = 1;
-        foreach ($result as $k => $item) {
+        foreach ($result['data'] as $k => $item) {
             $list[] = [
                 'number' => $i,
                 'id' => $item['id'],
@@ -319,12 +321,17 @@ class VipYoudaoExamined extends Model
             ];
             $i++;
         }
-        $result = $this->groupCount($condition = [], $order = ['image_examined_status' => 'asc'], ['image_examined_status'], $group = 'image_examined_status');
+
+        $result = $this->groupCount($condition, $order = ['image_examined_status' => 'asc'], ['image_examined_status'], $group = 'image_examined_status');
+
         $listCount = [];
         foreach ($result as $v) {
             $listCount[$imageExaminedStatus[$v['image_examined_status']]] = $v['total'];
         }
-        return array('rows' => $list, 'total' => $recordCount, 'listCount' => $listCount);
+        $arrayMerge = array_merge($statusStartValue,$listCount);
+
+//print_r(array('rows' => $list, 'total' => $recordCount, 'listCount' => $listCount));exit;
+        return array('rows' => $list, 'total' => ceil($recordCount/5), 'listCount' => $arrayMerge,'totalNum' => $recordCount);
     }
     /**
      * 转换图片审核查询参数
@@ -361,6 +368,8 @@ class VipYoudaoExamined extends Model
         if (isset($formData['paperName'])) {
             $searchArgs['paperName'] = $formData['paperName'];
         }
+
+        $searchArgs['isSort'] = trim($formData['isSort']);
         $searchArgs['IMG_AUDITOR'] = trim($formData['IMG_AUDITOR']);
         return $searchArgs;
     }
