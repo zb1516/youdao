@@ -45,6 +45,7 @@ class ImagePaperController extends BaseController
             $_GET['IMG_AUDITOR'] = $roleId;
             $searchArgs = $this->vipYoudaoExamined->imagePaperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->getImagePaperList($searchArgs, $currentPage, $pageSize);
+            //print_r(response()->json($result));exit;
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

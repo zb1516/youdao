@@ -20,7 +20,7 @@
 					} else {
 						obj = {};
 					}
-					$this.selectpicker(obj);
+					//$this.selectpicker(obj);
 				});
 			}
 			if( $('.input-date-range') ) {

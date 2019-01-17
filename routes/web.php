@@ -75,7 +75,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('paper/paperInfo', 'Youdao\PaperController@paperInfo');
     Route::get('imagePaper/paperList', 'Youdao\ImagePaperController@paperList');
     Route::get('imagePaper/imageExport', 'Youdao\ImagePaperController@imageExport');
-    Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
+
     Route::get('paper/paperExport', 'Youdao\PaperController@paperExport');
     Route::get('paper/questionExport', 'Youdao\PaperController@questionExport');
     Route::get('imagePaper/imagePaperDetail', 'Youdao\ImagePaperController@imagePaperDetail');
@@ -84,6 +84,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
     Route::get('paper/paperExaminOne', 'Youdao\PaperController@paperExaminOne');
     Route::get('paper/paperExaminTwo', 'Youdao\PaperController@paperExaminTwo');
+    Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
 
 
 });
