@@ -10,21 +10,22 @@ class VipYoudaoExamined extends Model
     protected $connection = "mysql_kms";
     public $timestamps = false;
 
-    public function getPaperInfo($taskId){
+    public function getPaperInfo($taskId)
+    {
         $condition = array(
             'task_id'=>$taskId
         );
         $paperInfo = $this->findOne($condition);
         if($paperInfo){
             $vipPaperImage = new VipPaperImage;
-            $paperInfo['images'] = $vipPaperImage->findAll(array('task_id'=>$taskId,'is_delete'=>0), ['id'=>'asc']);
+            $paperInfo['images'] = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0), ['id'=>'asc']);
             if($paperInfo['subject_id']){
                 $kmsSubject = new KmsSubjects;
                 $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
             }
             if($paperInfo['grade']){
                 $vipDict = new VipDict;
-                $gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'],'category'=>'GRADE'));
+                $gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
                 $paperInfo['grade_name'] = $gradeInfo['title'];
             }
         }
@@ -37,7 +38,8 @@ class VipYoudaoExamined extends Model
      * @param $formData
      * @return array
      */
-    public function paperSearchArgs($formData){
+    public function paperSearchArgs($formData)
+    {
         $searchArgs = array();
         if(isset($formData['subjectId'])){
             $searchArgs['subjectId'] = abs($formData['subjectId']);
@@ -85,7 +87,8 @@ class VipYoudaoExamined extends Model
      * @param $searchArgs
      * @return array
      */
-    public function paperCondition($searchArgs){
+    public function paperCondition($searchArgs)
+    {
         $condition = [];
         //有道最终处理日期
         if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
@@ -95,7 +98,7 @@ class VipYoudaoExamined extends Model
             $condition['final_processing_time'] = array('gt' => $searchArgs['beginDate'].' 00:00:01');
         }
         if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['final_processing_time'] = array('between' => array($searchArgs['beginDate'].' 00:00:01',$searchArgs['endDate'].' 23:59:59'));
+            $condition['final_processing_time'] = array('between' => array($searchArgs['beginDate'].' 00:00:01', $searchArgs['endDate'].' 23:59:59'));
         }
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
@@ -129,31 +132,33 @@ class VipYoudaoExamined extends Model
             $condition['paper_examined_time'] = array('gt' => $searchArgs['auditBeginDate'].' 00:00:01');
         }
         if (!empty($searchArgs['auditBeginDate']) && !empty($searchArgs['auditEndDate'])) {
-            $condition['paper_examined_time'] = array('between' => array($searchArgs['auditBeginDate'].' 00:00:01',$searchArgs['auditEndDate'].' 23:59:59'));
+            $condition['paper_examined_time'] = array('between' => array($searchArgs['auditBeginDate'].' 00:00:01', $searchArgs['auditEndDate'].' 23:59:59'));
         }
         return $condition;
     }
 
-    public function paperList($searchArgs, $currentPage = 1, $pageSize = 20){
+    public function paperList($searchArgs, $currentPage = 1, $pageSize = 20)
+    {
         $condition = $this->paperCondition($searchArgs);
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => $recordCount);
         }
 
-        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '',[],$currentPage,$pageSize);
+        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '', [], $currentPage, $pageSize);
         $list = $this->formatPaperList($list);
         return array('rows' => $list, 'total' => $recordCount);
     }
 
 
-    public function paperStatistic($searchArgs){
+    public function paperStatistic($searchArgs)
+    {
         $condition = $this->paperCondition($searchArgs);
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => $recordCount);
         }
-        $list = $this->findAll($condition, [], ['paper_examined_status'], '',[],null);
+        $list = $this->findAll($condition, [], ['paper_examined_status'], '', [], null);
         $totalCount = $waitCount = $passCount = $returnCount = 0;
         if($list){
             foreach ($list as $row){
@@ -183,13 +188,14 @@ class VipYoudaoExamined extends Model
      * @param $list
      * @return mixed
      */
-    public function formatPaperList($list){
+    public function formatPaperList($list)
+    {
         if($list){
             $vipYoudaoAgency = new VipYoudaoAgency;
             foreach ($list as &$row){
                 //获取机构名称
                 if($row['agency_id']){
-                    $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']),[],['agency_name']);
+                    $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']), [], ['agency_name']);
                     $row['agency_name'] = $agencyInfo['agency_name'];
                 }
                 //获取学科名称
@@ -200,7 +206,7 @@ class VipYoudaoExamined extends Model
                 //获取年级
                 if($row['grade']){
                     $vipDict = new VipDict;
-                    $gradeInfo = $vipDict->findOne(array('id'=>$row['grade'],'category'=>'GRADE'));
+                    $gradeInfo = $vipDict->findOne(array('id'=>$row['grade'], 'category'=>'GRADE'));
                     $row['grade_name'] = $gradeInfo['title'];
                 }
                 /*
@@ -525,17 +531,18 @@ class VipYoudaoExamined extends Model
      * @param $searchArgs
      * @return array
      */
-    public function paperAll($searchArgs){
+    public function paperAll($searchArgs)
+    {
         $list = [];
         $condition = $this->paperCondition($searchArgs);
         $recordCount = $this->count($condition);
         $limit = 1000;
-        $max = ceil($recordCount/$limit);
-        for($i=1;$i<=$max;$i++){
-            $result = $this->findAll($condition,['upload_time'=>'asc'],['*'],'',[],$i,$limit);
+        $max = ceil($recordCount / $limit);
+        for($i=1; $i<=$max; $i++){
+            $result = $this->findAll($condition,['upload_time'=>'asc'], ['*'], '', [], $i, $limit);
             $result = json_decode(json_encode($result), true);
             if($result['data']){
-                foreach ($result['data'] as $key=>$row){
+                foreach ($result['data'] as $key => $row){
                     $list[] = $row;
                 }
             }
@@ -550,33 +557,35 @@ class VipYoudaoExamined extends Model
      * @param $data
      * @return int
      */
-    public function paperExamined($data, $userInfo){
+    public function paperExamined($data, $userInfo)
+    {
         $status = 0;
         if($data){
             $time = time();
+            $common = new CommonController;
             $question = new Question;
             $paper = new Paper;
             $paperInfo = array(
-                'grade_id'=>$data['grade'],
-                'subject_id'=>$data['subject_id'],
-                'name'=>$data['source'],
-                'source'=>$data['source'],
-                'year'=>$data['year'],
-                'province'=>$data['province'],
-                'city'=>$data['city'],
-                'country'=>$data['area'],
-                'school'=>$data['school'],
-                'grades'=>$data['grade'],
-                'term'=>$data['semester'],
-                'duration'=>$data['examination_length'],
-                'score'=>$data['examination_score'],
-                'question_number'=>$data['question_number'],
-                'created_time'=>$time,
-                'file_name'=>$data['paper_name'],
-                'file_name_md5'=>md5($data['paper_name']),
-                'show_name'=>$data['youdao_info']['paper_name'],
-                'agency_id'=>$data['agency_id'],
-                'paper_type'=>2,//1教研，2有道
+                'grade_id' => $data['grade'],
+                'subject_id' => $data['subject_id'],
+                'name' => $data['source'],
+                'source' => $data['source'],
+                'year' => $data['year'],
+                'province' => $data['province'],
+                'city' => $data['city'],
+                'country' => $data['area'],
+                'school' => $data['school'],
+                'grades' => $data['grade'],
+                'term' => $data['semester'],
+                'duration' => $data['examination_length'],
+                'score' => $data['examination_score'],
+                'question_number' => $data['question_number'],
+                'created_time' => $time,
+                'file_name' => $data['paper_name'],
+                'file_name_md5' => md5($data['paper_name']),
+                'show_name' => $data['youdao_info']['paper_name'],
+                'agency_id' => $data['agency_id'],
+                'paper_type' => 2,//1教研，2有道
             );
             $paper->beginTransaction();
             $paperId = $paper->add($paperInfo);
@@ -586,14 +595,14 @@ class VipYoudaoExamined extends Model
             }
             //更新vip_youdao_examined表paper_id字段，和套卷状态、套卷审核人、套卷审核通过时间
             $lastYoudaoTime = $this->getLastYoudaoTime($data['task_id']);
-            $result = $this->edit(array('paper_id'=>$paperId,
-                                        'paper_examined_status'=>3,
-                                        'paper_examined_auditor_id'=>$userInfo['id'],
-                                        'paper_examined_time'=>date('Y-m-d H:i:s'),
-                                        'final_youdao_receive_time'=>$lastYoudaoTime['last_receive_time'],
-                                        'final_processing_time'=>$lastYoudaoTime['youdao_processing_time'],
-                                        'final_processing_days'=>$lastYoudaoTime['processing_days']),
-                                array('task_id'=>$data['task_id'])
+            $result = $this->edit(array('paper_id' => $paperId,
+                                        'paper_examined_status' => 3,
+                                        'paper_examined_auditor_id' => $userInfo['id'],
+                                        'paper_examined_time' => date('Y-m-d H:i:s'),
+                                        'final_youdao_receive_time' => $lastYoudaoTime['last_receive_time'],
+                                        'final_processing_time' => $lastYoudaoTime['youdao_processing_time'],
+                                        'final_processing_days' => $lastYoudaoTime['processing_days']),
+                                array('task_id' => $data['task_id'])
             );
             if(!$result){
                 $this->rollback();
@@ -602,21 +611,21 @@ class VipYoudaoExamined extends Model
 
             //更新最后一次有道处理记录的审核结果
             $vip_paper_examined_details = new VipPaperExaminedDetails;
-            $lastYoudaoPaperDetail = $vip_paper_examined_details->findOne(array('task_id'=>$data['task_id']),['id'=>'desc']);
-            $result = $vip_paper_examined_details->edit(array('author_id'=>$userInfo['id'],'audit_time'=>date('Y-m-d H:i:s'),'audit_status'=>1),array('id'=>$lastYoudaoPaperDetail['id']));
+            $lastYoudaoPaperDetail = $vip_paper_examined_details->findOne(array('task_id'=>$data['task_id']), ['id'=>'desc']);
+            $result = $vip_paper_examined_details->edit(array('author_id'=>$userInfo['id'], 'audit_time'=>date('Y-m-d H:i:s'), 'audit_status'=>1), array('id'=>$lastYoudaoPaperDetail['id']));
             if(!$result){
                 $this->rollback();
                 throw new \Exception('更新有道处理记录审核结果失败');
             }
 
-            /**
-             * todo:套卷的latex内容文件是否需要上传到oss
-             */
+            $fileArr['paper_id'] = $paperId;
+            $fileArr['complete_file'] = $data['youdao_info']['paperFilePath'];
+
             if(!empty($data['youdao_info']['questions'])){
                 $ques = new Question;
                 $opt = new VipQuestionOption;
                 $ans = new VipQuestionAnswer;
-                foreach ($data['youdao_info']['questions'] as $key=>$q){
+                foreach ($data['youdao_info']['questions'] as $key => $q){
                     $question['number'] = $q['quesNumber'];
                     $question['yd_question_type'] = $q['quesType'];
                     $question['content'] = $q['quesLatextContent']['content'];
@@ -642,11 +651,17 @@ class VipYoudaoExamined extends Model
                     if(!$newQuesId){
                         $this->rollback();
                         throw new \Exception('试题添加失败');
+                    }else{
+                        $fileArr['questions'][$key]['question_id'] = $newQuesId;
+                        $fileArr['questions'][$key]['content_file'] = $data['youdao_info']['questions']['quesLatextContent']['fileUrl'];
+
+                        //解析文档
+                        $fileArr['questions'][$key]['analysis_file'] = $q['quesLatextAnalysis']['fileUrl'];
                     }
 
                     //选项录入
                     if($q['hasOptions'] == 1){
-                        foreach ($q['options'] as $k=>$o){
+                        foreach ($q['options'] as $k => $o){
                             $option['question_id'] = $newQuesId;
                             $option['content'] = $o['latexContent'];
                             $option['content_text'] = strip_tags($o['latexContent']);
@@ -679,12 +694,16 @@ class VipYoudaoExamined extends Model
                                     $option['sort'] = 9;
                                     break;
                             }
-                            $option['is_answer'] = ($o['isAnswer']==1)?1:0;
+                            $option['is_answer'] = ($o['isAnswer'] == 1)? 1 : 0;
                             $newOptionId = $opt->add($option);
                             if(!$newOptionId){
                                 $this->rollback();
                                 throw new \Exception('试题选项添加失败');
                             }
+                            $fileArr['questions'][$key]['options'][] = array(
+                                'option_id'=>$newOptionId,
+                                'option_file'=>$o['latexFilePath']
+                            );
                         }
 
                     }else{
@@ -696,19 +715,21 @@ class VipYoudaoExamined extends Model
                             $this->rollback();
                             throw new \Exception('试题答案添加失败');
                         }
+                        $fileArr['questions'][$key]['answer_id'] = $newAnswerId;
+                        $fileArr['questions'][$key]['answer_file'] = $q['quesLatextAnswer']['fileUrl'];
                     }
 
                     //查看vip_youdao_question中该试题是否有记录，若无记录，则插入一条，若有记录，则不做操作(即使试题没有被退回过也需要录一条记录，此种试题也需导出)
                     $vip_youdao_question = new VipYoudaoQuestion;
-                    $count = $vip_youdao_question->count(array('task_id'=>$data['task_id'],'quesNumber'=>$q['quesNumber']));
+                    $count = $vip_youdao_question->count(array('task_id'=>$data['task_id'], 'quesNumber'=>$q['quesNumber']));
                     if($count == 0){
                         $newYoudaoQuestion = array(
-                            'task_id'=>$data['task_id'],
-                            'quesNumber'=>$q['quesNumber'],
-                            'youdao_receive_time'=>$lastYoudaoPaperDetail['youdao_receive_time'],
-                            'youdao_processing_time'=>$lastYoudaoPaperDetail['youdao_processing_time'],
-                            'processing_days'=>$lastYoudaoPaperDetail['processing_days'],
-                            'many_times'=>1,
+                            'task_id' => $data['task_id'],
+                            'quesNumber' => $q['quesNumber'],
+                            'youdao_receive_time' => $lastYoudaoPaperDetail['youdao_receive_time'],
+                            'youdao_processing_time' => $lastYoudaoPaperDetail['youdao_processing_time'],
+                            'processing_days' => $lastYoudaoPaperDetail['processing_days'],
+                            'many_times' => 1,
                         );
                         $result = $vip_youdao_question->add($newYoudaoQuestion);
                         if(!$result){
@@ -719,9 +740,9 @@ class VipYoudaoExamined extends Model
 
                     //更新vip_youdao_question_details表question_id字段
                     $ydQuesDetail = new VipYoudaoQuestionDetails;
-                    $count = $ydQuesDetail->count(array('task_id'=>$data['task_id'],'quesNumber'=>$q['quesNumber']));
+                    $count = $ydQuesDetail->count(array('task_id'=>$data['task_id'], 'quesNumber'=>$q['quesNumber']));
                     if($count > 0){
-                        $result = $ydQuesDetail->edit(array('paper_id'=>$paperId,'question_id'=>$newQuesId),array('task_id'=>$data['task_id'],'quesNumber'=>$q['quesNumber']));
+                        $result = $ydQuesDetail->edit(array('paper_id'=>$paperId, 'question_id'=>$newQuesId), array('task_id'=>$data['task_id'], 'quesNumber'=>$q['quesNumber']));
                         if(!$result){
                             $this->rollback();
                             throw new \Exception('套卷ID、试题ID更新失败');
@@ -743,22 +764,22 @@ class VipYoudaoExamined extends Model
                         }
                     }
 
-                    /**
-                     * todo:试题的题干、选项、答案、解析latex内容文件是否需要上传到oss
-                     */
-
-
                 }
             }
 
             //审核通过反馈给有道
-            $common = new CommonController;
             $result = $common->doYoudaoComplete(config('YOUDAO_COMPLETE_URL'), $data['task_id']);
             $result = json_decode($result, true);
             if($result['code'] !== 200){
                 $this->rollback();
                 throw new \Exception('审核通过反馈失败:'.$result['message']);
             }
+
+            /**
+             * 试题的题干、选项、答案、解析latex内容文件上传到题库服务器
+             */
+            $common->uploadPaperFile($fileArr);
+
             $this->commit();
             $status = 1;
         }
@@ -767,9 +788,10 @@ class VipYoudaoExamined extends Model
 
 
 
-    public function updateFirstYouDaoTime($data){
+    public function updateFirstYouDaoTime($data)
+    {
         if($data['taskId']){
-            $taskInfo = $this->findOne(array('task_id'=>$data['taskId']));
+            $taskInfo = $this->findOne(array('task_id' => $data['taskId']));
             if($taskInfo['first_youdao_receive_time']){
                 $first_youdao_receive_time =  $taskInfo['first_youdao_receive_time'];
             }else{
@@ -777,26 +799,26 @@ class VipYoudaoExamined extends Model
             }
             $first_processing_days = $this->getDiffDaysCount($first_youdao_receive_time, $data['youdaoProcessingTime']);
             $row = array(
-                'first_processing_time'=>$data['youdaoProcessingTime'],
-                'first_processing_days'=>$first_processing_days,
-                'paper_examined_status'=>2
+                'first_processing_time' => $data['youdaoProcessingTime'],
+                'first_processing_days' => $first_processing_days,
+                'paper_examined_status' => 2
             );
             $this->beginTransaction();
-            $result = $this->edit($row,array('task_id'=>$data['taskId']));
+            $result = $this->edit($row, array('task_id' => $data['taskId']));
             if(!$result){
                 $this->rollback();
                 throw new \Exception('有道第一次处理成功回调处理失败');
             }
             $newPaperExaminedDetail = array(
-                'task_id'=>$data['taskId'],
-                'youdao_receive_time'=>$first_youdao_receive_time,
-                'youdao_processing_time'=>$data['youdaoProcessingTime'],
-                'processing_days'=>$first_processing_days
+                'task_id' => $data['taskId'],
+                'youdao_receive_time' => $first_youdao_receive_time,
+                'youdao_processing_time' => $data['youdaoProcessingTime'],
+                'processing_days' => $first_processing_days
             );
             $vip_paper_examined_details = new VipPaperExaminedDetails;
             $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
             if($lastPaperExaminedDetail['youdao_processing_time'] == ''){
-                $result = $vip_paper_examined_details->edit($newPaperExaminedDetail,array('id'=>$lastPaperExaminedDetail['id']));
+                $result = $vip_paper_examined_details->edit($newPaperExaminedDetail, array('id'=>$lastPaperExaminedDetail['id']));
             }else{
                 $result = $vip_paper_examined_details->add($newPaperExaminedDetail);
             }
@@ -812,13 +834,15 @@ class VipYoudaoExamined extends Model
 
 
 
-    public function getLastPaperExaminedDetail($taskId){
+    public function getLastPaperExaminedDetail($taskId)
+    {
         $vip_paper_examined_details = new VipPaperExaminedDetails;
-        return $vip_paper_examined_details->findOne(array('task_id'=>$taskId),['id'=>'desc']);
+        return $vip_paper_examined_details->findOne(array('task_id'=>$taskId), ['id'=>'desc']);
     }
 
 
-    public function updateErrorYouDaoTime($data){
+    public function updateErrorYouDaoTime($data)
+    {
         if($data['taskId']){
             $vip_paper_examined_details = new VipPaperExaminedDetails;
             $vip_youdao_paper = new VipYoudaoPaper;
@@ -826,22 +850,22 @@ class VipYoudaoExamined extends Model
             $vip_youdao_question_details =  new VipYoudaoQuestionDetails;
             $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
             $this->beginTransaction();
-            $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'],$data['youdaoProcessingTime']);
+            $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
             $newData = array(
-                'youdao_processing_time'=>$data['youdaoProcessingTime'],
-                'processing_days'=>$processing_days
+                'youdao_processing_time' => $data['youdaoProcessingTime'],
+                'processing_days' => $processing_days
             );
-            $result = $vip_paper_examined_details->edit(array($newData),array('id'=>$lastPaperExaminedDetail['id']));
-            if(count($data['list'])>0){
-                foreach ($data['list'] as $key=>$q){
+            $result = $vip_paper_examined_details->edit(array($newData), array('id'=>$lastPaperExaminedDetail['id']));
+            if(count($data['list']) > 0){
+                foreach ($data['list'] as $key => $q){
                     //更新vip_youdao_question表
-                    $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'],'number'=>$q['number']),['id'=>'desc']);
-                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'],$data['youdaoProcessingTime']);
-                    $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'],'number'=>$q['number']));
+                    $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'], 'number'=>$q['number']), ['id'=>'desc']);
+                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'], $data['youdaoProcessingTime']);
+                    $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'number'=>$q['number']));
                     $newData = array(
-                        'youdao_processing_time'=>$data['youdaoProcessingTime'],
-                        'processing_days'=>$processing_days,
-                        'many_times'=>$count
+                        'youdao_processing_time' => $data['youdaoProcessingTime'],
+                        'processing_days' => $processing_days,
+                        'many_times' => $count
                     );
                     $result = $vip_youdao_question->edit($newData, array('id'=>$lastYoudaoQuestion['id']));
                     if(!$result){
@@ -850,11 +874,11 @@ class VipYoudaoExamined extends Model
                     }
 
                     //更新vip_youdao_question_details表，一道试题只有一条记录
-                    $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'],'number'=>$q['number']));
-                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'],$data['youdaoProcessingTime']);
+                    $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'number'=>$q['number']));
+                    $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
                     $newData = array(
-                        'youdao_processing_time'=>$data['youdaoProcessingTime'],
-                        'processing_days'=>$processing_days
+                        'youdao_processing_time' => $data['youdaoProcessingTime'],
+                        'processing_days' => $processing_days
                     );
                     $result = $vip_youdao_question_details->edit($newData, array('id'=>$lastYoudaoQuestionDetail['id']));
                     if(!$result){
@@ -869,7 +893,7 @@ class VipYoudaoExamined extends Model
             }
 
             //激活套卷待审状态
-            $result = $this->edit(array('paper_examined_status'=>2),array('task_id'=>$data['taskId']));
+            $result = $this->edit(array('paper_examined_status'=>2), array('task_id'=>$data['taskId']));
             if(!$result){
                 $this->rollback();
                 throw new \Exception('套卷待审状态激活失败');
@@ -887,7 +911,8 @@ class VipYoudaoExamined extends Model
      * @param $endTime
      * @return count
      */
-    public function getDiffDaysCount($startTime, $endTime){
+    public function getDiffDaysCount($startTime, $endTime)
+    {
         $vipYoudaoWorkingWeekendDays =  new VipYoudaoWorkingWeekendDays;
         return $vipYoudaoWorkingWeekendDays->getDiffDaysCount($startTime, $endTime);
     }
@@ -899,19 +924,20 @@ class VipYoudaoExamined extends Model
      * @param $paperInfo
      * @return bool
      */
-    public function paperError($data, $paperInfo, $userInfo){
+    public function paperError($data, $paperInfo, $userInfo)
+    {
         $this->beginTransaction();
         $nowTime = date('Y-m-d H:i:s');
         //更新套卷审核状态、审核时间、审核人
-        $result = $this->edit(array('paper_examined_status'=>4,'paper_examined_time'=>$nowTime,'paper_examined_auditor_id'=>$userInfo['id']),array('task_id'=>$data['task_id']));
+        $result = $this->edit(array('paper_examined_status'=>4, 'paper_examined_time'=>$nowTime, 'paper_examined_auditor_id'=>$userInfo['id']), array('task_id'=>$data['task_id']));
         if(!$result){
             $this->rollback();
             throw new \Exception('套卷审核状态更新失败');
         }
         //更新最后一次有道处理记录的审核结果
         $vip_youdao_examined_details = new VipPaperExaminedDetails;
-        $lastYoudaoPaperDetail = $vip_youdao_examined_details->findOne(array('task_id'=>$data['task_id']),['id'=>'desc']);
-        $result = $vip_youdao_examined_details->edit(array('author_id'=>$userInfo['id'],'audit_time'=>date('Y-m-d H:i:s'),'audit_status'=>2,'return_reason'=>json_encode($data)),array('id'=>$lastYoudaoPaperDetail['id']));
+        $lastYoudaoPaperDetail = $vip_youdao_examined_details->findOne(array('task_id'=>$data['task_id']), ['id'=>'desc']);
+        $result = $vip_youdao_examined_details->edit(array('author_id'=>$userInfo['id'], 'audit_time'=>date('Y-m-d H:i:s'), 'audit_status'=>2, 'return_reason'=>json_encode($data)), array('id'=>$lastYoudaoPaperDetail['id']));
         if(!$result){
             $this->rollback();
             throw new \Exception('更新有道处理记录审核结果失败');
@@ -928,8 +954,8 @@ class VipYoudaoExamined extends Model
 
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(
-            'task_id'=>$data['task_id'],
-            'youdao_receive_time'=>$nowTime,
+            'task_id' => $data['task_id'],
+            'youdao_receive_time' => $nowTime,
         );
         $newDetailId = $vip_youdao_examined_details->add($newPaperExaminedDetail);
         if(!$newDetailId){
@@ -938,9 +964,9 @@ class VipYoudaoExamined extends Model
         }
         if($data['isPaperError'] == 1){
             $newPaperError = array(
-                'task_id'=>$data['task_id'],
-                'paper_name'=>$paperInfo['paper_name'],
-                'content'=>$data['paperErrorDesc']
+                'task_id' => $data['task_id'],
+                'paper_name' => $paperInfo['paper_name'],
+                'content' => $data['paperErrorDesc']
             );
             $vip_youdao_paper = new VipYoudaoPaper;
             $newErrorId = $vip_youdao_paper->add($newPaperError);
@@ -952,16 +978,16 @@ class VipYoudaoExamined extends Model
         if(count($data['list']) > 0){//如果有问题试题
             $vip_youdao_question = new VipYoudaoQuestion;
             $vip_youdao_question_details = new VipYoudaoQuestionDetails;
-            foreach ($data['list'] as $key=>$error){
-                $return_times = $vip_youdao_question->count(array('task_id'=>$data['task_id'],'quesNumber'=>$error['number']));
+            foreach ($data['list'] as $key => $error){
+                $return_times = $vip_youdao_question->count(array('task_id'=>$data['task_id'], 'quesNumber'=>$error['number']));
                 $newErrorQuestion = array(
-                        'task_id'=>$data['task_id'],
-                        'quesNumber'=>$error['number'],
-                        'youdao_receive_time'=>$nowTime,
-                        'many_times'=>$return_times+1,
-                        'return_reason_content1'=>$error['content'],
-                        'return_reason_answer1'=>$error['answer'],
-                        'return_reason_analysis1'=>$error['analysis']
+                        'task_id' => $data['task_id'],
+                        'quesNumber' => $error['number'],
+                        'youdao_receive_time' => $nowTime,
+                        'many_times' => $return_times + 1,
+                        'return_reason_content1' => $error['content'],
+                        'return_reason_answer1' => $error['answer'],
+                        'return_reason_analysis1' => $error['analysis']
                 );
 
                 $newErrorQuestionId = $vip_youdao_question->add($newErrorQuestion);
@@ -971,15 +997,15 @@ class VipYoudaoExamined extends Model
                 }
 
                 $newQuestionDetail = array(
-                    'task_id'=>$data['task_id'],
-                    'quesNumber'=>$error['number'],
-                    'youdao_receive_time'=>$nowTime,
-                    'return_times'=>$return_times+1,
-                    'money'=>0,
+                    'task_id' => $data['task_id'],
+                    'quesNumber' => $error['number'],
+                    'youdao_receive_time' => $nowTime,
+                    'return_times' => $return_times + 1,
+                    'money' => 0,
                 );
-                $count = $vip_youdao_question_details->count(array('task_id'=>$data['task_id'],'quesNumber'=>$error['number']));
+                $count = $vip_youdao_question_details->count(array('task_id'=>$data['task_id'], 'quesNumber'=>$error['number']));
                 if($count > 0){
-                    $result = $vip_youdao_question_details->edit($newQuestionDetail,array('task_id'=>$data['task_id'],'quesNumber'=>$error['number']));
+                    $result = $vip_youdao_question_details->edit($newQuestionDetail, array('task_id'=>$data['task_id'], 'quesNumber'=>$error['number']));
                 }else{
                     $result = $vip_youdao_question_details->add($newQuestionDetail);
                 }
@@ -998,7 +1024,8 @@ class VipYoudaoExamined extends Model
     }
 
 
-    public function getLastYoudaoTime($taskId){
+    public function getLastYoudaoTime($taskId)
+    {
         $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($taskId);
         if($lastPaperExaminedDetail){
             $lastYoudaoReceiveTime = $lastPaperExaminedDetail['youdao_receive_time'];
@@ -1019,31 +1046,32 @@ class VipYoudaoExamined extends Model
 
 
     //批量自动审核任务
-    public function batchExamined(){
+    public function batchExamined()
+    {
         $autoAuditDays = config('AUTO_AUDIT_DAYS');
         $vipYoudaoWorkingWeekendDays =  new VipYoudaoWorkingWeekendDays;
         $startTime = $vipYoudaoWorkingWeekendDays->getStartTime($autoAuditDays);
         $vip_paper_examined_details = new VipPaperExaminedDetails;
         $condition = array(
-            'paper_examined_status'=>2,
-            'author_id'=>array('eq'=>null),
-            'youdao_processing_time'=>array('between' => array(date('Y-m-d',0),$startTime))
+            'paper_examined_status' => 2,
+            'author_id' => array('eq'=>null),
+            'youdao_processing_time' => array('between' => array(date('Y-m-d',0), $startTime))
         );
         $join = array(
-            array('type'=>'left','table'=>'vip_youdao_examined','on'=>array($this->table.'.task_id'=>$vip_paper_examined_details->getTable().'.task_id')),
+            array('type'=>'left', 'table'=>'vip_youdao_examined', 'on'=>array($this->table.'.task_id'=>$vip_paper_examined_details->getTable().'.task_id')),
         );
-        $recordCount = $vip_paper_examined_details->count($condition,$join);
+        $recordCount = $vip_paper_examined_details->count($condition, $join);
         $limit = 1000;
-        $max = ceil($recordCount/$limit);
+        $max = ceil($recordCount / $limit);
         $successArr = [];
         $nowTime = date('Y-m-d H:i:s');
-        if($recordCount>0){
+        if($recordCount > 0){
             $this->beginTransaction();
-            for($i=1;$i<=$max;$i++) {
+            for($i=1; $i<=$max; $i++) {
                 $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id'], '', $join, $i, $limit);
                 $result = json_decode(json_encode($result), true);
                 if($result['data']){
-                    foreach ($result['data'] as $key=>$row){
+                    foreach ($result['data'] as $key => $row){
                         //套卷、试题入库
                         $paper = new PaperController;
                         $paperInfo = $paper->getPaperInfo($row['task_id']);
@@ -1053,10 +1081,10 @@ class VipYoudaoExamined extends Model
                             throw new \Exception('套卷入库、更新任务审核状态失败');
                         }else{
                             $successArr[] = array(
-                                'taskId'=>$row['task_id'],
-                                'openId'=>$row['open_id'],
-                                'type'=>2,
-                                'formId'=>''
+                                'taskId' => $row['task_id'],
+                                'openId' => $row['open_id'],
+                                'type' => 2,
+                                'formId' => ''
                             );
                         }
                     }

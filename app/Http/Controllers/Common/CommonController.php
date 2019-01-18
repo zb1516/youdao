@@ -12,8 +12,10 @@ use App\Clients\KlibQuestionClient;
 use App\Clients\KlibSubjectClient;
 use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
+use App\Models\Question;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Models\VipQuestionOption;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use App\Models\KmsSubjects;
@@ -362,7 +364,8 @@ class CommonController extends BaseController
      * @param $taskId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function doYoudaoComplete($url, $taskId){
+    public function doYoudaoComplete($url, $taskId)
+    {
         return $this->youdaoService->doYoudaoComplete($url, $taskId);
     }
 
@@ -372,13 +375,128 @@ class CommonController extends BaseController
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function doYoudaoFeedback($url, $data){
+    public function doYoudaoFeedback($url, $data)
+    {
         return $this->youdaoService->doYoudaoFeedback($url, $data);
     }
 
 
-    public function uploadQuestionFile($data){
+    /**
+     * 上传套卷中所有试题相关word文件到题库服务器
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadPaperFile($data = array())
+    {
+        try {
 
+            //测试数据
+            $data = array(
+                'paper_id'=>1483,
+                'complete_file'=>'http://vip.gaosiedu.com/static/images/eap_loginbg2.png',
+                'questions' => array(
+                    '0'=>array(
+                        'question_id'=>41866,
+                        'content_file'=>'http://teacher.aitifen.com/static/images/logo.png',
+                        'options'=>array(
+                            '0'=>array(
+                                'option_id'=>187340,
+                                'option_file'=>'http://teacher.aitifen.com/static/images/logo.png',
+                            ),
+                            '1'=>array(
+                                'option_id'=>187341,
+                                'option_file'=>'http://teacher.aitifen.com/static/images/logo.png',
+                            )
+                        ),
+                        'analysis_file'=>'http://teacher.aitifen.com/static/images/logo.png',
+                    ),
+                    '1'=>array(
+                        'question_id'=>611785,
+                        'content_file'=>'http://teacher.aitifen.com/static/images/loginbg2.png',
+                        'answer_id'=>324087,
+                        'answer_file'=>'http://teacher.aitifen.com/static/images/loginbg2.png',
+                        'analysis_file'=>'http://teacher.aitifen.com/static/images/logo.png',
+                    )
+                )
+            );
+
+            //上传试卷文档
+            //$newFileName = date('Ymd').'_test-'.$this->uuid().'_'.'content'.'_paper.docx';
+            //$result = $this->curlUploadFile($data['complete_file'], $newFileName);
+            //上传试题文档
+            if($data['questions']){
+                foreach ($data['questions'] as $key=>$q){
+                    $uuid = $this->uuid();
+                    $sdate = date('Ymd');
+                    $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
+                    $result = $this->curlUploadFile($q['content_file'], $newFileName);
+                    if($result){
+                        //更新vip_question中uid和sdate字段
+                        $question = new Question;
+                        $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
+                    }
+
+                    //上传选项文档
+                    if(isset($q['options']) && !empty($q['options'])){
+                        foreach ($q['options'] as $k=>$o){
+                            $shorUuid = $this->shortUuid();
+                            $newFileName = $sdate.'_test-'.$uuid.'_'.$shorUuid.'_'.$shorUuid.'.docx';
+                            $result = $this->curlUploadFile($o['option_file'], $newFileName);
+                            //更新vip_question_option中uid字段
+                            $questionOption = new VipQuestionOption;
+                            $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
+                        }
+                    }
+
+                    //上传答案文档
+                    if(isset($q['answer_file'])){
+                        $newFileName = $sdate.'_test-'.$uuid.'_'.'answers'.'_answers.docx';
+                        $result = $this->curlUploadFile($q['answer_file'], $newFileName);
+                    }
+
+                    //上传解析文档
+                    if(isset($q['analysis_file'])){
+                        $newFileName = $sdate.'_test-'.$uuid.'_'.'analysis'.'_analysis.docx';
+                        $result = $this->curlUploadFile($q['analysis_file'], $newFileName);
+                    }
+
+                }
+            }
+            return response()->json(['status' => 1]);
+
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+
+    public function curlUploadFile($fileUrl, $newFileName){
+        try {
+
+            $fileContent = file_get_contents($fileUrl);
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'].'/ossImages/temp/';
+            $targetFile = $uploadDir.$newFileName;
+            $result = file_put_contents($targetFile, $fileContent);
+            if($result){
+                $data = array('file'=>new \CURLFile($targetFile));
+                header('content-type:text/html;charset=utf8');
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, config('app.UPLOAD_PHP_URL'));
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_POST, 1);
+                curl_setopt($curl, CURLOPT_SAFE_UPLOAD, 1);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                $result = curl_exec($curl);
+                $aStatus = curl_getinfo($curl);
+                curl_close($curl);
+                @unlink($targetFile);
+                return $result;
+
+            }
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
     }
 
 
@@ -386,22 +504,17 @@ class CommonController extends BaseController
      * 生成唯一标识
      * @return string
      */
-    public function guid() {
-        if (function_exists('com_create_guid')) {
-            return com_create_guid();
-        } else {
-            mt_srand((double)microtime()*10000);
-            $charid = strtoupper(md5(uniqid(rand(), true)));
-            $hyphen = chr(45);
-            $uuid   = chr(123)
-                .substr($charid, 0, 8).$hyphen
-                .substr($charid, 8, 4).$hyphen
-                .substr($charid,12, 4).$hyphen
-                .substr($charid,16, 4).$hyphen
-                .substr($charid,20,12)
-                .chr(125);
-            return $uuid;
-        }
+    public function uuid()
+    {
+        $charid = strtolower(md5(uniqid(mt_rand(), true)));
+        $uuid = substr($charid, 0, 8).substr($charid, 8, 4).substr($charid,12, 4).substr($charid,16, 4).substr($charid,20,12);
+        return $uuid;
+    }
+
+
+    public function shortUuid()
+    {
+        return strtoupper(substr($this->uuid(), 8, 16));
     }
 
 }
