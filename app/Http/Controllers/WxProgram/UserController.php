@@ -18,6 +18,22 @@ class UserController extends Controller
             $searchArgs['password']=$request->input('password');
             $searchArgs['agencyId']=$request->input('agencyId');
             $searchArgs['token']=$request->input('token');
+            if(!isset($searchArgs['token']) || empty($searchArgs['token']))
+            {
+                throw new \Exception('缺少token信息');
+            }
+            if(!isset($searchArgs['userName']))
+            {
+                throw new \Exception('缺少用户名');
+            }
+            if(!isset($searchArgs['password']))
+            {
+                throw new \Exception('缺少密码');
+            }
+            if(!isset($searchArgs['agencyId']) || intval($searchArgs['agencyId']) <=0)
+            {
+                throw new \Exception('缺少机构ID');
+            }
             //调用微服务接口，进行用户登陆
             $microToken=KlibTeacherClient::getToken([
                 'userName'=>$searchArgs['userName'],

@@ -75,13 +75,6 @@ class WxService
      */
     public static function getOpenId($token)
     {
-        //验证token是否过期
-        $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
-        $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
-        if(!$userInfo)
-        {
-            throw new \Exception('登陆已过期，请重新登陆');
-        }
         $token=Redis::get($token);
         $json=json_decode($token);
         return $json->openid;
