@@ -390,7 +390,7 @@ class CommonController extends BaseController
     public function uploadPaperFile($data = array())
     {
         try {
-
+            /*
             //测试数据
             $data = array(
                 'paper_id'=>1483,
@@ -419,11 +419,7 @@ class CommonController extends BaseController
                         'analysis_file'=>'http://teacher.aitifen.com/static/images/logo.png',
                     )
                 )
-            );
-
-            //上传试卷文档
-            //$newFileName = date('Ymd').'_test-'.$this->uuid().'_'.'content'.'_paper.docx';
-            //$result = $this->curlUploadFile($data['complete_file'], $newFileName);
+            );*/
 
             //上传试题文档
             if($data['questions']){
@@ -465,7 +461,6 @@ class CommonController extends BaseController
                         //$result = $this->curlUploadFile($q['analysis_file'], $newFileName);
                         $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['analysis_file'], 'newFileName'=>$newFileName)));
                     }
-
                 }
             }
             return response()->json(['status' => 1]);
@@ -475,35 +470,6 @@ class CommonController extends BaseController
         }
     }
 
-
-    /**
-    public function curlUploadFile($fileUrl, $newFileName){
-        try {
-
-            $fileContent = file_get_contents($fileUrl);
-            $uploadDir = $_SERVER['DOCUMENT_ROOT'].'/ossImages/temp/';
-            $targetFile = $uploadDir.$newFileName;
-            $result = file_put_contents($targetFile, $fileContent);
-            if($result){
-                $data = array('file'=>new \CURLFile($targetFile));
-                header('content-type:text/html;charset=utf8');
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, config('app.UPLOAD_PHP_URL'));
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($curl, CURLOPT_POST, 1);
-                curl_setopt($curl, CURLOPT_SAFE_UPLOAD, 1);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                $result = curl_exec($curl);
-                $aStatus = curl_getinfo($curl);
-                curl_close($curl);
-                @unlink($targetFile);
-                return $result;
-
-            }
-        } catch (\Exception $e) {
-            return response()->json(['errorMsg' => $e->getMessage()]);
-        }
-    }*/
 
 
     /**
