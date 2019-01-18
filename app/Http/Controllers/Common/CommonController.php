@@ -12,6 +12,7 @@ use App\Clients\KlibQuestionClient;
 use App\Clients\KlibSubjectClient;
 use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\BaseController;
+use App\Jobs\UploadQueue;
 use App\Models\Question;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
@@ -389,7 +390,7 @@ class CommonController extends BaseController
     public function uploadPaperFile($data = array())
     {
         try {
-
+            /*
             //测试数据
             $data = array(
                 'paper_id'=>1483,
@@ -418,18 +419,20 @@ class CommonController extends BaseController
                         'analysis_file'=>'http://teacher.aitifen.com/static/images/logo.png',
                     )
                 )
-            );
+            );*/
 
             //上传试卷文档
             //$newFileName = date('Ymd').'_test-'.$this->uuid().'_'.'content'.'_paper.docx';
             //$result = $this->curlUploadFile($data['complete_file'], $newFileName);
+
             //上传试题文档
             if($data['questions']){
                 foreach ($data['questions'] as $key=>$q){
                     $uuid = $this->uuid();
                     $sdate = date('Ymd');
                     $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
-                    $result = $this->curlUploadFile($q['content_file'], $newFileName);
+                    //$result = $this->curlUploadFile($q['content_file'], $newFileName);
+                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['content_file'], 'newFileName'=>$newFileName)));
                     if($result){
                         //更新vip_question中uid和sdate字段
                         $question = new Question;
@@ -441,7 +444,8 @@ class CommonController extends BaseController
                         foreach ($q['options'] as $k=>$o){
                             $shorUuid = $this->shortUuid();
                             $newFileName = $sdate.'_test-'.$uuid.'_'.$shorUuid.'_'.$shorUuid.'.docx';
-                            $result = $this->curlUploadFile($o['option_file'], $newFileName);
+                            $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$o['option_file'], 'newFileName'=>$newFileName)));
+                            //$result = $this->curlUploadFile($o['option_file'], $newFileName);
                             //更新vip_question_option中uid字段
                             $questionOption = new VipQuestionOption;
                             $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
@@ -451,13 +455,15 @@ class CommonController extends BaseController
                     //上传答案文档
                     if(isset($q['answer_file'])){
                         $newFileName = $sdate.'_test-'.$uuid.'_'.'answers'.'_answers.docx';
-                        $result = $this->curlUploadFile($q['answer_file'], $newFileName);
+                        //$result = $this->curlUploadFile($q['answer_file'], $newFileName);
+                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['answer_file'], 'newFileName'=>$newFileName)));
                     }
 
                     //上传解析文档
                     if(isset($q['analysis_file'])){
                         $newFileName = $sdate.'_test-'.$uuid.'_'.'analysis'.'_analysis.docx';
-                        $result = $this->curlUploadFile($q['analysis_file'], $newFileName);
+                        //$result = $this->curlUploadFile($q['analysis_file'], $newFileName);
+                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['analysis_file'], 'newFileName'=>$newFileName)));
                     }
 
                 }
