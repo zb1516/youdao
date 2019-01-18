@@ -39,12 +39,13 @@ class ImagePaperController extends BaseController
     {
         try {
             $currentPage = abs($request->get('currentPage', 1));
-            $pageSize = abs($request->get('pageSize', 15));
+            $pageSize = abs($request->get('pageSize', 5));
             $imgAuditor = config('app.IMG_AUDITOR');
             $roleId = $this->sysRoles->getRoleId ($imgAuditor);
             $_GET['IMG_AUDITOR'] = $roleId;
             $searchArgs = $this->vipYoudaoExamined->imagePaperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->getImagePaperList($searchArgs, $currentPage, $pageSize);
+            //print_r(response()->json($result));exit;
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

@@ -42,9 +42,6 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if(!isset($searchArgs['token']) <= 0){
-                    throw new \Exception('缺少登陆用户token');
-                }
                 if(intval($searchArgs['agencyId']) <= 0){
                     throw new \Exception('缺少机构id');
                 }
@@ -206,11 +203,8 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
-                if(!isset($searchArgs['token'])){
-                    throw new \Exception('缺少微信用户token');
-                }
-                if (intval($searchArgs['taskId']) <= 0) {
-                    throw new \Exception('缺少任务id');
+                if (!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])) {
+                    throw new \Exception('缺少任务ID');
                 }
                 if (intval($searchArgs['paperType']) <= 0) {
                     throw new \Exception('缺少试卷类型');
@@ -329,8 +323,8 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            if(empty($searchArgs['taskId'])){
-                throw new \Exception('缺少任务id');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])){
+                throw new \Exception('缺少任务ID');
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
@@ -359,16 +353,10 @@ class paperController extends Controller
             $searchArgs['token']=$request->input('token');
             $searchArgs['page']=$request->input('page')>0?$request->input('page'):1;
             $searchArgs['pageSize']=$request->input('pageSize')>0?$request->input('pageSize'):20;
-            if(!isset($searchArgs['token']))
-            {
-                throw new \Exception('缺少微信用户token');
-            }
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
-            //获取用户openId;
-            $openId=WxService::getOpenId($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." and open_id='".$openId."'  order by id desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." order by id desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
@@ -397,9 +385,6 @@ class paperController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');
-            if(!isset($searchArgs['token'])){
-                throw new \Exception('缺少微信用户token');
-            }
             //获取用户id
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
@@ -433,10 +418,11 @@ class paperController extends Controller
     public function getPaperImageList(Request $request)
     {
         try{
-            $searchArgs['taskId']=$request->input('taskId');                 //任务id
-            if(intval($searchArgs['taskId']) <=0 )
+            $searchArgs['taskId']=$request->input('taskId');               //任务id
+            $searchArgs['token']=$request->input('token');                 //用户token
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
             {
-                throw new \Exception('缺少任务id');
+                throw new \Exception('缺少任务ID');
             }
             //查询任务
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
@@ -469,6 +455,10 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
+            {
+                throw new \Exception('缺少任务ID');
+            }
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             return response()->json([
@@ -497,57 +487,57 @@ class paperController extends Controller
             $searchArgs['taskId']=$request->input('taskId');
             $searchArgs['token']=$request->input('token');
             $searchArgs['isShare']=$request->input('isShare');
-//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-//            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
-//            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-//            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
             if(!isset($searchArgs['isShare']))
             {
-                //判断用户是否登陆
-                $result=UserService::checkUserStatus($searchArgs['token']);
-                if($result === false)
+                if(!isset($searchArgs['token']))
                 {
-                    throw new \Exception('未登陆，请登陆后查看');
+                    return response()->json(['status'=>1001,'errorMsg'=>'您还没登陆，请登陆后查看']);
                 }
+                //判断用户是否登陆
+                UserService::checkUserStatus($searchArgs['token']);
             }
-            $result='{
-    "status":200,
-    "errorMsg":"操作成功",
-    "data":{
-        "rows":[
-            {
-                "ques_id":"12619",
-                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
-                "ques_sdate":"201442",
-                "ques_subject_id":4,
-                "ques_subject_name":"",
-                "ques_type_id":1,
-                "ques_type_name":"单选题",
-                "paper_id":"465",
-                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
-                "ques_score":"4",
-                "ques_number":null,
-                "ques_difficulty":"1",
-                "ques_knowledge_id":"10301",
-                "ques_knowledge_name":"",
-                "ques_content":"",
-                "ques_analysis":"",
-                "ques_province":"",
-                "ques_city":"北京市",
-                "ques_year":"2008",
-                "ques_source":"真题",
-                "ques_grade":"小学二年级",
-                "ques_school":"",
-                "ques_answer":"B",
-                "ques_options":""
-            }
-        ]
-    }
-}';
-            $jsonData=json_decode($result,true);
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+//            $result='{
+//    "status":200,
+//    "errorMsg":"操作成功",
+//    "data":{
+//        "rows":[
+//            {
+//                "ques_id":"12619",
+//                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
+//                "ques_sdate":"201442",
+//                "ques_subject_id":4,
+//                "ques_subject_name":"",
+//                "ques_type_id":1,
+//                "ques_type_name":"单选题",
+//                "paper_id":"465",
+//                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
+//                "ques_score":"4",
+//                "ques_number":null,
+//                "ques_difficulty":"1",
+//                "ques_knowledge_id":"10301",
+//                "ques_knowledge_name":"",
+//                "ques_content":"",
+//                "ques_analysis":"",
+//                "ques_province":"",
+//                "ques_city":"北京市",
+//                "ques_year":"2008",
+//                "ques_source":"真题",
+//                "ques_grade":"小学二年级",
+//                "ques_school":"",
+//                "ques_answer":"B",
+//                "ques_options":""
+//            }
+//        ]
+//    }
+//}';
+//            return $result;
             $detail = [];
             $i = 1;
-            foreach ($jsonData['data']['rows'] as $v) {
+            foreach ($result as $v) {
                 $detail[$v['ques_id']] = [
                     'i' => $i,
                     'questionId'       => $v['ques_id'],//试题ID
@@ -572,8 +562,9 @@ class paperController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            if(intval($searchArgs['taskId']) <= 0){
-                throw new \Exception('缺少任务id');
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
+            {
+                throw new \Exception('缺少任务ID');
             }
             //获取信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();

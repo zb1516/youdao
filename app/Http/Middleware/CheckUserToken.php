@@ -17,15 +17,22 @@ class CheckUserToken
     public function handle($request, Closure $next)
     {
         try{
+            $searchArgs['isShare']=$request->input('isShare');
             $searchArgs['token']=$request->input('token');
-            $result=UserService::checkUserStatus($searchArgs['token']);
-            if($result === false)
-            {
-                throw new \Exception('登陆已过期，请重新登陆');
+            if(!isset($searchArgs['isShare'])){
+                if(!isset($searchArgs['token']) || empty($searchArgs['token']) )
+                {
+                    throw new \Exception('缺少token信息');
+                }
+                $result=UserService::checkUserStatus($searchArgs['token']);
+                if($result === false)
+                {
+                    throw new \Exception('登陆已过期，请重新登陆');
+                }
             }
             return $next($request);
         }catch (\Exception $e){
-            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+            return response()->json(['status'=>1001,'errorMsg'=>$e->getMessage()]);
         }
     }
 }

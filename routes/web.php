@@ -20,25 +20,26 @@ Route::get('/', function () {
 //小程序接口
 Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
-    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
-    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
-    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
-    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
-    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
-    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
 });
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
     $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage');
+    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
+    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
+    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
+    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
+    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
+    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
     $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount');
     $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
     $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
     $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
     $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
     $router->get('user/logout','WxProgram\UserController@logout');
+    $router->post('upload/getSignature','WxProgram\UploadController@getSignature');
 });
 
 //以下为4.0路由
@@ -75,16 +76,17 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('paper/paperInfo', 'Youdao\PaperController@paperInfo');
     Route::get('imagePaper/paperList', 'Youdao\ImagePaperController@paperList');
     Route::get('imagePaper/imageExport', 'Youdao\ImagePaperController@imageExport');
-    Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
     Route::get('paper/paperExport', 'Youdao\PaperController@paperExport');
     Route::get('paper/questionExport', 'Youdao\PaperController@questionExport');
     Route::get('imagePaper/imagePaperDetail', 'Youdao\ImagePaperController@imagePaperDetail');
     Route::get('imagePaper/repeatPaperRecord', 'Youdao\ImagePaperController@repeatPaperRecord');
     Route::get('imagePaper/paperReturn', 'Youdao\ImagePaperController@paperReturn');
     Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
+    Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
     Route::get('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
     Route::get('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
     Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');
+
 
 
 });
