@@ -390,7 +390,7 @@ class CommonController extends BaseController
     public function uploadPaperFile($data = array())
     {
         try {
-            /*
+
             //测试数据
             $data = array(
                 'paper_id'=>1483,
@@ -419,7 +419,7 @@ class CommonController extends BaseController
                         'analysis_file'=>'http://teacher.aitifen.com/static/images/logo.png',
                     )
                 )
-            );*/
+            );
 
             //上传试卷文档
             //$newFileName = date('Ymd').'_test-'.$this->uuid().'_'.'content'.'_paper.docx';
@@ -476,7 +476,7 @@ class CommonController extends BaseController
     }
 
 
-
+    /**
     public function curlUploadFile($fileUrl, $newFileName){
         try {
 
@@ -503,7 +503,7 @@ class CommonController extends BaseController
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
-    }
+    }*/
 
 
     /**
