@@ -499,7 +499,22 @@ class paperController extends Controller
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+//            dd($paperInfo);
             $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+            $questions=[];
+            foreach ($result as $key => $val)
+            {
+                $questions[$val['ques_id']]=$val;
+            }
+            foreach($paperInfo['module'] as $key => $val)
+            {
+                foreach($val['questions'] as $k => $v)
+                {
+                    $val['questions'][$k]['ques_score']=$v['ques_score'];
+                    $val['questions'][$k]=$questions[$v['ques_id']];
+                }
+                $paperInfo['module'][$key]=$val;
+            }
 //            $result='{
 //    "status":200,
 //    "errorMsg":"操作成功",
@@ -535,19 +550,7 @@ class paperController extends Controller
 //    }
 //}';
 //            return $result;
-            $detail = [];
-            $i = 1;
-            foreach ($result as $v) {
-                $detail[$v['ques_id']] = [
-                    'i' => $i,
-                    'questionId'       => $v['ques_id'],//试题ID
-                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
-                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
-                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
-                ];
-                $i++;
-            }
-            return response()->json(['status'=>200,'data'=>['rows' => $detail]]);
+            return response()->json(['status'=>200,'data'=>$paperInfo]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
@@ -568,7 +571,7 @@ class paperController extends Controller
             }
             //获取信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],['task_id','subject_id','grade','province','city','paper_type']);
             //获取所有照片
             $vipPpaerImageModel=new VipPaperImage();
             //判断试卷类型
@@ -580,7 +583,7 @@ class paperController extends Controller
                 $questionRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>1,'is_delete'=>0]);
                 $paperInfo['question_rows']=!empty($questionRows)?$questionRows:[];
                 $ansterRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>2,'is_delete'=>0]);
-                $paperInfo['anster_rows']=!empty($ansterRows)?$ansterRows:[];
+                $paperInfo['answer_rows']=!empty($ansterRows)?$ansterRows:[];
             }
             return response()->json(['status'=>200,'data'=>['rows'=>$paperInfo]]);
         }catch (\Exception $e){
