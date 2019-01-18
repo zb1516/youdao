@@ -487,19 +487,9 @@ class paperController extends Controller
             $searchArgs['taskId']=$request->input('taskId');
             $searchArgs['token']=$request->input('token');
             $searchArgs['isShare']=$request->input('isShare');
-            if(!isset($searchArgs['isShare']))
-            {
-                if(!isset($searchArgs['token']))
-                {
-                    return response()->json(['status'=>1001,'errorMsg'=>'您还没登陆，请登陆后查看']);
-                }
-                //判断用户是否登陆
-                UserService::checkUserStatus($searchArgs['token']);
-            }
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-//            dd($paperInfo);
             $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
             $questions=[];
             foreach ($result as $key => $val)
