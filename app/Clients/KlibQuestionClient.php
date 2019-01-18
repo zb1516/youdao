@@ -15,7 +15,7 @@ class KlibQuestionClient
     public static function getQuestion($questionIds)
     {
         try{
-            $user = new Client(env('KLIB_SERVICE_HOST') . ':' . env('KLIB_SERVICE_PORT') . '/quesService', false);
+            $user = new Client(env('KLIB_SERVICE_HOST') . '/klibService/quesService', false);
             $res = $user->getQuesInfoById($questionIds, false, intval(env('QUES_ATTR_DEFAULT',7)) | intval(env('QUES_ATTR_PAPER',32)));
             if(count($res) == count($res,1)){
                 $quesOptions=isset($res['ques_options'])?trim($res['ques_options']):'';

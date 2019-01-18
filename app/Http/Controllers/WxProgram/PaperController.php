@@ -484,71 +484,70 @@ class paperController extends Controller
     public function getPaperInfo(Request $request)
     {
         try{
-//            echo 1111;exit;
-//            $searchArgs['taskId']=$request->input('taskId');
-//            $searchArgs['token']=$request->input('token');
-//            $searchArgs['isShare']=$request->input('isShare');
-//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-//            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
-//            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-//            $result = KlibQuestionClient::getQuestion($paperInfo['data']['ques_ids']);
-//            if(!isset($searchArgs['isShare']))
-//            {
-//                if(!isset($searchArgs['token']))
-//                {
-//                    return response()->json(['status'=>1001,'errorMsg'=>'您还没登陆，请登陆后查看']);
-//                }
-//                //判断用户是否登陆
-//                UserService::checkUserStatus($searchArgs['token']);
-//            }
-            $result='{
-    "status":200,
-    "errorMsg":"操作成功",
-    "data":{
-        "rows":[
+            $searchArgs['taskId']=$request->input('taskId');
+            $searchArgs['token']=$request->input('token');
+            $searchArgs['isShare']=$request->input('isShare');
+            if(!isset($searchArgs['isShare']))
             {
-                "ques_id":"12619",
-                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
-                "ques_sdate":"201442",
-                "ques_subject_id":4,
-                "ques_subject_name":"",
-                "ques_type_id":1,
-                "ques_type_name":"单选题",
-                "paper_id":"465",
-                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
-                "ques_score":"4",
-                "ques_number":null,
-                "ques_difficulty":"1",
-                "ques_knowledge_id":"10301",
-                "ques_knowledge_name":"",
-                "ques_content":"",
-                "ques_analysis":"",
-                "ques_province":"",
-                "ques_city":"北京市",
-                "ques_year":"2008",
-                "ques_source":"真题",
-                "ques_grade":"小学二年级",
-                "ques_school":"",
-                "ques_answer":"B",
-                "ques_options":""
+                if(!isset($searchArgs['token']))
+                {
+                    return response()->json(['status'=>1001,'errorMsg'=>'您还没登陆，请登陆后查看']);
+                }
+                //判断用户是否登陆
+                UserService::checkUserStatus($searchArgs['token']);
             }
-        ]
-    }
-}';
-            return $result;
-//            $detail = [];
-//            $i = 1;
-//            foreach ($result['data'] as $v) {
-//                $detail[$v['ques_id']] = [
-//                    'i' => $i,
-//                    'questionId'       => $v['ques_id'],//试题ID
-//                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
-//                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
-//                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
-//                ];
-//                $i++;
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+//            $result='{
+//    "status":200,
+//    "errorMsg":"操作成功",
+//    "data":{
+//        "rows":[
+//            {
+//                "ques_id":"12619",
+//                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
+//                "ques_sdate":"201442",
+//                "ques_subject_id":4,
+//                "ques_subject_name":"",
+//                "ques_type_id":1,
+//                "ques_type_name":"单选题",
+//                "paper_id":"465",
+//                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
+//                "ques_score":"4",
+//                "ques_number":null,
+//                "ques_difficulty":"1",
+//                "ques_knowledge_id":"10301",
+//                "ques_knowledge_name":"",
+//                "ques_content":"",
+//                "ques_analysis":"",
+//                "ques_province":"",
+//                "ques_city":"北京市",
+//                "ques_year":"2008",
+//                "ques_source":"真题",
+//                "ques_grade":"小学二年级",
+//                "ques_school":"",
+//                "ques_answer":"B",
+//                "ques_options":""
 //            }
-//            return response()->json(['status'=>200,'data'=>['rows' => $result]]);
+//        ]
+//    }
+//}';
+//            return $result;
+            $detail = [];
+            $i = 1;
+            foreach ($result as $v) {
+                $detail[$v['ques_id']] = [
+                    'i' => $i,
+                    'questionId'       => $v['ques_id'],//试题ID
+                    'answer'           => isset($v['ques_answer']) ? $v['ques_answer'] : '',
+                    'content'          => isset($v['ques_content']) ? $v['ques_content'] : '',
+                    'analysis'         => isset($v['ques_analysis']) ? $v['ques_analysis'] : ''
+                ];
+                $i++;
+            }
+            return response()->json(['status'=>200,'data'=>['rows' => $detail]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
