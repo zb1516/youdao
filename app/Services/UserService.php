@@ -18,7 +18,7 @@ class UserService
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
             if(!$userInfo){
-                throw new \Exception('用户未登陆');
+                throw new \Exception('登陆已过期，请重新登陆');
             }
             //调用获取登陆信息接口，是否成功，如果成功，说明用户未过期，如果抛出异常，说明用户已经过期
             KlibTeacherClient::getAuthInfo($userInfo['micro_token']);
@@ -59,7 +59,7 @@ class UserService
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$token,'is_delete'=>0]);
             if(!$userInfo){
-                throw new \Exception('用户未登陆');
+                throw new \Exception('登陆已过期，请重新登陆');
             }
             return $userInfo;
         }catch (\Exception $e){

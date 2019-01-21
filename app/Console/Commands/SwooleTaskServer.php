@@ -94,7 +94,7 @@ class SwooleTaskServer extends Command
         //执行任务
         $result=httpPost($data['url'],$data['data']);
         $result=json_decode($result,true);
-        return $result;
+        $serv->finish($result);
     }
 
     /**
