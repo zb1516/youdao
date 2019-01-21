@@ -194,7 +194,7 @@ class VipYoudaoExamined extends Model
             $vipYoudaoAgency = new VipYoudaoAgency;
             foreach ($list as &$row){
                 //获取机构名称
-                if($row['agency_id']){
+                if(!empty($row['agency_id'])){
                     $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']), [], ['agency_name']);
                     $row['agency_name'] = $agencyInfo['agency_name'];
                 }
@@ -235,6 +235,23 @@ class VipYoudaoExamined extends Model
                 }
                 if($row['paper_examined_auditor_id']==-1 && !empty($row['paper_examined_time'])){
                     $row['paper_examined_auditor_name'] = '自动审核';
+                }
+                switch($row['paper_examined_status']){
+                    case 0:
+                        $row['paper_examined_status_name'] = '未提交给有道';
+                        break;
+                    case 1:
+                        $row['paper_examined_status_name'] = '处理中';
+                        break;
+                    case 2:
+                        $row['paper_examined_status_name'] = '待审核';
+                        break;
+                    case 3:
+                        $row['paper_examined_status_name'] = '已通过';
+                        break;
+                    case 4:
+                        $row['paper_examined_status_name'] = '已退回';
+                        break;
                 }
             }
         }

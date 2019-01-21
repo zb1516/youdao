@@ -380,6 +380,7 @@ class PaperController extends BaseController
              * todo:有道处理超过9个工作日未反馈的批量审核通过：未完,发送模版消息formID目前没有办法获取
              */
             $successTask = $this->vipYoudaoExamined->batchExamined();
+
             //批量发送微信模版消息
             if($successTask){
                 foreach ($successTask as $key=>$task){
