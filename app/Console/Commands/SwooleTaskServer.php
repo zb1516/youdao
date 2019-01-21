@@ -46,7 +46,7 @@ class SwooleTaskServer extends Command
         $this->serv=new \swoole_server('0.0.0.0',9502);
         $this->serv->set([
             'reactor_num' => 2,
-            'task_worker_num'=>1,
+            'task_worker_num'=>100,
             'worker_num' => 4
         ]);
         $this->serv->on('Connect',[$this,'onConnect']);
