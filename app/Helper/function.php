@@ -36,6 +36,15 @@ if(!function_exists('uuid'))
         return $prefix . $uuid;
     }
 }
+
+if(!function_exists('shortUuid'))
+{
+    function shortUuid($uuid)
+    {
+        return strtoupper(substr($uuid, 8, 16));
+    }
+}
+
 //curl_get请求
 if(!function_exists('httpGet'))
 {
