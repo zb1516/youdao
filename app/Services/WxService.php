@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\VipYoudaoUserLoginLog;
 use Illuminate\Support\Facades\Redis;
 
 class WxService

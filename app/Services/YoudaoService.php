@@ -75,4 +75,76 @@ class YoudaoService
         $str = substr($url,0,10).$length.substr($url,$length-10,$length);
         return $str;
     }
+
+
+    /**
+     * 套卷审核通过，通知有道审核通过
+     * @param $url
+     * @param $taskId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function doYoudaoComplete($url,$taskId){
+        try{
+            $appKey = config('app.TEST_APP_KEY');
+            $appSecret = config('app.TEST_APP_SECRET');
+            $url = config('app.TEST_YOUDAO_URL').$url;
+            $salt = rand(1,1000);
+            $time = time();
+            $sign = $this->getYoudaoSign($appKey,$url,$salt,$time,$appSecret);
+            $postData = array(
+                'taskId'=>$taskId,
+                'appKey' => $appKey,
+                'salt' => $salt,
+                'curtime' => $time,
+                'sign' => $sign,
+                'type' => 1,
+            );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);// post数据
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
+            $result = curl_exec($ch);//有道返回的内容
+            curl_close($ch);
+            return response()->json($result);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    /**
+     * 套卷审核不通过，退回有道
+     * @param $url
+     * @param $data
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function doYoudaoFeedback($url,$data){
+        try{
+            $appKey = config('app.TEST_APP_KEY');
+            $appSecret = config('app.TEST_APP_SECRET');
+            $url = config('app.TEST_YOUDAO_URL').$url;
+            $salt = rand(1,1000);
+            $time = time();
+            $sign = $this->getYoudaoSign($appKey,$url,$salt,$time,$appSecret);
+            $postData = array(
+                'appKey' => $appKey,
+                'salt' => $salt,
+                'curtime' => $time,
+                'sign' => $sign,
+                'type' => 1,
+            );
+            $postData = array_merge($data, $postData);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);// post数据
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
+            $result = curl_exec($ch);//有道返回的内容
+            curl_close($ch);
+            return response()->json($result);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
 }

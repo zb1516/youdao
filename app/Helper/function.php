@@ -36,6 +36,15 @@ if(!function_exists('uuid'))
         return $prefix . $uuid;
     }
 }
+
+if(!function_exists('shortUuid'))
+{
+    function shortUuid($uuid)
+    {
+        return strtoupper(substr($uuid, 8, 16));
+    }
+}
+
 //curl_get请求
 if(!function_exists('httpGet'))
 {
@@ -113,5 +122,27 @@ if(!function_exists('formatDate'))
     function formatDate($ustime) {
         $rtime = date("Y年n月j日",$ustime);
         return $rtime;
+    }
+}
+
+if(!function_exists('gmt_iso8601'))
+{
+    function gmt_iso8601($time) {
+        $dtStr = date("c", $time);
+        $mydatetime = new DateTime($dtStr);
+        $expiration = $mydatetime->format(DateTime::ISO8601);
+        $pos = strpos($expiration, '+');
+        $expiration = substr($expiration, 0, $pos);
+        return $expiration."Z";
+    }
+}
+
+if(!function_exists('key_sort_desc'))
+{
+    function key_sort_desc($data)
+    {
+        $last_names = array_column($data,'upload_time');
+        array_multisort($last_names,SORT_DESC,$data);
+        return $data;
     }
 }

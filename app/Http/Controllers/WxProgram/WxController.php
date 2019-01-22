@@ -141,13 +141,13 @@ class WxController extends Controller
             $vipPaperImageModel=new VipPaperImage();
             //获取第一张图片
             $paperInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId'],'is_delete'=>0],['create_time'=>'asc'],['image_url']);
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $examinedPaperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'show_name');
+//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+//            $examinedPaperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'show_name');
             return response()->json([
                 'status'=>200,
                 'data'=>[
-                    'title'=>$examinedPaperInfo['show_name'],
-                    'path'=>'/pages/message/photo/photo?task_id='.$searchArgs['taskId'].'is_share=1',
+                    'title'=>'看过来，又有一套试卷进入咱们的机构私库了，快到私库中查看喽！',
+                    'path'=>'/pages/message/detail/detail?task_id='.$searchArgs['taskId'].'&is_share=1',
                     'desc'=>'',
                     'imageUrl'=>$paperInfo['image_url'],
                 ]
