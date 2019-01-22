@@ -343,6 +343,7 @@ class PaperController extends BaseController
             $status = 0;
             if($code == 200){
                 $postData = json_decode($data,true);
+                //todo 有道反馈时可能没有通过有道审核，这边需要做处理
                 //更新任务的有道接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($postData);
             }

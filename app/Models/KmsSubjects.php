@@ -72,4 +72,19 @@ class KmsSubjects extends Model
         }
         return '';
     }
+
+
+    public function getSubjectsByIds($subjectIdArr){
+        $condition = array(
+            'id'=>array('in'=>$subjectIdArr)
+        );
+        $subjectList = $this->findAll($condition);
+        $grade = new Grade();
+        $gradeArray = $grade->getGradeArray();
+        foreach ($subjectList as $key => $subject) {
+            $subjectList[$key]['grade_name'] = $gradeArray[$subject['grade_id']];
+            $subjectList[$key]['grade_show_name'] = str_replace("部", "", $gradeArray[$subject['grade_id']]);
+        }
+        return $subjectList;
+    }
 }

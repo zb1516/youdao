@@ -17,7 +17,7 @@
               <div class="input-wrapper">
                   <label for="" class="title">年级</label>
                   <div class="input-box">
-                      <select class="grade-select-box" id="grade-select-box" name="grade-select-box" v-model="gradeValue" data-options="width: 100">
+                      <select class="grade-select-box" id="grade-select-box" name="grade-select-box"  data-options="width: 100">
                           <option value="0">全部</option>
                           <option value="1">小学</option>
                           <option value="2">初中</option>
@@ -114,14 +114,17 @@
                              <td>{{paper.final_processing_time}}</td>
                              <td>{{paper.paper_examined_time}}</td>
                              <td>
-                                 <template v-if="paper.paper_examined_status_name == '已通过'">
-                                     <span class="status green">{{paper.paper_examined_status_name}}</span>
+                                 <template v-if="paper.paper_examined_status == 3">
+                                     <span class="status green">已通过</span>
                                  </template>
-                                 <template v-else-if="imagePaper.imageExaminedStatusName == '已退回'">
-                                     <span class="status red">{{paper.paper_examined_status_name}}</span>
+                                 <template v-else-if="paper.paper_examined_status == 4">
+                                     <span class="status red">已退回</span>
                                  </template>
-                                 <template v-else>
-                                     <span class="status">{{paper.paper_examined_status_name}}</span>
+                                 <template v-else-if="paper.paper_examined_status == 2">
+                                     <span class="status">待审核</span>
+                                 </template>
+                                 <template v-else-if="paper.paper_examined_status == 1">
+                                     <span class="status">处理中</span>
                                  </template>
                              </td>
                              <td>
@@ -192,8 +195,8 @@
             var that = this;
             that.subjectList();
             that.agencyList();
-            that.doSearch();
-            that.doSearchStatic();
+            //that.doSearch();
+
 
         },
         watch:{
@@ -201,7 +204,7 @@
                 var that = this;
                 that.currentPage = 1;
             },
-            imagePaperList:function(){
+            paperList:function(){
                 var that = this;
                 that.jsPage();
             }
@@ -237,32 +240,8 @@
                     }
                 })
             },
-            jsPage(){
-                var that = this;
-                if($("#paginationBox").html() != '') {
-                    $("#paginationBox").pagination('setPage', that.currentPage, that._total);
-                } else {
-                    $("#paginationBox").pagination({
-                        totalPage: that._total,
-                        showPageNum: 5,
-                        isShowPageSizeOpt: false,
-                        isShowFL: false,
-                        isShowRefresh: false,
-                        callBack: function (currPage, pageSize) {
-                            that.currentPage = currPage;
-                            //alert(that.currentPage)
-                            that.pageSize = 5;
-                            //alert(that.pageSize)
-                            that.doSearch();
-                            console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
-                        }
-                    });
 
-                }
-
-            },
             doSearch(){
-
 
                 // alert($(".drop-city-ul").html());
                 // alert($(".drop-city-ul").find('.selected').attr('data-val'));
@@ -272,9 +251,10 @@
                 searchArgs.pageSize = that.pageSize;
                 searchArgs.userKey = that.userKey;
                 axios.get('youdao/paper/paperList',{params:searchArgs}).then(function(data){
+                    alert(11111);
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
-                    } else {
+                    } else {alert(222);
                         that.$nextTick(function () {
                             that.paperList = data.data.rows;
                             that._total = data.data.total;
@@ -305,22 +285,7 @@
 
             },
 
-            doSearchStatic: function(){
-                var that = this;
-                var searchArgs = $.extend(true, {}, that.searchArgs);
-                searchArgs.userKey = that.userKey;
-                axios.get('youdao/paper/paperStatistic',{params:searchArgs}).then(function(data){
-                    if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
-                    } else {
-                        that.$nextTick(function () {
-                            that.totalNum = data.data.totalNum;
-                            that.listCount = data.data.listCount;
 
-                        });
-                    }
-                })
-            }
         }
     }
 
