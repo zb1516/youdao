@@ -471,4 +471,29 @@ class CommonController extends BaseController
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+    //获取所有省份
+    public function getAllProvince()
+    {
+        //return 1;
+        $result = $this->province->getAllProvince();
+        return response()->json($result);
+
+    }
+    /*
+     * 获取所有市
+     */
+    public function getAllCitys()
+    {
+        $provinceModel=new Province();
+        $list = $provinceModel->getCitys();
+        $arr = [];
+        foreach ($list as $v){
+            $cityValue = [];
+            foreach ($v['children'] as $value){
+                $cityValue[] = $value['city'];
+            }
+            $arr[] = $cityValue;
+        }
+        return response()->json($arr);
+    }
 }

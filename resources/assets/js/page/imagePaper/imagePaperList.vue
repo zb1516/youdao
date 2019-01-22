@@ -17,8 +17,8 @@
                 <div class="input-wrapper">
                     <label for="" class="title">年级</label>
                     <div class="input-box">
-                        <select class="grade-select-box" id="grade-select-box" name="grade-select-box" data-options="width: 100">
-                            <option value="0">全部</option>
+                        <select class="grade-select-box" id="grade-select-box" name="grade-select-box" v-model="curGrade" data-options="width: 100">
+                            <option value="">全部</option>
                             <option value="1">小学</option>
                             <option value="2">初中</option>
                             <option value="3">高中</option>
@@ -58,7 +58,7 @@
                 <div class="input-wrapper">
                     <label for="" class="title">状态</label>
                     <div class="input-box">
-                        <select class="status-select-box" id="status-select-box" name="status-select-box" data-options="width: 100">
+                        <select class="status-select-box" id="status-select-box" name="status-select-box" v-model="curImageExaminedStatus" data-options="width: 100">
                             <option value="1">待审核</option>
                             <option value="2">已通过</option>
                             <option value="3">退回</option>
@@ -69,7 +69,7 @@
                 <div class="input-wrapper">
                     <label for="" class="title">机构</label>
                     <div class="input-box">
-                        <select class="mechanism-select-box" id="mechanism-select-box" name="mechanism-select-box" data-options="width: 100" data-live-search="true">
+                        <select class="mechanism-select-box" id="mechanism-select-box" name="mechanism-select-box" data-options="width: 100" v-model="agencyId" data-live-search="true">
                             <option value="0">全部</option>
                             <option v-for="option in optionsAgency" v-bind:value="option.agencyId">
                                 {{ option.agencyName }}
@@ -105,9 +105,9 @@
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
-                        <th :class="isTrue?'sorting':(isShow?'sorting_desc':'sorting_asc')" id='uploadTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;" @click="selectGet">上传时间</th>
-                        <th class="sorting asc" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true">审核时间</th>
-                        <th class="sorting" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;">审核状态</th>
+                        <th :class="isUploadTimeTrue?'sorting':(isUploadTimeShow?'sorting_asc':'sorting_desc')" id="paginationBox1" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;" @click="selectUploadTimeGet">上传时间</th>
+                        <th :class="isExaminedTimeTrue?'sorting':(isExaminedTimeShow?'sorting_asc':'sorting_desc')" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectExaminedTimeGet">审核时间</th>
+                        <th :class="isExaminedStatusTrue?'sorting':(isExaminedStatusShow?'sorting_asc':'sorting_desc')" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectExaminedStatusGet">审核状态</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
                     </tr>
                     </thead>
@@ -132,7 +132,11 @@
                             </td>
                             <td>
                                 <template v-if="imagePaper.imageExaminedStatusName == '待审核'">
-                                    <a href="reviewPic1.html" class="reviewBtn">审核</a>
+
+                          <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:imagePaper.taskId,paperType:imagePaper.paperType}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
+
+
+
                                 </template>
                             </td>
                         </tr>
@@ -156,8 +160,6 @@
     import "../../static/js/pagination/pagination.min.js"
     import "../../static/js/jquery.common.js"
 
-
-
     import {mapGetters} from 'vuex'
     export default {
         data(){
@@ -173,14 +175,23 @@
                 _total:0,
                 totalNum:0,
                 listCount:'',
-                isShow:0,
-                isTrue:1,
-                isSort:'desc'
-
+                isUploadTimeShow:0,
+                isUploadTimeTrue:1,
+                isUploadTimeSort:'desc',
+                isExaminedTimeShow:0,
+                isExaminedTimeTrue:1,
+                isExaminedTimeSort:'desc',
+                isExaminedStatusShow:0,
+                isExaminedStatusTrue:1,
+                isExaminedStatusSort:'desc',
+                curImageExaminedStatus:1,
+                agencyId:0,
+                curProvince:'',
+                curCity:'',
+                beginDate:'',
+                endDate:''
             }
         },
-
-
         computed: {
             searchArgs: function () {
                 var that = this;
@@ -188,7 +199,15 @@
                     grade: that.curGrade,
                     subjectId: that.subjectValue,
                     pageSize:that.pageSize,
-                    isSort: that.isSort,
+                    isUploadTimeSort: that.isUploadTimeSort,
+                    isExaminedTimeSort: that.isExaminedTimeSort,
+                    isExaminedStatusSort: that.isExaminedStatusSort,
+                    imageExaminedStatus:that.curImageExaminedStatus,
+                    agencyId:that.agencyId,
+                    beginDate:that.beginDate,
+                    endDate:that.endDate,
+                    province:that.curProvince,
+                    city:that.curCity,
                 };
             },
             ...mapGetters({
@@ -256,23 +275,26 @@
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
-                            //alert(that.currentPage)
                             that.pageSize = 5;
-                            //alert(that.pageSize)
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }
                     });
 
                 }
-
             },
             doSearch(){
-
-
                 // alert($(".drop-city-ul").html());
-                // alert($(".drop-city-ul").find('.selected').attr('data-val'));
+                //alert($(".drop-city-ul").find('.selected').attr('data-val'));
                 var that = this;
+                if($(".drop-prov-ul").find('.selected').attr('data-val')){
+                    that.curProvince = $(".drop-prov-ul").find('.selected').attr('data-val');
+                    that.curCity = $(".drop-city-ul").find('.selected').attr('data-val');
+                }
+                if($("input[name='start-date']").val()){
+                    that.beginDate = $("input[name='start-date']").val();
+                    that.endDate = $("input[name='end-date']").val();
+                }
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
@@ -286,30 +308,51 @@
                             that._total = data.data.total;
                             that.totalNum = data.data.totalNum;
                             that.listCount = data.data.listCount;
+                            that.currentPage = searchArgs.currentPage;
                             //that.jsPage();
                         });
                     }
                 })
             },
-            selectGet: function () {
-
+            selectUploadTimeGet: function () {
                 var that = this;
-that.doSearch();
-                that.isTrue = 0;
-                if(!that.isShow){
+                that.isUploadTimeTrue = 0;
+                if(!that.isUploadTimeShow){
                     //alert('down')
-                    that.isSort = 'desc';
-                    that.isShow = 1;
+                    that.isUploadTimeShow = 1;
+                    that.isUploadTimeSort = 'asc';
                 }else{
                     //alert('up')
-                    that.isSort = 'asc';
-                    that.isShow = 0;
+                    that.isUploadTimeSort = 'desc';
+                    that.isUploadTimeShow = 0;
                 }
-
-
-                    // $('#isTag').hide();
-
+                that.doSearch();
             },
+            selectExaminedTimeGet: function () {
+                var that = this;
+                that.isExaminedTimeTrue = 0;
+                if(!that.isExaminedTimeShow){
+                    that.isExaminedTimeShow = 1;
+                    that.isExaminedTimeSort = 'asc';
+                }else{
+                    that.isExaminedTimeSort = 'desc';
+                    that.isExaminedTimeShow = 0;
+                }
+                that.doSearch();
+            },
+            selectExaminedStatusGet: function () {
+                var that = this;
+                that.isExaminedStatusTrue = 0;
+                if(!that.isExaminedStatusShow){
+                    that.isExaminedStatusShow = 1;
+                    that.isExaminedStatusSort = 'asc';
+                }else{
+                    that.isExaminedStatusSort = 'desc';
+                    that.isExaminedStatusShow = 0;
+                }
+                that.doSearch();
+            },
+
         }
     }
 
