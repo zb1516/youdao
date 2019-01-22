@@ -365,6 +365,7 @@ class paperController extends Controller
                 $val['upload_time']=intval($val['image_examined_status'])==3?formatDate(strtotime($val['image_examined_time'])):formatDate(strtotime($val['upload_time']));
                 $list['data'][$key]=$val;
             }
+            $list['data']=key_sort_desc($list['data']);
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
                 'per_page'=>$list['per_page'],
