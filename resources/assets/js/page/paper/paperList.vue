@@ -6,7 +6,7 @@
               <div class="input-wrapper">
                   <label for="" class="title">学科</label>
                   <div class="input-box">
-                      <select class="subject-select-box" id="subject-select-box" name="subject-select-box" v-model="subjectValue" data-options="width: 100">
+                      <select class="subject-select-box" id="subject-select-box" name="subject-select-box" v-model="subjectValue" data-options="width: 100" >
                           <option value="0">全部</option>
                           <option v-for="option in optionsSubject" :value="option.subjectId">
                               {{option.subjectName}}
@@ -17,11 +17,11 @@
               <div class="input-wrapper">
                   <label for="" class="title">年级</label>
                   <div class="input-box">
-                      <select class="grade-select-box" id="grade-select-box" name="grade-select-box"  data-options="width: 100">
+                      <select class="grade-select-box" id="grade-select-box" name="grade-select-box"  v-model="gradeValue" data-options="width: 100" >
                           <option value="0">全部</option>
-                          <option value="1">小学</option>
-                          <option value="2">初中</option>
-                          <option value="3">高中</option>
+                          <option v-for="option in optionsGrade" :value="option.gradeId">
+                              {{option.gradeName}}
+                          </option>
                       </select>
                   </div>
               </div>
@@ -30,8 +30,8 @@
                   <div class="input-box">
                       <div class="address-search-box">
                           <div class="city-select cf">
-                              <input class="value prov-name" type="text" placeholder="省" readonly="readonly">
-                              <input class="value city-name" type="text" placeholder="市" readonly="readonly">
+                              <input class="value prov-name" type="text" v-model="province" placeholder="省" readonly="readonly">
+                              <input class="value city-name" type="text" v-model="city" placeholder="市" readonly="readonly">
                           </div>
                           <div class="drop-down">
                               <div class="drop-prov">
@@ -48,28 +48,28 @@
                   <label for="" class="title">有道处理成功</label>
                   <div class="input-box">
                       <div class="date-range-box paper-list">
-                          <input type="hidden" name="">
+                          <input type="hidden" name="" v-model="beginDate" ref="beginDate">
                       </div>
                       <div class="input-inner">
-                          <input type="text" class="input-text input-date-range" readonly="readonly">
+                          <input type="text" v-model="endDate" ref="endDate" class="input-text input-date-range" readonly="readonly">
                       </div>
                   </div>
               </div>
               <div class="input-wrapper">
                   <label for="" class="title">状态</label>
                   <div class="input-box">
-                      <select class="status-select-box" id="status-select-box" name="status-select-box" data-options="width: 100">
-                          <option value="0">待审核</option>
-                          <option value="1">已通过</option>
-                          <option value="2">退回</option>
-                          <option value="3">试卷重复</option>
+                      <select class="status-select-box" id="status-select-box" name="status-select-box" v-model="statusValue" data-options="width: 100">
+                          <option value="0">全部</option>
+                          <option v-for="(option,index) in optionsStatus" :value="index">
+                              {{option}}
+                          </option>
                       </select>
                   </div>
               </div>
               <div class="input-wrapper">
                   <label for="" class="title">机构</label>
                   <div class="input-box">
-                      <select class="mechanism-select-box" id="mechanism-select-box" name="mechanism-select-box" data-options="width: 100" data-live-search="true">
+                      <select class="mechanism-select-box" id="mechanism-select-box" name="mechanism-select-box" v-model="agencyValue" data-options="width: 100" data-live-search="true">
                           <option value="0">全部</option>
                           <option v-for="option in optionsAgency" v-bind:value="option.agencyId">
                               {{ option.agencyName }}
@@ -83,13 +83,13 @@
         <!-- list -->
         <div class="pic-list-wrapper">
           <div class="pic-number-wrapper">
-            <span class="info-n sum">共<span class="num">100</span>套</span>
-            <span class="info-n vertify">待审核<span class="num yellow">40</span>套</span>
-            <span class="info-n right">已通过<span class="num green">52</span>套</span>
-            <span class="info-n pass">退回<span class="num red">5</span>套</span>
+            <span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>
+            <span class="info-n vertify">待审核<span class="num yellow">{{listCount.waitCount}}</span>套</span>
+            <span class="info-n right">已通过<span class="num green">{{listCount.passCount}}</span>套</span>
+            <span class="info-n pass">退回<span class="num red">{{listCount.returnCount}}</span>套</span>
             <div class="search-wrapper">
-              <input type="text" class="s-input" value="" placeholder="试卷名称">
-              <span class="search-btn"></span>
+              <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称">
+              <span class="search-btn" @click="doSearch"></span>
             </div>
           </div>
           <div class="pic-form-wrapper">
@@ -128,7 +128,7 @@
                                  </template>
                              </td>
                              <td>
-                                 <template v-if="paper.paper_examined_status_name == '待审核'">
+                                 <template v-if="paper.paper_examined_status == 2">
                                      <a href="reviewPic1.html" class="reviewBtn">审核</a>
                                  </template>
                              </td>
@@ -158,10 +158,19 @@
     export default {
         data(){
             return {
-                subjectValue:'',
+                subjectValue:0,
                 optionsSubject:'',
-                agencyValue:'',
+                gradeValue:0,
+                optionsGrade:'',
+                province:'',
+                city:'',
+                statusValue:0,
+                optionsStatus:'',
+                agencyValue:0,
                 optionsAgency:'',
+                beginDate:'',
+                endDate:'',
+                paperName:'',
                 paperList: '',
                 pageSize: 5,
                 currentPage:1,
@@ -181,8 +190,15 @@
             searchArgs: function () {
                 var that = this;
                 return {
-                    grade: that.curGrade,
+                    gradeId: that.gradeValue,
                     subjectId: that.subjectValue,
+                    province: that.province,
+                    city: that.city,
+                    beginDate: that.beginDate,
+                    endDate: that.endDate,
+                    agencyId: that.agencyValue,
+                    status: that.statusValue,
+                    paperName: that.paperName,
                     pageSize:that.pageSize,
                     isSort: that.isSort,
                 };
@@ -194,8 +210,10 @@
         mounted(){
             var that = this;
             that.subjectList();
+            that.gradeList();
             that.agencyList();
-            //that.doSearch();
+            that.statusList();
+            that.doSearch();
 
 
         },
@@ -240,27 +258,83 @@
                     }
                 })
             },
-
-            doSearch(){
-
-                // alert($(".drop-city-ul").html());
-                // alert($(".drop-city-ul").find('.selected').attr('data-val'));
+            gradeList(){
                 var that = this;
+                axios.get('common/common/getAllGrade',{params:{userKey:that.userKey}}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.$nextTick(function(){
+                            that.optionsGrade = data.data;
+                            that.$nextTick(function() {
+                                $('#grade-select-box').selectpicker('refresh');
+                            });
+
+                        })
+
+                    }
+                })
+            },
+            statusList(){
+                var that = this;
+                axios.get('common/common/getPaperStatus',{params:{userKey:that.userKey}}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.$nextTick(function(){
+                            that.optionsStatus = data.data;
+                            that.$nextTick(function() {
+                                $('#status-select-box').selectpicker('refresh');
+                            });
+
+                        })
+
+                    }
+                })
+            },
+            jsPage(){
+                var that = this;
+                if($("#paginationBox").html() != '') {
+                    $("#paginationBox").pagination('setPage', that.currentPage, that._total);
+                } else {
+                    $("#paginationBox").pagination({
+                        totalPage: that._total,
+                        showPageNum: 5,
+                        isShowPageSizeOpt: false,
+                        isShowFL: false,
+                        isShowRefresh: false,
+                        callBack: function (currPage, pageSize) {
+                            that.currentPage = currPage;
+                            //alert(that.currentPage)
+                            that.pageSize = 5;
+                            //alert(that.pageSize)
+                            that.doSearch();
+                            console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                        }
+                    });
+
+                }
+
+            },
+            doSearch(){alert();
+                var that = this;
+                that.beginDate = $("input[name='start-date']").val();
+                that.endDate = $("input[name='end-date']").val();
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
                 searchArgs.userKey = that.userKey;
                 axios.get('youdao/paper/paperList',{params:searchArgs}).then(function(data){
-                    alert(11111);
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
-                    } else {alert(222);
+                    } else {
                         that.$nextTick(function () {
                             that.paperList = data.data.rows;
-                            that._total = data.data.total;
-                            that.totalNum = data.data.totalNum;
+                            that._total = data.data.totalPage;
+                            that.totalNum = data.data.total;
                             that.listCount = data.data.listCount;
-                            //that.jsPage();
+                            that.jsPage();
+                            $('.pic-list-wrapper').selectpicker('refresh');
                         });
                     }
                 })

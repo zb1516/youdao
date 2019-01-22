@@ -38267,10 +38267,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            subjectValue: '',
+            subjectValue: 0,
             optionsSubject: '',
-            agencyValue: '',
+            gradeValue: 0,
+            optionsGrade: '',
+            province: '',
+            city: '',
+            statusValue: 0,
+            optionsStatus: '',
+            agencyValue: 0,
             optionsAgency: '',
+            beginDate: '',
+            endDate: '',
+            paperName: '',
             paperList: '',
             pageSize: 5,
             currentPage: 1,
@@ -38290,8 +38299,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         searchArgs: function searchArgs() {
             var that = this;
             return {
-                grade: that.curGrade,
+                gradeId: that.gradeValue,
                 subjectId: that.subjectValue,
+                province: that.province,
+                city: that.city,
+                beginDate: that.beginDate,
+                endDate: that.endDate,
+                agencyId: that.agencyValue,
+                status: that.statusValue,
+                paperName: that.paperName,
                 pageSize: that.pageSize,
                 isSort: that.isSort
             };
@@ -38302,9 +38318,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     mounted: function mounted() {
         var that = this;
         that.subjectList();
+        that.gradeList();
         that.agencyList();
-        //that.doSearch();
-
+        that.statusList();
+        that.doSearch();
     },
 
     watch: {
@@ -38346,27 +38363,78 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 }
             });
         },
-        doSearch: function doSearch() {
-
-            // alert($(".drop-city-ul").html());
-            // alert($(".drop-city-ul").find('.selected').attr('data-val'));
+        gradeList: function gradeList() {
             var that = this;
+            axios.get('common/common/getAllGrade', { params: { userKey: that.userKey } }).then(function (data) {
+                if (data.data.errorMsg) {
+                    that.$message.error(data.data.errorMsg);
+                } else {
+                    that.$nextTick(function () {
+                        that.optionsGrade = data.data;
+                        that.$nextTick(function () {
+                            $('#grade-select-box').selectpicker('refresh');
+                        });
+                    });
+                }
+            });
+        },
+        statusList: function statusList() {
+            var that = this;
+            axios.get('common/common/getPaperStatus', { params: { userKey: that.userKey } }).then(function (data) {
+                if (data.data.errorMsg) {
+                    that.$message.error(data.data.errorMsg);
+                } else {
+                    that.$nextTick(function () {
+                        that.optionsStatus = data.data;
+                        that.$nextTick(function () {
+                            $('#status-select-box').selectpicker('refresh');
+                        });
+                    });
+                }
+            });
+        },
+        jsPage: function jsPage() {
+            var that = this;
+            if ($("#paginationBox").html() != '') {
+                $("#paginationBox").pagination('setPage', that.currentPage, that._total);
+            } else {
+                $("#paginationBox").pagination({
+                    totalPage: that._total,
+                    showPageNum: 5,
+                    isShowPageSizeOpt: false,
+                    isShowFL: false,
+                    isShowRefresh: false,
+                    callBack: function callBack(currPage, pageSize) {
+                        that.currentPage = currPage;
+                        //alert(that.currentPage)
+                        that.pageSize = 5;
+                        //alert(that.pageSize)
+                        that.doSearch();
+                        console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                    }
+                });
+            }
+        },
+        doSearch: function doSearch() {
+            alert();
+            var that = this;
+            that.beginDate = $("input[name='start-date']").val();
+            that.endDate = $("input[name='end-date']").val();
             var searchArgs = $.extend(true, {}, that.searchArgs);
             searchArgs.currentPage = that.currentPage;
             searchArgs.pageSize = that.pageSize;
             searchArgs.userKey = that.userKey;
             axios.get('youdao/paper/paperList', { params: searchArgs }).then(function (data) {
-                alert(11111);
                 if (data.data.errorMsg) {
                     that.$message.error(data.data.errorMsg);
                 } else {
-                    alert(222);
                     that.$nextTick(function () {
                         that.paperList = data.data.rows;
-                        that._total = data.data.total;
-                        that.totalNum = data.data.totalNum;
+                        that._total = data.data.totalPage;
+                        that.totalNum = data.data.total;
                         that.listCount = data.data.listCount;
-                        //that.jsPage();
+                        that.jsPage();
+                        $('.pic-list-wrapper').selectpicker('refresh');
                     });
                 }
             });
@@ -38465,13 +38533,242 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("div", { staticClass: "input-wrapper" }, [
+          _c("label", { staticClass: "title", attrs: { for: "" } }, [
+            _vm._v("年级")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-box" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.gradeValue,
+                    expression: "gradeValue"
+                  }
+                ],
+                staticClass: "grade-select-box",
+                attrs: {
+                  id: "grade-select-box",
+                  name: "grade-select-box",
+                  "data-options": "width: 100"
+                },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.gradeValue = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "0" } }, [_vm._v("全部")]),
+                _vm._v(" "),
+                _vm._l(_vm.optionsGrade, function(option) {
+                  return _c("option", { domProps: { value: option.gradeId } }, [
+                    _vm._v(
+                      "\n                          " +
+                        _vm._s(option.gradeName) +
+                        "\n                      "
+                    )
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
         _vm._v(" "),
-        _vm._m(1),
+        _c("div", { staticClass: "input-wrapper" }, [
+          _c("label", { staticClass: "title", attrs: { for: "" } }, [
+            _vm._v("省市")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-box" }, [
+            _c("div", { staticClass: "address-search-box" }, [
+              _c("div", { staticClass: "city-select cf" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.province,
+                      expression: "province"
+                    }
+                  ],
+                  staticClass: "value prov-name",
+                  attrs: {
+                    type: "text",
+                    placeholder: "省",
+                    readonly: "readonly"
+                  },
+                  domProps: { value: _vm.province },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.province = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.city,
+                      expression: "city"
+                    }
+                  ],
+                  staticClass: "value city-name",
+                  attrs: {
+                    type: "text",
+                    placeholder: "市",
+                    readonly: "readonly"
+                  },
+                  domProps: { value: _vm.city },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.city = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ])
+        ]),
         _vm._v(" "),
-        _vm._m(2),
+        _c("div", { staticClass: "input-wrapper" }, [
+          _c("label", { staticClass: "title", attrs: { for: "" } }, [
+            _vm._v("有道处理成功")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-box" }, [
+            _c("div", { staticClass: "date-range-box paper-list" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.beginDate,
+                    expression: "beginDate"
+                  }
+                ],
+                ref: "beginDate",
+                attrs: { type: "hidden", name: "" },
+                domProps: { value: _vm.beginDate },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.beginDate = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-inner" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.endDate,
+                    expression: "endDate"
+                  }
+                ],
+                ref: "endDate",
+                staticClass: "input-text input-date-range",
+                attrs: { type: "text", readonly: "readonly" },
+                domProps: { value: _vm.endDate },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.endDate = $event.target.value
+                  }
+                }
+              })
+            ])
+          ])
+        ]),
         _vm._v(" "),
-        _vm._m(3),
+        _c("div", { staticClass: "input-wrapper" }, [
+          _c("label", { staticClass: "title", attrs: { for: "" } }, [
+            _vm._v("状态")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-box" }, [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.statusValue,
+                    expression: "statusValue"
+                  }
+                ],
+                staticClass: "status-select-box",
+                attrs: {
+                  id: "status-select-box",
+                  name: "status-select-box",
+                  "data-options": "width: 100"
+                },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.statusValue = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              [
+                _c("option", { attrs: { value: "0" } }, [_vm._v("全部")]),
+                _vm._v(" "),
+                _vm._l(_vm.optionsStatus, function(option, index) {
+                  return _c("option", { domProps: { value: index } }, [
+                    _vm._v(
+                      "\n                          " +
+                        _vm._s(option) +
+                        "\n                      "
+                    )
+                  ])
+                })
+              ],
+              2
+            )
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "input-wrapper" }, [
           _c("label", { staticClass: "title", attrs: { for: "" } }, [
@@ -38482,12 +38779,35 @@ var render = function() {
             _c(
               "select",
               {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.agencyValue,
+                    expression: "agencyValue"
+                  }
+                ],
                 staticClass: "mechanism-select-box",
                 attrs: {
                   id: "mechanism-select-box",
                   name: "mechanism-select-box",
                   "data-options": "width: 100",
                   "data-live-search": "true"
+                },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.agencyValue = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
                 }
               },
               [
@@ -38525,7 +38845,63 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "pic-list-wrapper" }, [
-      _vm._m(4),
+      _c("div", { staticClass: "pic-number-wrapper" }, [
+        _c("span", { staticClass: "info-n sum" }, [
+          _vm._v("共"),
+          _c("span", { staticClass: "num" }, [_vm._v(_vm._s(_vm.totalNum))]),
+          _vm._v("套")
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "info-n vertify" }, [
+          _vm._v("待审核"),
+          _c("span", { staticClass: "num yellow" }, [
+            _vm._v(_vm._s(_vm.listCount.waitCount))
+          ]),
+          _vm._v("套")
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "info-n right" }, [
+          _vm._v("已通过"),
+          _c("span", { staticClass: "num green" }, [
+            _vm._v(_vm._s(_vm.listCount.passCount))
+          ]),
+          _vm._v("套")
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "info-n pass" }, [
+          _vm._v("退回"),
+          _c("span", { staticClass: "num red" }, [
+            _vm._v(_vm._s(_vm.listCount.returnCount))
+          ]),
+          _vm._v("套")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "search-wrapper" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.paperName,
+                expression: "paperName"
+              }
+            ],
+            staticClass: "s-input",
+            attrs: { type: "text", value: "", placeholder: "试卷名称" },
+            domProps: { value: _vm.paperName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.paperName = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", { staticClass: "search-btn", on: { click: _vm.doSearch } })
+        ])
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "pic-form-wrapper" }, [
         _c(
@@ -38707,7 +39083,7 @@ var render = function() {
                       _c(
                         "td",
                         [
-                          paper.paper_examined_status_name == "待审核"
+                          paper.paper_examined_status == 2
                             ? [
                                 _c(
                                   "a",
@@ -38741,163 +39117,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-wrapper" }, [
-      _c("label", { staticClass: "title", attrs: { for: "" } }, [
-        _vm._v("年级")
+    return _c("div", { staticClass: "drop-down" }, [
+      _c("div", { staticClass: "drop-prov" }, [
+        _c("ul", { staticClass: "drop-prov-ul drop-ul" })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "input-box" }, [
-        _c(
-          "select",
-          {
-            staticClass: "grade-select-box",
-            attrs: {
-              id: "grade-select-box",
-              name: "grade-select-box",
-              "data-options": "width: 100"
-            }
-          },
-          [
-            _c("option", { attrs: { value: "0" } }, [_vm._v("全部")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "1" } }, [_vm._v("小学")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "2" } }, [_vm._v("初中")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "3" } }, [_vm._v("高中")])
-          ]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-wrapper" }, [
-      _c("label", { staticClass: "title", attrs: { for: "" } }, [
-        _vm._v("省市")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-box" }, [
-        _c("div", { staticClass: "address-search-box" }, [
-          _c("div", { staticClass: "city-select cf" }, [
-            _c("input", {
-              staticClass: "value prov-name",
-              attrs: { type: "text", placeholder: "省", readonly: "readonly" }
-            }),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "value city-name",
-              attrs: { type: "text", placeholder: "市", readonly: "readonly" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "drop-down" }, [
-            _c("div", { staticClass: "drop-prov" }, [
-              _c("ul", { staticClass: "drop-prov-ul drop-ul" })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "drop-city" }, [
-              _c("ul", { staticClass: "drop-city-ul drop-ul" })
-            ])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-wrapper" }, [
-      _c("label", { staticClass: "title", attrs: { for: "" } }, [
-        _vm._v("有道处理成功")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-box" }, [
-        _c("div", { staticClass: "date-range-box paper-list" }, [
-          _c("input", { attrs: { type: "hidden", name: "" } })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "input-inner" }, [
-          _c("input", {
-            staticClass: "input-text input-date-range",
-            attrs: { type: "text", readonly: "readonly" }
-          })
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-wrapper" }, [
-      _c("label", { staticClass: "title", attrs: { for: "" } }, [
-        _vm._v("状态")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-box" }, [
-        _c(
-          "select",
-          {
-            staticClass: "status-select-box",
-            attrs: {
-              id: "status-select-box",
-              name: "status-select-box",
-              "data-options": "width: 100"
-            }
-          },
-          [
-            _c("option", { attrs: { value: "0" } }, [_vm._v("待审核")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "1" } }, [_vm._v("已通过")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "2" } }, [_vm._v("退回")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "3" } }, [_vm._v("试卷重复")])
-          ]
-        )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "pic-number-wrapper" }, [
-      _c("span", { staticClass: "info-n sum" }, [
-        _vm._v("共"),
-        _c("span", { staticClass: "num" }, [_vm._v("100")]),
-        _vm._v("套")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "info-n vertify" }, [
-        _vm._v("待审核"),
-        _c("span", { staticClass: "num yellow" }, [_vm._v("40")]),
-        _vm._v("套")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "info-n right" }, [
-        _vm._v("已通过"),
-        _c("span", { staticClass: "num green" }, [_vm._v("52")]),
-        _vm._v("套")
-      ]),
-      _vm._v(" "),
-      _c("span", { staticClass: "info-n pass" }, [
-        _vm._v("退回"),
-        _c("span", { staticClass: "num red" }, [_vm._v("5")]),
-        _vm._v("套")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "search-wrapper" }, [
-        _c("input", {
-          staticClass: "s-input",
-          attrs: { type: "text", value: "", placeholder: "试卷名称" }
-        }),
-        _vm._v(" "),
-        _c("span", { staticClass: "search-btn" })
+      _c("div", { staticClass: "drop-city" }, [
+        _c("ul", { staticClass: "drop-city-ul drop-ul" })
       ])
     ])
   }

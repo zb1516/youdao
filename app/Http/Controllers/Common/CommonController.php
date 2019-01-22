@@ -149,10 +149,9 @@ class CommonController extends BaseController
     {
         try {
             $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
-            return response()->json(['status'=>200,'data'=>['rows'=>$allGrade]]);
+            return response()->json($allGrade);
         } catch (\Exception $e) {
             return [
-                'status'=>0,
                 'errorMsg' => $e->getMessage(),
             ];
         }
@@ -222,7 +221,7 @@ class CommonController extends BaseController
      */
     public static function getPaperStatus()
     {
-        $status = config('app.IMAGE_EXAMINED_STATUS');
+        $status = config('app.PAPER_EXAMINED_STATUS');
         return response()->json($status);
     }
 

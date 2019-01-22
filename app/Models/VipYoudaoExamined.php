@@ -55,10 +55,10 @@ class VipYoudaoExamined extends Model
         }
         //有道最终处理日期
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = $formData['beginDate'];
+            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = $formData['endDate'];
+            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
         }
         if(isset($formData['status'])){
             $searchArgs['status'] = abs($formData['status']);
@@ -67,10 +67,10 @@ class VipYoudaoExamined extends Model
             $searchArgs['agencyId'] = abs($formData['agencyId']);
         }
         if(isset($formData['paperName'])){
-            $searchArgs['paperName'] = trim($searchArgs['paperName']);
+            $searchArgs['paperName'] = trim($formData['paperName']);
         }
         if(isset($formData['auditorId'])){//审核人
-            $searchArgs['auditorId'] = abs($searchArgs['auditorId']);
+            $searchArgs['auditorId'] = abs($formData['auditorId']);
         }
         //试卷审核日期
         if (isset($formData['auditBeginDate'])) {
@@ -147,7 +147,8 @@ class VipYoudaoExamined extends Model
 
         $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         $list = $this->formatPaperList($list['data']);
-        return array('rows' => $list, 'total' => $recordCount);
+        $statistic = $this->paperStatistic($condition);
+        return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
     }
 
 
@@ -175,10 +176,10 @@ class VipYoudaoExamined extends Model
             }
         }
         return array(
-            'totalCount'=>$totalCount,
-            'waitCount'=>$waitCount,
-            'passCount'=>$passCount,
-            'returnCount'=>$returnCount
+            'totalCount'=>abs($totalCount),
+            'waitCount'=>abs($waitCount),
+            'passCount'=>abs($passCount),
+            'returnCount'=>abs($returnCount)
         );
     }
 
