@@ -424,7 +424,7 @@ class CommonController extends BaseController
             //上传试题文档
             if($data['questions']){
                 foreach ($data['questions'] as $key=>$q){
-                    $uuid = $this->uuid();
+                    $uuid = uuid();
                     $sdate = date('Ymd');
                     $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
                     //$result = $this->curlUploadFile($q['content_file'], $newFileName);
@@ -438,7 +438,7 @@ class CommonController extends BaseController
                     //上传选项文档
                     if(isset($q['options']) && !empty($q['options'])){
                         foreach ($q['options'] as $k=>$o){
-                            $shorUuid = $this->shortUuid();
+                            $shorUuid = shortUuid($uuid);
                             $newFileName = $sdate.'_test-'.$uuid.'_'.$shorUuid.'_'.$shorUuid.'.docx';
                             $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$o['option_file'], 'newFileName'=>$newFileName)));
                             //$result = $this->curlUploadFile($o['option_file'], $newFileName);
@@ -469,24 +469,4 @@ class CommonController extends BaseController
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
-
-
-
-    /**
-     * 生成唯一标识
-     * @return string
-     */
-    public function uuid()
-    {
-        $charid = strtolower(md5(uniqid(mt_rand(), true)));
-        $uuid = substr($charid, 0, 8).substr($charid, 8, 4).substr($charid,12, 4).substr($charid,16, 4).substr($charid,20,12);
-        return $uuid;
-    }
-
-
-    public function shortUuid()
-    {
-        return strtoupper(substr($this->uuid(), 8, 16));
-    }
-
 }

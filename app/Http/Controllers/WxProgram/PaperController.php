@@ -356,7 +356,7 @@ class paperController extends Controller
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where create_uid=".$userInfo['userId']." order by id desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
@@ -365,6 +365,7 @@ class paperController extends Controller
                 $val['upload_time']=intval($val['image_examined_status'])==3?formatDate(strtotime($val['image_examined_time'])):formatDate(strtotime($val['upload_time']));
                 $list['data'][$key]=$val;
             }
+            $list['data']=key_sort_desc($list['data']);
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
                 'per_page'=>$list['per_page'],
@@ -505,41 +506,6 @@ class paperController extends Controller
                 }
                 $paperInfo['module'][$key]=$val;
             }
-//            $result='{
-//    "status":200,
-//    "errorMsg":"操作成功",
-//    "data":{
-//        "rows":[
-//            {
-//                "ques_id":"12619",
-//                "ques_uid":"175a4cd5e3fb42e085395d1d80344e4a",
-//                "ques_sdate":"201442",
-//                "ques_subject_id":4,
-//                "ques_subject_name":"",
-//                "ques_type_id":1,
-//                "ques_type_name":"单选题",
-//                "paper_id":"465",
-//                "paper_name":"套卷-2008-北京市-初中-数学-中考-真题-120-120-25",
-//                "ques_score":"4",
-//                "ques_number":null,
-//                "ques_difficulty":"1",
-//                "ques_knowledge_id":"10301",
-//                "ques_knowledge_name":"",
-//                "ques_content":"",
-//                "ques_analysis":"",
-//                "ques_province":"",
-//                "ques_city":"北京市",
-//                "ques_year":"2008",
-//                "ques_source":"真题",
-//                "ques_grade":"小学二年级",
-//                "ques_school":"",
-//                "ques_answer":"B",
-//                "ques_options":""
-//            }
-//        ]
-//    }
-//}';
-//            return $result;
             return response()->json(['status'=>200,'data'=>$paperInfo]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
@@ -568,11 +534,23 @@ class paperController extends Controller
             if($paperInfo['paper_type'] == 1)
             {
                 $rows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>3,'is_delete'=>0]);
+                foreach ($rows as $key => $val)
+                {
+                    $rows[$key]['url']=$val['image_url'];
+                }
                 $paperInfo['rows']=!empty($rows)?$rows:[];
             }else{
                 $questionRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>1,'is_delete'=>0]);
+                foreach ($questionRows as $key => $val)
+                {
+                    $questionRows[$key]['url']=$val['image_url'];
+                }
                 $paperInfo['question_rows']=!empty($questionRows)?$questionRows:[];
                 $ansterRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>2,'is_delete'=>0]);
+                foreach ($ansterRows as $key => $val)
+                {
+                    $ansterRows[$key]['url']=$val['image_url'];
+                }
                 $paperInfo['answer_rows']=!empty($ansterRows)?$ansterRows:[];
             }
             return response()->json(['status'=>200,'data'=>['rows'=>$paperInfo]]);
