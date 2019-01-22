@@ -14,8 +14,15 @@ class VipPaperImage extends Model
     /**
      * 图片审核列表详情
      */
-    public function getImagePaperDetail($taskId, $paperType)
+    public function getImagePaperDetail($taskId, $paperType, $allType = false)
     {
+        if($allType == true){
+            $condition = array(
+                'task_id' => $taskId,
+            );
+            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            return $result;
+        }
         if($paperType == 1){
             $condition = array(
                 'task_id' => $taskId,

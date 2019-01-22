@@ -13,14 +13,14 @@ const routes = [
                     title:'图片审核',
                 }
             },
-            // {
-            //     path:'paperManageDetail/:userKey/:paperId/:paperName',
-            //     name:'manage-paper-paperManageDetail',
-            //     component:resolve => require(['./page/manage/PaperDetail'], resolve),
-            //     meta:{
-            //         title:'套卷详情',
-            //     }
-            // },
+            {
+                path:'imagePaperDetail/:userKey/:taskId/:paperType',
+                name:'imagePaper-imagePaperList-imagePaperDetail',
+                component:resolve => require(['./page/imagePaper/imagePaperDetail'], resolve),
+                meta:{
+                    title:'套卷详情',
+                }
+            },
             // {
             //     path:'question/:userKey',
             //     name:'manage-question',

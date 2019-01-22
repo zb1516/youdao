@@ -40,5 +40,19 @@ class Province extends Model
         }
         return $list;
     }
-
+    /**
+     * 获取省份all
+     * @param
+     * @return array
+     */
+    public function getAllProvince()
+    {
+        $condition = array('oneid' => array('gt' => 0), 'twoid' => array('eq' => 0), 'threeid' => array('eq' => 0));
+        $result = $this->findAll($condition, $order=[], ['id', 'city']);
+        $list = [];
+        foreach ($result as $v){
+            $list[] = $v['city'];
+        }
+        return $list;
+    }
 }
