@@ -6,6 +6,8 @@ use App\Clients\KlibPaperClient;
 use App\Clients\KlibQuestionClient;
 use App\Clients\KlibTeacherClient;
 use App\Models\Common;
+use App\Models\VipDictGrade;
+use App\Models\VipDictSubject;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
@@ -434,6 +436,7 @@ class paperController extends Controller
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
             {
+                $val['url']=$val['image_url'];
                 if(intval($val['image_type']) == 1){
                     $result['question_rows'][]=$val;
                 }elseif(intval($val['image_type']) == 2){
@@ -554,6 +557,37 @@ class paperController extends Controller
                 $paperInfo['answer_rows']=!empty($ansterRows)?$ansterRows:[];
             }
             return response()->json(['status'=>200,'data'=>['rows'=>$paperInfo]]);
+        }catch (\Exception $e){
+            return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 通过学科id取年级
+     * @param Request $request
+     */
+    public function getGradeBySubject(Request $request)
+    {
+        try{
+            $searchArgs['subjectName']=$request->input('subjectName');
+            $searchArgs['token']=$request->input('token');
+            $list=[];
+            $gradeList=config('app.KMS_GRADE_LIST');
+            //判断是否传了学科名称
+            if(isset($searchArgs['subjectName']) || !empty($searchArgs['subjectName']))
+            {
+                $gradeName=mb_substr($searchArgs['subjectName'],0,2);
+                $list=$gradeList[$gradeName];
+            }else{
+                foreach($gradeList as $key => $val)
+                {
+                    foreach($val as $k => $v)
+                    {
+                        $list[]=$v;
+                    }
+                }
+            }
+            return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }

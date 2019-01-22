@@ -14,14 +14,11 @@ class VipDictSubject extends Model
     protected $connection = "mysql_kms";
     public $timestamps = false;
 
-    public function getDictSubject()
+    public function getDictSubject($condition=[])
     {
-        $condition = array(
-            'status' => 1
-        );
+        $condition['status']=1;
         $result = $this->findAll($condition, $order=[], ['id', 'grade_id', 'title']);
         return $result;
 
     }
-
 }

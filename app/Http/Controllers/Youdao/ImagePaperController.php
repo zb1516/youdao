@@ -123,11 +123,12 @@ class ImagePaperController extends BaseController
         try {
             $taskId = $request->get('taskId', '');
             $paperType = abs($request->get('paperType', 1));
+            $allType = abs($request->get('allType', 0));
             if(empty($taskId))
             {
                 throw new \Exception('缺少taskId');
             }
-            $result = $this->vipPaperImage->getImagePaperDetail($taskId, $paperType);
+            $result = $this->vipPaperImage->getImagePaperDetail($taskId, $paperType, $allType);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

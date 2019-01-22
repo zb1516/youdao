@@ -16,6 +16,8 @@ use App\Jobs\UploadQueue;
 use App\Models\Question;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Models\VipDictGrade;
+use App\Models\VipDictSubject;
 use App\Models\VipQuestionOption;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -467,5 +469,30 @@ class CommonController extends BaseController
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
+    }
+    //获取所有省份
+    public function getAllProvince()
+    {
+        //return 1;
+        $result = $this->province->getAllProvince();
+        return response()->json($result);
+
+    }
+    /*
+     * 获取所有市
+     */
+    public function getAllCitys()
+    {
+        $provinceModel=new Province();
+        $list = $provinceModel->getCitys();
+        $arr = [];
+        foreach ($list as $v){
+            $cityValue = [];
+            foreach ($v['children'] as $value){
+                $cityValue[] = $value['city'];
+            }
+            $arr[] = $cityValue;
+        }
+        return response()->json($arr);
     }
 }

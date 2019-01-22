@@ -40,6 +40,8 @@ Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($ro
     $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
     $router->get('user/logout','WxProgram\UserController@logout');
     $router->post('upload/getSignature','WxProgram\UploadController@getSignature');
+    $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject');
+
 });
 
 //以下为4.0路由
@@ -65,7 +67,8 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
     $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');//获取试卷信息
     $router->get('common/uploadPaperFile', 'Common\CommonController@uploadPaperFile');//获取试卷信息
-
+    $router->get('common/getAllProvince', 'Common\CommonController@getAllProvince');
+    $router->get('common/getAllCitys','Common\CommonController@getAllCitys');
 });
 
 

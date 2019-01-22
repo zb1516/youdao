@@ -330,10 +330,10 @@ class VipYoudaoExamined extends Model
             $condition['city'] = array('eq' => $countryName);
         }
         if (!empty($searchArgs['grade'])) {
-            $condition['grade_id'] = array('eq' => $searchArgs['grade']);
+            $condition['grade'] = array('eq' => $searchArgs['grade']);
         }
-        if (!empty($searchArgs['agency_id'])) {
-            $condition['agencyId'] = array('eq' => $searchArgs['agency_id']);
+        if (!empty($searchArgs['agencyId'])) {
+            $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
         }
         if (!empty($searchArgs['imageExaminedStatus'])) {
             $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
@@ -349,7 +349,8 @@ class VipYoudaoExamined extends Model
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
         }
-        $result = $this->findAll($condition, ['upload_time' => $searchArgs['isSort']], ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
+        $order = ['upload_time' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
+        $result = $this->findAll($condition, $order, ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','task_id','paper_type'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
 
         $vipYoudaoAgency = new VipYoudaoAgency();
         $agencyResult = $vipYoudaoAgency->getYoudaoAgency();
@@ -366,6 +367,8 @@ class VipYoudaoExamined extends Model
             $list[] = [
                 'number' => $i,
                 'id' => $item['id'],
+                'taskId' => $item['task_id'],
+                'paperType' => $item['paper_type'],
                 'province' => $item['province'],
                 'city' => $item['city'],
                 'paperName' => $item['paper_name'],
@@ -400,10 +403,10 @@ class VipYoudaoExamined extends Model
     {
         $searchArgs = [];
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = $formData['beginDate'];
+            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = $formData['endDate'];
+            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
         }
         if (isset($formData['subjectId'])) {
             $searchArgs['subjectId'] = $formData['subjectId'];
@@ -417,8 +420,8 @@ class VipYoudaoExamined extends Model
         if (isset($formData['grade'])) {
             $searchArgs['grade'] = $formData['grade'];
         }
-        if (isset($formData['image_examined_status'])) {
-            $searchArgs['imageExaminedStatus'] = $formData['image_examined_status'];
+        if (isset($formData['imageExaminedStatus'])) {
+            $searchArgs['imageExaminedStatus'] = $formData['imageExaminedStatus'];
         }
         if (isset($formData['agencyId'])) {
             $searchArgs['agencyId'] = $formData['agencyId'];
@@ -426,8 +429,9 @@ class VipYoudaoExamined extends Model
         if (isset($formData['paperName'])) {
             $searchArgs['paperName'] = $formData['paperName'];
         }
-
-        $searchArgs['isSort'] = trim($formData['isSort']);
+        $searchArgs['isUploadTimeSort'] = trim($formData['isUploadTimeSort']);
+        $searchArgs['isExaminedTimeSort'] = trim($formData['isExaminedTimeSort']);
+        $searchArgs['isExaminedStatusSort'] = trim($formData['isExaminedStatusSort']);
         $searchArgs['IMG_AUDITOR'] = trim($formData['IMG_AUDITOR']);
         return $searchArgs;
     }
