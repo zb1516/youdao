@@ -16,6 +16,8 @@ use App\Jobs\UploadQueue;
 use App\Models\Question;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Models\VipDictGrade;
+use App\Models\VipDictSubject;
 use App\Models\VipQuestionOption;
 use App\Services\UserService;
 use Illuminate\Http\Request;

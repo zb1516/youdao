@@ -25,7 +25,5 @@ class VipDictGrade extends Model
         );
         $result = $this->findAll($condition, $order=[], ['id', 'title']);
         return $result;
-
     }
-
 }
