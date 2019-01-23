@@ -38276,6 +38276,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 //
 
@@ -38312,7 +38322,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             totalNum: 0,
             listCount: '',
             sortField: '',
-            sortType: 'asc'
+            sortType: 'asc',
+            isContent: 1
         };
     },
 
@@ -38461,10 +38472,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 } else {
 
                     that.$nextTick(function () {
-                        that.paperList = data.data.rows;
+                        if (data.data.rows != '') {
+                            that.isContent = 1;
+                            that.paperList = data.data.rows;
+                        } else {
+                            that.isContent = 0;
+                        }
                         that._total = data.data.totalPage;
                         that.totalNum = data.data.total;
                         that.listCount = data.data.listCount;
+                        that.currentPage = searchArgs.currentPage;
                         //that.jsPage();
                     });
                 }
@@ -39032,85 +39049,109 @@ var render = function() {
             _c(
               "tbody",
               [
-                _vm._l(_vm.paperList, function(paper) {
-                  return [
-                    _c("tr", { staticClass: "odd", attrs: { role: "row" } }, [
-                      _c("td", { staticClass: "sorting_1" }, [
-                        _vm._v(_vm._s(paper.task_id))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("span", { staticClass: "color-black" }, [
-                          _vm._v(_vm._s(paper.paper_name))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(paper.agency_name))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(paper.final_processing_time))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(paper.paper_examined_time))]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          paper.paper_examined_status == 3
-                            ? [
-                                _c("span", { staticClass: "status green" }, [
-                                  _vm._v("已通过")
+                _vm.isContent == 1
+                  ? [
+                      _vm._l(_vm.paperList, function(paper) {
+                        return [
+                          _c(
+                            "tr",
+                            { staticClass: "odd", attrs: { role: "row" } },
+                            [
+                              _c("td", { staticClass: "sorting_1" }, [
+                                _vm._v(_vm._s(paper.task_id))
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c("span", { staticClass: "color-black" }, [
+                                  _vm._v(_vm._s(paper.paper_name))
                                 ])
-                              ]
-                            : paper.paper_examined_status == 4
-                              ? [
-                                  _c("span", { staticClass: "status red" }, [
-                                    _vm._v("已退回")
-                                  ])
-                                ]
-                              : paper.paper_examined_status == 2
-                                ? [
-                                    _c("span", { staticClass: "status" }, [
-                                      _vm._v("待审核")
-                                    ])
-                                  ]
-                                : paper.paper_examined_status == 1
-                                  ? [
-                                      _c("span", { staticClass: "status" }, [
-                                        _vm._v("处理中")
-                                      ])
-                                    ]
-                                  : _vm._e()
-                        ],
-                        2
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        [
-                          paper.paper_examined_status == 2
-                            ? [
-                                _c(
-                                  "a",
-                                  {
-                                    staticClass: "reviewBtn",
-                                    attrs: { href: "reviewPic1.html" }
-                                  },
-                                  [_vm._v("审核")]
-                                )
-                              ]
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    ])
-                  ]
-                })
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(paper.agency_name))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(paper.final_processing_time))
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(_vm._s(paper.paper_examined_time))
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                [
+                                  paper.paper_examined_status == 3
+                                    ? [
+                                        _c(
+                                          "span",
+                                          { staticClass: "status green" },
+                                          [_vm._v("已通过")]
+                                        )
+                                      ]
+                                    : paper.paper_examined_status == 4
+                                      ? [
+                                          _c(
+                                            "span",
+                                            { staticClass: "status red" },
+                                            [_vm._v("已退回")]
+                                          )
+                                        ]
+                                      : paper.paper_examined_status == 2
+                                        ? [
+                                            _c(
+                                              "span",
+                                              { staticClass: "status" },
+                                              [_vm._v("待审核")]
+                                            )
+                                          ]
+                                        : paper.paper_examined_status == 1
+                                          ? [
+                                              _c(
+                                                "span",
+                                                { staticClass: "status" },
+                                                [_vm._v("处理中")]
+                                              )
+                                            ]
+                                          : _vm._e()
+                                ],
+                                2
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "td",
+                                [
+                                  paper.paper_examined_status == 2
+                                    ? [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass: "reviewBtn",
+                                            attrs: { href: "reviewPic1.html" }
+                                          },
+                                          [_vm._v("审核")]
+                                        )
+                                      ]
+                                    : _vm._e()
+                                ],
+                                2
+                              )
+                            ]
+                          )
+                        ]
+                      })
+                    ]
+                  : void 0
               ],
               2
             )
           ]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "m-pages", attrs: { id: "paginationBox" } })
+        _c("div", {
+          staticClass: "m-pages",
+          style: _vm.isContent ? "display:block" : "display:none",
+          attrs: { id: "paginationBox" }
+        })
       ])
     ])
   ])

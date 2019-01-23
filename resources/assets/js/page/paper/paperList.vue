@@ -106,37 +106,47 @@
                      </tr>
                  </thead>
                  <tbody>
-                     <template v-for="paper in paperList">
-                         <tr role="row" class="odd">
-                             <td class="sorting_1">{{paper.task_id}}</td>
-                             <td><span class="color-black">{{paper.paper_name}}</span></td>
-                             <td>{{paper.agency_name}}</td>
-                             <td>{{paper.final_processing_time}}</td>
-                             <td>{{paper.paper_examined_time}}</td>
-                             <td>
-                                 <template v-if="paper.paper_examined_status == 3">
-                                     <span class="status green">已通过</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 4">
-                                     <span class="status red">已退回</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 2">
-                                     <span class="status">待审核</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 1">
-                                     <span class="status">处理中</span>
-                                 </template>
-                             </td>
-                             <td>
-                                 <template v-if="paper.paper_examined_status == 2">
-                                     <a href="reviewPic1.html" class="reviewBtn">审核</a>
-                                 </template>
-                             </td>
-                         </tr>
+                     <template v-if="isContent == 1">
+                         <template v-for="paper in paperList">
+                             <tr role="row" class="odd">
+                                 <td class="sorting_1">{{paper.task_id}}</td>
+                                 <td><span class="color-black">{{paper.paper_name}}</span></td>
+                                 <td>{{paper.agency_name}}</td>
+                                 <td>{{paper.final_processing_time}}</td>
+                                 <td>{{paper.paper_examined_time}}</td>
+                                 <td>
+                                     <template v-if="paper.paper_examined_status == 3">
+                                         <span class="status green">已通过</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 4">
+                                         <span class="status red">已退回</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 2">
+                                         <span class="status">待审核</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 1">
+                                         <span class="status">处理中</span>
+                                     </template>
+                                 </td>
+                                 <td>
+                                     <template v-if="paper.paper_examined_status == 2">
+                                         <a href="reviewPic1.html" class="reviewBtn">审核</a>
+                                     </template>
+                                 </td>
+                             </tr>
+                         </template>
+                     </template>
+                     <template v-else>
+                         <!--<p style="text-align:center;">暂无数据</p>-->
                      </template>
                  </tbody>
             </table>
-            <div id="paginationBox" class="m-pages"></div>
+            <!--<template v-if="isContent == 1">-->
+                <div id="paginationBox" class="m-pages" :style="isContent?'display:block':'display:none'"></div>
+            <!--</template>-->
+            <!--<template v-else>-->
+               <!--<div id="paginationBox" class="m-pages"></div>-->
+            <!--</template>-->
           </div>
         </div>
     </div>
@@ -180,6 +190,7 @@
                 listCount:'',
                 sortField:'',
                 sortType:'asc',
+                isContent:1,
             }
         },
 
@@ -336,10 +347,16 @@ isShowRefresh: false,
                     } else {
 
                         that.$nextTick(function () {
-                            that.paperList = data.data.rows;
+                            if(data.data.rows != ''){
+                                that.isContent = 1;
+                                that.paperList = data.data.rows;
+                            }else{
+                                that.isContent = 0;
+                            }
                             that._total = data.data.totalPage;
                             that.totalNum = data.data.total;
                             that.listCount = data.data.listCount;
+                            that.currentPage = searchArgs.currentPage;
                             //that.jsPage();
                         });
                     }

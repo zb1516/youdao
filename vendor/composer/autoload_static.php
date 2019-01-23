@@ -385,6 +385,7 @@ class ComposerStaticInitc25fe21de67a98617919f64582d42d92
     );
 
     public static $classMap = array (
+        'App\\Clients\\KlibAgencyClient' => __DIR__ . '/../..' . '/app/Clients/KlibAgencyClient.php',
         'App\\Clients\\KlibPaperClient' => __DIR__ . '/../..' . '/app/Clients/KlibPaperClient.php',
         'App\\Clients\\KlibQuestionClient' => __DIR__ . '/../..' . '/app/Clients/KlibQuestionClient.php',
         'App\\Clients\\KlibSubjectClient' => __DIR__ . '/../..' . '/app/Clients/KlibSubjectClient.php',

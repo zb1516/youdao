@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Clients\\KlibAgencyClient' => $baseDir . '/app/Clients/KlibAgencyClient.php',
     'App\\Clients\\KlibPaperClient' => $baseDir . '/app/Clients/KlibPaperClient.php',
     'App\\Clients\\KlibQuestionClient' => $baseDir . '/app/Clients/KlibQuestionClient.php',
     'App\\Clients\\KlibSubjectClient' => $baseDir . '/app/Clients/KlibSubjectClient.php',

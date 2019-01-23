@@ -94,8 +94,8 @@
                     <template v-if="listCount['试卷重复']">{{listCount['试卷重复']}}</template><template v-else>0</template>
                 </span>套</span>
                 <div class="search-wrapper">
-                    <input type="text" class="s-input" value="" placeholder="试卷名称">
-                    <span class="search-btn"></span>
+                    <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
+                    <span class="search-btn"  @click="doSearch"></span>
                 </div>
             </div>
             <div class="pic-form-wrapper">
@@ -112,6 +112,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <template v-if="isContent == 1">
                     <template v-for="imagePaper in imagePaperList">
                         <tr role="row" class="odd">
                             <td class="sorting_1">{{imagePaper.number}}</td>
@@ -133,7 +134,7 @@
                             <td>
                                 <template v-if="imagePaper.imageExaminedStatusName == '待审核'">
 
-                          <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:imagePaper.taskId,paperType:imagePaper.paperType}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
+                                    <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:imagePaper.taskId,paperType:imagePaper.paperType}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
 
 
 
@@ -141,9 +142,18 @@
                             </td>
                         </tr>
                     </template>
+                    </template>
+                    <template v-else>
+                        <!--<p style="text-align:center;">暂无数据</p>-->
+                    </template>
                     </tbody>
                 </table>
-                <div id="paginationBox" class="m-pages"></div>
+                <!--<template v-if="isContent == 1">-->
+                <div id="paginationBox" class="m-pages" :style="isContent?'display:block':'display:none'"></div>
+                <!--</template>-->
+                <!--<template v-else>-->
+                    <!--<div id="paginationBox" class="m-pages"></div>-->
+                <!--</template>-->
             </div>
         </div>
     </div>
@@ -152,13 +162,16 @@
 <script>
     //
     import "../../static/js/jquery-1.12.2.min.js"
-    import "../../static/js/jquery.plugin.js"
-    import "../../static/js/jquery.dataTables.min.js"
+
+    import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
     import "../../static/css/jquery.dataTables.min.css"
     import "../../static/js/pagination/pagination.css"
-    import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
-    import "../../static/js/pagination/pagination.min.js"
+    import "../../static/js/jquery.min.js"
+    import "../../static/js/jquery.plugin.js"
+    import "../../static/js/jquery.dataTables.min.js"
     import "../../static/js/jquery.common.js"
+    import "../../static/js/pagination/pagination.min.js"
+
 
     import {mapGetters} from 'vuex'
     export default {
@@ -189,7 +202,9 @@
                 curProvince:'',
                 curCity:'',
                 beginDate:'',
-                endDate:''
+                endDate:'',
+                isContent:1,
+                paperName:''
             }
         },
         computed: {
@@ -208,6 +223,7 @@
                     endDate:that.endDate,
                     province:that.curProvince,
                     city:that.curCity,
+                    paperName:that.paperName,
                 };
             },
             ...mapGetters({
@@ -264,9 +280,13 @@
             },
             jsPage(){
                 var that = this;
+                //alert($("#paginationBox").html())
                 if($("#paginationBox").html() != '') {
+
                     $("#paginationBox").pagination('setPage', that.currentPage, that._total);
+
                 } else {
+
                     $("#paginationBox").pagination({
                         totalPage: that._total,
                         showPageNum: 5,
@@ -278,8 +298,11 @@
                             that.pageSize = 5;
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+
                         }
                     });
+
+
 
                 }
             },
@@ -304,7 +327,12 @@
                         that.$message.error(data.data.errorMsg);
                     } else {
                         that.$nextTick(function () {
-                            that.imagePaperList = data.data.rows;
+                            if(data.data.rows != ''){
+                                that.isContent = 1;
+                                that.imagePaperList = data.data.rows;
+                            }else{
+                                that.isContent = 0;
+                            }
                             that._total = data.data.total;
                             that.totalNum = data.data.totalNum;
                             that.listCount = data.data.listCount;

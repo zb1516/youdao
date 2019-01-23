@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         E421083458\Wxxcx\WxxcxServiceProvider::class,
         SwooleTW\Http\LaravelServiceProvider::class,
+        Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 
     /*
