@@ -64,13 +64,14 @@ class WxController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendTemplate(Request $request)
+    public function sendTemplate(Request $request,$data)
     {
         try{
-            $searchArgs['openId']=$request->input('openId');
-            $searchArgs['type']=$request->input('type');
-            $searchArgs['userId']=$request->input('userId');
-            $searchArgs['taskId']=$request->input('taskId');
+            $searchArgs['openId']=$data['openId'];//$request->input('openId');
+            $searchArgs['type']=$data['type'];//$request->input('type');
+            $searchArgs['userId']=$data['userId'];//$request->input('userId');
+            $searchArgs['taskId']=$data['taskId'];//$request->input('taskId');
+            $searchArgs['content']=$data['content'];//$request->input('content');
             if(!isset($searchArgs['openId']) || empty($searchArgs['openId']))
             {
                 throw new \Exception('缺少openid');
@@ -103,12 +104,11 @@ class WxController extends Controller
             }else{
                 $templateData=[
                     'first'=>['value'=>'恭喜您，您提交的试卷已加工完成','color'=>'#000000'],
-                    'keyword1'=>['value'=>$taskInfo['file_name'],'color'=>'#000000'],
+                    'keyword1'=>['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
                     'keyword2'  => ['value'=>'加工试卷','color'=>'#000000'],
                     'keyword3'  => ['value'=>'已进入您的机构私库','color'=>'#000000']
                 ];
             }
-
             $result=WxService::SendTemplate($searchArgs['openId'],$templateData,$searchArgs['type']);
             if($result->errcode != 0)
             {
@@ -175,7 +175,7 @@ class WxController extends Controller
     {
         $wechat = app('wechat');
         $wechat->server->setMessageHandler(function($message){
-            return "欢迎关注 overtrue！";
+            return "欢迎关注小a说课！";
         });
         return $wechat->server->serve();
     }
