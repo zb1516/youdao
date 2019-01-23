@@ -38313,18 +38313,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             listCount: '',
             sortField: '',
             sortType: 'asc'
-
-            //isProcessTimeTrue:1,
-            //isProcessTimeShow:0,
-            //processTimeSort:'desc',
-
-            //isExaminedTimeTrue:1,
-            //isExaminedTimeShow:0,
-            //examinedTimeSort:'desc',
-
-            //isExaminedStatusTrue:1,
-            //isExaminedStatusShow:0,
-            //examinedStatusSort:'desc'
         };
     },
 
@@ -38345,10 +38333,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 pageSize: that.pageSize,
                 sortField: that.sortField,
                 sortType: that.sortType
-
-                //processTimeSort: that.processTimeSort,
-                //examinedTimeSort: that.examinedTimeSort,
-                //examinedStatusSort: that.examinedStatusSort,
             };
         }
     }, __WEBPACK_IMPORTED_MODULE_8_vuex__["b" /* mapGetters */]({
@@ -38445,9 +38429,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                     isShowRefresh: false,
                     callBack: function callBack(currPage, pageSize) {
                         that.currentPage = currPage;
-                        //alert(that.currentPage)
                         that.pageSize = 5;
-                        //alert(that.pageSize)
                         that.doSearch();
                         console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                     }
@@ -38489,41 +38471,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
         selectGet: function selectGet(type) {
             var that = this;
-            /*
-            if(type == 1){
-                that.isProcessTimeTrue = 0;
-                if(!that.isProcessTimeShow){
-                    alert('down');
-                    that.isProcessTimeShow = 1;
-                    that.isProcessTimeSort = 'asc';
-                }else{
-                    alert('up');
-                    that.isProcessTimeSort = 'desc';
-                    that.isProcessTimeShow = 0;
-                }
-            }else if(type == 2){
-                that.isExaminedTimeTrue = 0;
-                if(!that.isExaminedTimeShow){
-                    alert('down');
-                    that.isExaminedTimeShow = 1;
-                    that.examinedTimeSort = 'asc';
-                }else{
-                    alert('up');
-                    that.isExaminedTimeShow = 0;
-                    that.examinedTimeSort = 'desc';
-                }
-            }else if(type == 3){
-                that.isExaminedStatusTrue = 0;
-                if(!that.isExaminedStatusShow){
-                    alert('down');
-                    that.isExaminedStatusShow = 1;
-                    that.examinedStatusSort = 'asc';
-                }else{
-                    alert('up');
-                    that.isExaminedStatusShow = 0;
-                    that.examinedStatusSort = 'desc';
-                }
-            }*/
             if (type == 1) {
                 that.sortField = 'final_processing_time';
                 if (that.sortType == 'desc') {
