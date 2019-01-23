@@ -52,4 +52,12 @@ class User extends Model
         $result = $this->findOne($condition, $order=[], ['user_realname']);
         return $result['user_realname'];
     }
+
+
+    public function getUsersByIds($userIdArr){
+        $condition = [
+            'id' => array('in'=>$userIdArr)
+        ];
+        return $this->findAll($condition, $order=[], ['id','user_realname']);
+    }
 }

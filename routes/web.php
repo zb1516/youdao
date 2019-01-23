@@ -40,6 +40,8 @@ Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($ro
     $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
     $router->get('user/logout','WxProgram\UserController@logout');
     $router->post('upload/getSignature','WxProgram\UploadController@getSignature');
+    $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject');
+
 });
 
 //以下为4.0路由

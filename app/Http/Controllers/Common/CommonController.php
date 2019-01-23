@@ -16,6 +16,8 @@ use App\Jobs\UploadQueue;
 use App\Models\Question;
 use App\Models\SysRoles;
 use App\Models\SysUsers;
+use App\Models\VipDictGrade;
+use App\Models\VipDictSubject;
 use App\Models\VipQuestionOption;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -149,10 +151,9 @@ class CommonController extends BaseController
     {
         try {
             $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
-            return response()->json(['status'=>200,'data'=>['rows'=>$allGrade]]);
+            return response()->json($allGrade);
         } catch (\Exception $e) {
             return [
-                'status'=>0,
                 'errorMsg' => $e->getMessage(),
             ];
         }
@@ -200,10 +201,6 @@ class CommonController extends BaseController
     {
         try{
 //            $searchArgs['token']=$request->input('token');
-//            if(!isset($searchArgs['token']))
-//            {
-//                throw new \Exception('缺少微信用户token');
-//            }
 //            //获取登陆用户uid
 //            $userInfo=UserService::getUserInfo($searchArgs['token']);
 //            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
@@ -222,7 +219,7 @@ class CommonController extends BaseController
      */
     public static function getPaperStatus()
     {
-        $status = config('app.IMAGE_EXAMINED_STATUS');
+        $status = config('app.PAPER_EXAMINED_STATUS');
         return response()->json($status);
     }
 

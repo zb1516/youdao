@@ -55,10 +55,10 @@ class VipYoudaoExamined extends Model
         }
         //有道最终处理日期
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = $formData['beginDate'];
+            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = $formData['endDate'];
+            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
         }
         if(isset($formData['status'])){
             $searchArgs['status'] = abs($formData['status']);
@@ -67,10 +67,10 @@ class VipYoudaoExamined extends Model
             $searchArgs['agencyId'] = abs($formData['agencyId']);
         }
         if(isset($formData['paperName'])){
-            $searchArgs['paperName'] = trim($searchArgs['paperName']);
+            $searchArgs['paperName'] = trim($formData['paperName']);
         }
         if(isset($formData['auditorId'])){//审核人
-            $searchArgs['auditorId'] = abs($searchArgs['auditorId']);
+            $searchArgs['auditorId'] = abs($formData['auditorId']);
         }
         //试卷审核日期
         if (isset($formData['auditBeginDate'])) {
@@ -145,9 +145,10 @@ class VipYoudaoExamined extends Model
             return array('rows' => [], 'total' => $recordCount);
         }
 
-        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','final_processing_time','paper_examined_time','paper_examined_status'], '', [], $currentPage, $pageSize);
-        $list = $this->formatPaperList($list);
-        return array('rows' => $list, 'total' => $recordCount);
+        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        $list = $this->formatPaperList($list['data']);
+        $statistic = $this->paperStatistic($condition);
+        return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
     }
 
 
@@ -175,10 +176,10 @@ class VipYoudaoExamined extends Model
             }
         }
         return array(
-            'totalCount'=>$totalCount,
-            'waitCount'=>$waitCount,
-            'passCount'=>$passCount,
-            'returnCount'=>$returnCount
+            'totalCount'=>abs($totalCount),
+            'waitCount'=>abs($waitCount),
+            'passCount'=>abs($passCount),
+            'returnCount'=>abs($returnCount)
         );
     }
 
@@ -191,52 +192,102 @@ class VipYoudaoExamined extends Model
     public function formatPaperList($list)
     {
         if($list){
-            $vipYoudaoAgency = new VipYoudaoAgency;
-            foreach ($list as &$row){
-                //获取机构名称
-                if($row['agency_id']){
-                    $agencyInfo = $vipYoudaoAgency->findOne(array('agency_id'=>$row['agency_id']), [], ['agency_name']);
-                    $row['agency_name'] = $agencyInfo['agency_name'];
+            $agencyIdArr = [];
+            $subjectIdArr = [];
+            $gradeIdArr = [];
+            $authorIdArr = [];
+            foreach ($list as $row){
+                if(isset($row['agency_id']) && !empty($row['agency_id'])){
+                    $agencyIdArr[] = $row['agency_id'];
                 }
-                //获取学科名称
-                if($row['subject_id']){
-                    $kmsSubject = new KmsSubjects;
-                    $row['subject_name'] = $kmsSubject->getSubjectName($row['subject_id']);
+                if(isset($row['subject_id']) && !empty($row['subject_id'])){
+                    $subjectIdArr[] = $row['subject_id'];
                 }
-                //获取年级
-                if($row['grade']){
-                    $vipDict = new VipDict;
-                    $gradeInfo = $vipDict->findOne(array('id'=>$row['grade'], 'category'=>'GRADE'));
-                    $row['grade_name'] = $gradeInfo['title'];
+                if(isset($row['grade']) && !empty($row['grade'])){
+                    $gradeIdArr[] = $row['grade'];
                 }
-                /*
-                //获取省、市、区
-                $city = new City;
-                if($row['province']){
-                    $cityInfo = $city->findOne(array('id'=>$row['province']),[],['city']);
-                    $row['province_name'] = $cityInfo['city'];
+                if(isset($row['image_examined_auditor_id']) && !empty($row['image_examined_auditor_id'])){
+                    $authorIdArr[] = $row['image_examined_auditor_id'];
                 }
-                if($row['city']){
-                    $cityInfo = $city->findOne(array('id'=>$row['city']),[],['city']);
-                    $row['city_name'] = $cityInfo['city'];
-                }
-                if($row['area']){
-                    $cityInfo = $city->findOne(array('id'=>$row['area']),[],['city']);
-                    $row['area_name'] = $cityInfo['city'];
-                }*/
-                //获取图片审核人姓名
-                $user = new User;
-                if($row['image_examined_auditor_id']){
-                    $row['image_examined_auditor_name'] = $user->getUserRealNameById($row['image_examined_auditor_id']);
-                }
-                //获取试卷审核人姓名
-                if($row['paper_examined_auditor_id']){
-                    $row['paper_examined_auditor_name'] = $user->getUserRealNameById($row['paper_examined_auditor_id']);
-                }
-                if($row['paper_examined_auditor_id']==-1 && !empty($row['paper_examined_time'])){
-                    $row['paper_examined_auditor_name'] = '自动审核';
+                if(isset($row['paper_examined_auditor_id']) && !empty($row['paper_examined_auditor_id'])){
+                    $authorIdArr[] = $row['paper_examined_auditor_id'];
                 }
             }
+
+            //获取机构
+            $vipYoudaoAgency = new VipYoudaoAgency;
+            $agencyIdArr = array_unique($agencyIdArr);
+            $agencyArr = [];
+            if($agencyIdArr){
+                $agency = $vipYoudaoAgency->findAll(array('agency_id'=>array('in'=>$agencyIdArr)), [], ['agency_id','agency_name']);
+                if(!empty($agency)){
+                    foreach ($agency  as $key=>$row){
+                        $agencyArr[$row['agency_id']] = $row['agency_name'];
+                    }
+                }
+            }
+
+
+            //获取学科、年级
+            $kmsSubject = new KmsSubjects;
+            $subjectIdArr = array_unique($subjectIdArr);
+            $subjectArr = [];
+            if($subjectIdArr){
+                $subject = $kmsSubject->getSubjectsByIds($subjectIdArr);
+                if(!empty($subject)){
+                    foreach ($subject  as $key=>$row){
+                        $subjectArr[$row['id']] = $row['grade_show_name'].$row['title'];
+                    }
+                }
+            }
+
+            $vipDict = new VipDict;
+            $gradeIdArr = array_unique($gradeIdArr);
+            $gradeArr = [];
+            if($gradeIdArr){
+                $grade = $vipDict->findAll(array('id'=>array('in'=>$gradeIdArr),'category'=>'GRADE'));
+                if(!empty($grade)){
+                    foreach ($grade  as $key=>$row){
+                        $gradeArr[$row['id']] = $row['title'];
+                    }
+                }
+            }
+
+            //获取审核人
+            $user = new User;
+            $authorIdArr = array_unique($authorIdArr);
+            $userArr = [];
+            if(!empty($authorIdArr)){
+                $users = $user->getUsersByIds($authorIdArr);
+                if(!empty($users)){
+                    foreach ($users  as $key=>$row){
+                        $userArr[$row['id']] = $row['user_realname'];
+                    }
+                }
+            }
+
+            foreach ($list as $key=>$row){
+                if(!empty($row['agency_id'])){
+                    $list[$key]['agency_name'] = $agencyArr[$row['agency_id']];
+                }
+                if(!empty($row['subject_id'])){
+                    $list[$key]['subject_name'] = $subjectArr[$row['subject_id']];
+                }
+                if(!empty($row['grade'])){
+                    $list[$key]['grade_name'] = $gradeArr[$row['grade']];
+                }
+                if(!empty($row['image_examined_auditor_id'])){
+                    $list[$key]['image_examined_auditor_name'] = $userArr[$row['image_examined_auditor_id']];
+                }
+                if(!empty($row['paper_examined_auditor_id'])){
+                    if($row['paper_examined_auditor_id']==-1 && !empty($row['paper_examined_time'])){
+                        $list[$key]['paper_examined_auditor_name'] = '自动审核';
+                    }else{
+                        $list[$key]['paper_examined_auditor_name'] = $userArr[$row['paper_examined_auditor_id']];
+                    }
+                }
+            }
+
         }
         return $list;
     }

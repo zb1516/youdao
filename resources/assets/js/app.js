@@ -12,6 +12,7 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
 import imagePaper from './imagePaper'
+import paper from './paper'
 import "./http"
 //
 // import "./static/js/jquery.min.js"
@@ -23,6 +24,7 @@ Vue.use(VueRouter)
 const router=new VueRouter({
     routes: [
         ...imagePaper,
+        ...paper
     ]
 })
 //路由拦截器
