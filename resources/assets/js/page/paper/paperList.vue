@@ -305,14 +305,12 @@
                 if($("#paginationBox").html() != '') {
                     $("#paginationBox").pagination('setPage', that.currentPage, that._total);
                 } else {
-                    alert(that._total);
                     $("#paginationBox").pagination({
                         totalPage: that._total,
                         showPageNum: 5,
                         isShowPageSizeOpt: false,
                         isShowFL: false,
-isShowRefresh: false,
-
+                        isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
                             that.pageSize = 5;
@@ -326,16 +324,14 @@ isShowRefresh: false,
             },
             doSearch(){
                 var that = this;
-                /*if($("input[name='start-date']").val()){
+                if($("input[name='start-date']").val()){
                    that.beginDate = $("input[name='start-date']").val();
                    that.endDate = $("input[name='end-date']").val();
                 }
                 if($(".drop-prov-ul").find('.selected').attr('data-val')){
-                    //that.province = $(".drop-prov-ul").find('.selected').attr('data-val');
-                    //that.city = $(".drop-city-ul").find('.selected').attr('data-val');
                     that.province = $(".drop-prov-ul").find('.selected').text();
                     that.city = $(".drop-city-ul").find('.selected').text();
-                }*/
+                }
 
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
@@ -345,7 +341,6 @@ isShowRefresh: false,
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
                     } else {
-
                         that.$nextTick(function () {
                             if(data.data.rows != ''){
                                 that.isContent = 1;

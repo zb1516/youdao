@@ -148,7 +148,16 @@ class VipYoudaoExamined extends Model
         $condition = $this->paperCondition($searchArgs);
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => $recordCount);
+            return array(
+                'rows' => [],
+                'total' => $recordCount,
+                'totalPage'=>0,
+                'listCount'=>array(
+                    'totalCount'=>0,
+                    'waitCount'=>0,
+                    'passCount'=>0,
+                    'returnCount'=>0
+                ));
         }
         if(!empty($searchArgs['sortField'])){
             $order = [$searchArgs['sortField']=>$searchArgs['sortType']];
