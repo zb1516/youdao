@@ -130,7 +130,7 @@
                                  </td>
                                  <td>
                                      <template v-if="paper.paper_examined_status == 2">
-                                         <a href="reviewPic1.html" class="reviewBtn">审核</a>
+                                         <router-link  :to="{name:'paper-paperExaminedOne',params:{userKey:userKey,taskId:paper.task_id}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
                                      </template>
                                  </td>
                              </tr>

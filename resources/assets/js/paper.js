@@ -13,14 +13,14 @@ const routes = [
                     title:'试卷审核',
                 }
             },
-            // {
-            //     path:'paperManageDetail/:userKey/:paperId/:paperName',
-            //     name:'manage-paper-paperManageDetail',
-            //     component:resolve => require(['./page/manage/PaperDetail'], resolve),
-            //     meta:{
-            //         title:'套卷详情',
-            //     }
-            // },
+            {
+                 path:'paperExaminedOne/:userKey/:taskId',
+                 name:'paper-paperExaminedOne',
+                 component:resolve => require(['./page/paper/paperExaminedOne'], resolve),
+                 meta:{
+                     title:'标识题目问题',
+                 }
+             },
             // {
             //     path:'question/:userKey',
             //     name:'manage-question',
