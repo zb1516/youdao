@@ -1151,7 +1151,7 @@ class VipYoudaoExamined extends Model
         if($recordCount > 0){
             $this->beginTransaction();
             for($i=1; $i<=$max; $i++) {
-                $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id'], '', $join, $i, $limit);
+                $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id','vip_youdao_examined.create_uid'], '', $join, $i, $limit);
                 $result = json_decode(json_encode($result), true);
                 if($result['data']){
                     foreach ($result['data'] as $key => $row){
@@ -1167,7 +1167,8 @@ class VipYoudaoExamined extends Model
                                 'taskId' => $row['task_id'],
                                 'openId' => $row['open_id'],
                                 'type' => 2,
-                                'formId' => ''
+                                'userId' => $row['create_uid'],
+                                'content'=>'恭喜您，您提交的试卷已审核通过。'
                             );
                         }
                     }

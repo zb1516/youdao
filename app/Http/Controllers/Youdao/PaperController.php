@@ -270,7 +270,8 @@ class PaperController extends BaseController
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>0,
-                    'formId'=>$formId
+                    'userId'=>$paperInfo['create_uid'],
+                    'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));
 
                 return response()->json(['status' => $result]);
@@ -286,7 +287,8 @@ class PaperController extends BaseController
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>1,
-                    'formId'=>$formId
+                    'userId'=>$paperInfo['create_uid'],
+                    'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
 
                 $error = [];
@@ -365,7 +367,8 @@ class PaperController extends BaseController
             'taskId'=>$data['taskId'],
             'openId'=>$data['openId'],
             'type'=>$data['type'],
-            'formId'=>$data['formId']
+            'userId'=>$data['userId'],
+            'content'=>$data['content']
         );
         return $wxTemplate->sendTemplate($wxTemplateData);
     }
@@ -377,19 +380,16 @@ class PaperController extends BaseController
      */
     public function batchPaperExamined(){
         try{
-            /**
-             * todo:有道处理超过9个工作日未反馈的批量审核通过：未完,发送模版消息formID目前没有办法获取
-             */
             $successTask = $this->vipYoudaoExamined->batchExamined();
-
             //批量发送微信模版消息
             if($successTask){
                 foreach ($successTask as $key=>$task){
                     $this->sendWxTemplate(array(
                         'taskId'=>$task['taskId'],
                         'openId'=>$task['openId'],
+                        'userId'=>$task['userId'],
                         'type'=>$task['type'],
-                        'formId'=>$task['formId']
+                        'content'=>$task['content']
                     ));
                 }
             }
