@@ -23,6 +23,8 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
+    $router->any('wx/serve','WxProgram\WxController@serve');
+    $router->post('wx/sendTemplate','WxProgram\WxController@sendTemplate');
 });
 
 Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
