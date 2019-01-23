@@ -201,10 +201,6 @@ class CommonController extends BaseController
     {
         try{
 //            $searchArgs['token']=$request->input('token');
-//            if(!isset($searchArgs['token']))
-//            {
-//                throw new \Exception('缺少微信用户token');
-//            }
 //            //获取登陆用户uid
 //            $userInfo=UserService::getUserInfo($searchArgs['token']);
 //            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
