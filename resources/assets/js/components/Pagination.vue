@@ -4,7 +4,7 @@
             <!-- 首页 -->
             <!--<li :class="['paging-item', 'paging-item&#45;&#45;first', {'paging-item&#45;&#45;disabled' : index === 1}]" @click="first">首页</li>-->
             <!-- 上一页 -->
-            <li :class="['paging-item', 'paging-item--prev', {'paging-item--disabled' : index === 1}]" @click="prev">上一页</li>
+            <li :class="['paging-item', 'paging-item--prev', {'paging-item--disabled' : index === 1}]" @click="prev"><</li>
 
             <li :class="['paging-item', 'paging-item--more']" v-if="showPrevMore">...</li>
 
@@ -13,14 +13,14 @@
             <li :class="['paging-item', 'paging-item--more']" v-if="showNextMore">...</li>
 
             <!-- 下一页 -->
-            <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]" @click="next">下一页</li>
+            <li :class="['paging-item', 'paging-item--next', {'paging-item--disabled' : index === pages}]" @click="next">></li>
             <!-- 尾页 -->
             <!--<li :class="['paging-item', 'paging-item&#45;&#45;last', {'paging-item&#45;&#45;disabled' : index === pages}]" @click="last">尾页</li>-->
         </ul>
+        <div class="sum-wrapper"><span class="descri">共</span><span class="sum-page">{{pages}}</span><span class="descri">页</span></div>
         <div class="jump-wrapper" v-if="jumpShow">
             <span class="descri">跳至</span><input type="text" v-model="jumpPag" name="" value="" class="jump-page" @blur="go(parseInt(jumpPag))" @keyup.enter="go(parseInt(jumpPag))" /><span class="descri">页</span>
         </div>
-        <div class="sum-wrapper"><span class="descri">共</span><span class="sum-page">{{pages}}</span><span class="descri">页</span></div>
         <!--<div class="average-wrapper ml">-->
             <!--<select class="drop-page" v-model="selected" @change="changeSelect(selected)">-->
                 <!--<option v-for="item in pageSelect" :value="item.id">{{item.name}}</option>-->
@@ -173,6 +173,10 @@
     }
 </script>
 <style>
+    .page-wrapper{
+        width: auto;
+        text-align: center;
+    }
     .mo-paging {
         display: inline-block;
         padding: 0;
@@ -180,6 +184,7 @@
         font-size: 0;
         list-style: none;
         user-select: none;
+
     }
     .paging-item {
         display: inline;
@@ -190,7 +195,7 @@
         line-height: 1.42857143;
         text-decoration: none;
         border: 1px solid #e7e9ed;
-        border-radius: 3px;
+        border-radius: 4px;
         cursor: pointer;
         /*color: #fff;*/
     }
@@ -198,7 +203,7 @@
         margin-left: 0;
     }
     .paging-item:hover {
-        background-color: #5d9cec;
+        background-color: #33cc66;
         color: #fff;
     }
     .paging-item.paging-item--disabled,
@@ -217,19 +222,19 @@
     }
     /* 选中 */
     .paging-item.paging-item--current {
-        background-color: #5d9cec;
+        background-color: #33cc66;
         color: #fff;
         position: relative;
         z-index: 1;
         border-color: #e7e9ed;
     }
     /* 跳转样式S */
-    .pag-jump {
+    .jump-wrapper{
         margin-left: 10px;
         display: inline-block;
-        color: #ddd;
+        /*color: #ddd;*/
     }
-    .pag-jump--input {
+    .jump-wrapper input {
         width: 40px;
         font-size: 14px;
         padding: 6px 4px;

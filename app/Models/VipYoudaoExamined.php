@@ -298,8 +298,8 @@ class VipYoudaoExamined extends Model
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
         }
-        $order = ['upload_time' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
-        $result = $this->findAll($condition, $order, ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','task_id','paper_type'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
+        $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
+        $result = $this->findAll($condition, $orderSort, ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','task_id','paper_type'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
 
         $vipYoudaoAgency = new VipYoudaoAgency();
         $agencyResult = $vipYoudaoAgency->getYoudaoAgency();
