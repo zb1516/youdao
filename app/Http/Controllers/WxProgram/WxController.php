@@ -104,7 +104,7 @@ class WxController extends Controller
             }else{
                 $templateData=[
                     'first'=>['value'=>'恭喜您，您提交的试卷已加工完成','color'=>'#000000'],
-                    'keyword1'=>['value'=>$taskInfo['file_name'],'color'=>'#000000'],
+                    'keyword1'=>['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
                     'keyword2'  => ['value'=>'加工试卷','color'=>'#000000'],
                     'keyword3'  => ['value'=>'已进入您的机构私库','color'=>'#000000']
                 ];
@@ -175,7 +175,7 @@ class WxController extends Controller
     {
         $wechat = app('wechat');
         $wechat->server->setMessageHandler(function($message){
-            return "欢迎关注 overtrue！";
+            return "欢迎关注小a说课！";
         });
         return $wechat->server->serve();
     }
