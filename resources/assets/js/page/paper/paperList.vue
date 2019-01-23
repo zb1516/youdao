@@ -30,8 +30,8 @@
                   <div class="input-box">
                       <div class="address-search-box">
                           <div class="city-select cf">
-                              <input class="value prov-name" type="text" v-model="province" placeholder="省" readonly="readonly">
-                              <input class="value city-name" type="text" v-model="city" placeholder="市" readonly="readonly">
+                              <input class="value prov-name" type="text"  placeholder="省" readonly="readonly">
+                              <input class="value city-name" type="text"  placeholder="市" readonly="readonly">
                           </div>
                           <div class="drop-down">
                               <div class="drop-prov">
@@ -99,9 +99,9 @@
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
-                         <th :class="isTrue?'sorting':(isShow?'sorting_desc':'sorting_asc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet" >有道处理成功</th>
-                         <th :class="isTrue2?'sorting':(isShow?'sorting_desc':'sorting_asc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet">审核时间</th>
-                         <th :class="isTrue3?'sorting':(isShow?'sorting_desc':'sorting_asc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet">审核状态</th>
+                         <th :class="isProcessTimeTrue?'sorting':(isProcessTimeShow?'sorting_asc':'sorting_desc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet(1)" >有道处理成功</th>
+                         <th :class="isExaminedTimeTrue?'sorting':(isExaminedTimeShow?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核时间</th>
+                         <th :class="isExaminedStatusTrue?'sorting':(isExaminedStatusShow?'sorting_asc':'sorting_desc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet(3)">审核状态</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
                      </tr>
                  </thead>
@@ -178,10 +178,18 @@
                 _total:0,
                 totalNum:0,
                 listCount:'',
-                isShow:0,
-                isTrue:1,
-                isSort:'desc'
 
+                isProcessTimeTrue:1,
+                isProcessTimeShow:0,
+                processTimeSort:'desc',
+
+                isExaminedTimeTrue:1,
+                isExaminedTimeShow:0,
+                examinedTimeSort:'desc',
+
+                isExaminedStatusTrue:1,
+                isExaminedStatusShow:0,
+                examinedStatusSort:'desc'
             }
         },
 
@@ -200,7 +208,9 @@
                     status: that.statusValue,
                     paperName: that.paperName,
                     pageSize:that.pageSize,
-                    isSort: that.isSort,
+                    processTimeSort: that.processTimeSort,
+                    examinedTimeSort: that.examinedTimeSort,
+                    examinedStatusSort: that.examinedStatusSort,
                 };
             },
             ...mapGetters({
@@ -296,7 +306,7 @@
                 var that = this;
                 if($("#paginationBox").html() != '') {
                     $("#paginationBox").pagination('setPage', that.currentPage, that._total);
-                } else {
+                } else {//alert(666);
                     $("#paginationBox").pagination({
                         totalPage: that._total,
                         showPageNum: 5,
@@ -316,10 +326,19 @@
                 }
 
             },
-            doSearch(){alert();
+            doSearch(){
                 var that = this;
-                that.beginDate = $("input[name='start-date']").val();
-                that.endDate = $("input[name='end-date']").val();
+                if($("input[name='start-date']").val()){
+                   that.beginDate = $("input[name='start-date']").val();
+                   that.endDate = $("input[name='end-date']").val();
+                }
+                if($(".drop-prov-ul").find('.selected').attr('data-val')){
+                    //that.province = $(".drop-prov-ul").find('.selected').attr('data-val');
+                    //that.city = $(".drop-city-ul").find('.selected').attr('data-val');
+                    that.province = $(".drop-prov-ul").find('.selected').text();
+                    that.city = $(".drop-city-ul").find('.selected').text();
+                }
+
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
@@ -328,35 +347,54 @@
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
                     } else {
+                        that.paperList = [];
                         that.$nextTick(function () {
                             that.paperList = data.data.rows;
                             that._total = data.data.totalPage;
                             that.totalNum = data.data.total;
                             that.listCount = data.data.listCount;
                             that.jsPage();
-                            $('.pic-list-wrapper').selectpicker('refresh');
                         });
                     }
                 })
             },
-            selectGet: function () {
-
+            selectGet: function (type) {
                 var that = this;
-                that.doSearch();
-                that.isTrue = 0;
-                if(!that.isShow){
-                    //alert('down')
-                    that.isSort = 'desc';
-                    that.isShow = 1;
-                }else{
-                    //alert('up')
-                    that.isSort = 'asc';
-                    that.isShow = 0;
+                if(type == 1){
+                    that.isProcessTimeTrue = 0;
+                    if(!that.isProcessTimeShow){
+                        alert('down');
+                        that.isProcessTimeShow = 1;
+                        that.isProcessTimeSort = 'asc';
+                    }else{
+                        alert('up');
+                        that.isProcessTimeSort = 'desc';
+                        that.isProcessTimeShow = 0;
+                    }
+                }else if(type == 2){
+                    that.isExaminedTimeTrue = 0;
+                    if(!that.isExaminedTimeShow){
+                        alert('down');
+                        that.isExaminedTimeShow = 1;
+                        that.examinedTimeSort = 'asc';
+                    }else{
+                        alert('up');
+                        that.isExaminedTimeShow = 0;
+                        that.examinedTimeSort = 'desc';
+                    }
+                }else if(type == 3){
+                    that.isExaminedStatusTrue = 0;
+                    if(!that.isExaminedStatusShow){
+                        alert('down');
+                        that.isExaminedStatusShow = 1;
+                        that.examinedStatusSort = 'asc';
+                    }else{
+                        alert('up');
+                        that.isExaminedStatusShow = 0;
+                        that.examinedStatusSort = 'desc';
+                    }
                 }
-
-
-                    // $('#isTag').hide();
-
+                that.doSearch();
             },
 
 
