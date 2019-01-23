@@ -99,9 +99,9 @@
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
-                         <th :class="isProcessTimeTrue?'sorting':(isProcessTimeShow?'sorting_asc':'sorting_desc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet(1)" >有道处理成功</th>
-                         <th :class="isExaminedTimeTrue?'sorting':(isExaminedTimeShow?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核时间</th>
-                         <th :class="isExaminedStatusTrue?'sorting':(isExaminedStatusShow?'sorting_asc':'sorting_desc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet(3)">审核状态</th>
+                         <th :class="sortField!='final_processing_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet(1)" >有道处理成功</th>
+                         <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核时间</th>
+                         <th :class="sortField!='paper_examined_status'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet(3)">审核状态</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
                      </tr>
                  </thead>
@@ -178,18 +178,21 @@
                 _total:0,
                 totalNum:0,
                 listCount:'',
+                sortField:'',
+                sortType:'asc',
 
-                isProcessTimeTrue:1,
-                isProcessTimeShow:0,
-                processTimeSort:'desc',
 
-                isExaminedTimeTrue:1,
-                isExaminedTimeShow:0,
-                examinedTimeSort:'desc',
+                //isProcessTimeTrue:1,
+                //isProcessTimeShow:0,
+                //processTimeSort:'desc',
 
-                isExaminedStatusTrue:1,
-                isExaminedStatusShow:0,
-                examinedStatusSort:'desc'
+                //isExaminedTimeTrue:1,
+                //isExaminedTimeShow:0,
+                //examinedTimeSort:'desc',
+
+                //isExaminedStatusTrue:1,
+                //isExaminedStatusShow:0,
+                //examinedStatusSort:'desc'
             }
         },
 
@@ -208,9 +211,12 @@
                     status: that.statusValue,
                     paperName: that.paperName,
                     pageSize:that.pageSize,
-                    processTimeSort: that.processTimeSort,
-                    examinedTimeSort: that.examinedTimeSort,
-                    examinedStatusSort: that.examinedStatusSort,
+                    sortField: that.sortField,
+                    sortType: that.sortType,
+
+                    //processTimeSort: that.processTimeSort,
+                    //examinedTimeSort: that.examinedTimeSort,
+                    //examinedStatusSort: that.examinedStatusSort,
                 };
             },
             ...mapGetters({
@@ -224,8 +230,6 @@
             that.agencyList();
             that.statusList();
             that.doSearch();
-
-
         },
         watch:{
             searchArgs:function() {
@@ -306,7 +310,7 @@
                 var that = this;
                 if($("#paginationBox").html() != '') {
                     $("#paginationBox").pagination('setPage', that.currentPage, that._total);
-                } else {//alert(666);
+                } else {
                     $("#paginationBox").pagination({
                         totalPage: that._total,
                         showPageNum: 5,
@@ -360,6 +364,7 @@
             },
             selectGet: function (type) {
                 var that = this;
+                /*
                 if(type == 1){
                     that.isProcessTimeTrue = 0;
                     if(!that.isProcessTimeShow){
@@ -392,6 +397,29 @@
                         alert('up');
                         that.isExaminedStatusShow = 0;
                         that.examinedStatusSort = 'desc';
+                    }
+                }*/
+                if(type == 1){
+                    that.sortField = 'final_processing_time';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
+                    }
+
+                }else if(type == 2){
+                    that.sortField = 'paper_examined_time';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
+                    }
+                }else if(type == 3){
+                    that.sortField = 'paper_examined_status';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
                     }
                 }
                 that.doSearch();

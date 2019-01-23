@@ -79,6 +79,12 @@ class VipYoudaoExamined extends Model
         if (isset($formData['auditEndDate'])) {
             $searchArgs['auditEndDate'] = $formData['auditEndDate'];
         }
+        if (isset($formData['sortField'])) {
+            $searchArgs['sortField'] = $formData['sortField'];
+        }
+        if (isset($formData['sortType'])) {
+            $searchArgs['sortType'] = $formData['sortType'];
+        }
         return $searchArgs;
     }
 
@@ -144,8 +150,12 @@ class VipYoudaoExamined extends Model
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'total' => $recordCount);
         }
-
-        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        if(!empty($searchArgs['sortField'])){
+            $order = [$searchArgs['sortField']=>$searchArgs['sortType']];
+        }else{
+            $order = ['upload_time'=>'asc'];
+        }
+        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         $list = $this->formatPaperList($list['data']);
         $statistic = $this->paperStatistic($condition);
         return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
