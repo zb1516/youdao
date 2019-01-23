@@ -16341,9 +16341,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         },
         jsPage: function jsPage() {
             var that = this;
+            //alert($("#paginationBox").html())
             if ($("#paginationBox").html() != '') {
                 $("#paginationBox").pagination('setPage', that.currentPage, that._total);
             } else {
+                alert(1);
+                alert(that._total);
                 $("#paginationBox").pagination({
                     totalPage: that._total,
                     showPageNum: 5,

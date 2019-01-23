@@ -2,6 +2,30 @@ webpackJsonp([1],Array(74).concat([
 /* 74 */
 /***/ (function(module, exports) {
 
+<<<<<<< HEAD
+/***/ 216:
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div")
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a7ed8242", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ 80:
+=======
 
 /**
  * When source maps are enabled, `style-loader` uses a link element with a data-uri to
@@ -458,12 +482,17 @@ function updateLink (link, options, obj) {
 
 /***/ }),
 /* 80 */
+>>>>>>> f6fbc104719cfc174ffbeea161ecb928f37c46e8
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(3)
 /* script */
+<<<<<<< HEAD
+var __vue_script__ = null
+=======
 var __vue_script__ = __webpack_require__(215)
+>>>>>>> f6fbc104719cfc174ffbeea161ecb928f37c46e8
 /* template */
 var __vue_template__ = __webpack_require__(216)
 /* template functional */
@@ -482,7 +511,11 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
+<<<<<<< HEAD
+Component.options.__file = "resources\\assets\\js\\page\\imagePaper\\imagePaperDetail.vue"
+=======
 Component.options.__file = "resources\\assets\\js\\page\\imagePaper\\imagePaperList.vue"
+>>>>>>> f6fbc104719cfc174ffbeea161ecb928f37c46e8
 
 /* hot reload */
 if (false) {(function () {
@@ -491,9 +524,15 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
+<<<<<<< HEAD
+    hotAPI.createRecord("data-v-a7ed8242", Component.options)
+  } else {
+    hotAPI.reload("data-v-a7ed8242", Component.options)
+=======
     hotAPI.createRecord("data-v-c874e3a8", Component.options)
   } else {
     hotAPI.reload("data-v-c874e3a8", Component.options)
+>>>>>>> f6fbc104719cfc174ffbeea161ecb928f37c46e8
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -503,6 +542,8 @@ if (false) {(function () {
 module.exports = Component.exports
 
 
+<<<<<<< HEAD
+=======
 /***/ }),
 /* 81 */,
 /* 82 */
@@ -38972,5 +39013,6 @@ if (false) {
   }
 }
 
+>>>>>>> f6fbc104719cfc174ffbeea161ecb928f37c46e8
 /***/ })
 ]));
