@@ -64,13 +64,14 @@ class WxController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendTemplate(Request $request)
+    public function sendTemplate(Request $request,$data)
     {
         try{
-            $searchArgs['openId']=$request->input('openId');
-            $searchArgs['type']=$request->input('type');
-            $searchArgs['userId']=$request->input('userId');
-            $searchArgs['taskId']=$request->input('taskId');
+            $searchArgs['openId']=$data['openId'];//$request->input('openId');
+            $searchArgs['type']=$data['type'];//$request->input('type');
+            $searchArgs['userId']=$data['userId'];//$request->input('userId');
+            $searchArgs['taskId']=$data['taskId'];//$request->input('taskId');
+            $searchArgs['content']=$data['content'];//$request->input('content');
             if(!isset($searchArgs['openId']) || empty($searchArgs['openId']))
             {
                 throw new \Exception('缺少openid');
@@ -108,7 +109,6 @@ class WxController extends Controller
                     'keyword3'  => ['value'=>'已进入您的机构私库','color'=>'#000000']
                 ];
             }
-
             $result=WxService::SendTemplate($searchArgs['openId'],$templateData,$searchArgs['type']);
             if($result->errcode != 0)
             {
