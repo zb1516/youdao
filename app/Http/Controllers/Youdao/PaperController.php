@@ -343,6 +343,7 @@ class PaperController extends BaseController
             $status = 0;
             if($code == 200){
                 $postData = json_decode($data,true);
+                //todo 有道反馈时可能没有通过有道审核，这边需要做处理
                 //更新任务的有道接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($postData);
             }
@@ -380,6 +381,7 @@ class PaperController extends BaseController
              * todo:有道处理超过9个工作日未反馈的批量审核通过：未完,发送模版消息formID目前没有办法获取
              */
             $successTask = $this->vipYoudaoExamined->batchExamined();
+
             //批量发送微信模版消息
             if($successTask){
                 foreach ($successTask as $key=>$task){
