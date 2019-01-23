@@ -73,7 +73,6 @@ class WxService
             //获取access_token
             $url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$secretKey;
             $accessTokenJson=httpGet($url);
-            var_dump($accessTokenJson);exit;
             if(isset($accessTokenJson->errcode) && $accessTokenJson->errorcode != 0)
             {
                 throw new \Exception($accessTokenJson->errmsg);
