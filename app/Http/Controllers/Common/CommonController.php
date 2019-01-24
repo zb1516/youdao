@@ -327,6 +327,7 @@ class CommonController extends BaseController
             {
                 throw new \Exception('试卷Id不能为空');
             }
+            //print_r($paperId);exit;
             $result = KlibPaperClient::getPaperClient($paperId);
             return response()->json($result);
         } catch (\Exception $e) {
@@ -339,7 +340,11 @@ class CommonController extends BaseController
     public function getQuestionClient(Request $request)
     {
         try {
-            $questionIds = abs($request->post('questionIds', ''));
+
+            $questionIds = $request->post('questionIds', '');
+            $questionIds = explode(',',$questionIds);
+           // echo 2;exit;
+
             if(empty($questionIds))
             {
                 throw new \Exception('试题Id不能为空');

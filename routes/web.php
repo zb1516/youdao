@@ -66,7 +66,7 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
     $router->get('common/getCitys','Common\CommonController@getCitys');
     $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
-    $router->get('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
+    $router->post('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
     $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');//获取试卷信息
     $router->get('common/uploadPaperFile', 'Common\CommonController@uploadPaperFile');//获取试卷信息
     $router->get('common/getAllProvince', 'Common\CommonController@getAllProvince');

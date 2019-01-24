@@ -15,28 +15,31 @@
                 <h2 class="title">第二步 搜索排重</h2>
                 <div class="search-form">
                     <h3 class="title2">自动根据标签搜索的试卷</h3>
+                    <template v-for="(paper,index) in paperList">
                     <p class="paper-name">
-                        <span class="checkbox js-radio"></span>
-                        <span>套卷VIP-初中-数学------初三-上学期-章节测试卷</span>
+                        <template v-if="index == 0">
+                            <span class="checkbox js-radio select firstSelectValue" :data-val="paper.id"></span>
+                        </template>
+                        <template v-else>
+                            <span class="checkbox js-radio" :data-val="paper.id"></span>
+                        </template>
+                        <span>
+                            <template v-if="paper.showName">
+                               {{paper.showName}}
+                            </template>
+                            <template v-else>
+                                {{paper.fileName}}
+                            </template>
+                        </span>
                     </p>
-                    <p class="paper-name">
-                        <span class="checkbox select js-radio"></span>
-                        <span>套卷VIP-初中-数学------初三-上学期-章节测试卷章节测试卷初三上学期-章节测试卷章节测试卷</span>
-                    </p>
-                    <p class="paper-name">
-                        <span class="checkbox js-radio"></span>
-                        <span>套卷VIP-初中-数学------初三-上学期-章节测试卷</span>
-                    </p>
-                    <p class="paper-name">
-                        <span class="checkbox js-radio"></span>
-                        <span>套卷VIP-初中-数学------初三-上学期-章节测试卷</span>
-                    </p>
+
+                    </template>
                 </div>
                 <div class="pic-paper-form">
                     <div class="page-turn">
-                        <span class="prev"></span>
-                        <span class="page-number"><span class="curren-p">1</span>/<span class="sum-p">2</span></span>
-                        <span class="next"></span>
+                        <span class="prev" @click="doPage(currentPage-1)"></span>
+                        <span class="page-number"><span class="curren-p">{{currentPage}}</span>/<span class="sum-p">{{papeNum}}</span></span>
+                        <span class="next" @click="doPage(currentPage+1)"></span>
                     </div>
                     <div class="pic-paper-box">
                         <div class="pic-list-wrapper">
@@ -54,31 +57,24 @@
                             </ul>
                         </div>
 
-                        <div class="paper-box">
-                            <h2 class="title">2018年初中数学</h2>
-                            <p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>
-                            <dl class="question-wrapper">
-                                <dt class="question-name">1、硫隔绝空气加热后的蒸气中有一种物质的化学式为S8，关于S8的叙述不正确的是（    ）</dt>
-                                <dd class="option">A.它是一种新型的化合物</dd>
-                                <dd class="option"> B.它是一种单质</dd>
-                                <dd class="option selecter"> C.它的一个分子中有8个硫原子 </dd>
-                                <dd class="option"> D.相对分子质量为256</dd>
-                                <dd class="analyze">
-                                    <p class="a-answer">答案：B</p>
-                                    <p class="a-info">解析：硫隔绝空气加热后的蒸气中有一种物质的化学式,硫隔绝空气加热后的蒸气中有一种物质的化学式</p>
-                                </dd>
-                            </dl>
-                            <dl class="question-wrapper">
-                                <dt class="question-name">2、硫隔绝空气加热后的蒸气中有一种物质的化学式为S8，关于S8的叙述不正确的是（    ）</dt>
-                                <dd class="option">A.它是一种新型的化合物</dd>
-                                <dd class="option"> B.它是一种单质</dd>
-                                <dd class="option selecter"> C.它的一个分子中有8个硫原子 </dd>
-                                <dd class="option"> D.相对分子质量为256</dd>
-                                <dd class="analyze">
-                                    <p class="a-answer">答案：B</p>
-                                    <p class="a-info">解析：硫隔绝空气加热后的蒸气中有一种物质的化学式,硫隔绝空气加热后的蒸气中有一种物质的化学式</p>
-                                </dd>
-                            </dl>
+                        <div id="paper-box" class="paper-box">
+                            <h2 class="title">{{paperContent.title}}</h2>
+                            <template v-for="item in paperContent.module">
+                            <p class="question-type">{{item.title}}（合计{{item.total_score}}分）</p>
+                                <template v-if="item.questions">
+                                <template v-for="(it,index) in item.questions">
+
+                                    <dl class="question-wrapper">
+                                        <dt class="question-name" v-html="questionContent[it.ques_id].content"></dt>
+
+                                        <dd class="analyze">
+                                            <p class="a-answer">答案：<div v-html="questionContent[it.ques_id].answer"></div></p>
+                                            <p class="a-info">解析：<div v-html="questionContent[it.ques_id].analysis"></div></p>
+                                        </dd>
+                                    </dl>
+                                </template>
+                                </template>
+                            </template>
                         </div>
                     </div>
                     <div class="btn-wrapper cf">
@@ -90,6 +86,8 @@
         </div>
     </div>
 </template>
+
+
 <script>
 
     import "../../static/css/jquery.fancybox.css"
@@ -104,23 +102,52 @@
         data(){
             return {
                 imagePaperDetailContent:'',
+                paperList:'',
+                isShow:0,
+                papeNum:0,
+                currentPage:1,
+                pageSize: 4,
+                paperId:0,
+                paperContent:'',
+                questionContent:'',
             }
         },
         computed: {
+            searchArgs: function () {
+                var that = this;
+                return {
 
+                    pageSize:that.pageSize,
+
+                };
+            },
             ...mapGetters({
                 userKey:'getUserKey'            //this.userKey  ==  this.$store.getters.getUserKey
             })
         },
+        watch:{
+            searchArgs:function() {
+                var that = this;
+                that.currentPage = 1;
+            },
+            // paperList:function(){
+            //     var that = this;
+            //     that.doPage(that.currentPage);
+            // }
 
+        },
         mounted(){
 
             var that = this;
             that.taskId = this.$route.params.taskId;
             that.paperType = this.$route.params.paperType;
             that.imagePaperDetail();
+
             that.doSearch();
+            that.doSelect();
+
             common.init();
+
 
         },
         methods:{
@@ -139,19 +166,110 @@
             },
             doSearch(){
                 var that = this;
-                console.log(JSON.parse(localStorage.getItem("paperSearchArgs")));
-                var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
 
+                var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
+                searchArgs.currentPage = that.currentPage;
+                searchArgs.pageSize = that.pageSize;
+               // console.log(searchArgs);
                 axios.get('youdao/imagePaper/paperList',{params:searchArgs}).then(function(data){
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
                     } else {
+                        //that.$nextTick(function () {
+                            that.paperList = data.data.rows;
+                       // });
+                        //that.paperList = data.data.rows;
+                        //console.log(that.paperList)
+                        that.papeNum = data.data.totalPage;
                         that.$nextTick(function () {
-                            console.log(data.data.rows);
-                            //that.jsPage();
+                            that.doPaperContent();
                         });
-                    }
+                   }
                 })
+            },
+            doSelect(){
+                var that = this;
+                $(document).on('click','.js-radio',function(){
+                    var $this = $(this);
+                    //console.log($this.hasClass('select'));
+                    $this.hasClass('select') ? $this.removeClass('select') :
+                        $this.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
+
+
+                    that.paperId = $this.has('select') ? $this.attr('data-val') : "";
+                    axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
+
+                        that.$nextTick(function () {
+                            that.paperContent = data.data;
+                            axios.post('common/common/getQuestionClient',{questionIds:that.paperContent.ques_ids.join(','),userKey:that.userKey}).then(function(data){
+                                that.questionContent = data.data.rows;
+                                that.$nextTick(() => {
+                                    MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                                });
+
+                            })
+                        });
+
+                        //console.log(that.paperContent.ques_ids);return false;
+
+
+
+
+
+                    })
+
+
+
+
+
+                });
+
+
+            },
+            doPage(curPage){
+                var that = this;
+                if(curPage == 0){
+                    curPage = 1;
+                }
+                if(curPage > that.papeNum){
+                    curPage = that.papeNum;
+                }
+                that.currentPage = curPage;
+                that.doSearch();
+
+            },
+            doPaperContent(aa){
+alert(1)
+                var $firstTab = $('.firstSelectValue');
+
+
+                // $('.firstSelectValue').attr('data-val');
+                // $('.firstSelectValue').addClass('data-val')
+                $firstTab.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
+                //console.log($firstTab.attr('data-val'));
+                var that = this;
+                that.paperId = $firstTab.attr('data-val');
+               // alert(that.paperId)
+                axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
+
+                    that.paperContent = data.data;
+                    //console.log(that.paperContent.ques_ids);return false;
+                    axios.post('common/common/getQuestionClient',{questionIds:that.paperContent.ques_ids.join(','),userKey:that.userKey}).then(function(data){
+
+                        that.questionContent = data.data.rows;
+                        that.$nextTick(() => {
+                            MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                        });
+
+                    })
+
+
+
+
+                })
+            },
+            doPaperContent1(){
+                alert(12)
             }
 
         }

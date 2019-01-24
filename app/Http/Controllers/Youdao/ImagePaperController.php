@@ -106,7 +106,7 @@ class ImagePaperController extends BaseController
     {
         try {
             $currentPage = abs($request->get('currentPage', 1));
-            $pageSize = abs($request->get('pageSize', 15));
+            $pageSize = abs($request->get('pageSize', 4));
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET);
             $result = $this->paper->getImagePaperList($searchArgs, $currentPage, $pageSize);
             return response()->json($result);

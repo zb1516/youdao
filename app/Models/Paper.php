@@ -81,12 +81,13 @@ class Paper extends Model
         }
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => $recordCount);
+            return array('rows' => [], 'totalPage' => ceil($recordCount/5));
         }
         $result = $this->findAll($condition, ['created_time' => 'desc'], ['id', 'subject_id', 'show_name', 'file_name'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
+
         $list = [];
         $i = 1;
-        foreach ($result as $k => $item) {
+        foreach ($result['data'] as $k => $item) {
             $list[] = [
                 'number' => $i,
                 'id' => $item['id'],
@@ -95,8 +96,8 @@ class Paper extends Model
             ];
             $i++;
         }
-        print_R($list);exit;
-        return array('rows' => $list, 'total' => $recordCount);
+        return array('rows' => $list, 'totalPage' => ceil($recordCount/5));
+
     }
 
 
@@ -109,7 +110,7 @@ class Paper extends Model
      */
     public function imagePaperSearchArgs($formData,$isSort=0)
     {
-        
+        $formData['taskId'] = 1;
         $searchArgs = [];
         if (isset($formData['taskId'])) {
             $searchArgs['taskId'] = trim($formData['taskId']);
