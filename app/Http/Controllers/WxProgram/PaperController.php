@@ -77,14 +77,6 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择省份');
                 }
-                if(intval($searchArgs['cityId']) <= 0)
-                {
-                    throw new \Exception('请选择城市');
-                }
-                if(!isset($searchArgs['token']))
-                {
-                    throw new \Exception('缺少微信用户token');
-                }
                 //获取用户openid
                 $openId=WxService::getOpenId($searchArgs['token']);
                 $userInfo=UserService::getUserInfo($searchArgs['token']);
@@ -99,7 +91,7 @@ class paperController extends Controller
                     'subject_id'=>$searchArgs['subjectId'],
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],
-                    'city'=>$searchArgs['cityId'],
+                    'city'=>!isset($searchArgs['cityId'])?0:$searchArgs['cityId'],
                     'paper_name'=> $searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$subjectName.'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
                     'paper_type'=>$searchArgs['paperType'],
                     'upload_time'=>date('Y-m-d H:i:s')
@@ -237,10 +229,6 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择省份');
                 }
-                if(intval($searchArgs['cityId']) <= 0)
-                {
-                    throw new \Exception('请选择城市');
-                }
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
@@ -299,7 +287,7 @@ class paperController extends Controller
                     'subject_id'=>$searchArgs['subjectId'],
                     'grade'=>$searchArgs['gradeId'],
                     'province'=>$searchArgs['provId'],
-                    'city'=>$searchArgs['cityId'],
+                    'city'=>!isset($searchArgs['cityId'])?0:$searchArgs['cityId'],
                     'paper_name'=>$searchArgs['agencyId'].'-'.'套卷VIP'.'-'.$subjectName.'-'.$searchArgs['provName'].'-'.$searchArgs['cityName'].'-'.$searchArgs['gradeName'],
                     'upload_time'=>date('Y-m-d H:i:s'),
                 ], ['task_id' => $searchArgs['taskId']]);
