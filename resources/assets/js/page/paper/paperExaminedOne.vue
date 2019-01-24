@@ -76,7 +76,7 @@
               </div>
             </div>
             <div class="btn-wrapper cf">
-                <router-link  :to="{name:'paper-paperExaminedTwo',params:{userKey:userKey}}" target="_blank"><a class="next-btn review2-btn">下一步</a></router-link>
+                <span class="next-btn review2-btn" @click="doPaperExaminedOne()">下一步</span>
             </div>
           </div>
         </div>
@@ -84,17 +84,16 @@
     </div>
 </template>
 <script>
-    //import "../../static/css/jquery-ui.min.css"
+    import "../../static/css/jquery-ui.min.css"
     import "../../static/css/jquery.fancybox.css"
     import "../../static/js/jquery-1.12.2.min.js"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery.fancybox.js"
     import "../../static/js/jquery.fancybox-buttons.js"
-    import "../../static/js/jquery.common.js"
+    import common from "../../static/js/jquery.common.js"
     import "../../static/js/jquery-ui.min.js"
-
-
     import {mapGetters} from 'vuex'
+
     export default {
             data(){
                 return {
@@ -116,7 +115,7 @@
             },
             mounted(){
                 var that = this;
-                //that.init();
+                common.init();
                 that.doGetPaperInfo();
 
             },
@@ -124,9 +123,6 @@
 
             },
             methods:{
-                init(){
-                    //initGallery($('.pic-list-wrapper'));
-                },
                 doCheck(index){
                     alert(index);
                     this.selected = index;
@@ -139,14 +135,37 @@
                     searchArgs.userKey = that.userKey;
                     searchArgs.taskId = this.$route.params.taskId;
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
-                        if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
-                        } else {
-                            that.$nextTick(function () {
+                        if(data.data){
+                            if (data.data.errorMsg) {
+                                that.$message.error(data.data.errorMsg);
+                            } else {
                                 that.paperInfo =  data.data;
                                 that.questions = that.paperInfo.youdao_info.questions;
-                            });
+                            }
                         }
+                        that.$nextTick(function() {
+                            common.init();
+                        });
+                    })
+                },
+
+                doPaperExaminedOne(){
+                    var that = this;
+                    var searchArgs = $.extend(true, {}, that.searchArgs);
+                    searchArgs.userKey = that.userKey;
+                    searchArgs.taskId = this.$route.params.taskId;
+                    axios.post('youdao/paper/paperExaminedOne',{params:searchArgs}).then(function(data){
+                        if(data.data){
+                            if (data.data.errorMsg) {
+                                that.$message.error(data.data.errorMsg);
+                            } else {
+                                that.paperInfo =  data.data;
+                                that.questions = that.paperInfo.youdao_info.questions;
+                            }
+                        }
+                        that.$nextTick(function() {
+                            common.init();
+                        });
                     })
                 }
             }

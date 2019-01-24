@@ -55,13 +55,11 @@ class MessageController extends Controller
     {
         try{
             $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
-            //获取用户openid
-            $openId=WxService::getOpenId($searchArgs['token']);
             //获取用户id
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //查询出当前用户已读消息
             $vipMessageViewLogModel=new VipMessageViewLog();
-            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId'],'open_id'=>$openId],['addtime'=>'desc'],['message_id']);
+            $messageIdsList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId']],['addtime'=>'desc'],['message_id']);
             $messageIds=[];
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];

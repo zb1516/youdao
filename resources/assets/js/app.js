@@ -10,6 +10,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import App from './App.vue'
 import VueRouter from 'vue-router'
+import $ from 'jquery'
 import store from './vuex/store'
 import imagePaper from './imagePaper'
 import paper from './paper'

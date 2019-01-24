@@ -21,6 +21,14 @@ const routes = [
                     title:'套卷详情',
                 }
             },
+            {
+                path:'imageSearch/:userKey/:taskId/:allType',
+                name:'imagePaper-imagePaperList-imageSearch',
+                component:resolve => require(['./page/imagePaper/imageSearch'], resolve),
+                meta:{
+                    title:'套卷详情',
+                }
+            },
             // {
             //     path:'question/:userKey',
             //     name:'manage-question',

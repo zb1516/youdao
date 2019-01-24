@@ -1,6 +1,9 @@
 (function(global, $, factory) {
-	factory(global, $);
-})(this, jQuery, function(window, $) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+        typeof define === 'function' && define.amd ? define(factory) :
+            (global.siteCommon = factory(global));
+
+})(this, jQuery, function(window) {
 
 	var siteFns = {
 		init: function() {
@@ -8,56 +11,68 @@
 			self.componentInit().addressPicker.init();
 		},
 
-		componentInit: function() {
-			var self = this;
-			if( $('select').length ) {
-				initSelectBox();
-				$('select').each(function() {
-					var $this = $(this),
-						obj = $(this).data('options');
-					if( obj ) {
-						obj = obj.charAt(0) === '{' && obj.charAt( obj.length - 1 ) === '}' ? stf( obj ) : stf('{' + obj + '}');
-					} else {
-						obj = {};
-					}
-					$this.selectpicker(obj);
-				});
-			}
-			if( $('.input-date-range') ) {
-				$('.input-date-range').each(function() {
-					var $this = $(this),
-						options = {
-							autoUpdateInput: false,
-							locale: {
-								applyLabel: '确定',
-		            cancelLabel: '取消',
-		            fromLabel: '起始时间',
-		            toLabel: '结束时间',
-								daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
-								monthNames: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
-								firstDay: 1,
-								format: 'YYYY/DD/MM'
-							}
-						};
-					// if( $this. ) {
-					//
-					// }
-					$this.after('<input type="hidden" name="start-date" /><input type="hidden" name="end-date" />');
-					$this.daterangepicker(options, function(start, end, label) {
-						$this.parent().prev().addClass('has-content');
-						start = start.format('YYYY/DD/MM');
-						end = end.format('YYYY/DD/MM');
-						$this.val(start + ' - ' + end);
-						$this.nextAll().eq(0).val( start ).end().eq(1).val( end );
-					});
+        componentInit: function() {
+            var self = this;
+            if( $('select').length ) {
+                // initSelectBox();
+                $('select').each(function() {
+                    var $this = $(this),
+                        obj = $(this).data('options');
+                    if( obj ) {
+                        obj = obj.charAt(0) === '{' && obj.charAt( obj.length - 1 ) === '}' ? stf( obj ) : stf('{' + obj + '}');
+                    } else {
+                        obj = {};
+                    }
+                    $this.selectpicker(obj);
+                });
+            }
+            if( $('.input-date-range') ) {
+                $('.input-date-range').each(function() {
+                    var $this = $(this),
+                        options = {
+                            autoUpdateInput: false,
+                            locale: {
+                                applyLabel: '确定',
+                                cancelLabel: '取消',
+                                fromLabel: '起始时间',
+                                toLabel: '结束时间',
+                                daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+                                monthNames: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+                                firstDay: 1,
+                                format: 'YYYY/DD/MM'
+                            }
+                        };
+                    // if( $this. ) {
+                    //
+                    // }
+                    $this.after('<input type="hidden" name="start-date" /><input type="hidden" name="end-date" />');
+                    $this.daterangepicker(options, function(start, end, label) {
+                        $this.parent().prev().addClass('has-content');
+                        start = start.format('YYYY/DD/MM');
+                        end = end.format('YYYY/DD/MM');
+                        $this.val(start + ' - ' + end);
+                        $this.nextAll().eq(0).val( start ).end().eq(1).val( end );
+                    });
 
-					if( $this.val() ) {
-						$this.parent().prev().addClass('has-content');
-					}
-				});
-			}
-			return self;
-		},
+                    if( $this.val() ) {
+                        $this.parent().prev().addClass('has-content');
+                    }
+                });
+            }
+            if( $('.pic-list a').length ){
+                var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null;
+                self.initGallery(parentBox);
+                $('.js-pic-list,.js-st-list').sortable({
+                    deactivate: function() {
+                        $('> li', this).each(function functionName( i ) {
+                            $(this).find('.tab-index').text( i + 1 );
+                        });
+                        self.initGallery(parentBox);
+                    }
+                });
+            }
+            return self;
+        },
     addressPicker: {
       init: function() {
           province = '';
@@ -205,19 +220,32 @@
 		})
         return self;
       }
+    },
+        initGallery: function(parent){
+            $('.pic-list a').fancybox({
+                parent: parent || null,
+                fixed: !parent,
+                openEffect  : 'none',
+                closeEffect : 'none',
+                padding: 0,
+                prevEffect : 'none',
+                nextEffect : 'none',
+                closeBtn  : false,
+                helpers : {
+                    buttons	: {
+                        show: false
+                    }
+                },
+                afterLoad : function() {
+                    this.title = (this.index + 1) + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
+                }
+            });
+        }
+	}
+    function stf( s ) {
+        return new Function('return ' + s)();
     }
-	}
-	function stf( s ) {
-		return new Function('return ' + s)();
-	}
-	$(document).ready(function() {
-		siteFns.init();
-		$('.js-pic-box').click(function(){
-        var $this = $(this);
-        $this.hasClass('select') ? $this.removeClass('selected') :
-        $this.addClass('selected').siblings('li').removeClass('selected');
-    });
-	});
+    return siteFns;
 });
 function initGallery( parent ) {
 	$('.pic-list a').fancybox({

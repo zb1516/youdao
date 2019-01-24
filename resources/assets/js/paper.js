@@ -29,6 +29,14 @@ const routes = [
                     title:'标识试卷问题',
                 }
             },
+            {
+                path:'paperExaminedResult/:userKey/:taskId/:type',
+                name:'paper-paperExaminedResult',
+                component:resolve => require(['./page/paper/paperExaminedResult'], resolve),
+                meta:{
+                    title:'试卷审核结果',
+                }
+            },
             // {
             //     path:'question/:userKey',
             //     name:'manage-question',
