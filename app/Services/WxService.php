@@ -11,21 +11,26 @@ class WxService
      *
      * @return reposne
      */
-    public static function SendTemplate($openId,$formId,$data,$type)
+    public static function SendTemplate($openId,$data,$type)
     {
         try{
-            $tempalteId=intval($type)==1?"am9CzBmTGUrjxN7oKY5qy0GetWPgq98_3WBqEbk4X0Y":"7G9-0evnvXdg_4mBU9cs83wg4jSjp8jK-rjSRzlar-w";
+            $tempalteId=intval($type)==1?"umwNreURUB7KeE2y_d3ozPfZyIhpRxnEEiwIrh5cDjg":"ogryc1vv3lPF94kShdrMsfX4llpIAAlK6u9Fbnv0aNk";
             $template =[
                 'touser' => $openId,
-                'template_id' => $tempalteId,
-                'url' => 'pages/index/index',
-                'form_id'=>$formId,
-                'topcolor' =>'#7B68EE',
-                'data' =>$data,
+                'mp_template_msg'=>[
+                    "appid"=>config('wechat.app_id'),
+                    'template_id' => $tempalteId,
+                    'url' => '',
+                    "miniprogram"=>[
+                        "appid"=>config('wxxcx.appid'),
+                        "path"=>"pages/message/index/index"
+                    ],
+                    'data' =>$data,
+                ]
             ];
             $accessToken=self::getAccessToken();         //获取access_token
             //发送模板消息
-            $url = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=".$accessToken;
+            $url ="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=".$accessToken;
             $template =  json_encode($template);
             $result = httpPost($url,$template);
             return $result;
@@ -47,24 +52,40 @@ class WxService
         $key='wx_token_'.substr(sha1($appId),0,10);
         //从缓存中取出access_token ，判断是否过期，如果已过期从新获取access_token
         $accessToken=Redis::get($key);
-        $result=json_decode($accessToken);
-        if($result->expire_time <= time()){
+        if(!empty($accessToken)){
+            $accessTokenJson=json_decode($accessToken);
+            if($accessTokenJson->expire_time <= time()){
+                //获取access_token
+                $url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$secretKey;
+                $accessTokenJson=httpGet($url);
+                if(isset($accessTokenJson->errcode) && $accessTokenJson->errorcode != 0)
+                {
+                    throw new \Exception($accessTokenJson->errmsg);
+                }
+                //把access_token存入redis
+                $data=[
+                    'access_token'=>$accessTokenJson->access_token,
+                    'expire_time'=>time()+$accessTokenJson->expires_in
+                ];
+                Redis::set($key,json_encode($data));        //存入redis
+            }
+        }else{
             //获取access_token
             $url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$secretKey;
-            $access_token=httpGet($url);
-            $result=json_decode($access_token);
-            if($result->errcode != 0)
+            $accessTokenJson=httpGet($url);
+            var_dump($accessTokenJson);exit;
+            if(isset($accessTokenJson->errcode) && $accessTokenJson->errorcode != 0)
             {
-                throw new \Exception($result->errmsg);
+                throw new \Exception($accessTokenJson->errmsg);
             }
             //把access_token存入redis
             $data=[
-                'access_token'=>$result->access_token,
-                'expire_time'=>time()+$access_token->expires_in
+                'access_token'=>$accessTokenJson->access_token,
+                'expire_time'=>time()+$accessTokenJson->expires_in
             ];
             Redis::set($key,json_encode($data));        //存入redis
         }
-        return $result->access_token;
+        return $accessTokenJson->access_token;
     }
 
     /**

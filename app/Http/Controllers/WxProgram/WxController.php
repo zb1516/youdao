@@ -67,38 +67,49 @@ class WxController extends Controller
     public function sendTemplate(Request $request,$data)
     {
         try{
-            if(intval($data['openId']) <= 0)
+            $searchArgs['openId']=$data['openId'];//$request->input('openId');
+            $searchArgs['type']=$data['type'];//$request->input('type');
+            $searchArgs['userId']=$data['userId'];//$request->input('userId');
+            $searchArgs['taskId']=$data['taskId'];//$request->input('taskId');
+            $searchArgs['content']=$data['content'];//$request->input('content');
+            if(!isset($searchArgs['openId']) || empty($searchArgs['openId']))
             {
                 throw new \Exception('缺少openid');
             }
-            if(intval($data['type']) <= 0)
+            if(intval($searchArgs['type']) <= 0)
             {
                 throw new \Exception('缺少类型');
             }
-            if(intval($data['userId']) <= 0){
-                throw new \Exception('缺少用户id');
+            if(intval($searchArgs['userId']) <= 0){
+                throw new \Exception('缺少用户Id');
             }
-            if(intval($data['formId']) <= 0)
+            if(!isset($searchArgs['taskId']) || empty($searchArgs['taskId']))
             {
-                throw new \Exception('缺少表单id');
+                throw new \Exception('缺少任务Id');
             }
             //查询任务id
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $taskInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$data['taskId']]);
+            $taskInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            //获取本地登陆账号的用户信息
+            $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
+            $userInfo=$vipYoudaoUserLoginLogModel->findOne(['userId'=>$taskInfo['create_uid'],'open_id'=>$taskInfo['open_id']],['id'=>'desc']);
             //判断完成还是退回消息
-            if($data['type'] == 1){
+            if(intval($searchArgs['type']) == 1){
                 $templateData=[
-                    'keyword1'  => ['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
-                    'keyword2'  => ['value'=>$taskInfo['upload_time'],'color'=>'#000000'],
-                    'keyword3'  => ['value'=>$taskInfo['image_error_type'],'color'=>'#000000'],
+                    'first' =>  ['value'=>'您上传的试卷图片未通过审核，请重新上传','color'=>'#000000'],
+                    'keyword1'  =>  ['value'=>$userInfo['realName'],'color'=>'#000000'],
+                    'keyword2'  => ['value'=>formatDate(strtotime($taskInfo['upload_time'])),'color'=>'#000000'],
+                    'keyword3'  => ['value'=>$taskInfo['image_error_type'],'color'=>'#000000']
                 ];
             }else{
                 $templateData=[
-                    'keyword1'  => ['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
-                    'keyword2'  => ['value'=>'试卷加工已完成，请到私库中查看','color'=>'#000000'],
+                    'first'=>['value'=>'恭喜您，您提交的试卷已加工完成','color'=>'#000000'],
+                    'keyword1'=>['value'=>$taskInfo['paper_name'],'color'=>'#000000'],
+                    'keyword2'  => ['value'=>'加工试卷','color'=>'#000000'],
+                    'keyword3'  => ['value'=>'已进入您的机构私库','color'=>'#000000']
                 ];
             }
-            $result=WxService::SendTemplate($data['openId'],$data['formId'],$templateData,$data['type']);
+            $result=WxService::SendTemplate($searchArgs['openId'],$templateData,$searchArgs['type']);
             if($result->errcode != 0)
             {
                 throw new \Exception($result->errmsg);
@@ -106,11 +117,11 @@ class WxController extends Controller
             //添加发送消息记录
             $messageModel=new VipMessageRemind();
             $result=$messageModel->add([
-                'uid'=>$data['userId'],
-                'task_id'=>$data['taskId'],
-                'open_id'=>$data['openId'],
-                'message_content'=>htmlspecialchars($data['content']),
-                'message_status'=>$data['type'],
+                'uid'=>$searchArgs['userId'],
+                'task_id'=>$searchArgs['taskId'],
+                'open_id'=>$searchArgs['openId'],
+                'message_content'=>htmlspecialchars($searchArgs['content']),
+                'message_status'=>$searchArgs['type'],
                 'message_type'=>1,
                 'addtime'=>time()
             ]);
@@ -136,8 +147,6 @@ class WxController extends Controller
             {
                 throw new \Exception('缺少试卷任务id');
             }
-            //判断如果没有分享标识，需要登陆判断是否存在用户token
-            if($request->input()){}
             $vipPaperImageModel=new VipPaperImage();
             //获取第一张图片
             $paperInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId'],'is_delete'=>0],['create_time'=>'asc'],['image_url']);
@@ -155,5 +164,19 @@ class WxController extends Controller
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
+    }
+
+    /**
+     * 处理微信的请求消息
+     *
+     * @return string
+     */
+    public function serve(Request $request)
+    {
+        $wechat = app('wechat');
+        $wechat->server->setMessageHandler(function($message){
+            return "欢迎关注小a说课！";
+        });
+        return $wechat->server->serve();
     }
 }
