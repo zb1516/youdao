@@ -94,11 +94,11 @@ class PaperController extends BaseController
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
         $postData['data']['taskId'] = $taskId;
-        $common = new CommonController;
+        /*$common = new CommonController;
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
         if($result['code']== 200){
             $paperInfo['youdao_info'] = $result['data'];
-        }
+        }*/
         return $paperInfo;
     }
 

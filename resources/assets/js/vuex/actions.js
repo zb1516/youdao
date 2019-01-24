@@ -5,7 +5,7 @@ export default {
     },
     setUserKeyMutations({commit},userKey){
         commit('setUserKey',userKey);
-    }
+    },
     // setPaperMutations({commit},paperId)
     // {
     //     commit('setPaperId',paperId);

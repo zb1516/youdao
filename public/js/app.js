@@ -1,4 +1,4 @@
-webpackJsonp([3],[
+webpackJsonp([4],[
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35793,7 +35793,8 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 /* harmony default export */ __webpack_exports__["a"] = ({
     //定义变量
     user: {},
-    userKey: ''
+    userKey: '',
+    taskId: ''
     // paperId:0,
     // subjectList:[]
 });
@@ -35816,18 +35817,10 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     },
     setUserKey: function setUserKey(state, userKey) {
         state.userKey = userKey;
+    },
+    setTaskId: function setTaskId(state, taskId) {
+        state.taskId = taskId;
     }
-    // setPaperId(state,paperId)
-    // {
-    //     state.paperId=paperId;
-    // },
-    // setSubject(state,subject)
-    // {
-    //     axios.get("label/common/getSubjects",{params:{userKey:state.userKey}}).then(res=>{
-    //         state.subjectList=res.data;
-    //     });
-    // }
-
 });
 
 /***/ }),
@@ -35847,15 +35840,6 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
 
         commit('setUserKey', userKey);
     }
-    // setPaperMutations({commit},paperId)
-    // {
-    //     commit('setPaperId',paperId);
-    // },
-    // setSubjectMutations({commit})
-    // {
-    //     commit('setSubject');
-    // }
-
 });
 
 /***/ }),
@@ -35869,6 +35853,9 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     },
     getUserKey: function getUserKey(state) {
         return state.userKey;
+    },
+    getTaskId: function getTaskId(state) {
+        return state.taskId;
     }
     // getPaperId(state)
     // {
@@ -35878,6 +35865,7 @@ var store = new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
     // {
     //     return state.subjectList;
     // }
+
 
 });
 
@@ -35906,7 +35894,7 @@ var routes = [{
         path: 'imagePaperDetail/:userKey/:taskId/:paperType',
         name: 'imagePaper-imagePaperList-imagePaperDetail',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(2).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(81)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(3).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(81)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '套卷详情'
@@ -36374,7 +36362,7 @@ var routes = [{
         path: 'paperList/:userKey',
         name: 'paper-paperList',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(82)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(1).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(82)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷审核'
@@ -36383,7 +36371,7 @@ var routes = [{
         path: 'paperExaminedOne/:userKey/:taskId',
         name: 'paper-paperExaminedOne',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(1/* empty */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(229)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(2).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(83)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '标识题目问题'
