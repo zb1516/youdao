@@ -6,7 +6,7 @@
                 <div class="input-wrapper">
                     <label for="" class="title">学科</label>
                     <div class="input-box">
-                        <select class="subject-select-box" id="subject-select-box" name="subject-select-box" title="请选择学科" v-model="subjectValue" data-options="width: 100">
+                        <select class="subject-select-box" id="subject-select-box" name="subject-select-box" v-model="subjectValue" data-options="width: 100">
                             <option value="">全部</option>
                             <option v-for="option in optionsSubject" :value="option.subjectId">
                                 {{option.subjectName}}
@@ -169,7 +169,7 @@
     import "../../static/js/jquery.min.js"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery.dataTables.min.js"
-    import "../../static/js/jquery.common.js"
+    import common from "../../static/js/jquery.common.js"
     import "../../static/js/pagination/pagination.min.js"
 
 
@@ -235,7 +235,7 @@
             that.subjectList();
             that.agencyList();
             that.doSearch();
-
+            common.init();
         },
         watch:{
             searchArgs:function() {

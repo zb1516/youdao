@@ -22,27 +22,29 @@ class VipPaperImage extends Model
             );
             $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             return $result;
-        }
-        if($paperType == 1){
-            $condition = array(
-                'task_id' => $taskId,
-                'image_type' => 3,
-            );
-            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
-            return $result;
         }else{
-            $condition = array(
-                'task_id' => $taskId,
-                'image_type' => 1,
-            );
-            $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
-            $condition = array(
-                'task_id' => $taskId,
-                'image_type' => 2,
-            );
-            $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
-            return ['question' => $question, 'answer' => $answer];
+            if($paperType == 1){
+                $condition = array(
+                    'task_id' => $taskId,
+                    'image_type' => 3,
+                );
+                $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                return $result;
+            }else{
+                $condition = array(
+                    'task_id' => $taskId,
+                    'image_type' => 1,
+                );
+                $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $condition = array(
+                    'task_id' => $taskId,
+                    'image_type' => 2,
+                );
+                $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                return ['question' => $question, 'answer' => $answer];
+            }
         }
+
 
     }
 
