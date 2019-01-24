@@ -129,6 +129,7 @@ class ImagePaperController extends BaseController
                 throw new \Exception('缺少taskId');
             }
             $result = $this->vipPaperImage->getImagePaperDetail($taskId, $paperType, $allType);
+
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -179,6 +180,16 @@ class ImagePaperController extends BaseController
      */
     public function paperPass(Request $request)
     {
+        if($_GET['paperType'] == 1){
+            $_GET['sortTaskId'][$_GET['taskId']] = $_GET['sortTaskId'];
+
+            //unset($_GET['sortTaskId'][1][0]);
+
+        }else{
+            $_GET['sortTaskId'][$_GET['taskId']]['question'] = $_GET['sortTaskId'][0];
+            $_GET['sortTaskId'][$_GET['taskId']]['answer'] = $_GET['sortTaskId'][1];
+        }
+        print_r($_GET);exit;
         try {
             $isSort = 1;
             $_GET['paperType'] = 2;

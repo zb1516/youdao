@@ -298,9 +298,17 @@ class CommonController extends BaseController
     {
         try {
             $areas = [];
-            $provinceId = abs($request->post('provinceId', ''));
-            $twoId = abs($request->post('twoId', ''));
+            $provinceId = trim($request->post('provinceId', 0));
+            if(empty($provinceId))
+            {
+                throw new \Exception('省Id不能为空');
+            }
+
             if ($provinceId) {
+                $result = explode("-",$provinceId);
+
+                $provinceId = $result[0];
+                $twoId = $result[1];
                 $areas = $this->city->getAreaCitys($provinceId,$twoId);
             }
             return response()->json($areas);
