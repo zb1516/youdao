@@ -29,62 +29,54 @@
                   </ul>
               </div>
               <div class="paper-box">
-                <h2 class="title">2018年初中数学</h2>
-                <p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>
-                <dl class="question-wrapper">
-                  <dt class="question-name">1、硫隔绝空气加热后的蒸气中有一种物质的化学式为S8，关于S8的叙述不正确的是（    ）</dt>
-                  <dd class="option">A.它是一种新型的化合物</dd>
-                  <dd class="option"> B.它是一种单质</dd>
-                  <dd class="option selecter"> C.它的一个分子中有8个硫原子 </dd>
-                  <dd class="option"> D.相对分子质量为256</dd>
-                  <dd class="analyze">
-                    <p class="a-answer">答案：B</p>
-                    <p class="a-info">解析：硫隔绝空气加热后的蒸气中有一种物质的化学式,硫隔绝空气加热后的蒸气中有一种物质的化学式</p>
-                  </dd>
-                  <div class="q-operational">
-                    <div class="q-o-con">
-                      <span class="r-option">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>题干不完整</span>
-                      </span>
-                      <span class="r-option">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>答案不完整</span>
-                      </span>
-                      <span class="r-option mr-n">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>解析不完整</span>
-                      </span>
-                      <span class="r-option">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>题干错误</span>
-                      </span>
-                      <span class="r-option">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>错误答案</span>
-                      </span>
-                      <span class="r-option mr-n">
-                        <span class="checkbox js-checkbox" @click="doCheck()"></span>
-                        <span>解析错误</span>
-                      </span>
-                    </div>
-                  </div>
-               </dl>
-               <dl class="question-wrapper">
-                 <dt class="question-name">2、硫隔绝空气加热后的蒸气中有一种物质的化学式为S8，关于S8的叙述不正确的是（    ）</dt>
-                 <dd class="option">A.它是一种新型的化合物</dd>
-                 <dd class="option"> B.它是一种单质</dd>
-                 <dd class="option selecter"> C.它的一个分子中有8个硫原子 </dd>
-                 <dd class="option"> D.相对分子质量为256</dd>
-                 <dd class="analyze">
-                   <p class="a-answer">答案：B</p>
-                   <p class="a-info">解析：硫隔绝空气加热后的蒸气中有一种物质的化学式,硫隔绝空气加热后的蒸气中有一种物质的化学式</p>
-                 </dd>
-              </dl>
+                <h2 class="title">{{paperInfo.paper_name}}</h2>
+                <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
+                <template v-for="(question, index) in questions">
+                    <dl class="question-wrapper">
+                      <dt class="question-name">{{question.quesNumber}}、{{question.quesLatextContent.content}}</dt>
+                      <template v-if="question.hasOptions == 1">
+                          <template v-for="(option, i) in question.options">
+                          <dd class="option">{{option.label}}.{{option.latexContent}}</dd>
+                          </template>
+                      </template>
+                      <dd class="analyze" v-if="question.quesLatextAnswer || question.quesLatextAnalysis">
+                         <p class="a-answer" v-if="question.quesLatextAnswer ">答案：{{question.quesLatextAnswer.content}}</p>
+                         <p class="a-info" v-if="question.quesLatextAnalysis ">解析：{{question.quesLatextAnalysis.content}}</p>
+                      </dd>
+                      <div class="q-operational">
+                        <div class="q-o-con">
+                          <span class="r-option">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>题干不完整</span>
+                          </span>
+                          <span class="r-option">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>答案不完整</span>
+                          </span>
+                          <span class="r-option mr-n">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>解析不完整</span>
+                          </span>
+                          <span class="r-option">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>题干错误</span>
+                          </span>
+                          <span class="r-option">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>错误答案</span>
+                          </span>
+                          <span class="r-option mr-n">
+                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span>解析错误</span>
+                          </span>
+                        </div>
+                      </div>
+                   </dl>
+               </template>
               </div>
             </div>
             <div class="btn-wrapper cf">
-              <a href="reviewPaper2.html" class="next-btn review2-btn">下一步</a>
+                <router-link  :to="{name:'paper-paperExaminedTwo',params:{userKey:userKey}}" target="_blank"><a class="next-btn review2-btn">下一步</a></router-link>
             </div>
           </div>
         </div>
@@ -107,6 +99,8 @@
             data(){
                 return {
                     paperInfo:'',
+                    questions:'',
+                    selected:'',
                 }
             },
             computed: {
@@ -133,8 +127,10 @@
                 init(){
                     //initGallery($('.pic-list-wrapper'));
                 },
-                doCheck(){
-
+                doCheck(index){
+                    alert(index);
+                    this.selected = index;
+                    //$(this).hasClass('select') ? $(this).removeClass('select') : $(this).addClass('select');
                 },
 
                 doGetPaperInfo(){
@@ -148,6 +144,7 @@
                         } else {
                             that.$nextTick(function () {
                                 that.paperInfo =  data.data;
+                                that.questions = that.paperInfo.youdao_info.questions;
                             });
                         }
                     })

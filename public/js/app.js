@@ -36376,6 +36376,15 @@ var routes = [{
         meta: {
             title: '标识题目问题'
         }
+    }, {
+        path: 'paperExaminedTwo/:userKey/:taskId',
+        name: 'paper-paperExaminedTwo',
+        component: function component(resolve) {
+            return new Promise(function(resolve) { resolve(); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [!(function webpackMissingModule() { var e = new Error("Cannot find module \"./page/paper/paperExaminedTwo\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        },
+        meta: {
+            title: '标识试卷问题'
+        }
     }]
 }];
 /* harmony default export */ __webpack_exports__["a"] = (routes);

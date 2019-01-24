@@ -2339,7 +2339,7 @@ function loadLocale(name) {
             module && module.exports) {
         try {
             oldLocale = globalLocale._abbr;
-            __webpack_require__(213)("./" + name);
+            __webpack_require__(202)("./" + name);
             // because defineLocale currently also sets the global locale, we
             // want to undo that for lazy loaded locales
             getSetGlobalLocale(oldLocale);
@@ -16060,236 +16060,6 @@ return zhTw;
 /* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
- * jQuery Mousewheel 3.1.13
- *
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license
- * http://jquery.org/license
- */
-
-(function (factory) {
-    if ( true ) {
-        // AMD. Register as an anonymous module.
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS style for Browserify
-        module.exports = factory;
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function ($) {
-
-    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
-        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
-                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-        slice  = Array.prototype.slice,
-        nullLowestDeltaTimeout, lowestDelta;
-
-    if ( $.event.fixHooks ) {
-        for ( var i = toFix.length; i; ) {
-            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
-        }
-    }
-
-    var special = $.event.special.mousewheel = {
-        version: '3.1.12',
-
-        setup: function() {
-            if ( this.addEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.addEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = handler;
-            }
-            // Store the line height and page height for this particular element
-            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
-            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
-        },
-
-        teardown: function() {
-            if ( this.removeEventListener ) {
-                for ( var i = toBind.length; i; ) {
-                    this.removeEventListener( toBind[--i], handler, false );
-                }
-            } else {
-                this.onmousewheel = null;
-            }
-            // Clean up the data we added to the element
-            $.removeData(this, 'mousewheel-line-height');
-            $.removeData(this, 'mousewheel-page-height');
-        },
-
-        getLineHeight: function(elem) {
-            var $elem = $(elem),
-                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-            if (!$parent.length) {
-                $parent = $('body');
-            }
-            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
-        },
-
-        getPageHeight: function(elem) {
-            return $(elem).height();
-        },
-
-        settings: {
-            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
-            normalizeOffset: true  // calls getBoundingClientRect for each event
-        }
-    };
-
-    $.fn.extend({
-        mousewheel: function(fn) {
-            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
-        },
-
-        unmousewheel: function(fn) {
-            return this.unbind('mousewheel', fn);
-        }
-    });
-
-
-    function handler(event) {
-        var orgEvent   = event || window.event,
-            args       = slice.call(arguments, 1),
-            delta      = 0,
-            deltaX     = 0,
-            deltaY     = 0,
-            absDelta   = 0,
-            offsetX    = 0,
-            offsetY    = 0;
-        event = $.event.fix(orgEvent);
-        event.type = 'mousewheel';
-
-        // Old school scrollwheel delta
-        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
-
-        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
-            deltaX = deltaY * -1;
-            deltaY = 0;
-        }
-
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-        delta = deltaY === 0 ? deltaX : deltaY;
-
-        // New school wheel delta (wheel event)
-        if ( 'deltaY' in orgEvent ) {
-            deltaY = orgEvent.deltaY * -1;
-            delta  = deltaY;
-        }
-        if ( 'deltaX' in orgEvent ) {
-            deltaX = orgEvent.deltaX;
-            if ( deltaY === 0 ) { delta  = deltaX * -1; }
-        }
-
-        // No change actually happened, no reason to go any further
-        if ( deltaY === 0 && deltaX === 0 ) { return; }
-
-        // Need to convert lines and pages to pixels if we aren't already in pixels
-        // There are three delta modes:
-        //   * deltaMode 0 is by pixels, nothing to do
-        //   * deltaMode 1 is by lines
-        //   * deltaMode 2 is by pages
-        if ( orgEvent.deltaMode === 1 ) {
-            var lineHeight = $.data(this, 'mousewheel-line-height');
-            delta  *= lineHeight;
-            deltaY *= lineHeight;
-            deltaX *= lineHeight;
-        } else if ( orgEvent.deltaMode === 2 ) {
-            var pageHeight = $.data(this, 'mousewheel-page-height');
-            delta  *= pageHeight;
-            deltaY *= pageHeight;
-            deltaX *= pageHeight;
-        }
-
-        // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
-
-        if ( !lowestDelta || absDelta < lowestDelta ) {
-            lowestDelta = absDelta;
-
-            // Adjust older deltas if necessary
-            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-                lowestDelta /= 40;
-            }
-        }
-
-        // Adjust older deltas if necessary
-        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
-            // Divide all the things by 40!
-            delta  /= 40;
-            deltaX /= 40;
-            deltaY /= 40;
-        }
-
-        // Get a whole, normalized value for the deltas
-        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
-
-        // Normalise offsetX and offsetY properties
-        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
-            var boundingRect = this.getBoundingClientRect();
-            offsetX = event.clientX - boundingRect.left;
-            offsetY = event.clientY - boundingRect.top;
-        }
-
-        // Add information to the event object
-        event.deltaX = deltaX;
-        event.deltaY = deltaY;
-        event.deltaFactor = lowestDelta;
-        event.offsetX = offsetX;
-        event.offsetY = offsetY;
-        // Go ahead and set deltaMode to 0 since we converted to pixels
-        // Although this is a little odd since we overwrite the deltaX/Y
-        // properties with normalized deltas.
-        event.deltaMode = 0;
-
-        // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
-
-        // Clearout lowestDelta after sometime to better
-        // handle multiple device types that give different
-        // a different lowestDelta
-        // Ex: trackpad = 3 and mouse wheel = 120
-        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
-        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
-
-        return ($.event.dispatch || $.event.handle).apply(this, args);
-    }
-
-    function nullLowestDelta() {
-        lowestDelta = null;
-    }
-
-    function shouldAdjustOldDeltas(orgEvent, absDelta) {
-        // If this is an older event and the delta is divisable by 120,
-        // then we are assuming that the browser is treating this as an
-        // older mouse wheel event and that we should divide the deltas
-        // by 40 to try and get a more usable deltaFactor.
-        // Side note, this actually impacts the reported scroll distance
-        // in older browsers and can cause scrolling to be slower than native.
-        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
-        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
-    }
-
-}));
-
-
-/***/ }),
-/* 201 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*!
@@ -26860,3042 +26630,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
 
 /***/ }),
-/* 202 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-/*!
- * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
- * @version 1.3.3
- *
- * Date formatter utility library that allows formatting date/time variables or Date objects using PHP DateTime format.
- * @see http://php.net/manual/en/function.date.php
- *
- * For more JQuery plugins visit http://plugins.krajee.com
- * For more Yii related demos visit http://demos.krajee.com
- */
-
-if (!window.jQuery) {
-    var jQuery = __webpack_require__(18);
-} else {
-    var jQuery = window.jQuery;
-}
-
-var DateFormatter;
-(function ($) {
-    "use strict";
-
-    var _compare, _lpad2, _extend2, defaultSettings, DAY, HOUR;
-    DAY = 1000 * 60 * 60 * 24;
-    HOUR = 3600;
-
-    _compare = function _compare(str1, str2) {
-        return typeof str1 === 'string' && typeof str2 === 'string' && str1.toLowerCase() === str2.toLowerCase();
-    };
-    _lpad2 = function _lpad(value, length, char) {
-        var chr = char || '0',
-            val = value.toString();
-        return val.length < length ? _lpad2(chr + val, length) : val;
-    };
-    _extend2 = function _extend(out) {
-        var i, obj;
-        out = out || {};
-        for (i = 1; i < arguments.length; i++) {
-            obj = arguments[i];
-            if (!obj) {
-                continue;
-            }
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    if (_typeof(obj[key]) === 'object') {
-                        _extend2(out[key], obj[key]);
-                    } else {
-                        out[key] = obj[key];
-                    }
-                }
-            }
-        }
-        return out;
-    };
-    defaultSettings = {
-        dateSettings: {
-            days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-            daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            meridiem: ['AM', 'PM'],
-            ordinal: function ordinal(number) {
-                var n = number % 10,
-                    suffixes = { 1: 'st', 2: 'nd', 3: 'rd' };
-                return Math.floor(number % 100 / 10) === 1 || !suffixes[n] ? 'th' : suffixes[n];
-            }
-        },
-        separators: /[ \-+\/\.T:@]/g,
-        validParts: /[dDjlNSwzWFmMntLoYyaABgGhHisueTIOPZcrU]/g,
-        intParts: /[djwNzmnyYhHgGis]/g,
-        tzParts: /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-        tzClip: /[^-+\dA-Z]/g
-    };
-
-    DateFormatter = function DateFormatter(options) {
-        var self = this,
-            config = _extend2(defaultSettings, options);
-        self.dateSettings = config.dateSettings;
-        self.separators = config.separators;
-        self.validParts = config.validParts;
-        self.intParts = config.intParts;
-        self.tzParts = config.tzParts;
-        self.tzClip = config.tzClip;
-    };
-
-    DateFormatter.prototype = {
-        constructor: DateFormatter,
-        parseDate: function parseDate(vDate, vFormat) {
-            var self = this,
-                vFormatParts,
-                vDateParts,
-                i,
-                vDateFlag = false,
-                vTimeFlag = false,
-                vDatePart,
-                iDatePart,
-                vSettings = self.dateSettings,
-                vMonth,
-                vMeriIndex,
-                vMeriOffset,
-                len,
-                mer,
-                out = { date: null, year: null, month: null, day: null, hour: 0, min: 0, sec: 0 };
-            if (!vDate) {
-                return undefined;
-            }
-            if (vDate instanceof Date) {
-                return vDate;
-            }
-            if (typeof vDate === 'number') {
-                return new Date(vDate);
-            }
-            if (vFormat === 'U') {
-                i = parseInt(vDate);
-                return i ? new Date(i * 1000) : vDate;
-            }
-            if (typeof vDate !== 'string') {
-                return '';
-            }
-            vFormatParts = vFormat.match(self.validParts);
-            if (!vFormatParts || vFormatParts.length === 0) {
-                throw new Error("Invalid date format definition.");
-            }
-            vDateParts = vDate.replace(self.separators, '\0').split('\0');
-            for (i = 0; i < vDateParts.length; i++) {
-                vDatePart = vDateParts[i];
-                iDatePart = parseInt(vDatePart);
-                switch (vFormatParts[i]) {
-                    case 'y':
-                    case 'Y':
-                        len = vDatePart.length;
-                        if (len === 2) {
-                            out.year = parseInt((iDatePart < 70 ? '20' : '19') + vDatePart);
-                        } else if (len === 4) {
-                            out.year = iDatePart;
-                        }
-                        vDateFlag = true;
-                        break;
-                    case 'm':
-                    case 'n':
-                    case 'M':
-                    case 'F':
-                        if (isNaN(vDatePart)) {
-                            vMonth = vSettings.monthsShort.indexOf(vDatePart);
-                            if (vMonth > -1) {
-                                out.month = vMonth + 1;
-                            }
-                            vMonth = vSettings.months.indexOf(vDatePart);
-                            if (vMonth > -1) {
-                                out.month = vMonth + 1;
-                            }
-                        } else {
-                            if (iDatePart >= 1 && iDatePart <= 12) {
-                                out.month = iDatePart;
-                            }
-                        }
-                        vDateFlag = true;
-                        break;
-                    case 'd':
-                    case 'j':
-                        if (iDatePart >= 1 && iDatePart <= 31) {
-                            out.day = iDatePart;
-                        }
-                        vDateFlag = true;
-                        break;
-                    case 'g':
-                    case 'h':
-                        vMeriIndex = vFormatParts.indexOf('a') > -1 ? vFormatParts.indexOf('a') : vFormatParts.indexOf('A') > -1 ? vFormatParts.indexOf('A') : -1;
-                        mer = vDateParts[vMeriIndex];
-                        if (vMeriIndex > -1) {
-                            vMeriOffset = _compare(mer, vSettings.meridiem[0]) ? 0 : _compare(mer, vSettings.meridiem[1]) ? 12 : -1;
-                            if (iDatePart >= 1 && iDatePart <= 12 && vMeriOffset > -1) {
-                                out.hour = iDatePart + vMeriOffset;
-                            } else if (iDatePart >= 0 && iDatePart <= 23) {
-                                out.hour = iDatePart;
-                            }
-                        } else if (iDatePart >= 0 && iDatePart <= 23) {
-                            out.hour = iDatePart;
-                        }
-                        vTimeFlag = true;
-                        break;
-                    case 'G':
-                    case 'H':
-                        if (iDatePart >= 0 && iDatePart <= 23) {
-                            out.hour = iDatePart;
-                        }
-                        vTimeFlag = true;
-                        break;
-                    case 'i':
-                        if (iDatePart >= 0 && iDatePart <= 59) {
-                            out.min = iDatePart;
-                        }
-                        vTimeFlag = true;
-                        break;
-                    case 's':
-                        if (iDatePart >= 0 && iDatePart <= 59) {
-                            out.sec = iDatePart;
-                        }
-                        vTimeFlag = true;
-                        break;
-                }
-            }
-            if (vDateFlag === true && out.year && out.month && out.day) {
-                out.date = new Date(out.year, out.month - 1, out.day, out.hour, out.min, out.sec, 0);
-            } else {
-                if (vTimeFlag !== true) {
-                    return false;
-                }
-                out.date = new Date(0, 0, 0, out.hour, out.min, out.sec, 0);
-            }
-            return out.date;
-        },
-        guessDate: function guessDate(vDateStr, vFormat) {
-            if (typeof vDateStr !== 'string') {
-                return vDateStr;
-            }
-            var self = this,
-                vParts = vDateStr.replace(self.separators, '\0').split('\0'),
-                vPattern = /^[djmn]/g,
-                vFormatParts = vFormat.match(self.validParts),
-                vDate = new Date(),
-                vDigit = 0,
-                vYear,
-                i,
-                iPart,
-                iSec;
-
-            if (!vPattern.test(vFormatParts[0])) {
-                return vDateStr;
-            }
-
-            for (i = 0; i < vParts.length; i++) {
-                vDigit = 2;
-                iPart = vParts[i];
-                iSec = parseInt(iPart.substr(0, 2));
-                switch (i) {
-                    case 0:
-                        if (vFormatParts[0] === 'm' || vFormatParts[0] === 'n') {
-                            vDate.setMonth(iSec - 1);
-                        } else {
-                            vDate.setDate(iSec);
-                        }
-                        break;
-                    case 1:
-                        if (vFormatParts[0] === 'm' || vFormatParts[0] === 'n') {
-                            vDate.setDate(iSec);
-                        } else {
-                            vDate.setMonth(iSec - 1);
-                        }
-                        break;
-                    case 2:
-                        vYear = vDate.getFullYear();
-                        if (iPart.length < 4) {
-                            vDate.setFullYear(parseInt(vYear.toString().substr(0, 4 - iPart.length) + iPart));
-                            vDigit = iPart.length;
-                        } else {
-                            vDate.setFullYear = parseInt(iPart.substr(0, 4));
-                            vDigit = 4;
-                        }
-                        break;
-                    case 3:
-                        vDate.setHours(iSec);
-                        break;
-                    case 4:
-                        vDate.setMinutes(iSec);
-                        break;
-                    case 5:
-                        vDate.setSeconds(iSec);
-                        break;
-                }
-                if (iPart.substr(vDigit).length > 0) {
-                    vParts.splice(i + 1, 0, iPart.substr(vDigit));
-                }
-            }
-            return vDate;
-        },
-        parseFormat: function parseFormat(vChar, vDate) {
-            var self = this,
-                vSettings = self.dateSettings,
-                fmt,
-                backspace = /\\?(.?)/gi,
-                doFormat = function doFormat(t, s) {
-                return fmt[t] ? fmt[t]() : s;
-            };
-            fmt = {
-                /////////
-                // DAY //
-                /////////
-                /**
-                 * Day of month with leading 0: `01..31`
-                 * @return {string}
-                 */
-                d: function d() {
-                    return _lpad2(fmt.j(), 2);
-                },
-                /**
-                 * Shorthand day name: `Mon...Sun`
-                 * @return {string}
-                 */
-                D: function D() {
-                    return vSettings.daysShort[fmt.w()];
-                },
-                /**
-                 * Day of month: `1..31`
-                 * @return {number}
-                 */
-                j: function j() {
-                    return vDate.getDate();
-                },
-                /**
-                 * Full day name: `Monday...Sunday`
-                 * @return {number}
-                 */
-                l: function l() {
-                    return vSettings.days[fmt.w()];
-                },
-                /**
-                 * ISO-8601 day of week: `1[Mon]..7[Sun]`
-                 * @return {number}
-                 */
-                N: function N() {
-                    return fmt.w() || 7;
-                },
-                /**
-                 * Day of week: `0[Sun]..6[Sat]`
-                 * @return {number}
-                 */
-                w: function w() {
-                    return vDate.getDay();
-                },
-                /**
-                 * Day of year: `0..365`
-                 * @return {number}
-                 */
-                z: function z() {
-                    var a = new Date(fmt.Y(), fmt.n() - 1, fmt.j()),
-                        b = new Date(fmt.Y(), 0, 1);
-                    return Math.round((a - b) / DAY);
-                },
-
-                //////////
-                // WEEK //
-                //////////
-                /**
-                 * ISO-8601 week number
-                 * @return {number}
-                 */
-                W: function W() {
-                    var a = new Date(fmt.Y(), fmt.n() - 1, fmt.j() - fmt.N() + 3),
-                        b = new Date(a.getFullYear(), 0, 4);
-                    return _lpad2(1 + Math.round((a - b) / DAY / 7), 2);
-                },
-
-                ///////////
-                // MONTH //
-                ///////////
-                /**
-                 * Full month name: `January...December`
-                 * @return {string}
-                 */
-                F: function F() {
-                    return vSettings.months[vDate.getMonth()];
-                },
-                /**
-                 * Month w/leading 0: `01..12`
-                 * @return {string}
-                 */
-                m: function m() {
-                    return _lpad2(fmt.n(), 2);
-                },
-                /**
-                 * Shorthand month name; `Jan...Dec`
-                 * @return {string}
-                 */
-                M: function M() {
-                    return vSettings.monthsShort[vDate.getMonth()];
-                },
-                /**
-                 * Month: `1...12`
-                 * @return {number}
-                 */
-                n: function n() {
-                    return vDate.getMonth() + 1;
-                },
-                /**
-                 * Days in month: `28...31`
-                 * @return {number}
-                 */
-                t: function t() {
-                    return new Date(fmt.Y(), fmt.n(), 0).getDate();
-                },
-
-                //////////
-                // YEAR //
-                //////////
-                /**
-                 * Is leap year? `0 or 1`
-                 * @return {number}
-                 */
-                L: function L() {
-                    var Y = fmt.Y();
-                    return Y % 4 === 0 && Y % 100 !== 0 || Y % 400 === 0 ? 1 : 0;
-                },
-                /**
-                 * ISO-8601 year
-                 * @return {number}
-                 */
-                o: function o() {
-                    var n = fmt.n(),
-                        W = fmt.W(),
-                        Y = fmt.Y();
-                    return Y + (n === 12 && W < 9 ? 1 : n === 1 && W > 9 ? -1 : 0);
-                },
-                /**
-                 * Full year: `e.g. 1980...2010`
-                 * @return {number}
-                 */
-                Y: function Y() {
-                    return vDate.getFullYear();
-                },
-                /**
-                 * Last two digits of year: `00...99`
-                 * @return {string}
-                 */
-                y: function y() {
-                    return fmt.Y().toString().slice(-2);
-                },
-
-                //////////
-                // TIME //
-                //////////
-                /**
-                 * Meridian lower: `am or pm`
-                 * @return {string}
-                 */
-                a: function a() {
-                    return fmt.A().toLowerCase();
-                },
-                /**
-                 * Meridian upper: `AM or PM`
-                 * @return {string}
-                 */
-                A: function A() {
-                    var n = fmt.G() < 12 ? 0 : 1;
-                    return vSettings.meridiem[n];
-                },
-                /**
-                 * Swatch Internet time: `000..999`
-                 * @return {string}
-                 */
-                B: function B() {
-                    var H = vDate.getUTCHours() * HOUR,
-                        i = vDate.getUTCMinutes() * 60,
-                        s = vDate.getUTCSeconds();
-                    return _lpad2(Math.floor((H + i + s + HOUR) / 86.4) % 1000, 3);
-                },
-                /**
-                 * 12-Hours: `1..12`
-                 * @return {number}
-                 */
-                g: function g() {
-                    return fmt.G() % 12 || 12;
-                },
-                /**
-                 * 24-Hours: `0..23`
-                 * @return {number}
-                 */
-                G: function G() {
-                    return vDate.getHours();
-                },
-                /**
-                 * 12-Hours with leading 0: `01..12`
-                 * @return {string}
-                 */
-                h: function h() {
-                    return _lpad2(fmt.g(), 2);
-                },
-                /**
-                 * 24-Hours w/leading 0: `00..23`
-                 * @return {string}
-                 */
-                H: function H() {
-                    return _lpad2(fmt.G(), 2);
-                },
-                /**
-                 * Minutes w/leading 0: `00..59`
-                 * @return {string}
-                 */
-                i: function i() {
-                    return _lpad2(vDate.getMinutes(), 2);
-                },
-                /**
-                 * Seconds w/leading 0: `00..59`
-                 * @return {string}
-                 */
-                s: function s() {
-                    return _lpad2(vDate.getSeconds(), 2);
-                },
-                /**
-                 * Microseconds: `000000-999000`
-                 * @return {string}
-                 */
-                u: function u() {
-                    return _lpad2(vDate.getMilliseconds() * 1000, 6);
-                },
-
-                //////////////
-                // TIMEZONE //
-                //////////////
-                /**
-                 * Timezone identifier: `e.g. Atlantic/Azores, ...`
-                 * @return {string}
-                 */
-                e: function e() {
-                    var str = /\((.*)\)/.exec(String(vDate))[1];
-                    return str || 'Coordinated Universal Time';
-                },
-                /**
-                 * Timezone abbreviation: `e.g. EST, MDT, ...`
-                 * @return {string}
-                 */
-                T: function T() {
-                    var str = (String(vDate).match(self.tzParts) || [""]).pop().replace(self.tzClip, "");
-                    return str || 'UTC';
-                },
-                /**
-                 * DST observed? `0 or 1`
-                 * @return {number}
-                 */
-                I: function I() {
-                    var a = new Date(fmt.Y(), 0),
-                        c = Date.UTC(fmt.Y(), 0),
-                        b = new Date(fmt.Y(), 6),
-                        d = Date.UTC(fmt.Y(), 6);
-                    return a - c !== b - d ? 1 : 0;
-                },
-                /**
-                 * Difference to GMT in hour format: `e.g. +0200`
-                 * @return {string}
-                 */
-                O: function O() {
-                    var tzo = vDate.getTimezoneOffset(),
-                        a = Math.abs(tzo);
-                    return (tzo > 0 ? '-' : '+') + _lpad2(Math.floor(a / 60) * 100 + a % 60, 4);
-                },
-                /**
-                 * Difference to GMT with colon: `e.g. +02:00`
-                 * @return {string}
-                 */
-                P: function P() {
-                    var O = fmt.O();
-                    return O.substr(0, 3) + ':' + O.substr(3, 2);
-                },
-                /**
-                 * Timezone offset in seconds: `-43200...50400`
-                 * @return {number}
-                 */
-                Z: function Z() {
-                    return -vDate.getTimezoneOffset() * 60;
-                },
-
-                ////////////////////
-                // FULL DATE TIME //
-                ////////////////////
-                /**
-                 * ISO-8601 date
-                 * @return {string}
-                 */
-                c: function c() {
-                    return 'Y-m-d\\TH:i:sP'.replace(backspace, doFormat);
-                },
-                /**
-                 * RFC 2822 date
-                 * @return {string}
-                 */
-                r: function r() {
-                    return 'D, d M Y H:i:s O'.replace(backspace, doFormat);
-                },
-                /**
-                 * Seconds since UNIX epoch
-                 * @return {number}
-                 */
-                U: function U() {
-                    return vDate.getTime() / 1000 || 0;
-                }
-            };
-            return doFormat(vChar, vChar);
-        },
-        formatDate: function formatDate(vDate, vFormat) {
-            var self = this,
-                i,
-                n,
-                len,
-                str,
-                vChar,
-                vDateStr = '';
-            if (typeof vDate === 'string') {
-                vDate = self.parseDate(vDate, vFormat);
-                if (vDate === false) {
-                    return false;
-                }
-            }
-            if (vDate instanceof Date) {
-                len = vFormat.length;
-                for (i = 0; i < len; i++) {
-                    vChar = vFormat.charAt(i);
-                    if (vChar === 'S') {
-                        continue;
-                    }
-                    str = self.parseFormat(vChar, vDate);
-                    if (i !== len - 1 && self.intParts.test(vChar) && vFormat.charAt(i + 1) === 'S') {
-                        n = parseInt(str);
-                        str += self.dateSettings.ordinal(n);
-                    }
-                    vDateStr += str;
-                }
-                return vDateStr;
-            }
-            return '';
-        }
-    };
-})(); /**
-      * @preserve jQuery DateTimePicker plugin v2.5.4
-      * @homepage http://xdsoft.net/jqplugins/datetimepicker/
-      * @author Chupurnov Valeriy (<chupurnov@gmail.com>)
-      */
-/*global DateFormatter, document,window,jQuery,setTimeout,clearTimeout,HighlightedDate,getCurrentValue*/
-;(function (factory) {
-    if (true) {
-        // AMD. Register as an anonymous module.
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18), __webpack_require__(200)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-        // Node/CommonJS style for Browserify
-        module.exports = factory;
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-})(function ($) {
-    'use strict';
-
-    var currentlyScrollingTimeDiv = false;
-
-    var default_options = {
-        i18n: {
-            ar: { // Arabic
-                months: ["كانون الثاني", "شباط", "آذار", "نيسان", "مايو", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"],
-                dayOfWeekShort: ["ن", "ث", "ع", "خ", "ج", "س", "ح"],
-                dayOfWeek: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
-            },
-            ro: { // Romanian
-                months: ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"],
-                dayOfWeekShort: ["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"],
-                dayOfWeek: ["Duminică", "Luni", "Marţi", "Miercuri", "Joi", "Vineri", "Sâmbătă"]
-            },
-            id: { // Indonesian
-                months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
-                dayOfWeekShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
-                dayOfWeek: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-            },
-            is: { // Icelandic
-                months: ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"],
-                dayOfWeekShort: ["Sun", "Mán", "Þrið", "Mið", "Fim", "Fös", "Lau"],
-                dayOfWeek: ["Sunnudagur", "Mánudagur", "Þriðjudagur", "Miðvikudagur", "Fimmtudagur", "Föstudagur", "Laugardagur"]
-            },
-            bg: { // Bulgarian
-                months: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
-                dayOfWeekShort: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                dayOfWeek: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота"]
-            },
-            fa: { // Persian/Farsi
-                months: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
-                dayOfWeekShort: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
-                dayOfWeek: ["یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه", "یک‌شنبه"]
-            },
-            ru: { // Russian
-                months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-                dayOfWeekShort: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
-                dayOfWeek: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
-            },
-            uk: { // Ukrainian
-                months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-                dayOfWeekShort: ["Ндл", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт"],
-                dayOfWeek: ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"]
-            },
-            en: { // English
-                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                dayOfWeekShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-            },
-            el: { // Ελληνικά
-                months: ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"],
-                dayOfWeekShort: ["Κυρ", "Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ"],
-                dayOfWeek: ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"]
-            },
-            de: { // German
-                months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-                dayOfWeekShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-                dayOfWeek: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"]
-            },
-            nl: { // Dutch
-                months: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
-                dayOfWeekShort: ["zo", "ma", "di", "wo", "do", "vr", "za"],
-                dayOfWeek: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"]
-            },
-            tr: { // Turkish
-                months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
-                dayOfWeekShort: ["Paz", "Pts", "Sal", "Çar", "Per", "Cum", "Cts"],
-                dayOfWeek: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
-            },
-            fr: { //French
-                months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-                dayOfWeekShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-                dayOfWeek: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
-            },
-            es: { // Spanish
-                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                dayOfWeek: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
-            },
-            th: { // Thai
-                months: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
-                dayOfWeekShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
-                dayOfWeek: ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัส", "ศุกร์", "เสาร์", "อาทิตย์"]
-            },
-            pl: { // Polish
-                months: ["styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"],
-                dayOfWeekShort: ["nd", "pn", "wt", "śr", "cz", "pt", "sb"],
-                dayOfWeek: ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"]
-            },
-            pt: { // Portuguese
-                months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-                dayOfWeekShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                dayOfWeek: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
-            },
-            ch: { // Simplified Chinese
-                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"]
-            },
-            se: { // Swedish
-                months: ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],
-                dayOfWeekShort: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"]
-            },
-            kr: { // Korean
-                months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-                dayOfWeekShort: ["일", "월", "화", "수", "목", "금", "토"],
-                dayOfWeek: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
-            },
-            it: { // Italian
-                months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
-                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
-                dayOfWeek: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
-            },
-            da: { // Dansk
-                months: ["January", "Februar", "Marts", "April", "Maj", "Juni", "July", "August", "September", "Oktober", "November", "December"],
-                dayOfWeekShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
-                dayOfWeek: ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"]
-            },
-            no: { // Norwegian
-                months: ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
-                dayOfWeekShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
-                dayOfWeek: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']
-            },
-            ja: { // Japanese
-                months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
-                dayOfWeekShort: ["日", "月", "火", "水", "木", "金", "土"],
-                dayOfWeek: ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"]
-            },
-            vi: { // Vietnamese
-                months: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-                dayOfWeekShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
-                dayOfWeek: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"]
-            },
-            sl: { // Slovenščina
-                months: ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"],
-                dayOfWeekShort: ["Ned", "Pon", "Tor", "Sre", "Čet", "Pet", "Sob"],
-                dayOfWeek: ["Nedelja", "Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota"]
-            },
-            cs: { // Čeština
-                months: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"],
-                dayOfWeekShort: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"]
-            },
-            hu: { // Hungarian
-                months: ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
-                dayOfWeekShort: ["Va", "Hé", "Ke", "Sze", "Cs", "Pé", "Szo"],
-                dayOfWeek: ["vasárnap", "hétfő", "kedd", "szerda", "csütörtök", "péntek", "szombat"]
-            },
-            az: { //Azerbaijanian (Azeri)
-                months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
-                dayOfWeekShort: ["B", "Be", "Ça", "Ç", "Ca", "C", "Ş"],
-                dayOfWeek: ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"]
-            },
-            bs: { //Bosanski
-                months: ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"],
-                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
-                dayOfWeek: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"]
-            },
-            ca: { //Català
-                months: ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Juliol", "Agost", "Setembre", "Octubre", "Novembre", "Desembre"],
-                dayOfWeekShort: ["Dg", "Dl", "Dt", "Dc", "Dj", "Dv", "Ds"],
-                dayOfWeek: ["Diumenge", "Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte"]
-            },
-            'en-GB': { //English (British)
-                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                dayOfWeekShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-            },
-            et: { //"Eesti"
-                months: ["Jaanuar", "Veebruar", "Märts", "Aprill", "Mai", "Juuni", "Juuli", "August", "September", "Oktoober", "November", "Detsember"],
-                dayOfWeekShort: ["P", "E", "T", "K", "N", "R", "L"],
-                dayOfWeek: ["Pühapäev", "Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev"]
-            },
-            eu: { //Euskara
-                months: ["Urtarrila", "Otsaila", "Martxoa", "Apirila", "Maiatza", "Ekaina", "Uztaila", "Abuztua", "Iraila", "Urria", "Azaroa", "Abendua"],
-                dayOfWeekShort: ["Ig.", "Al.", "Ar.", "Az.", "Og.", "Or.", "La."],
-                dayOfWeek: ['Igandea', 'Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata']
-            },
-            fi: { //Finnish (Suomi)
-                months: ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
-                dayOfWeekShort: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"],
-                dayOfWeek: ["sunnuntai", "maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai"]
-            },
-            gl: { //Galego
-                months: ["Xan", "Feb", "Maz", "Abr", "Mai", "Xun", "Xul", "Ago", "Set", "Out", "Nov", "Dec"],
-                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mer", "Xov", "Ven", "Sab"],
-                dayOfWeek: ["Domingo", "Luns", "Martes", "Mércores", "Xoves", "Venres", "Sábado"]
-            },
-            hr: { //Hrvatski
-                months: ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"],
-                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
-                dayOfWeek: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"]
-            },
-            ko: { //Korean (한국어)
-                months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-                dayOfWeekShort: ["일", "월", "화", "수", "목", "금", "토"],
-                dayOfWeek: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
-            },
-            lt: { //Lithuanian (lietuvių)
-                months: ["Sausio", "Vasario", "Kovo", "Balandžio", "Gegužės", "Birželio", "Liepos", "Rugpjūčio", "Rugsėjo", "Spalio", "Lapkričio", "Gruodžio"],
-                dayOfWeekShort: ["Sek", "Pir", "Ant", "Tre", "Ket", "Pen", "Šeš"],
-                dayOfWeek: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"]
-            },
-            lv: { //Latvian (Latviešu)
-                months: ["Janvāris", "Februāris", "Marts", "Aprīlis ", "Maijs", "Jūnijs", "Jūlijs", "Augusts", "Septembris", "Oktobris", "Novembris", "Decembris"],
-                dayOfWeekShort: ["Sv", "Pr", "Ot", "Tr", "Ct", "Pk", "St"],
-                dayOfWeek: ["Svētdiena", "Pirmdiena", "Otrdiena", "Trešdiena", "Ceturtdiena", "Piektdiena", "Sestdiena"]
-            },
-            mk: { //Macedonian (Македонски)
-                months: ["јануари", "февруари", "март", "април", "мај", "јуни", "јули", "август", "септември", "октомври", "ноември", "декември"],
-                dayOfWeekShort: ["нед", "пон", "вто", "сре", "чет", "пет", "саб"],
-                dayOfWeek: ["Недела", "Понеделник", "Вторник", "Среда", "Четврток", "Петок", "Сабота"]
-            },
-            mn: { //Mongolian (Монгол)
-                months: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", "9-р сар", "10-р сар", "11-р сар", "12-р сар"],
-                dayOfWeekShort: ["Дав", "Мяг", "Лха", "Пүр", "Бсн", "Бям", "Ням"],
-                dayOfWeek: ["Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан", "Бямба", "Ням"]
-            },
-            'pt-BR': { //Português(Brasil)
-                months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-                dayOfWeekShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-                dayOfWeek: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
-            },
-            sk: { //Slovenčina
-                months: ["Január", "Február", "Marec", "Apríl", "Máj", "Jún", "Júl", "August", "September", "Október", "November", "December"],
-                dayOfWeekShort: ["Ne", "Po", "Ut", "St", "Št", "Pi", "So"],
-                dayOfWeek: ["Nedeľa", "Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota"]
-            },
-            sq: { //Albanian (Shqip)
-                months: ["Janar", "Shkurt", "Mars", "Prill", "Maj", "Qershor", "Korrik", "Gusht", "Shtator", "Tetor", "Nëntor", "Dhjetor"],
-                dayOfWeekShort: ["Die", "Hën", "Mar", "Mër", "Enj", "Pre", "Shtu"],
-                dayOfWeek: ["E Diel", "E Hënë", "E Martē", "E Mërkurë", "E Enjte", "E Premte", "E Shtunë"]
-            },
-            'sr-YU': { //Serbian (Srpski)
-                months: ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"],
-                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sre", "čet", "Pet", "Sub"],
-                dayOfWeek: ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"]
-            },
-            sr: { //Serbian Cyrillic (Српски)
-                months: ["јануар", "фебруар", "март", "април", "мај", "јун", "јул", "август", "септембар", "октобар", "новембар", "децембар"],
-                dayOfWeekShort: ["нед", "пон", "уто", "сре", "чет", "пет", "суб"],
-                dayOfWeek: ["Недеља", "Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота"]
-            },
-            sv: { //Svenska
-                months: ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],
-                dayOfWeekShort: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
-                dayOfWeek: ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"]
-            },
-            'zh-TW': { //Traditional Chinese (繁體中文)
-                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"],
-                dayOfWeek: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-            },
-            zh: { //Simplified Chinese (简体中文)
-                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"],
-                dayOfWeek: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
-            },
-            he: { //Hebrew (עברית)
-                months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
-                dayOfWeekShort: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
-                dayOfWeek: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
-            },
-            hy: { // Armenian
-                months: ["Հունվար", "Փետրվար", "Մարտ", "Ապրիլ", "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս", "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"],
-                dayOfWeekShort: ["Կի", "Երկ", "Երք", "Չոր", "Հնգ", "Ուրբ", "Շբթ"],
-                dayOfWeek: ["Կիրակի", "Երկուշաբթի", "Երեքշաբթի", "Չորեքշաբթի", "Հինգշաբթի", "Ուրբաթ", "Շաբաթ"]
-            },
-            kg: { // Kyrgyz
-                months: ['Үчтүн айы', 'Бирдин айы', 'Жалган Куран', 'Чын Куран', 'Бугу', 'Кулжа', 'Теке', 'Баш Оона', 'Аяк Оона', 'Тогуздун айы', 'Жетинин айы', 'Бештин айы'],
-                dayOfWeekShort: ["Жек", "Дүй", "Шей", "Шар", "Бей", "Жум", "Ише"],
-                dayOfWeek: ["Жекшемб", "Дүйшөмб", "Шейшемб", "Шаршемб", "Бейшемби", "Жума", "Ишенб"]
-            },
-            rm: { // Romansh
-                months: ["Schaner", "Favrer", "Mars", "Avrigl", "Matg", "Zercladur", "Fanadur", "Avust", "Settember", "October", "November", "December"],
-                dayOfWeekShort: ["Du", "Gli", "Ma", "Me", "Gie", "Ve", "So"],
-                dayOfWeek: ["Dumengia", "Glindesdi", "Mardi", "Mesemna", "Gievgia", "Venderdi", "Sonda"]
-            },
-            ka: { // Georgian
-                months: ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი', 'ივლისი', 'აგვისტო', 'სექტემბერი', 'ოქტომბერი', 'ნოემბერი', 'დეკემბერი'],
-                dayOfWeekShort: ["კვ", "ორშ", "სამშ", "ოთხ", "ხუთ", "პარ", "შაბ"],
-                dayOfWeek: ["კვირა", "ორშაბათი", "სამშაბათი", "ოთხშაბათი", "ხუთშაბათი", "პარასკევი", "შაბათი"]
-            }
-        },
-        value: '',
-        rtl: false,
-
-        format: 'Y/m/d H:i',
-        formatTime: 'H:i',
-        formatDate: 'Y/m/d',
-
-        startDate: false, // new Date(), '1986/12/08', '-1970/01/05','-1970/01/05',
-        step: 60,
-        monthChangeSpinner: true,
-
-        closeOnDateSelect: false,
-        closeOnTimeSelect: true,
-        closeOnWithoutClick: true,
-        closeOnInputClick: true,
-
-        timepicker: true,
-        datepicker: true,
-        weeks: false,
-
-        defaultTime: false, // use formatTime format (ex. '10:00' for formatTime:	'H:i')
-        defaultDate: false, // use formatDate format (ex new Date() or '1986/12/08' or '-1970/01/05' or '-1970/01/05')
-
-        minDate: false,
-        maxDate: false,
-        minTime: false,
-        maxTime: false,
-        disabledMinTime: false,
-        disabledMaxTime: false,
-
-        allowTimes: [],
-        opened: false,
-        initTime: true,
-        inline: false,
-        theme: '',
-
-        onSelectDate: function onSelectDate() {},
-        onSelectTime: function onSelectTime() {},
-        onChangeMonth: function onChangeMonth() {},
-        onGetWeekOfYear: function onGetWeekOfYear() {},
-        onChangeYear: function onChangeYear() {},
-        onChangeDateTime: function onChangeDateTime() {},
-        onShow: function onShow() {},
-        onClose: function onClose() {},
-        onGenerate: function onGenerate() {},
-
-        withoutCopyright: true,
-        inverseButton: false,
-        hours12: false,
-        minHours: 0,
-        next: 'xdsoft_next',
-        prev: 'xdsoft_prev',
-        dayOfWeekStart: 0,
-        parentID: 'body',
-        timeHeightInTimePicker: 25,
-        timepickerScrollbar: true,
-        todayButton: true,
-        prevButton: true,
-        nextButton: true,
-        defaultSelect: true,
-
-        scrollMonth: true,
-        scrollTime: true,
-        scrollInput: true,
-
-        lazyInit: false,
-        mask: false,
-        validateOnBlur: true,
-        allowBlank: true,
-        yearStart: 1950,
-        yearEnd: 2050,
-        monthStart: 0,
-        monthEnd: 11,
-        style: '',
-        id: '',
-        fixed: false,
-        roundTime: 'round', // ceil, floor
-        className: '',
-        weekends: [],
-        highlightedDates: [],
-        highlightedPeriods: [],
-        allowDates: [],
-        allowDateRe: null,
-        disabledDates: [],
-        disabledWeekDays: [],
-        yearOffset: 0,
-        beforeShowDay: null,
-
-        enterLikeTab: true,
-        showApplyButton: false
-    };
-
-    var dateHelper = null,
-        globalLocaleDefault = 'en',
-        globalLocale = 'en';
-
-    var dateFormatterOptionsDefault = {
-        meridiem: ['AM', 'PM']
-    };
-
-    var initDateFormatter = function initDateFormatter() {
-        var locale = default_options.i18n[globalLocale],
-            opts = {
-            days: locale.dayOfWeek,
-            daysShort: locale.dayOfWeekShort,
-            months: locale.months,
-            monthsShort: $.map(locale.months, function (n) {
-                return n.substring(0, 3);
-            })
-        };
-
-        dateHelper = new DateFormatter({
-            dateSettings: $.extend({}, dateFormatterOptionsDefault, opts)
-        });
-    };
-
-    // for locale settings
-    $.datetimepicker = {
-        setLocale: function setLocale(locale) {
-            var newLocale = default_options.i18n[locale] ? locale : globalLocaleDefault;
-            if (globalLocale != newLocale) {
-                globalLocale = newLocale;
-                // reinit date formatter
-                initDateFormatter();
-            }
-        },
-        setDateFormatter: function setDateFormatter(dateFormatter) {
-            dateHelper = dateFormatter;
-        },
-        RFC_2822: 'D, d M Y H:i:s O',
-        ATOM: 'Y-m-d\TH:i:sP',
-        ISO_8601: 'Y-m-d\TH:i:sO',
-        RFC_822: 'D, d M y H:i:s O',
-        RFC_850: 'l, d-M-y H:i:s T',
-        RFC_1036: 'D, d M y H:i:s O',
-        RFC_1123: 'D, d M Y H:i:s O',
-        RSS: 'D, d M Y H:i:s O',
-        W3C: 'Y-m-d\TH:i:sP'
-    };
-
-    $.datetimepicker.setLocale('ch');
-    // first init date formatter
-    initDateFormatter();
-
-    // fix for ie8
-    if (!window.getComputedStyle) {
-        window.getComputedStyle = function (el, pseudo) {
-            this.el = el;
-            this.getPropertyValue = function (prop) {
-                var re = /(\-([a-z]){1})/g;
-                if (prop === 'float') {
-                    prop = 'styleFloat';
-                }
-                if (re.test(prop)) {
-                    prop = prop.replace(re, function (a, b, c) {
-                        return c.toUpperCase();
-                    });
-                }
-                return el.currentStyle[prop] || null;
-            };
-            return this;
-        };
-    }
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function (obj, start) {
-            var i, j;
-            for (i = start || 0, j = this.length; i < j; i += 1) {
-                if (this[i] === obj) {
-                    return i;
-                }
-            }
-            return -1;
-        };
-    }
-    Date.prototype.countDaysInMonth = function () {
-        return new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
-    };
-    $.fn.xdsoftScroller = function (percent) {
-        return this.each(function () {
-            var timeboxparent = $(this),
-                pointerEventToXY = function pointerEventToXY(e) {
-                var out = { x: 0, y: 0 },
-                    touch;
-                if (e.type === 'touchstart' || e.type === 'touchmove' || e.type === 'touchend' || e.type === 'touchcancel') {
-                    touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-                    out.x = touch.clientX;
-                    out.y = touch.clientY;
-                } else if (e.type === 'mousedown' || e.type === 'mouseup' || e.type === 'mousemove' || e.type === 'mouseover' || e.type === 'mouseout' || e.type === 'mouseenter' || e.type === 'mouseleave') {
-                    out.x = e.clientX;
-                    out.y = e.clientY;
-                }
-                return out;
-            },
-                timebox,
-                parentHeight,
-                height,
-                scrollbar,
-                scroller,
-                maximumOffset = 100,
-                start = false,
-                startY = 0,
-                startTop = 0,
-                h1 = 0,
-                touchStart = false,
-                startTopScroll = 0,
-                calcOffset = function calcOffset() {};
-            if (percent === 'hide') {
-                timeboxparent.find('.xdsoft_scrollbar').hide();
-                return;
-            }
-            if (!$(this).hasClass('xdsoft_scroller_box')) {
-                timebox = timeboxparent.children().eq(0);
-                parentHeight = timeboxparent[0].clientHeight;
-                height = timebox[0].offsetHeight;
-                scrollbar = $('<div class="xdsoft_scrollbar"></div>');
-                scroller = $('<div class="xdsoft_scroller"></div>');
-                scrollbar.append(scroller);
-
-                timeboxparent.addClass('xdsoft_scroller_box').append(scrollbar);
-                calcOffset = function calcOffset(event) {
-                    var offset = pointerEventToXY(event).y - startY + startTopScroll;
-                    if (offset < 0) {
-                        offset = 0;
-                    }
-                    if (offset + scroller[0].offsetHeight > h1) {
-                        offset = h1 - scroller[0].offsetHeight;
-                    }
-                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [maximumOffset ? offset / maximumOffset : 0]);
-                };
-
-                scroller.on('touchstart.xdsoft_scroller mousedown.xdsoft_scroller', function (event) {
-                    if (!parentHeight) {
-                        timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percent]);
-                    }
-
-                    startY = pointerEventToXY(event).y;
-                    startTopScroll = parseInt(scroller.css('margin-top'), 10);
-                    h1 = scrollbar[0].offsetHeight;
-
-                    if (event.type === 'mousedown' || event.type === 'touchstart') {
-                        if (document) {
-                            $(document.body).addClass('xdsoft_noselect');
-                        }
-                        $([document.body, window]).on('touchend mouseup.xdsoft_scroller', function arguments_callee() {
-                            $([document.body, window]).off('touchend mouseup.xdsoft_scroller', arguments_callee).off('mousemove.xdsoft_scroller', calcOffset).removeClass('xdsoft_noselect');
-                        });
-                        $(document.body).on('mousemove.xdsoft_scroller', calcOffset);
-                    } else {
-                        touchStart = true;
-                        event.stopPropagation();
-                        event.preventDefault();
-                    }
-                }).on('touchmove', function (event) {
-                    if (touchStart) {
-                        event.preventDefault();
-                        calcOffset(event);
-                    }
-                }).on('touchend touchcancel', function () {
-                    touchStart = false;
-                    startTopScroll = 0;
-                });
-
-                timeboxparent.on('scroll_element.xdsoft_scroller', function (event, percentage) {
-                    if (!parentHeight) {
-                        timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percentage, true]);
-                    }
-                    percentage = percentage > 1 ? 1 : percentage < 0 || isNaN(percentage) ? 0 : percentage;
-
-                    scroller.css('margin-top', maximumOffset * percentage);
-
-                    setTimeout(function () {
-                        timebox.css('marginTop', -parseInt((timebox[0].offsetHeight - parentHeight) * percentage, 10));
-                    }, 10);
-                }).on('resize_scroll.xdsoft_scroller', function (event, percentage, noTriggerScroll) {
-                    var percent, sh;
-                    parentHeight = timeboxparent[0].clientHeight;
-                    height = timebox[0].offsetHeight;
-                    percent = parentHeight / height;
-                    sh = percent * scrollbar[0].offsetHeight;
-                    if (percent > 1) {
-                        scroller.hide();
-                    } else {
-                        scroller.show();
-                        scroller.css('height', parseInt(sh > 10 ? sh : 10, 10));
-                        maximumOffset = scrollbar[0].offsetHeight - scroller[0].offsetHeight;
-                        if (noTriggerScroll !== true) {
-                            timeboxparent.trigger('scroll_element.xdsoft_scroller', [percentage || Math.abs(parseInt(timebox.css('marginTop'), 10)) / (height - parentHeight)]);
-                        }
-                    }
-                });
-
-                timeboxparent.on('mousewheel', function (event) {
-                    var top = Math.abs(parseInt(timebox.css('marginTop'), 10));
-
-                    top = top - event.deltaY * 20;
-                    if (top < 0) {
-                        top = 0;
-                    }
-
-                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [top / (height - parentHeight)]);
-                    event.stopPropagation();
-                    return false;
-                });
-
-                timeboxparent.on('touchstart', function (event) {
-                    start = pointerEventToXY(event);
-                    startTop = Math.abs(parseInt(timebox.css('marginTop'), 10));
-                });
-
-                timeboxparent.on('touchmove', function (event) {
-                    if (start) {
-                        event.preventDefault();
-                        var coord = pointerEventToXY(event);
-                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [(startTop - (coord.y - start.y)) / (height - parentHeight)]);
-                    }
-                });
-
-                timeboxparent.on('touchend touchcancel', function () {
-                    start = false;
-                    startTop = 0;
-                });
-            }
-            timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percent]);
-        });
-    };
-
-    $.fn.datetimepicker = function (opt, opt2) {
-        var result = this,
-            KEY0 = 48,
-            KEY9 = 57,
-            _KEY0 = 96,
-            _KEY9 = 105,
-            CTRLKEY = 17,
-            DEL = 46,
-            ENTER = 13,
-            ESC = 27,
-            BACKSPACE = 8,
-            ARROWLEFT = 37,
-            ARROWUP = 38,
-            ARROWRIGHT = 39,
-            ARROWDOWN = 40,
-            TAB = 9,
-            F5 = 116,
-            AKEY = 65,
-            CKEY = 67,
-            VKEY = 86,
-            ZKEY = 90,
-            YKEY = 89,
-            ctrlDown = false,
-            options = $.isPlainObject(opt) || !opt ? $.extend(true, {}, default_options, opt) : $.extend(true, {}, default_options),
-            lazyInitTimer = 0,
-            createDateTimePicker,
-            destroyDateTimePicker,
-            lazyInit = function lazyInit(input) {
-            input.on('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', function initOnActionCallback() {
-                if (input.is(':disabled') || input.data('xdsoft_datetimepicker')) {
-                    return;
-                }
-                clearTimeout(lazyInitTimer);
-                lazyInitTimer = setTimeout(function () {
-
-                    if (!input.data('xdsoft_datetimepicker')) {
-                        createDateTimePicker(input);
-                    }
-                    input.off('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', initOnActionCallback).trigger('open.xdsoft');
-                }, 100);
-            });
-        };
-
-        createDateTimePicker = function createDateTimePicker(input) {
-            var datetimepicker = $('<div class="xdsoft_datetimepicker xdsoft_noselect"></div>'),
-                xdsoft_copyright = $('<div class="xdsoft_copyright"><a target="_blank" href="http://xdsoft.net/jqplugins/datetimepicker/">xdsoft.net</a></div>'),
-                datepicker = $('<div class="xdsoft_datepicker active"></div>'),
-                month_picker = $('<div class="xdsoft_monthpicker"><button type="button" class="xdsoft_prev"></button><button type="button" class="xdsoft_today_button"></button>' + '<div class="xdsoft_label xdsoft_month"><span></span><i></i></div>' + '<div class="xdsoft_label xdsoft_year"><span></span><i></i></div>' + '<button type="button" class="xdsoft_next"></button></div>'),
-                calendar = $('<div class="xdsoft_calendar"></div>'),
-                timepicker = $('<div class="xdsoft_timepicker active"><button type="button" class="xdsoft_prev"></button><div class="xdsoft_time_box"></div><button type="button" class="xdsoft_next"></button></div>'),
-                timeboxparent = timepicker.find('.xdsoft_time_box').eq(0),
-                timebox = $('<div class="xdsoft_time_variant"></div>'),
-                applyButton = $('<button type="button" class="xdsoft_save_selected blue-gradient-button">Save Selected</button>'),
-                monthselect = $('<div class="xdsoft_select xdsoft_monthselect"><div></div></div>'),
-                yearselect = $('<div class="xdsoft_select xdsoft_yearselect"><div></div></div>'),
-                triggerAfterOpen = false,
-                XDSoft_datetime,
-                xchangeTimer,
-                timerclick,
-                current_time_index,
-                setPos,
-                timer = 0,
-                _xdsoft_datetime,
-                forEachAncestorOf,
-                throttle;
-
-            if (options.id) {
-                datetimepicker.attr('id', options.id);
-            }
-            if (options.style) {
-                datetimepicker.attr('style', options.style);
-            }
-            if (options.weeks) {
-                datetimepicker.addClass('xdsoft_showweeks');
-            }
-            if (options.rtl) {
-                datetimepicker.addClass('xdsoft_rtl');
-            }
-
-            datetimepicker.addClass('xdsoft_' + options.theme);
-            datetimepicker.addClass(options.className);
-
-            month_picker.find('.xdsoft_month span').after(monthselect);
-            month_picker.find('.xdsoft_year span').after(yearselect);
-
-            month_picker.find('.xdsoft_month,.xdsoft_year').on('touchstart mousedown.xdsoft', function (event) {
-                var select = $(this).find('.xdsoft_select').eq(0),
-                    val = 0,
-                    top = 0,
-                    visible = select.is(':visible'),
-                    items,
-                    i;
-
-                month_picker.find('.xdsoft_select').hide();
-                if (_xdsoft_datetime.currentTime) {
-                    val = _xdsoft_datetime.currentTime[$(this).hasClass('xdsoft_month') ? 'getMonth' : 'getFullYear']();
-                }
-
-                select[visible ? 'hide' : 'show']();
-                for (items = select.find('div.xdsoft_option'), i = 0; i < items.length; i += 1) {
-                    if (items.eq(i).data('value') === val) {
-                        break;
-                    } else {
-                        top += items[0].offsetHeight;
-                    }
-                }
-
-                select.xdsoftScroller(top / (select.children()[0].offsetHeight - select[0].clientHeight));
-                event.stopPropagation();
-                return false;
-            });
-
-            month_picker.find('.xdsoft_select').xdsoftScroller().on('touchstart mousedown.xdsoft', function (event) {
-                event.stopPropagation();
-                event.preventDefault();
-            }).on('touchstart mousedown.xdsoft', '.xdsoft_option', function () {
-                if (_xdsoft_datetime.currentTime === undefined || _xdsoft_datetime.currentTime === null) {
-                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
-                }
-
-                var year = _xdsoft_datetime.currentTime.getFullYear();
-                if (_xdsoft_datetime && _xdsoft_datetime.currentTime) {
-                    _xdsoft_datetime.currentTime[$(this).parent().parent().hasClass('xdsoft_monthselect') ? 'setMonth' : 'setFullYear']($(this).data('value'));
-                }
-
-                $(this).parent().parent().hide();
-
-                datetimepicker.trigger('xchange.xdsoft');
-                if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
-                    options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                }
-
-                if (year !== _xdsoft_datetime.currentTime.getFullYear() && $.isFunction(options.onChangeYear)) {
-                    options.onChangeYear.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                }
-            });
-
-            datetimepicker.getValue = function () {
-                return _xdsoft_datetime.getCurrentTime();
-            };
-
-            datetimepicker.setOptions = function (_options) {
-                var highlightedDates = {};
-
-                options = $.extend(true, {}, options, _options);
-
-                if (_options.allowTimes && $.isArray(_options.allowTimes) && _options.allowTimes.length) {
-                    options.allowTimes = $.extend(true, [], _options.allowTimes);
-                }
-
-                if (_options.weekends && $.isArray(_options.weekends) && _options.weekends.length) {
-                    options.weekends = $.extend(true, [], _options.weekends);
-                }
-
-                if (_options.allowDates && $.isArray(_options.allowDates) && _options.allowDates.length) {
-                    options.allowDates = $.extend(true, [], _options.allowDates);
-                }
-
-                if (_options.allowDateRe && Object.prototype.toString.call(_options.allowDateRe) === "[object String]") {
-                    options.allowDateRe = new RegExp(_options.allowDateRe);
-                }
-
-                if (_options.highlightedDates && $.isArray(_options.highlightedDates) && _options.highlightedDates.length) {
-                    $.each(_options.highlightedDates, function (index, value) {
-                        var splitData = $.map(value.split(','), $.trim),
-                            exDesc,
-                            hDate = new HighlightedDate(dateHelper.parseDate(splitData[0], options.formatDate), splitData[1], splitData[2]),
-                            // date, desc, style
-                        keyDate = dateHelper.formatDate(hDate.date, options.formatDate);
-                        if (highlightedDates[keyDate] !== undefined) {
-                            exDesc = highlightedDates[keyDate].desc;
-                            if (exDesc && exDesc.length && hDate.desc && hDate.desc.length) {
-                                highlightedDates[keyDate].desc = exDesc + "\n" + hDate.desc;
-                            }
-                        } else {
-                            highlightedDates[keyDate] = hDate;
-                        }
-                    });
-
-                    options.highlightedDates = $.extend(true, [], highlightedDates);
-                }
-
-                if (_options.highlightedPeriods && $.isArray(_options.highlightedPeriods) && _options.highlightedPeriods.length) {
-                    highlightedDates = $.extend(true, [], options.highlightedDates);
-                    $.each(_options.highlightedPeriods, function (index, value) {
-                        var dateTest, // start date
-                        dateEnd, desc, hDate, keyDate, exDesc, style;
-                        if ($.isArray(value)) {
-                            dateTest = value[0];
-                            dateEnd = value[1];
-                            desc = value[2];
-                            style = value[3];
-                        } else {
-                            var splitData = $.map(value.split(','), $.trim);
-                            dateTest = dateHelper.parseDate(splitData[0], options.formatDate);
-                            dateEnd = dateHelper.parseDate(splitData[1], options.formatDate);
-                            desc = splitData[2];
-                            style = splitData[3];
-                        }
-
-                        while (dateTest <= dateEnd) {
-                            hDate = new HighlightedDate(dateTest, desc, style);
-                            keyDate = dateHelper.formatDate(dateTest, options.formatDate);
-                            dateTest.setDate(dateTest.getDate() + 1);
-                            if (highlightedDates[keyDate] !== undefined) {
-                                exDesc = highlightedDates[keyDate].desc;
-                                if (exDesc && exDesc.length && hDate.desc && hDate.desc.length) {
-                                    highlightedDates[keyDate].desc = exDesc + "\n" + hDate.desc;
-                                }
-                            } else {
-                                highlightedDates[keyDate] = hDate;
-                            }
-                        }
-                    });
-
-                    options.highlightedDates = $.extend(true, [], highlightedDates);
-                }
-
-                if (_options.disabledDates && $.isArray(_options.disabledDates) && _options.disabledDates.length) {
-                    options.disabledDates = $.extend(true, [], _options.disabledDates);
-                }
-
-                if (_options.disabledWeekDays && $.isArray(_options.disabledWeekDays) && _options.disabledWeekDays.length) {
-                    options.disabledWeekDays = $.extend(true, [], _options.disabledWeekDays);
-                }
-
-                if ((options.open || options.opened) && !options.inline) {
-                    input.trigger('open.xdsoft');
-                }
-
-                if (options.inline) {
-                    triggerAfterOpen = true;
-                    datetimepicker.addClass('xdsoft_inline');
-                    input.after(datetimepicker).hide();
-                }
-
-                if (options.inverseButton) {
-                    options.next = 'xdsoft_prev';
-                    options.prev = 'xdsoft_next';
-                }
-
-                if (options.datepicker) {
-                    datepicker.addClass('active');
-                } else {
-                    datepicker.removeClass('active');
-                }
-
-                if (options.timepicker) {
-                    timepicker.addClass('active');
-                } else {
-                    timepicker.removeClass('active');
-                }
-
-                if (options.value) {
-                    _xdsoft_datetime.setCurrentTime(options.value);
-                    if (input && input.val) {
-                        input.val(_xdsoft_datetime.str);
-                    }
-                }
-
-                if (isNaN(options.dayOfWeekStart)) {
-                    options.dayOfWeekStart = 0;
-                } else {
-                    options.dayOfWeekStart = parseInt(options.dayOfWeekStart, 10) % 7;
-                }
-
-                if (!options.timepickerScrollbar) {
-                    timeboxparent.xdsoftScroller('hide');
-                }
-
-                if (options.minDate && /^[\+\-](.*)$/.test(options.minDate)) {
-                    options.minDate = dateHelper.formatDate(_xdsoft_datetime.strToDateTime(options.minDate), options.formatDate);
-                }
-
-                if (options.maxDate && /^[\+\-](.*)$/.test(options.maxDate)) {
-                    options.maxDate = dateHelper.formatDate(_xdsoft_datetime.strToDateTime(options.maxDate), options.formatDate);
-                }
-
-                applyButton.toggle(options.showApplyButton);
-
-                month_picker.find('.xdsoft_today_button').css('visibility', !options.todayButton ? 'hidden' : 'visible');
-
-                month_picker.find('.' + options.prev).css('visibility', !options.prevButton ? 'hidden' : 'visible');
-
-                month_picker.find('.' + options.next).css('visibility', !options.nextButton ? 'hidden' : 'visible');
-
-                setMask(options);
-
-                if (options.validateOnBlur) {
-                    input.off('blur.xdsoft').on('blur.xdsoft', function () {
-                        if (options.allowBlank && (!$.trim($(this).val()).length || typeof options.mask == "string" && $.trim($(this).val()) === options.mask.replace(/[0-9]/g, '_'))) {
-                            $(this).val(null);
-                            datetimepicker.data('xdsoft_datetime').empty();
-                        } else {
-                            var d = dateHelper.parseDate($(this).val(), options.format);
-                            if (d) {
-                                // parseDate() may skip some invalid parts like date or time, so make it clear for user: show parsed date/time
-                                $(this).val(dateHelper.formatDate(d, options.format));
-                            } else {
-                                var splittedHours = +[$(this).val()[0], $(this).val()[1]].join(''),
-                                    splittedMinutes = +[$(this).val()[2], $(this).val()[3]].join('');
-
-                                // parse the numbers as 0312 => 03:12
-                                if (!options.datepicker && options.timepicker && splittedHours >= 0 && splittedHours < 24 && splittedMinutes >= 0 && splittedMinutes < 60) {
-                                    $(this).val([splittedHours, splittedMinutes].map(function (item) {
-                                        return item > 9 ? item : '0' + item;
-                                    }).join(':'));
-                                } else {
-                                    $(this).val(dateHelper.formatDate(_xdsoft_datetime.now(), options.format));
-                                }
-                            }
-                            datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
-                        }
-
-                        datetimepicker.trigger('changedatetime.xdsoft');
-                        datetimepicker.trigger('close.xdsoft');
-                    });
-                }
-                options.dayOfWeekStartPrev = options.dayOfWeekStart === 0 ? 6 : options.dayOfWeekStart - 1;
-
-                datetimepicker.trigger('xchange.xdsoft').trigger('afterOpen.xdsoft');
-            };
-
-            datetimepicker.data('options', options).on('touchstart mousedown.xdsoft', function (event) {
-                event.stopPropagation();
-                event.preventDefault();
-                yearselect.hide();
-                monthselect.hide();
-                return false;
-            });
-
-            //scroll_element = timepicker.find('.xdsoft_time_box');
-            timeboxparent.append(timebox);
-            timeboxparent.xdsoftScroller();
-
-            datetimepicker.on('afterOpen.xdsoft', function () {
-                timeboxparent.xdsoftScroller();
-            });
-
-            datetimepicker.append(datepicker).append(timepicker);
-
-            if (options.withoutCopyright !== true) {
-                datetimepicker.append(xdsoft_copyright);
-            }
-
-            datepicker.append(month_picker).append(calendar).append(applyButton);
-
-            $(options.parentID).append(datetimepicker);
-
-            XDSoft_datetime = function XDSoft_datetime() {
-                var _this = this;
-                _this.now = function (norecursion) {
-                    var d = new Date(),
-                        date,
-                        time;
-
-                    if (!norecursion && options.defaultDate) {
-                        date = _this.strToDateTime(options.defaultDate);
-                        d.setFullYear(date.getFullYear());
-                        d.setMonth(date.getMonth());
-                        d.setDate(date.getDate());
-                    }
-
-                    if (options.yearOffset) {
-                        d.setFullYear(d.getFullYear() + options.yearOffset);
-                    }
-
-                    if (!norecursion && options.defaultTime) {
-                        time = _this.strtotime(options.defaultTime);
-                        d.setHours(time.getHours());
-                        d.setMinutes(time.getMinutes());
-                    }
-                    return d;
-                };
-
-                _this.isValidDate = function (d) {
-                    if (Object.prototype.toString.call(d) !== "[object Date]") {
-                        return false;
-                    }
-                    return !isNaN(d.getTime());
-                };
-
-                _this.setCurrentTime = function (dTime, requireValidDate) {
-                    if (typeof dTime === 'string') {
-                        _this.currentTime = _this.strToDateTime(dTime);
-                    } else if (_this.isValidDate(dTime)) {
-                        _this.currentTime = dTime;
-                    } else if (!dTime && !requireValidDate && options.allowBlank) {
-                        _this.currentTime = null;
-                    } else {
-                        _this.currentTime = _this.now();
-                    }
-
-                    datetimepicker.trigger('xchange.xdsoft');
-                };
-
-                _this.empty = function () {
-                    _this.currentTime = null;
-                };
-
-                _this.getCurrentTime = function (dTime) {
-                    return _this.currentTime;
-                };
-
-                _this.nextMonth = function () {
-
-                    if (_this.currentTime === undefined || _this.currentTime === null) {
-                        _this.currentTime = _this.now();
-                    }
-
-                    var month = _this.currentTime.getMonth() + 1,
-                        year;
-                    if (month === 12) {
-                        _this.currentTime.setFullYear(_this.currentTime.getFullYear() + 1);
-                        month = 0;
-                    }
-
-                    year = _this.currentTime.getFullYear();
-
-                    _this.currentTime.setDate(Math.min(new Date(_this.currentTime.getFullYear(), month + 1, 0).getDate(), _this.currentTime.getDate()));
-                    _this.currentTime.setMonth(month);
-
-                    if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
-                        options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                    }
-
-                    if (year !== _this.currentTime.getFullYear() && $.isFunction(options.onChangeYear)) {
-                        options.onChangeYear.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                    }
-
-                    datetimepicker.trigger('xchange.xdsoft');
-                    return month;
-                };
-
-                _this.prevMonth = function () {
-
-                    if (_this.currentTime === undefined || _this.currentTime === null) {
-                        _this.currentTime = _this.now();
-                    }
-
-                    var month = _this.currentTime.getMonth() - 1;
-                    if (month === -1) {
-                        _this.currentTime.setFullYear(_this.currentTime.getFullYear() - 1);
-                        month = 11;
-                    }
-                    _this.currentTime.setDate(Math.min(new Date(_this.currentTime.getFullYear(), month + 1, 0).getDate(), _this.currentTime.getDate()));
-                    _this.currentTime.setMonth(month);
-                    if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
-                        options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                    }
-                    datetimepicker.trigger('xchange.xdsoft');
-                    return month;
-                };
-
-                _this.getWeekOfYear = function (datetime) {
-                    if (options.onGetWeekOfYear && $.isFunction(options.onGetWeekOfYear)) {
-                        var week = options.onGetWeekOfYear.call(datetimepicker, datetime);
-                        if (typeof week !== 'undefined') {
-                            return week;
-                        }
-                    }
-                    var onejan = new Date(datetime.getFullYear(), 0, 1);
-                    //First week of the year is th one with the first Thursday according to ISO8601
-                    if (onejan.getDay() != 4) onejan.setMonth(0, 1 + (4 - onejan.getDay() + 7) % 7);
-                    return Math.ceil(((datetime - onejan) / 86400000 + onejan.getDay() + 1) / 7);
-                };
-
-                _this.strToDateTime = function (sDateTime) {
-                    var tmpDate = [],
-                        timeOffset,
-                        currentTime;
-
-                    if (sDateTime && sDateTime instanceof Date && _this.isValidDate(sDateTime)) {
-                        return sDateTime;
-                    }
-
-                    tmpDate = /^(\+|\-)(.*)$/.exec(sDateTime);
-                    if (tmpDate) {
-                        tmpDate[2] = dateHelper.parseDate(tmpDate[2], options.formatDate);
-                    }
-                    if (tmpDate && tmpDate[2]) {
-                        timeOffset = tmpDate[2].getTime() - tmpDate[2].getTimezoneOffset() * 60000;
-                        currentTime = new Date(_this.now(true).getTime() + parseInt(tmpDate[1] + '1', 10) * timeOffset);
-                    } else {
-                        currentTime = sDateTime ? dateHelper.parseDate(sDateTime, options.format) : _this.now();
-                    }
-
-                    if (!_this.isValidDate(currentTime)) {
-                        currentTime = _this.now();
-                    }
-
-                    return currentTime;
-                };
-
-                _this.strToDate = function (sDate) {
-                    if (sDate && sDate instanceof Date && _this.isValidDate(sDate)) {
-                        return sDate;
-                    }
-
-                    var currentTime = sDate ? dateHelper.parseDate(sDate, options.formatDate) : _this.now(true);
-                    if (!_this.isValidDate(currentTime)) {
-                        currentTime = _this.now(true);
-                    }
-                    return currentTime;
-                };
-
-                _this.strtotime = function (sTime) {
-                    if (sTime && sTime instanceof Date && _this.isValidDate(sTime)) {
-                        return sTime;
-                    }
-                    var currentTime = sTime ? dateHelper.parseDate(sTime, options.formatTime) : _this.now(true);
-                    if (!_this.isValidDate(currentTime)) {
-                        currentTime = _this.now(true);
-                    }
-                    return currentTime;
-                };
-
-                _this.str = function () {
-                    return dateHelper.formatDate(_this.currentTime, options.format);
-                };
-                _this.currentTime = this.now();
-            };
-
-            _xdsoft_datetime = new XDSoft_datetime();
-
-            applyButton.on('touchend click', function (e) {
-                //pathbrite
-                e.preventDefault();
-                datetimepicker.data('changed', true);
-                _xdsoft_datetime.setCurrentTime(getCurrentValue());
-                input.val(_xdsoft_datetime.str());
-                datetimepicker.trigger('close.xdsoft');
-            });
-            month_picker.find('.xdsoft_today_button').on('touchend mousedown.xdsoft', function () {
-                datetimepicker.data('changed', true);
-                _xdsoft_datetime.setCurrentTime(0, true);
-                datetimepicker.trigger('afterOpen.xdsoft');
-            }).on('dblclick.xdsoft', function () {
-                var currentDate = _xdsoft_datetime.getCurrentTime(),
-                    minDate,
-                    maxDate;
-                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-                minDate = _xdsoft_datetime.strToDate(options.minDate);
-                minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
-                if (currentDate < minDate) {
-                    return;
-                }
-                maxDate = _xdsoft_datetime.strToDate(options.maxDate);
-                maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
-                if (currentDate > maxDate) {
-                    return;
-                }
-                input.val(_xdsoft_datetime.str());
-                input.trigger('change');
-                datetimepicker.trigger('close.xdsoft');
-            });
-            month_picker.find('.xdsoft_prev,.xdsoft_next').on('touchend mousedown.xdsoft', function () {
-                var $this = $(this),
-                    timer = 0,
-                    stop = false;
-
-                (function arguments_callee1(v) {
-                    if ($this.hasClass(options.next)) {
-                        _xdsoft_datetime.nextMonth();
-                    } else if ($this.hasClass(options.prev)) {
-                        _xdsoft_datetime.prevMonth();
-                    }
-                    if (options.monthChangeSpinner) {
-                        if (!stop) {
-                            timer = setTimeout(arguments_callee1, v || 100);
-                        }
-                    }
-                })(500);
-
-                $([document.body, window]).on('touchend mouseup.xdsoft', function arguments_callee2() {
-                    clearTimeout(timer);
-                    stop = true;
-                    $([document.body, window]).off('touchend mouseup.xdsoft', arguments_callee2);
-                });
-            });
-
-            timepicker.find('.xdsoft_prev,.xdsoft_next').on('touchend mousedown.xdsoft', function () {
-                var $this = $(this),
-                    timer = 0,
-                    stop = false,
-                    period = 110;
-                (function arguments_callee4(v) {
-                    var pheight = timeboxparent[0].clientHeight,
-                        height = timebox[0].offsetHeight,
-                        top = Math.abs(parseInt(timebox.css('marginTop'), 10));
-                    if ($this.hasClass(options.next) && height - pheight - options.timeHeightInTimePicker >= top) {
-                        timebox.css('marginTop', '-' + (top + options.timeHeightInTimePicker) + 'px');
-                    } else if ($this.hasClass(options.prev) && top - options.timeHeightInTimePicker >= 0) {
-                        timebox.css('marginTop', '-' + (top - options.timeHeightInTimePicker) + 'px');
-                    }
-                    /**
-                     * Fixed bug:
-                     * When using css3 transition, it will cause a bug that you cannot scroll the timepicker list.
-                     * The reason is that the transition-duration time, if you set it to 0, all things fine, otherwise, this
-                     * would cause a bug when you use jquery.css method.
-                     * Let's say: * { transition: all .5s ease; }
-                     * jquery timebox.css('marginTop') will return the original value which is before you clicking the next/prev button,
-                     * meanwhile the timebox[0].style.marginTop will return the right value which is after you clicking the
-                     * next/prev button.
-                     *
-                     * What we should do:
-                     * Replace timebox.css('marginTop') with timebox[0].style.marginTop.
-                     */
-                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [Math.abs(parseInt(timebox[0].style.marginTop, 10) / (height - pheight))]);
-                    period = period > 10 ? 10 : period - 10;
-                    if (!stop) {
-                        timer = setTimeout(arguments_callee4, v || period);
-                    }
-                })(500);
-                $([document.body, window]).on('touchend mouseup.xdsoft', function arguments_callee5() {
-                    clearTimeout(timer);
-                    stop = true;
-                    $([document.body, window]).off('touchend mouseup.xdsoft', arguments_callee5);
-                });
-            });
-
-            xchangeTimer = 0;
-            // base handler - generating a calendar and timepicker
-            datetimepicker.on('xchange.xdsoft', function (event) {
-                clearTimeout(xchangeTimer);
-                xchangeTimer = setTimeout(function () {
-
-                    if (_xdsoft_datetime.currentTime === undefined || _xdsoft_datetime.currentTime === null) {
-                        //In case blanks are allowed, delay construction until we have a valid date
-                        if (options.allowBlank) return;
-
-                        _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
-                    }
-
-                    var table = '',
-                        start = new Date(_xdsoft_datetime.currentTime.getFullYear(), _xdsoft_datetime.currentTime.getMonth(), 1, 12, 0, 0),
-                        i = 0,
-                        j,
-                        today = _xdsoft_datetime.now(),
-                        maxDate = false,
-                        minDate = false,
-                        hDate,
-                        day,
-                        d,
-                        y,
-                        m,
-                        w,
-                        classes = [],
-                        customDateSettings,
-                        newRow = true,
-                        time = '',
-                        h = '',
-                        line_time,
-                        description;
-
-                    while (start.getDay() !== options.dayOfWeekStart) {
-                        start.setDate(start.getDate() - 1);
-                    }
-
-                    table += '<table><thead><tr>';
-
-                    if (options.weeks) {
-                        table += '<th></th>';
-                    }
-
-                    for (j = 0; j < 7; j += 1) {
-                        table += '<th>' + options.i18n[globalLocale].dayOfWeekShort[(j + options.dayOfWeekStart) % 7] + '</th>';
-                    }
-
-                    table += '</tr></thead>';
-                    table += '<tbody>';
-
-                    if (options.maxDate !== false) {
-                        maxDate = _xdsoft_datetime.strToDate(options.maxDate);
-                        maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 23, 59, 59, 999);
-                    }
-
-                    if (options.minDate !== false) {
-                        minDate = _xdsoft_datetime.strToDate(options.minDate);
-                        minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
-                    }
-
-                    while (i < _xdsoft_datetime.currentTime.countDaysInMonth() || start.getDay() !== options.dayOfWeekStart || _xdsoft_datetime.currentTime.getMonth() === start.getMonth()) {
-                        classes = [];
-                        i += 1;
-
-                        day = start.getDay();
-                        d = start.getDate();
-                        y = start.getFullYear();
-                        m = start.getMonth();
-                        w = _xdsoft_datetime.getWeekOfYear(start);
-                        description = '';
-
-                        classes.push('xdsoft_date');
-
-                        if (options.beforeShowDay && $.isFunction(options.beforeShowDay.call)) {
-                            customDateSettings = options.beforeShowDay.call(datetimepicker, start);
-                        } else {
-                            customDateSettings = null;
-                        }
-
-                        if (options.allowDateRe && Object.prototype.toString.call(options.allowDateRe) === "[object RegExp]") {
-                            if (!options.allowDateRe.test(dateHelper.formatDate(start, options.formatDate))) {
-                                classes.push('xdsoft_disabled');
-                            }
-                        } else if (options.allowDates && options.allowDates.length > 0) {
-                            if (options.allowDates.indexOf(dateHelper.formatDate(start, options.formatDate)) === -1) {
-                                classes.push('xdsoft_disabled');
-                            }
-                        } else if (maxDate !== false && start > maxDate || minDate !== false && start < minDate || customDateSettings && customDateSettings[0] === false) {
-                            classes.push('xdsoft_disabled');
-                        } else if (options.disabledDates.indexOf(dateHelper.formatDate(start, options.formatDate)) !== -1) {
-                            classes.push('xdsoft_disabled');
-                        } else if (options.disabledWeekDays.indexOf(day) !== -1) {
-                            classes.push('xdsoft_disabled');
-                        } else if (input.is('[readonly]')) {
-                            classes.push('xdsoft_disabled');
-                        }
-
-                        if (customDateSettings && customDateSettings[1] !== "") {
-                            classes.push(customDateSettings[1]);
-                        }
-
-                        if (_xdsoft_datetime.currentTime.getMonth() !== m) {
-                            classes.push('xdsoft_other_month');
-                        }
-
-                        if ((options.defaultSelect || datetimepicker.data('changed')) && dateHelper.formatDate(_xdsoft_datetime.currentTime, options.formatDate) === dateHelper.formatDate(start, options.formatDate)) {
-                            classes.push('xdsoft_current');
-                        }
-
-                        if (dateHelper.formatDate(today, options.formatDate) === dateHelper.formatDate(start, options.formatDate)) {
-                            classes.push('xdsoft_today');
-                        }
-
-                        if (start.getDay() === 0 || start.getDay() === 6 || options.weekends.indexOf(dateHelper.formatDate(start, options.formatDate)) !== -1) {
-                            classes.push('xdsoft_weekend');
-                        }
-
-                        if (options.highlightedDates[dateHelper.formatDate(start, options.formatDate)] !== undefined) {
-                            hDate = options.highlightedDates[dateHelper.formatDate(start, options.formatDate)];
-                            classes.push(hDate.style === undefined ? 'xdsoft_highlighted_default' : hDate.style);
-                            description = hDate.desc === undefined ? '' : hDate.desc;
-                        }
-
-                        if (options.beforeShowDay && $.isFunction(options.beforeShowDay)) {
-                            classes.push(options.beforeShowDay(start));
-                        }
-
-                        if (newRow) {
-                            table += '<tr>';
-                            newRow = false;
-                            if (options.weeks) {
-                                table += '<th>' + w + '</th>';
-                            }
-                        }
-
-                        table += '<td data-date="' + d + '" data-month="' + m + '" data-year="' + y + '"' + ' class="xdsoft_date xdsoft_day_of_week' + start.getDay() + ' ' + classes.join(' ') + '" title="' + description + '">' + '<div>' + d + '</div>' + '</td>';
-
-                        if (start.getDay() === options.dayOfWeekStartPrev) {
-                            table += '</tr>';
-                            newRow = true;
-                        }
-
-                        start.setDate(d + 1);
-                    }
-                    table += '</tbody></table>';
-
-                    calendar.html(table);
-
-                    month_picker.find('.xdsoft_label span').eq(0).text(options.i18n[globalLocale].months[_xdsoft_datetime.currentTime.getMonth()]);
-                    month_picker.find('.xdsoft_label span').eq(1).text(_xdsoft_datetime.currentTime.getFullYear());
-
-                    // generate timebox
-                    time = '';
-                    h = '';
-                    m = '';
-
-                    line_time = function line_time(h, m) {
-                        var now = _xdsoft_datetime.now(),
-                            optionDateTime,
-                            current_time,
-                            isALlowTimesInit = options.allowTimes && $.isArray(options.allowTimes) && options.allowTimes.length;
-                        now.setHours(h);
-                        h = parseInt(now.getHours(), 10);
-                        now.setMinutes(m);
-                        m = parseInt(now.getMinutes(), 10);
-                        optionDateTime = new Date(_xdsoft_datetime.currentTime);
-                        optionDateTime.setHours(h);
-                        optionDateTime.setMinutes(m);
-                        classes = [];
-                        if (options.minDateTime !== false && options.minDateTime > optionDateTime || options.maxTime !== false && _xdsoft_datetime.strtotime(options.maxTime).getTime() < now.getTime() || options.minTime !== false && _xdsoft_datetime.strtotime(options.minTime).getTime() > now.getTime()) {
-                            classes.push('xdsoft_disabled');
-                        } else if (options.minDateTime !== false && options.minDateTime > optionDateTime || options.disabledMinTime !== false && now.getTime() > _xdsoft_datetime.strtotime(options.disabledMinTime).getTime() && options.disabledMaxTime !== false && now.getTime() < _xdsoft_datetime.strtotime(options.disabledMaxTime).getTime()) {
-                            classes.push('xdsoft_disabled');
-                        } else if (input.is('[readonly]')) {
-                            classes.push('xdsoft_disabled');
-                        }
-
-                        current_time = new Date(_xdsoft_datetime.currentTime);
-                        current_time.setHours(parseInt(_xdsoft_datetime.currentTime.getHours(), 10));
-
-                        if (!isALlowTimesInit) {
-                            current_time.setMinutes(Math[options.roundTime](_xdsoft_datetime.currentTime.getMinutes() / options.step) * options.step);
-                        }
-
-                        if ((options.initTime || options.defaultSelect || datetimepicker.data('changed')) && current_time.getHours() === parseInt(h, 10) && (!isALlowTimesInit && options.step > 59 || current_time.getMinutes() === parseInt(m, 10))) {
-                            if (options.defaultSelect || datetimepicker.data('changed')) {
-                                classes.push('xdsoft_current');
-                            } else if (options.initTime) {
-                                classes.push('xdsoft_init_time');
-                            }
-                        }
-                        if (parseInt(today.getHours(), 10) === parseInt(h, 10) && parseInt(today.getMinutes(), 10) === parseInt(m, 10)) {
-                            classes.push('xdsoft_today');
-                        }
-                        time += '<div class="xdsoft_time ' + classes.join(' ') + '" data-hour="' + h + '" data-minute="' + m + '">' + dateHelper.formatDate(now, options.formatTime) + '</div>';
-                    };
-                    if (!options.allowTimes || !$.isArray(options.allowTimes) || !options.allowTimes.length) {
-                        for (i = 0, j = 0; i < (options.hours12 ? 12 : 24); i += 1) {
-                            if (i >= options.minHours) {
-                                for (j = 0; j < 60; j += options.step) {
-                                    h = (i < 10 ? '0' : '') + i;
-                                    m = (j < 10 ? '0' : '') + j;
-                                    line_time(h, m);
-                                }
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < options.allowTimes.length; i += 1) {
-                            h = _xdsoft_datetime.strtotime(options.allowTimes[i]).getHours();
-                            m = _xdsoft_datetime.strtotime(options.allowTimes[i]).getMinutes();
-                            line_time(h, m);
-                        }
-                    }
-
-                    timebox.html(time);
-
-                    opt = '';
-                    i = 0;
-
-                    for (i = parseInt(options.yearStart, 10) + options.yearOffset; i <= parseInt(options.yearEnd, 10) + options.yearOffset; i += 1) {
-                        opt += '<div class="xdsoft_option ' + (_xdsoft_datetime.currentTime.getFullYear() === i ? 'xdsoft_current' : '') + '" data-value="' + i + '">' + i + '</div>';
-                    }
-                    yearselect.children().eq(0).html(opt);
-
-                    for (i = parseInt(options.monthStart, 10), opt = ''; i <= parseInt(options.monthEnd, 10); i += 1) {
-                        opt += '<div class="xdsoft_option ' + (_xdsoft_datetime.currentTime.getMonth() === i ? 'xdsoft_current' : '') + '" data-value="' + i + '">' + options.i18n[globalLocale].months[i] + '</div>';
-                    }
-                    monthselect.children().eq(0).html(opt);
-                    $(datetimepicker).trigger('generate.xdsoft');
-                }, 10);
-                event.stopPropagation();
-            }).on('afterOpen.xdsoft', function () {
-                if (options.timepicker) {
-                    var classType, pheight, height, top;
-                    if (timebox.find('.xdsoft_current').length) {
-                        classType = '.xdsoft_current';
-                    } else if (timebox.find('.xdsoft_init_time').length) {
-                        classType = '.xdsoft_init_time';
-                    }
-                    if (classType) {
-                        pheight = timeboxparent[0].clientHeight;
-                        height = timebox[0].offsetHeight;
-                        top = timebox.find(classType).index() * options.timeHeightInTimePicker + 1;
-                        if (height - pheight < top) {
-                            top = height - pheight;
-                        }
-                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [parseInt(top, 10) / (height - pheight)]);
-                    } else {
-                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [0]);
-                    }
-                }
-            });
-
-            timerclick = 0;
-            calendar.on('touchend click.xdsoft', 'td', function (xdevent) {
-                xdevent.stopPropagation(); // Prevents closing of Pop-ups, Modals and Flyouts in Bootstrap
-                timerclick += 1;
-                var $this = $(this),
-                    currentTime = _xdsoft_datetime.currentTime;
-
-                if (currentTime === undefined || currentTime === null) {
-                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
-                    currentTime = _xdsoft_datetime.currentTime;
-                }
-
-                if ($this.hasClass('xdsoft_disabled')) {
-                    return false;
-                }
-
-                currentTime.setDate(1);
-                currentTime.setFullYear($this.data('year'));
-                currentTime.setMonth($this.data('month'));
-                currentTime.setDate($this.data('date'));
-
-                datetimepicker.trigger('select.xdsoft', [currentTime]);
-
-                input.val(_xdsoft_datetime.str());
-
-                if (options.onSelectDate && $.isFunction(options.onSelectDate)) {
-                    options.onSelectDate.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), xdevent);
-                }
-
-                datetimepicker.data('changed', true);
-                datetimepicker.trigger('xchange.xdsoft');
-                datetimepicker.trigger('changedatetime.xdsoft');
-                if ((timerclick > 1 || options.closeOnDateSelect === true || options.closeOnDateSelect === false && !options.timepicker) && !options.inline) {
-                    datetimepicker.trigger('close.xdsoft');
-                }
-                setTimeout(function () {
-                    timerclick = 0;
-                }, 200);
-            });
-
-            timebox.on('touchmove', 'div', function () {
-                currentlyScrollingTimeDiv = true;
-            }).on('touchend click.xdsoft', 'div', function (xdevent) {
-                xdevent.stopPropagation();
-                if (currentlyScrollingTimeDiv) {
-                    currentlyScrollingTimeDiv = false;
-                    return;
-                }
-                var $this = $(this),
-                    currentTime = _xdsoft_datetime.currentTime;
-
-                if (currentTime === undefined || currentTime === null) {
-                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
-                    currentTime = _xdsoft_datetime.currentTime;
-                }
-
-                if ($this.hasClass('xdsoft_disabled')) {
-                    return false;
-                }
-                currentTime.setHours($this.data('hour'));
-                currentTime.setMinutes($this.data('minute'));
-                datetimepicker.trigger('select.xdsoft', [currentTime]);
-
-                datetimepicker.data('input').val(_xdsoft_datetime.str());
-
-                if (options.onSelectTime && $.isFunction(options.onSelectTime)) {
-                    options.onSelectTime.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), xdevent);
-                }
-                datetimepicker.data('changed', true);
-                datetimepicker.trigger('xchange.xdsoft');
-                datetimepicker.trigger('changedatetime.xdsoft');
-                if (options.inline !== true && options.closeOnTimeSelect === true) {
-                    datetimepicker.trigger('close.xdsoft');
-                }
-            });
-
-            datepicker.on('mousewheel.xdsoft', function (event) {
-                if (!options.scrollMonth) {
-                    return true;
-                }
-                if (event.deltaY < 0) {
-                    _xdsoft_datetime.nextMonth();
-                } else {
-                    _xdsoft_datetime.prevMonth();
-                }
-                return false;
-            });
-
-            input.on('mousewheel.xdsoft', function (event) {
-                if (!options.scrollInput) {
-                    return true;
-                }
-                if (!options.datepicker && options.timepicker) {
-                    current_time_index = timebox.find('.xdsoft_current').length ? timebox.find('.xdsoft_current').eq(0).index() : 0;
-                    if (current_time_index + event.deltaY >= 0 && current_time_index + event.deltaY < timebox.children().length) {
-                        current_time_index += event.deltaY;
-                    }
-                    if (timebox.children().eq(current_time_index).length) {
-                        timebox.children().eq(current_time_index).trigger('mousedown');
-                    }
-                    return false;
-                }
-                if (options.datepicker && !options.timepicker) {
-                    datepicker.trigger(event, [event.deltaY, event.deltaX, event.deltaY]);
-                    if (input.val) {
-                        input.val(_xdsoft_datetime.str());
-                    }
-                    datetimepicker.trigger('changedatetime.xdsoft');
-                    return false;
-                }
-            });
-
-            datetimepicker.on('changedatetime.xdsoft', function (event) {
-                if (options.onChangeDateTime && $.isFunction(options.onChangeDateTime)) {
-                    var $input = datetimepicker.data('input');
-                    options.onChangeDateTime.call(datetimepicker, _xdsoft_datetime.currentTime, $input, event);
-                    delete options.value;
-                    $input.trigger('change');
-                }
-            }).on('generate.xdsoft', function () {
-                if (options.onGenerate && $.isFunction(options.onGenerate)) {
-                    options.onGenerate.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
-                }
-                if (triggerAfterOpen) {
-                    datetimepicker.trigger('afterOpen.xdsoft');
-                    triggerAfterOpen = false;
-                }
-            }).on('click.xdsoft', function (xdevent) {
-                xdevent.stopPropagation();
-            });
-
-            current_time_index = 0;
-
-            /**
-             * Runs the callback for each of the specified node's ancestors.
-             *
-             * Return FALSE from the callback to stop ascending.
-             *
-             * @param {DOMNode} node
-             * @param {Function} callback
-             * @returns {undefined}
-             */
-            forEachAncestorOf = function forEachAncestorOf(node, callback) {
-                do {
-                    node = node.parentNode;
-
-                    if (callback(node) === false) {
-                        break;
-                    }
-                } while (node.nodeName !== 'HTML');
-            };
-
-            /**
-             * Sets the position of the picker.
-             *
-             * @returns {undefined}
-             */
-            setPos = function setPos() {
-                var dateInputOffset, dateInputElem, verticalPosition, left, position, datetimepickerElem, dateInputHasFixedAncestor, $dateInput, windowWidth, verticalAnchorEdge, datetimepickerCss, windowHeight, windowScrollTop;
-
-                $dateInput = datetimepicker.data('input');
-                dateInputOffset = $dateInput.offset();
-                dateInputElem = $dateInput[0];
-
-                verticalAnchorEdge = 'top';
-                verticalPosition = dateInputOffset.top + dateInputElem.offsetHeight - 1;
-                left = dateInputOffset.left;
-                position = "absolute";
-
-                windowWidth = $(window).width();
-                windowHeight = $(window).height();
-                windowScrollTop = $(window).scrollTop();
-
-                if (document.documentElement.clientWidth - dateInputOffset.left < datepicker.parent().outerWidth(true)) {
-                    var diff = datepicker.parent().outerWidth(true) - dateInputElem.offsetWidth;
-                    left = left - diff;
-                }
-
-                if ($dateInput.parent().css('direction') === 'rtl') {
-                    left -= datetimepicker.outerWidth() - $dateInput.outerWidth();
-                }
-
-                if (options.fixed) {
-                    verticalPosition -= windowScrollTop;
-                    left -= $(window).scrollLeft();
-                    position = "fixed";
-                } else {
-                    dateInputHasFixedAncestor = false;
-
-                    forEachAncestorOf(dateInputElem, function (ancestorNode) {
-                        if (window.getComputedStyle(ancestorNode).getPropertyValue('position') === 'fixed') {
-                            dateInputHasFixedAncestor = true;
-                            return false;
-                        }
-                    });
-
-                    if (dateInputHasFixedAncestor) {
-                        position = 'fixed';
-
-                        //If the picker won't fit entirely within the viewport then display it above the date input.
-                        if (verticalPosition + datetimepicker.outerHeight() > windowHeight + windowScrollTop) {
-                            verticalAnchorEdge = 'bottom';
-                            verticalPosition = windowHeight + windowScrollTop - dateInputOffset.top;
-                        } else {
-                            verticalPosition -= windowScrollTop;
-                        }
-                    } else {
-                        if (verticalPosition + dateInputElem.offsetHeight > windowHeight + windowScrollTop) {
-                            verticalPosition = dateInputOffset.top - dateInputElem.offsetHeight + 1;
-                        }
-                    }
-
-                    if (verticalPosition < 0) {
-                        verticalPosition = 0;
-                    }
-
-                    if (left + dateInputElem.offsetWidth > windowWidth) {
-                        left = windowWidth - dateInputElem.offsetWidth;
-                    }
-                }
-
-                datetimepickerElem = datetimepicker[0];
-
-                forEachAncestorOf(datetimepickerElem, function (ancestorNode) {
-                    var ancestorNodePosition;
-
-                    ancestorNodePosition = window.getComputedStyle(ancestorNode).getPropertyValue('position');
-
-                    if (ancestorNodePosition === 'relative' && windowWidth >= ancestorNode.offsetWidth) {
-                        left = left - (windowWidth - ancestorNode.offsetWidth) / 2;
-                        return false;
-                    }
-                });
-
-                datetimepickerCss = {
-                    position: position,
-                    left: left,
-                    top: '', //Initialize to prevent previous values interfering with new ones.
-                    bottom: '' //Initialize to prevent previous values interfering with new ones.
-                };
-
-                datetimepickerCss[verticalAnchorEdge] = verticalPosition;
-
-                datetimepicker.css(datetimepickerCss);
-            };
-
-            datetimepicker.on('open.xdsoft', function (event) {
-                var onShow = true;
-                if (options.onShow && $.isFunction(options.onShow)) {
-                    onShow = options.onShow.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), event);
-                }
-                if (onShow !== false) {
-                    datetimepicker.show();
-                    setPos();
-                    $(window).off('resize.xdsoft', setPos).on('resize.xdsoft', setPos);
-
-                    if (options.closeOnWithoutClick) {
-                        $([document.body, window]).on('touchstart mousedown.xdsoft', function arguments_callee6() {
-                            datetimepicker.trigger('close.xdsoft');
-                            $([document.body, window]).off('touchstart mousedown.xdsoft', arguments_callee6);
-                        });
-                    }
-                }
-            }).on('close.xdsoft', function (event) {
-                var onClose = true;
-                month_picker.find('.xdsoft_month,.xdsoft_year').find('.xdsoft_select').hide();
-                if (options.onClose && $.isFunction(options.onClose)) {
-                    onClose = options.onClose.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), event);
-                }
-                if (onClose !== false && !options.opened && !options.inline) {
-                    datetimepicker.hide();
-                }
-                event.stopPropagation();
-            }).on('toggle.xdsoft', function () {
-                if (datetimepicker.is(':visible')) {
-                    datetimepicker.trigger('close.xdsoft');
-                } else {
-                    datetimepicker.trigger('open.xdsoft');
-                }
-            }).data('input', input);
-
-            timer = 0;
-
-            datetimepicker.data('xdsoft_datetime', _xdsoft_datetime);
-            datetimepicker.setOptions(options);
-
-            function getCurrentValue() {
-                var ct = false,
-                    time;
-
-                if (options.startDate) {
-                    ct = _xdsoft_datetime.strToDate(options.startDate);
-                } else {
-                    ct = options.value || (input && input.val && input.val() ? input.val() : '');
-                    if (ct) {
-                        ct = _xdsoft_datetime.strToDateTime(ct);
-                    } else if (options.defaultDate) {
-                        ct = _xdsoft_datetime.strToDateTime(options.defaultDate);
-                        if (options.defaultTime) {
-                            time = _xdsoft_datetime.strtotime(options.defaultTime);
-                            ct.setHours(time.getHours());
-                            ct.setMinutes(time.getMinutes());
-                        }
-                    }
-                }
-
-                if (ct && _xdsoft_datetime.isValidDate(ct)) {
-                    datetimepicker.data('changed', true);
-                } else {
-                    ct = '';
-                }
-
-                return ct || 0;
-            }
-
-            function setMask(options) {
-
-                var isValidValue = function isValidValue(mask, value) {
-                    var reg = mask.replace(/([\[\]\/\{\}\(\)\-\.\+]{1})/g, '\\$1').replace(/_/g, '{digit+}').replace(/([0-9]{1})/g, '{digit$1}').replace(/\{digit([0-9]{1})\}/g, '[0-$1_]{1}').replace(/\{digit[\+]\}/g, '[0-9_]{1}');
-                    return new RegExp(reg).test(value);
-                },
-                    getCaretPos = function getCaretPos(input) {
-                    try {
-                        if (document.selection && document.selection.createRange) {
-                            var range = document.selection.createRange();
-                            return range.getBookmark().charCodeAt(2) - 2;
-                        }
-                        if (input.setSelectionRange) {
-                            return input.selectionStart;
-                        }
-                    } catch (e) {
-                        return 0;
-                    }
-                },
-                    setCaretPos = function setCaretPos(node, pos) {
-                    node = typeof node === "string" || node instanceof String ? document.getElementById(node) : node;
-                    if (!node) {
-                        return false;
-                    }
-                    if (node.createTextRange) {
-                        var textRange = node.createTextRange();
-                        textRange.collapse(true);
-                        textRange.moveEnd('character', pos);
-                        textRange.moveStart('character', pos);
-                        textRange.select();
-                        return true;
-                    }
-                    if (node.setSelectionRange) {
-                        node.setSelectionRange(pos, pos);
-                        return true;
-                    }
-                    return false;
-                };
-                if (options.mask) {
-                    input.off('keydown.xdsoft');
-                }
-                if (options.mask === true) {
-                    if (typeof moment != 'undefined') {
-                        options.mask = options.format.replace(/Y{4}/g, '9999').replace(/Y{2}/g, '99').replace(/M{2}/g, '19').replace(/D{2}/g, '39').replace(/H{2}/g, '29').replace(/m{2}/g, '59').replace(/s{2}/g, '59');
-                    } else {
-                        options.mask = options.format.replace(/Y/g, '9999').replace(/F/g, '9999').replace(/m/g, '19').replace(/d/g, '39').replace(/H/g, '29').replace(/i/g, '59').replace(/s/g, '59');
-                    }
-                }
-
-                if ($.type(options.mask) === 'string') {
-                    if (!isValidValue(options.mask, input.val())) {
-                        input.val(options.mask.replace(/[0-9]/g, '_'));
-                        setCaretPos(input[0], 0);
-                    }
-
-                    input.on('keydown.xdsoft', function (event) {
-                        var val = this.value,
-                            key = event.which,
-                            pos,
-                            digit;
-
-                        if (key >= KEY0 && key <= KEY9 || key >= _KEY0 && key <= _KEY9 || key === BACKSPACE || key === DEL) {
-                            pos = getCaretPos(this);
-                            digit = key !== BACKSPACE && key !== DEL ? String.fromCharCode(_KEY0 <= key && key <= _KEY9 ? key - KEY0 : key) : '_';
-
-                            if ((key === BACKSPACE || key === DEL) && pos) {
-                                pos -= 1;
-                                digit = '_';
-                            }
-
-                            while (/[^0-9_]/.test(options.mask.substr(pos, 1)) && pos < options.mask.length && pos > 0) {
-                                pos += key === BACKSPACE || key === DEL ? -1 : 1;
-                            }
-
-                            val = val.substr(0, pos) + digit + val.substr(pos + 1);
-                            if ($.trim(val) === '') {
-                                val = options.mask.replace(/[0-9]/g, '_');
-                            } else {
-                                if (pos === options.mask.length) {
-                                    event.preventDefault();
-                                    return false;
-                                }
-                            }
-
-                            pos += key === BACKSPACE || key === DEL ? 0 : 1;
-                            while (/[^0-9_]/.test(options.mask.substr(pos, 1)) && pos < options.mask.length && pos > 0) {
-                                pos += key === BACKSPACE || key === DEL ? -1 : 1;
-                            }
-
-                            if (isValidValue(options.mask, val)) {
-                                this.value = val;
-                                setCaretPos(this, pos);
-                            } else if ($.trim(val) === '') {
-                                this.value = options.mask.replace(/[0-9]/g, '_');
-                            } else {
-                                input.trigger('error_input.xdsoft');
-                            }
-                        } else {
-                            if ([AKEY, CKEY, VKEY, ZKEY, YKEY].indexOf(key) !== -1 && ctrlDown || [ESC, ARROWUP, ARROWDOWN, ARROWLEFT, ARROWRIGHT, F5, CTRLKEY, TAB, ENTER].indexOf(key) !== -1) {
-                                return true;
-                            }
-                        }
-
-                        event.preventDefault();
-                        return false;
-                    });
-                }
-            }
-
-            _xdsoft_datetime.setCurrentTime(getCurrentValue());
-
-            input.data('xdsoft_datetimepicker', datetimepicker).on('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', function () {
-                if (input.is(':disabled') || input.data('xdsoft_datetimepicker').is(':visible') && options.closeOnInputClick) {
-                    return;
-                }
-                clearTimeout(timer);
-                timer = setTimeout(function () {
-                    if (input.is(':disabled')) {
-                        return;
-                    }
-
-                    triggerAfterOpen = true;
-                    _xdsoft_datetime.setCurrentTime(getCurrentValue(), true);
-                    if (options.mask) {
-                        setMask(options);
-                    }
-                    datetimepicker.trigger('open.xdsoft');
-                }, 100);
-            }).on('keydown.xdsoft', function (event) {
-                var elementSelector,
-                    key = event.which;
-                if ([ENTER].indexOf(key) !== -1 && options.enterLikeTab) {
-                    elementSelector = $("input:visible,textarea:visible,button:visible,a:visible");
-                    datetimepicker.trigger('close.xdsoft');
-                    elementSelector.eq(elementSelector.index(this) + 1).focus();
-                    return false;
-                }
-                if ([TAB].indexOf(key) !== -1) {
-                    datetimepicker.trigger('close.xdsoft');
-                    return true;
-                }
-            }).on('blur.xdsoft', function () {
-                datetimepicker.trigger('close.xdsoft');
-            });
-        };
-        destroyDateTimePicker = function destroyDateTimePicker(input) {
-            var datetimepicker = input.data('xdsoft_datetimepicker');
-            if (datetimepicker) {
-                datetimepicker.data('xdsoft_datetime', null);
-                datetimepicker.remove();
-                input.data('xdsoft_datetimepicker', null).off('.xdsoft');
-                $(window).off('resize.xdsoft');
-                $([window, document.body]).off('mousedown.xdsoft touchstart');
-                if (input.unmousewheel) {
-                    input.unmousewheel();
-                }
-            }
-        };
-        $(document).off('keydown.xdsoftctrl keyup.xdsoftctrl').on('keydown.xdsoftctrl', function (e) {
-            if (e.keyCode === CTRLKEY) {
-                ctrlDown = true;
-            }
-        }).on('keyup.xdsoftctrl', function (e) {
-            if (e.keyCode === CTRLKEY) {
-                ctrlDown = false;
-            }
-        });
-
-        this.each(function () {
-            var datetimepicker = $(this).data('xdsoft_datetimepicker'),
-                $input;
-            if (datetimepicker) {
-                if ($.type(opt) === 'string') {
-                    switch (opt) {
-                        case 'show':
-                            $(this).select().focus();
-                            datetimepicker.trigger('open.xdsoft');
-                            break;
-                        case 'hide':
-                            datetimepicker.trigger('close.xdsoft');
-                            break;
-                        case 'toggle':
-                            datetimepicker.trigger('toggle.xdsoft');
-                            break;
-                        case 'destroy':
-                            destroyDateTimePicker($(this));
-                            break;
-                        case 'reset':
-                            this.value = this.defaultValue;
-                            if (!this.value || !datetimepicker.data('xdsoft_datetime').isValidDate(dateHelper.parseDate(this.value, options.format))) {
-                                datetimepicker.data('changed', false);
-                            }
-                            datetimepicker.data('xdsoft_datetime').setCurrentTime(this.value);
-                            break;
-                        case 'validate':
-                            $input = datetimepicker.data('input');
-                            $input.trigger('blur.xdsoft');
-                            break;
-                        default:
-                            if (datetimepicker[opt] && $.isFunction(datetimepicker[opt])) {
-                                result = datetimepicker[opt](opt2);
-                            }
-                    }
-                } else {
-                    datetimepicker.setOptions(opt);
-                }
-                return 0;
-            }
-            if ($.type(opt) !== 'string') {
-                if (!options.lazyInit || options.open || options.inline) {
-                    createDateTimePicker($(this));
-                } else {
-                    lazyInit($(this));
-                }
-            }
-        });
-
-        return result;
-    };
-
-    $.fn.datetimepicker.defaults = default_options;
-
-    function HighlightedDate(date, desc, style) {
-        "use strict";
-
-        this.date = date;
-        this.desc = desc;
-        this.style = style;
-    }
-});
-/*!
- * jQuery Mousewheel 3.1.13
- *
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license
- * http://jquery.org/license
- */
-
-(function (factory) {
-    if (true) {
-        // AMD. Register as an anonymous module.
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
-        // Node/CommonJS style for Browserify
-        module.exports = factory;
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-})(function ($) {
-
-    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
-        toBind = 'onwheel' in document || document.documentMode >= 9 ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
-        slice = Array.prototype.slice,
-        nullLowestDeltaTimeout,
-        lowestDelta;
-
-    if ($.event.fixHooks) {
-        for (var i = toFix.length; i;) {
-            $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
-        }
-    }
-
-    var special = $.event.special.mousewheel = {
-        version: '3.1.12',
-
-        setup: function setup() {
-            if (this.addEventListener) {
-                for (var i = toBind.length; i;) {
-                    this.addEventListener(toBind[--i], handler, false);
-                }
-            } else {
-                this.onmousewheel = handler;
-            }
-            // Store the line height and page height for this particular element
-            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
-            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
-        },
-
-        teardown: function teardown() {
-            if (this.removeEventListener) {
-                for (var i = toBind.length; i;) {
-                    this.removeEventListener(toBind[--i], handler, false);
-                }
-            } else {
-                this.onmousewheel = null;
-            }
-            // Clean up the data we added to the element
-            $.removeData(this, 'mousewheel-line-height');
-            $.removeData(this, 'mousewheel-page-height');
-        },
-
-        getLineHeight: function getLineHeight(elem) {
-            var $elem = $(elem),
-                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
-            if (!$parent.length) {
-                $parent = $('body');
-            }
-            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
-        },
-
-        getPageHeight: function getPageHeight(elem) {
-            return $(elem).height();
-        },
-
-        settings: {
-            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
-            normalizeOffset: true // calls getBoundingClientRect for each event
-        }
-    };
-
-    $.fn.extend({
-        mousewheel: function mousewheel(fn) {
-            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
-        },
-
-        unmousewheel: function unmousewheel(fn) {
-            return this.unbind('mousewheel', fn);
-        }
-    });
-
-    function handler(event) {
-        var orgEvent = event || window.event,
-            args = slice.call(arguments, 1),
-            delta = 0,
-            deltaX = 0,
-            deltaY = 0,
-            absDelta = 0,
-            offsetX = 0,
-            offsetY = 0;
-        event = $.event.fix(orgEvent);
-        event.type = 'mousewheel';
-
-        // Old school scrollwheel delta
-        if ('detail' in orgEvent) {
-            deltaY = orgEvent.detail * -1;
-        }
-        if ('wheelDelta' in orgEvent) {
-            deltaY = orgEvent.wheelDelta;
-        }
-        if ('wheelDeltaY' in orgEvent) {
-            deltaY = orgEvent.wheelDeltaY;
-        }
-        if ('wheelDeltaX' in orgEvent) {
-            deltaX = orgEvent.wheelDeltaX * -1;
-        }
-
-        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-        if ('axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
-            deltaX = deltaY * -1;
-            deltaY = 0;
-        }
-
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-        delta = deltaY === 0 ? deltaX : deltaY;
-
-        // New school wheel delta (wheel event)
-        if ('deltaY' in orgEvent) {
-            deltaY = orgEvent.deltaY * -1;
-            delta = deltaY;
-        }
-        if ('deltaX' in orgEvent) {
-            deltaX = orgEvent.deltaX;
-            if (deltaY === 0) {
-                delta = deltaX * -1;
-            }
-        }
-
-        // No change actually happened, no reason to go any further
-        if (deltaY === 0 && deltaX === 0) {
-            return;
-        }
-
-        // Need to convert lines and pages to pixels if we aren't already in pixels
-        // There are three delta modes:
-        //   * deltaMode 0 is by pixels, nothing to do
-        //   * deltaMode 1 is by lines
-        //   * deltaMode 2 is by pages
-        if (orgEvent.deltaMode === 1) {
-            var lineHeight = $.data(this, 'mousewheel-line-height');
-            delta *= lineHeight;
-            deltaY *= lineHeight;
-            deltaX *= lineHeight;
-        } else if (orgEvent.deltaMode === 2) {
-            var pageHeight = $.data(this, 'mousewheel-page-height');
-            delta *= pageHeight;
-            deltaY *= pageHeight;
-            deltaX *= pageHeight;
-        }
-
-        // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX));
-
-        if (!lowestDelta || absDelta < lowestDelta) {
-            lowestDelta = absDelta;
-
-            // Adjust older deltas if necessary
-            if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
-                lowestDelta /= 40;
-            }
-        }
-
-        // Adjust older deltas if necessary
-        if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
-            // Divide all the things by 40!
-            delta /= 40;
-            deltaX /= 40;
-            deltaY /= 40;
-        }
-
-        // Get a whole, normalized value for the deltas
-        delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
-        deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
-        deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
-
-        // Normalise offsetX and offsetY properties
-        if (special.settings.normalizeOffset && this.getBoundingClientRect) {
-            var boundingRect = this.getBoundingClientRect();
-            offsetX = event.clientX - boundingRect.left;
-            offsetY = event.clientY - boundingRect.top;
-        }
-
-        // Add information to the event object
-        event.deltaX = deltaX;
-        event.deltaY = deltaY;
-        event.deltaFactor = lowestDelta;
-        event.offsetX = offsetX;
-        event.offsetY = offsetY;
-        // Go ahead and set deltaMode to 0 since we converted to pixels
-        // Although this is a little odd since we overwrite the deltaX/Y
-        // properties with normalized deltas.
-        event.deltaMode = 0;
-
-        // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
-
-        // Clearout lowestDelta after sometime to better
-        // handle multiple device types that give different
-        // a different lowestDelta
-        // Ex: trackpad = 3 and mouse wheel = 120
-        if (nullLowestDeltaTimeout) {
-            clearTimeout(nullLowestDeltaTimeout);
-        }
-        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
-
-        return ($.event.dispatch || $.event.handle).apply(this, args);
-    }
-
-    function nullLowestDelta() {
-        lowestDelta = null;
-    }
-
-    function shouldAdjustOldDeltas(orgEvent, absDelta) {
-        // If this is an older event and the delta is divisable by 120,
-        // then we are assuming that the browser is treating this as an
-        // older mouse wheel event and that we should divide the deltas
-        // by 40 to try and get a more usable deltaFactor.
-        // Side note, this actually impacts the reported scroll distance
-        // in older browsers and can cause scrolling to be slower than native.
-        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
-        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
-    }
-});
-
-/***/ }),
-/* 203 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(204);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(79)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../node_modules/css-loader/index.js!./jquery.dataTables.min.css", function() {
-			var newContent = require("!!../../../../../node_modules/css-loader/index.js!./jquery.dataTables.min.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 204 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var escape = __webpack_require__(8);
-exports = module.exports = __webpack_require__(1)(false);
-// imports
-
-
-// module
-exports.push([module.i, "table.dataTable{width:100%;margin:0 auto;clear:both;border-collapse:separate;border-spacing:0}table.dataTable thead th,table.dataTable tfoot th{font-weight:bold}table.dataTable thead th,table.dataTable thead td{padding:10px 18px;border-bottom:1px solid #111}table.dataTable thead th:active,table.dataTable thead td:active{outline:none}table.dataTable tfoot th,table.dataTable tfoot td{padding:10px 18px 6px 18px;border-top:1px solid #111}table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{cursor:pointer;*cursor:hand}table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{background-repeat:no-repeat;background-position:center right}table.dataTable thead .sorting{background-image:url(" + escape(__webpack_require__(205)) + ")}table.dataTable thead .sorting_asc{background-image:url(" + escape(__webpack_require__(206)) + ")}table.dataTable thead .sorting_desc{background-image:url(" + escape(__webpack_require__(207)) + ")}table.dataTable thead .sorting_asc_disabled{background-image:url(" + escape(__webpack_require__(208)) + ")}table.dataTable thead .sorting_desc_disabled{background-image:url(" + escape(__webpack_require__(209)) + ")}table.dataTable tbody tr{background-color:#ffffff}table.dataTable tbody tr.selected{background-color:#B0BED9}table.dataTable tbody th,table.dataTable tbody td{padding:8px 10px}table.dataTable.row-border tbody th,table.dataTable.row-border tbody td,table.dataTable.display tbody th,table.dataTable.display tbody td{border-top:1px solid #ddd}table.dataTable.row-border tbody tr:first-child th,table.dataTable.row-border tbody tr:first-child td,table.dataTable.display tbody tr:first-child th,table.dataTable.display tbody tr:first-child td{border-top:none}table.dataTable.cell-border tbody th,table.dataTable.cell-border tbody td{border-top:1px solid #ddd;border-right:1px solid #ddd}table.dataTable.cell-border tbody tr th:first-child,table.dataTable.cell-border tbody tr td:first-child{border-left:1px solid #ddd}table.dataTable.cell-border tbody tr:first-child th,table.dataTable.cell-border tbody tr:first-child td{border-top:none}table.dataTable.stripe tbody tr.odd,table.dataTable.display tbody tr.odd{background-color:#f9f9f9}table.dataTable.stripe tbody tr.odd.selected,table.dataTable.display tbody tr.odd.selected{background-color:#acbad4}table.dataTable.hover tbody tr:hover,table.dataTable.display tbody tr:hover{background-color:#f6f6f6}table.dataTable.hover tbody tr:hover.selected,table.dataTable.display tbody tr:hover.selected{background-color:#aab7d1}table.dataTable.order-column tbody tr>.sorting_1,table.dataTable.order-column tbody tr>.sorting_2,table.dataTable.order-column tbody tr>.sorting_3,table.dataTable.display tbody tr>.sorting_1,table.dataTable.display tbody tr>.sorting_2,table.dataTable.display tbody tr>.sorting_3{background-color:#fafafa}table.dataTable.order-column tbody tr.selected>.sorting_1,table.dataTable.order-column tbody tr.selected>.sorting_2,table.dataTable.order-column tbody tr.selected>.sorting_3,table.dataTable.display tbody tr.selected>.sorting_1,table.dataTable.display tbody tr.selected>.sorting_2,table.dataTable.display tbody tr.selected>.sorting_3{background-color:#acbad5}table.dataTable.display tbody tr.odd>.sorting_1,table.dataTable.order-column.stripe tbody tr.odd>.sorting_1{background-color:#f1f1f1}table.dataTable.display tbody tr.odd>.sorting_2,table.dataTable.order-column.stripe tbody tr.odd>.sorting_2{background-color:#f3f3f3}table.dataTable.display tbody tr.odd>.sorting_3,table.dataTable.order-column.stripe tbody tr.odd>.sorting_3{background-color:whitesmoke}table.dataTable.display tbody tr.odd.selected>.sorting_1,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_1{background-color:#a6b4cd}table.dataTable.display tbody tr.odd.selected>.sorting_2,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_2{background-color:#a8b5cf}table.dataTable.display tbody tr.odd.selected>.sorting_3,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_3{background-color:#a9b7d1}table.dataTable.display tbody tr.even>.sorting_1,table.dataTable.order-column.stripe tbody tr.even>.sorting_1{background-color:#fafafa}table.dataTable.display tbody tr.even>.sorting_2,table.dataTable.order-column.stripe tbody tr.even>.sorting_2{background-color:#fcfcfc}table.dataTable.display tbody tr.even>.sorting_3,table.dataTable.order-column.stripe tbody tr.even>.sorting_3{background-color:#fefefe}table.dataTable.display tbody tr.even.selected>.sorting_1,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_1{background-color:#acbad5}table.dataTable.display tbody tr.even.selected>.sorting_2,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_2{background-color:#aebcd6}table.dataTable.display tbody tr.even.selected>.sorting_3,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_3{background-color:#afbdd8}table.dataTable.display tbody tr:hover>.sorting_1,table.dataTable.order-column.hover tbody tr:hover>.sorting_1{background-color:#eaeaea}table.dataTable.display tbody tr:hover>.sorting_2,table.dataTable.order-column.hover tbody tr:hover>.sorting_2{background-color:#ececec}table.dataTable.display tbody tr:hover>.sorting_3,table.dataTable.order-column.hover tbody tr:hover>.sorting_3{background-color:#efefef}table.dataTable.display tbody tr:hover.selected>.sorting_1,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_1{background-color:#a2aec7}table.dataTable.display tbody tr:hover.selected>.sorting_2,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_2{background-color:#a3b0c9}table.dataTable.display tbody tr:hover.selected>.sorting_3,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_3{background-color:#a5b2cb}table.dataTable.no-footer{border-bottom:1px solid #111}table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap}table.dataTable.compact thead th,table.dataTable.compact thead td{padding:4px 17px 4px 4px}table.dataTable.compact tfoot th,table.dataTable.compact tfoot td{padding:4px}table.dataTable.compact tbody th,table.dataTable.compact tbody td{padding:4px}table.dataTable th.dt-left,table.dataTable td.dt-left{text-align:left}table.dataTable th.dt-center,table.dataTable td.dt-center,table.dataTable td.dataTables_empty{text-align:center}table.dataTable th.dt-right,table.dataTable td.dt-right{text-align:right}table.dataTable th.dt-justify,table.dataTable td.dt-justify{text-align:justify}table.dataTable th.dt-nowrap,table.dataTable td.dt-nowrap{white-space:nowrap}table.dataTable thead th.dt-head-left,table.dataTable thead td.dt-head-left,table.dataTable tfoot th.dt-head-left,table.dataTable tfoot td.dt-head-left{text-align:left}table.dataTable thead th.dt-head-center,table.dataTable thead td.dt-head-center,table.dataTable tfoot th.dt-head-center,table.dataTable tfoot td.dt-head-center{text-align:center}table.dataTable thead th.dt-head-right,table.dataTable thead td.dt-head-right,table.dataTable tfoot th.dt-head-right,table.dataTable tfoot td.dt-head-right{text-align:right}table.dataTable thead th.dt-head-justify,table.dataTable thead td.dt-head-justify,table.dataTable tfoot th.dt-head-justify,table.dataTable tfoot td.dt-head-justify{text-align:justify}table.dataTable thead th.dt-head-nowrap,table.dataTable thead td.dt-head-nowrap,table.dataTable tfoot th.dt-head-nowrap,table.dataTable tfoot td.dt-head-nowrap{white-space:nowrap}table.dataTable tbody th.dt-body-left,table.dataTable tbody td.dt-body-left{text-align:left}table.dataTable tbody th.dt-body-center,table.dataTable tbody td.dt-body-center{text-align:center}table.dataTable tbody th.dt-body-right,table.dataTable tbody td.dt-body-right{text-align:right}table.dataTable tbody th.dt-body-justify,table.dataTable tbody td.dt-body-justify{text-align:justify}table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap{white-space:nowrap}table.dataTable,table.dataTable th,table.dataTable td{-webkit-box-sizing:content-box;box-sizing:content-box}.dataTables_wrapper{position:relative;clear:both;*zoom:1;zoom:1}.dataTables_wrapper .dataTables_length{float:left}.dataTables_wrapper .dataTables_filter{float:right;text-align:right}.dataTables_wrapper .dataTables_filter input{margin-left:0.5em}.dataTables_wrapper .dataTables_info{clear:both;float:left;padding-top:0.755em}.dataTables_wrapper .dataTables_paginate{float:right;text-align:right;padding-top:0.25em}.dataTables_wrapper .dataTables_paginate .paginate_button{box-sizing:border-box;display:inline-block;min-width:1.5em;padding:0.5em 1em;margin-left:2px;text-align:center;text-decoration:none !important;cursor:pointer;*cursor:hand;color:#333 !important;border:1px solid transparent;border-radius:2px}.dataTables_wrapper .dataTables_paginate .paginate_button.current,.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{color:#333 !important;border:1px solid #979797;background-color:white;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));background:-webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-o-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:linear-gradient(to bottom, #fff 0%, #dcdcdc 100%)}.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active{cursor:default;color:#666 !important;border:1px solid transparent;background:transparent;box-shadow:none}.dataTables_wrapper .dataTables_paginate .paginate_button:hover{color:white !important;border:1px solid #111;background-color:#585858;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));background:-webkit-linear-gradient(top, #585858 0%, #111 100%);background:-moz-linear-gradient(top, #585858 0%, #111 100%);background:-ms-linear-gradient(top, #585858 0%, #111 100%);background:-o-linear-gradient(top, #585858 0%, #111 100%);background:linear-gradient(to bottom, #585858 0%, #111 100%)}.dataTables_wrapper .dataTables_paginate .paginate_button:active{outline:none;background-color:#2b2b2b;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #2b2b2b), color-stop(100%, #0c0c0c));background:-webkit-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-moz-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-ms-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-o-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:linear-gradient(to bottom, #2b2b2b 0%, #0c0c0c 100%);box-shadow:inset 0 0 3px #111}.dataTables_wrapper .dataTables_paginate .ellipsis{padding:0 1em}.dataTables_wrapper .dataTables_processing{position:absolute;top:50%;left:50%;width:100%;height:40px;margin-left:-50%;margin-top:-25px;padding-top:20px;text-align:center;font-size:1.2em;background-color:white;background:-webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255,255,255,0)), color-stop(25%, rgba(255,255,255,0.9)), color-stop(75%, rgba(255,255,255,0.9)), color-stop(100%, rgba(255,255,255,0)));background:-webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%)}.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter,.dataTables_wrapper .dataTables_info,.dataTables_wrapper .dataTables_processing,.dataTables_wrapper .dataTables_paginate{color:#333}.dataTables_wrapper .dataTables_scroll{clear:both}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody{*margin-top:-1px;-webkit-overflow-scrolling:touch}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td{vertical-align:middle}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td>div.dataTables_sizing{height:0;overflow:hidden;margin:0 !important;padding:0 !important}.dataTables_wrapper.no-footer .dataTables_scrollBody{border-bottom:1px solid #111}.dataTables_wrapper.no-footer div.dataTables_scrollHead>table,.dataTables_wrapper.no-footer div.dataTables_scrollBody>table{border-bottom:none}.dataTables_wrapper:after{visibility:hidden;display:block;content:\"\";clear:both;height:0}@media screen and (max-width: 767px){.dataTables_wrapper .dataTables_info,.dataTables_wrapper .dataTables_paginate{float:none;text-align:center}.dataTables_wrapper .dataTables_paginate{margin-top:0.5em}}@media screen and (max-width: 640px){.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{float:none;text-align:center}.dataTables_wrapper .dataTables_filter{margin-top:0.5em}}\r\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 205 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/sort_both.png?d012efb263431f6e63699886a239daf5";
-
-/***/ }),
-/* 206 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/sort_asc.png?b55d4488b71419fa7d95fce0faa68559";
-
-/***/ }),
-/* 207 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/sort_desc.png?9083637c24e74024959f962612312b20";
-
-/***/ }),
-/* 208 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/sort_asc_disabled.png?7fa998ede4f84acdd88ce49e1b3882b2";
-
-/***/ }),
-/* 209 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/sort_desc_disabled.png?d37e43b5328ef55e49e4b5087a5f4b9a";
-
-/***/ }),
-/* 210 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(211);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(79)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!./pagination.css", function() {
-			var newContent = require("!!../../../../../../node_modules/css-loader/index.js!./pagination.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 211 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\r\n@charset \"UTF-8\";\r\n\r\n/*ccs-1*/\r\n.whj_jqueryPaginationCss-1{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-1 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_padding{\r\n    padding: 5px 13px;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_bgc{\r\n    border-radius: 4px;\r\n    background-color: #fff;\r\n    color: #666666;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_border{\r\n    border: 1px solid #eeeeee;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_color{\r\n    color: #9a9a9a;\r\n}\r\n.whj_jqueryPaginationCss-1 .to_page_color{\r\n    color: #666666;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_hover:hover{\r\n    background-color: #33cc66;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_checked{\r\n    background-color: #33cc66;\r\n    color: #ffffff;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-1 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-1 input{\r\n    padding: 0px;\r\n    width: 36px;\r\n    height: 36px;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    text-align: center;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-1 div,.whj_jqueryPaginationCss-1 input,.whj_jqueryPaginationCss-1 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-2*/\r\n.whj_jqueryPaginationCss-2{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-2 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_bgc{\r\n    background-color: #5194ca;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_border{\r\n    border: 1px solid #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_color{\r\n    color: #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_hover:hover{\r\n    background-color: #d4f1ff;\r\n    color: #5194ca;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_checked{\r\n    background-color: #d4f1ff;\r\n    color: #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_hoverDisable{\r\n    opacity: 0.7;\r\n}\r\n.whj_jqueryPaginationCss-2 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-2 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-2 div,.whj_jqueryPaginationCss-2 input,.whj_jqueryPaginationCss-2 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-3*/\r\n.whj_jqueryPaginationCss-3{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-3 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_bgc{\r\n    background-color: #7a7b7b;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_border{\r\n    border: 1px solid #929292;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_color{\r\n    color: #929292;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_hover:hover{\r\n    background-color: #e0dddd;\r\n    color: #7a7b7b;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_checked{\r\n    background-color: #e0dddd;\r\n    color: #7a7b7b;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-3 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-3 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-3 div,.whj_jqueryPaginationCss-3 input,.whj_jqueryPaginationCss-3 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-4*/\r\n.whj_jqueryPaginationCss-4{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-4 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_bgc{\r\n    background-color: #f5f5f5;\r\n    color: #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_border{\r\n    border: 1px solid #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_color{\r\n    color: #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_hover:hover{\r\n    background-color: #afacac;\r\n    color: #fff;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_checked{\r\n    background-color: #afacac;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-4 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-4 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-4 div,.whj_jqueryPaginationCss-4 input,.whj_jqueryPaginationCss-4 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-5*/\r\n.whj_jqueryPaginationCss-5{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-5 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_bgc{\r\n    background-color: #199eaf;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_border{\r\n    border: 1px solid #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_color{\r\n    color: #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_hover:hover{\r\n    background-color: #d4f1ff;\r\n    color: #199eaf;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_checked{\r\n    background-color: #d4f1ff;\r\n    color: #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-5 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-5 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-5 div,.whj_jqueryPaginationCss-5 input,.whj_jqueryPaginationCss-5 select{\r\n    margin: 0 4px;\r\n}\r\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 212 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -34515,7 +31250,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AM
 });
 
 /***/ }),
-/* 213 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -34764,10 +31499,3537 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 213;
+webpackContext.id = 202;
+
+/***/ }),
+/* 203 */
+/***/ (function(module, exports) {
+
+(function (global, $, factory) {
+	factory(global, $);
+})(this, jQuery, function (window, $) {
+
+	var siteFns = {
+		init: function init() {
+			var self = this;
+			self.componentInit().addressPicker.init();
+		},
+
+		componentInit: function componentInit() {
+			var self = this;
+			if ($('select').length) {
+				initSelectBox();
+				$('select').each(function () {
+					var $this = $(this),
+					    obj = $(this).data('options');
+					if (obj) {
+						obj = obj.charAt(0) === '{' && obj.charAt(obj.length - 1) === '}' ? stf(obj) : stf('{' + obj + '}');
+					} else {
+						obj = {};
+					}
+					$this.selectpicker(obj);
+				});
+			}
+			if ($('.input-date-range')) {
+				$('.input-date-range').each(function () {
+					var $this = $(this),
+					    options = {
+						autoUpdateInput: false,
+						locale: {
+							applyLabel: '确定',
+							cancelLabel: '取消',
+							fromLabel: '起始时间',
+							toLabel: '结束时间',
+							daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+							monthNames: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+							firstDay: 1,
+							format: 'YYYY/DD/MM'
+						}
+					};
+					// if( $this. ) {
+					//
+					// }
+					$this.after('<input type="hidden" name="start-date" /><input type="hidden" name="end-date" />');
+					$this.daterangepicker(options, function (start, end, label) {
+						$this.parent().prev().addClass('has-content');
+						start = start.format('YYYY/DD/MM');
+						end = end.format('YYYY/DD/MM');
+						$this.val(start + ' - ' + end);
+						$this.nextAll().eq(0).val(start).end().eq(1).val(end);
+					});
+
+					if ($this.val()) {
+						$this.parent().prev().addClass('has-content');
+					}
+				});
+			}
+			return self;
+		},
+		addressPicker: {
+			init: function init() {
+				province = '';
+				city = '';
+				$.ajax({
+					type: "GET",
+					url: "common/common/getAllProvince",
+					dataType: "json",
+					async: false,
+					success: function success(data) {
+
+						province = data;
+					}
+				});
+				$.ajax({
+					type: "GET",
+					url: "common/common/getAllCitys",
+					dataType: "json",
+					async: false,
+					success: function success(data) {
+						city = data;
+					}
+				});
+
+				var self = this,
+				    provs = province,
+				    citys = city;
+
+				self.provs = provs;
+				self.citys = citys;
+				self.render().eventInit();
+			},
+			render: function render() {
+				var self = this;
+
+				$('.city-select').each(function () {
+					var $this = $(this),
+					    html = '',
+					    name,
+					    val;
+
+					$this.prepend('<input name="search-prov" type="hidden" /><input name="search-city" type="hidden" />');
+
+					$.each(self.provs, function (i, prov) {
+						prov = ~prov.indexOf('-') ? prov.split('-') : [prov, i + 1];
+						name = prov[0];
+						val = prov[1];
+
+						html += '<li class="drop-prov-li" data-val="' + val + '">' + name + '</li>';
+					});
+
+					$this.next().find('.drop-prov-ul').append(html);
+
+					$this.next().find('.drop-prov-ul li').each(function (i) {
+						html = '';
+
+						$.each(self.citys[i], function (i, city) {
+
+							city = ~city.indexOf('-') ? city.split('-') : [city, i + 1];
+							name = city[0];
+							val = city[1];
+
+							html += '<li class="drop-city-li" data-val="' + val + '">' + name + '</li>';
+						});
+
+						$(this).data('citys', html);
+
+						if (!i) {
+							$this.next().find('.drop-city-ul').html(html);
+						}
+					});
+				});
+
+				$(document).on('click', 'body', function (e) {
+					if (!$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length) {
+						$('.drop-down:visible').prev('.city-select').trigger('click');
+					}
+				});
+				return self;
+			},
+
+			eventInit: function eventInit() {
+				var self = this;
+
+				$(document).on('click', '.city-select', function () {
+					var $this = $(this),
+					    index = 0;
+					// $parents, $value, $hidden;
+
+					$this.next().toggle();
+
+					if ($this.next().is(':visible') && $this.next().find('.selected').length === 2) {
+						$this.next().find('.selected').each(function () {
+							var $selected = $(this),
+							    scrollTop = $selected.prevAll().length * $selected.outerHeight(true);
+
+							$selected.parent().parent().scrollTop(scrollTop);
+						});
+					} else {
+						$this.next().find('.selected').removeClass('selected');
+						$this.next().children().each(function () {
+							$(this).scrollTop(0);
+						});
+						$this.next().find('.drop-city-ul').html($this.next().children().eq(0).find('li:eq(0)').data('citys'));
+						// $parents = $this.parents('.address-search-box');
+						// $value = $parents.find('.value');
+						// $hidden = $parents.find('input:hidden');
+						//
+						// $value.each(function( i ) {
+						// 	i ? $(this).val('省') : $(this).val('市');
+						// });
+						//
+						// $hidden.val('');
+					}
+				}).on('click', '.drop-prov-ul li', function () {
+					var $this = $(this),
+					    $cityWrap;
+
+					if (!$this.hasClass('selected')) {
+						$this.addClass('selected').siblings('.selected').removeClass('selected');
+
+						$cityWrap = $this.parents('.drop-prov').next();
+						$cityWrap.find('.drop-ul').html($this.data('citys'));
+					}
+				}).on('click', '.drop-city-ul li', function () {
+					var $this = $(this),
+					    $parents,
+					    $value,
+					    $hidden;
+
+					if (!$this.hasClass('selected')) {
+						$this.addClass('selected').siblings('.selected').removeClass('selected');
+
+						$parents = $this.parents('.address-search-box');
+						$value = $parents.find('.value');
+						$hidden = $parents.find('input:hidden');
+
+						$this.parents('.drop-down').toggle().find('.selected').each(function (i) {
+							$value.eq(i).val($(this).text());
+							$hidden.eq(i).val($(this).data('val'));
+						});
+					}
+				});
+				return self;
+			}
+		}
+	};
+	function stf(s) {
+		return new Function('return ' + s)();
+	}
+	$(document).ready(function () {
+		siteFns.init();
+		$('.js-pic-box').click(function () {
+			var $this = $(this);
+			$this.hasClass('select') ? $this.removeClass('selected') : $this.addClass('selected').siblings('li').removeClass('selected');
+		});
+	});
+});
+function initGallery(parent) {
+	$('.pic-list a').fancybox({
+		parent: parent || null,
+		fixed: !parent,
+		openEffect: 'none',
+		closeEffect: 'none',
+		padding: 0,
+		prevEffect: 'none',
+		nextEffect: 'none',
+		closeBtn: false,
+		helpers: {
+			buttons: {
+				show: false
+			}
+		},
+		afterLoad: function afterLoad() {
+			this.title = this.index + 1 + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
+		}
+	});
+}
+// 省份
+function initSelectBox() {
+	var provs = ["北京", "天津", "上海", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"],
+	    citys = ["北京", "天津", "上海", "重庆", "石家庄", "张家口", "承德", "秦皇岛", "唐山", "廊坊", "保定", "衡水", "沧州", "邢台", "邯郸", "太原", "朔州", "大同", "阳泉", "长治", "晋城", "忻州", "晋中", "临汾", "吕梁", "运城", "呼和浩特", "包头", "乌海", "赤峰", "通辽", "呼伦贝尔", "鄂尔多斯", "乌兰察布", "巴彦淖尔", "兴安盟", "锡林郭勒盟", "阿拉善盟", "沈阳", "朝阳", "阜新", "铁岭", "抚顺", "本溪", "辽阳", "鞍山", "丹东", "大连", "营口", "盘锦", "锦州", "葫芦岛", "长春", "白城", "松原", "吉林", "四平", "辽源", "通化", "白山", "延边州", "哈尔滨", "齐齐哈尔", "七台河", "黑河", "大庆", "鹤岗", "伊春", "佳木斯", "双鸭山", "鸡西", "牡丹江", "绥化", "大兴安岭", "南京", "徐州", "连云港", "宿迁", "淮安", "盐城", "扬州", "泰州", "南通", "镇江", "常州", "无锡", "苏州", "杭州", "湖州", "嘉兴", "舟山", "宁波", "绍兴", "衢州", "金华", "台州", "温州", "丽水", "合肥", "宿州", "淮北", "亳州", "阜阳", "蚌埠", "淮南", "滁州", "马鞍山", "芜湖", "铜陵", "安庆", "黄山", "六安", "巢湖", "池州", "宣城", "福州", "南平", "莆田", "三明", "泉州", "厦门", "漳州", "龙岩", "宁德", "南昌", "九江", "景德镇", "鹰潭", "新余", "萍乡", "赣州", "上饶", "抚州", "宜春", "吉安", "济南", "青岛", "聊城", "德州", "东营", "淄博", "潍坊", "烟台", "威海", "日照", "临沂", "枣庄", "济宁", "泰安", "莱芜", "滨州", "菏泽", "郑州", "开封", "三门峡", "洛阳", "焦作", "新乡", "鹤壁", "安阳", "濮阳", "商丘", "许昌", "漯河", "平顶山", "南阳", "信阳", "周口", "驻马店", "济源", "武汉", "十堰", "襄阳", "荆门", "孝感", "黄冈", "鄂州", "黄石", "咸宁", "荆州", "宜昌", "随州", "仙桃", "潜江", "天门", "神农架林区", "恩施州", "长沙", "张家界", "常德", "益阳", "岳阳", "株洲", "湘潭", "衡阳", "郴州", "永州", "邵阳", "怀化", "娄底", "湘西州", "广州", "深圳", "清远", "韶关", "河源", "梅州", "潮州", "汕头", "揭阳", "汕尾", "惠州", "东莞", "珠海", "中山", "江门", "佛山", "肇庆", "云浮", "阳江", "茂名", "湛江", "南宁", "桂林", "柳州", "梧州", "贵港", "玉林", "钦州", "北海", "防城港", "崇左", "百色", "河池", "来宾", "贺州", "海口", "三亚", "文昌", "琼海", "万宁", "五指山", "东方", "儋州", "三沙", "成都", "广元", "绵阳", "德阳", "南充", "广安", "遂宁", "内江", "乐山", "自贡", "泸州", "宜宾", "攀枝花", "巴中", "达州", "资阳", "眉山", "雅安", "阿坝州", "甘孜州", "凉山州", "贵阳", "六盘水", "遵义", "安顺", "毕节", "铜仁", "黔东南州", "黔南州", "黔西南州", "昆明", "曲靖", "玉溪", "保山", "昭通", "丽江", "思茅", "临沧", "德宏州", "怒江州", "迪庆州", "大理州", "楚雄州", "红河州", "文山州", "西双版纳", "拉萨", "那曲", "昌都", "林芝", "山南", "日喀则", "阿里", "西安", "延安", "铜川", "渭南", "咸阳", "宝鸡", "汉中", "榆林", "安康", "商洛", "兰州", "嘉峪关", "白银", "天水", "武威", "酒泉", "张掖", "庆阳", "平凉", "定西", "陇南", "临夏州", "甘南州", "西宁", "海东", "海北州", "海南州", "黄南州", "果洛州", "玉树州", "海西州", "银川", "石嘴山", "吴忠", "固原", "中卫", "乌鲁木齐", "克拉玛依", "喀什", "阿克苏", "和田", "吐鲁番", "哈密", "克孜勒苏柯州", "博尔塔拉州", "昌吉州", "巴音郭楞州", "伊犁州", "塔城", "阿勒泰", "香港", "澳门", "台北", "高雄", "台中", "花莲", "基隆", "嘉义", "金门", "连江", "苗栗", "南投", "澎湖", "屏东", "台东", "台南", "桃园", "新竹", "宜兰", "云林", "彰化"],
+	    areas = ["朝阳", "阜新", "铁岭", "抚顺", "本溪", "辽阳", "鞍山", "丹东", "大连", "营口", "盘锦", "锦州", "葫芦岛", "长春", "白城", "松原", "吉林", "四平", "辽源", "通化", "白山", "延边州", "哈尔滨", "齐齐哈尔", "七台河", "黑河", "大庆", "鹤岗", "伊春", "佳木斯", "双鸭山", "鸡西", "牡丹江", "绥化"];
+
+	// 省
+	for (var index = 0; index < provs.length; index++) {
+		$("#prev-select-box").append("<option>" + provs[index] + "</option>");
+	}
+	// 市
+	for (var index = 0; index < citys.length; index++) {
+		$("#city-select-box").append("<option>" + citys[index] + "</option>");
+	}
+	// 区
+	for (var index = 0; index < areas.length; index++) {
+		$("#area-select-box").append("<option>" + areas[index] + "</option>");
+	}
+}
+
+/***/ }),
+/* 204 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * jQuery Mousewheel 3.1.13
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license
+ * http://jquery.org/license
+ */
+
+(function (factory) {
+    if ( true ) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
+
+    var toFix  = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
+        toBind = ( 'onwheel' in document || document.documentMode >= 9 ) ?
+                    ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
+        slice  = Array.prototype.slice,
+        nullLowestDeltaTimeout, lowestDelta;
+
+    if ( $.event.fixHooks ) {
+        for ( var i = toFix.length; i; ) {
+            $.event.fixHooks[ toFix[--i] ] = $.event.mouseHooks;
+        }
+    }
+
+    var special = $.event.special.mousewheel = {
+        version: '3.1.12',
+
+        setup: function() {
+            if ( this.addEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.addEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+            // Store the line height and page height for this particular element
+            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
+            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
+        },
+
+        teardown: function() {
+            if ( this.removeEventListener ) {
+                for ( var i = toBind.length; i; ) {
+                    this.removeEventListener( toBind[--i], handler, false );
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+            // Clean up the data we added to the element
+            $.removeData(this, 'mousewheel-line-height');
+            $.removeData(this, 'mousewheel-page-height');
+        },
+
+        getLineHeight: function(elem) {
+            var $elem = $(elem),
+                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+            if (!$parent.length) {
+                $parent = $('body');
+            }
+            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+        },
+
+        getPageHeight: function(elem) {
+            return $(elem).height();
+        },
+
+        settings: {
+            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
+            normalizeOffset: true  // calls getBoundingClientRect for each event
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function(fn) {
+            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
+        },
+
+        unmousewheel: function(fn) {
+            return this.unbind('mousewheel', fn);
+        }
+    });
+
+
+    function handler(event) {
+        var orgEvent   = event || window.event,
+            args       = slice.call(arguments, 1),
+            delta      = 0,
+            deltaX     = 0,
+            deltaY     = 0,
+            absDelta   = 0,
+            offsetX    = 0,
+            offsetY    = 0;
+        event = $.event.fix(orgEvent);
+        event.type = 'mousewheel';
+
+        // Old school scrollwheel delta
+        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
+        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
+        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
+        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+
+        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
+        if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
+            deltaX = deltaY * -1;
+            deltaY = 0;
+        }
+
+        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
+        delta = deltaY === 0 ? deltaX : deltaY;
+
+        // New school wheel delta (wheel event)
+        if ( 'deltaY' in orgEvent ) {
+            deltaY = orgEvent.deltaY * -1;
+            delta  = deltaY;
+        }
+        if ( 'deltaX' in orgEvent ) {
+            deltaX = orgEvent.deltaX;
+            if ( deltaY === 0 ) { delta  = deltaX * -1; }
+        }
+
+        // No change actually happened, no reason to go any further
+        if ( deltaY === 0 && deltaX === 0 ) { return; }
+
+        // Need to convert lines and pages to pixels if we aren't already in pixels
+        // There are three delta modes:
+        //   * deltaMode 0 is by pixels, nothing to do
+        //   * deltaMode 1 is by lines
+        //   * deltaMode 2 is by pages
+        if ( orgEvent.deltaMode === 1 ) {
+            var lineHeight = $.data(this, 'mousewheel-line-height');
+            delta  *= lineHeight;
+            deltaY *= lineHeight;
+            deltaX *= lineHeight;
+        } else if ( orgEvent.deltaMode === 2 ) {
+            var pageHeight = $.data(this, 'mousewheel-page-height');
+            delta  *= pageHeight;
+            deltaY *= pageHeight;
+            deltaX *= pageHeight;
+        }
+
+        // Store lowest absolute delta to normalize the delta values
+        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+
+        if ( !lowestDelta || absDelta < lowestDelta ) {
+            lowestDelta = absDelta;
+
+            // Adjust older deltas if necessary
+            if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+                lowestDelta /= 40;
+            }
+        }
+
+        // Adjust older deltas if necessary
+        if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
+            // Divide all the things by 40!
+            delta  /= 40;
+            deltaX /= 40;
+            deltaY /= 40;
+        }
+
+        // Get a whole, normalized value for the deltas
+        delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
+        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
+        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+
+        // Normalise offsetX and offsetY properties
+        if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
+            var boundingRect = this.getBoundingClientRect();
+            offsetX = event.clientX - boundingRect.left;
+            offsetY = event.clientY - boundingRect.top;
+        }
+
+        // Add information to the event object
+        event.deltaX = deltaX;
+        event.deltaY = deltaY;
+        event.deltaFactor = lowestDelta;
+        event.offsetX = offsetX;
+        event.offsetY = offsetY;
+        // Go ahead and set deltaMode to 0 since we converted to pixels
+        // Although this is a little odd since we overwrite the deltaX/Y
+        // properties with normalized deltas.
+        event.deltaMode = 0;
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        // Clearout lowestDelta after sometime to better
+        // handle multiple device types that give different
+        // a different lowestDelta
+        // Ex: trackpad = 3 and mouse wheel = 120
+        if (nullLowestDeltaTimeout) { clearTimeout(nullLowestDeltaTimeout); }
+        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
+    }
+
+    function nullLowestDelta() {
+        lowestDelta = null;
+    }
+
+    function shouldAdjustOldDeltas(orgEvent, absDelta) {
+        // If this is an older event and the delta is divisable by 120,
+        // then we are assuming that the browser is treating this as an
+        // older mouse wheel event and that we should divide the deltas
+        // by 40 to try and get a more usable deltaFactor.
+        // Side note, this actually impacts the reported scroll distance
+        // in older browsers and can cause scrolling to be slower than native.
+        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
+        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+    }
+
+}));
+
+
+/***/ }),
+/* 205 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/*!
+ * @copyright Copyright &copy; Kartik Visweswaran, Krajee.com, 2014 - 2015
+ * @version 1.3.3
+ *
+ * Date formatter utility library that allows formatting date/time variables or Date objects using PHP DateTime format.
+ * @see http://php.net/manual/en/function.date.php
+ *
+ * For more JQuery plugins visit http://plugins.krajee.com
+ * For more Yii related demos visit http://demos.krajee.com
+ */
+
+if (!window.jQuery) {
+    var jQuery = __webpack_require__(18);
+} else {
+    var jQuery = window.jQuery;
+}
+
+var DateFormatter;
+(function ($) {
+    "use strict";
+
+    var _compare, _lpad2, _extend2, defaultSettings, DAY, HOUR;
+    DAY = 1000 * 60 * 60 * 24;
+    HOUR = 3600;
+
+    _compare = function _compare(str1, str2) {
+        return typeof str1 === 'string' && typeof str2 === 'string' && str1.toLowerCase() === str2.toLowerCase();
+    };
+    _lpad2 = function _lpad(value, length, char) {
+        var chr = char || '0',
+            val = value.toString();
+        return val.length < length ? _lpad2(chr + val, length) : val;
+    };
+    _extend2 = function _extend(out) {
+        var i, obj;
+        out = out || {};
+        for (i = 1; i < arguments.length; i++) {
+            obj = arguments[i];
+            if (!obj) {
+                continue;
+            }
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if (_typeof(obj[key]) === 'object') {
+                        _extend2(out[key], obj[key]);
+                    } else {
+                        out[key] = obj[key];
+                    }
+                }
+            }
+        }
+        return out;
+    };
+    defaultSettings = {
+        dateSettings: {
+            days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+            daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            meridiem: ['AM', 'PM'],
+            ordinal: function ordinal(number) {
+                var n = number % 10,
+                    suffixes = { 1: 'st', 2: 'nd', 3: 'rd' };
+                return Math.floor(number % 100 / 10) === 1 || !suffixes[n] ? 'th' : suffixes[n];
+            }
+        },
+        separators: /[ \-+\/\.T:@]/g,
+        validParts: /[dDjlNSwzWFmMntLoYyaABgGhHisueTIOPZcrU]/g,
+        intParts: /[djwNzmnyYhHgGis]/g,
+        tzParts: /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
+        tzClip: /[^-+\dA-Z]/g
+    };
+
+    DateFormatter = function DateFormatter(options) {
+        var self = this,
+            config = _extend2(defaultSettings, options);
+        self.dateSettings = config.dateSettings;
+        self.separators = config.separators;
+        self.validParts = config.validParts;
+        self.intParts = config.intParts;
+        self.tzParts = config.tzParts;
+        self.tzClip = config.tzClip;
+    };
+
+    DateFormatter.prototype = {
+        constructor: DateFormatter,
+        parseDate: function parseDate(vDate, vFormat) {
+            var self = this,
+                vFormatParts,
+                vDateParts,
+                i,
+                vDateFlag = false,
+                vTimeFlag = false,
+                vDatePart,
+                iDatePart,
+                vSettings = self.dateSettings,
+                vMonth,
+                vMeriIndex,
+                vMeriOffset,
+                len,
+                mer,
+                out = { date: null, year: null, month: null, day: null, hour: 0, min: 0, sec: 0 };
+            if (!vDate) {
+                return undefined;
+            }
+            if (vDate instanceof Date) {
+                return vDate;
+            }
+            if (typeof vDate === 'number') {
+                return new Date(vDate);
+            }
+            if (vFormat === 'U') {
+                i = parseInt(vDate);
+                return i ? new Date(i * 1000) : vDate;
+            }
+            if (typeof vDate !== 'string') {
+                return '';
+            }
+            vFormatParts = vFormat.match(self.validParts);
+            if (!vFormatParts || vFormatParts.length === 0) {
+                throw new Error("Invalid date format definition.");
+            }
+            vDateParts = vDate.replace(self.separators, '\0').split('\0');
+            for (i = 0; i < vDateParts.length; i++) {
+                vDatePart = vDateParts[i];
+                iDatePart = parseInt(vDatePart);
+                switch (vFormatParts[i]) {
+                    case 'y':
+                    case 'Y':
+                        len = vDatePart.length;
+                        if (len === 2) {
+                            out.year = parseInt((iDatePart < 70 ? '20' : '19') + vDatePart);
+                        } else if (len === 4) {
+                            out.year = iDatePart;
+                        }
+                        vDateFlag = true;
+                        break;
+                    case 'm':
+                    case 'n':
+                    case 'M':
+                    case 'F':
+                        if (isNaN(vDatePart)) {
+                            vMonth = vSettings.monthsShort.indexOf(vDatePart);
+                            if (vMonth > -1) {
+                                out.month = vMonth + 1;
+                            }
+                            vMonth = vSettings.months.indexOf(vDatePart);
+                            if (vMonth > -1) {
+                                out.month = vMonth + 1;
+                            }
+                        } else {
+                            if (iDatePart >= 1 && iDatePart <= 12) {
+                                out.month = iDatePart;
+                            }
+                        }
+                        vDateFlag = true;
+                        break;
+                    case 'd':
+                    case 'j':
+                        if (iDatePart >= 1 && iDatePart <= 31) {
+                            out.day = iDatePart;
+                        }
+                        vDateFlag = true;
+                        break;
+                    case 'g':
+                    case 'h':
+                        vMeriIndex = vFormatParts.indexOf('a') > -1 ? vFormatParts.indexOf('a') : vFormatParts.indexOf('A') > -1 ? vFormatParts.indexOf('A') : -1;
+                        mer = vDateParts[vMeriIndex];
+                        if (vMeriIndex > -1) {
+                            vMeriOffset = _compare(mer, vSettings.meridiem[0]) ? 0 : _compare(mer, vSettings.meridiem[1]) ? 12 : -1;
+                            if (iDatePart >= 1 && iDatePart <= 12 && vMeriOffset > -1) {
+                                out.hour = iDatePart + vMeriOffset;
+                            } else if (iDatePart >= 0 && iDatePart <= 23) {
+                                out.hour = iDatePart;
+                            }
+                        } else if (iDatePart >= 0 && iDatePart <= 23) {
+                            out.hour = iDatePart;
+                        }
+                        vTimeFlag = true;
+                        break;
+                    case 'G':
+                    case 'H':
+                        if (iDatePart >= 0 && iDatePart <= 23) {
+                            out.hour = iDatePart;
+                        }
+                        vTimeFlag = true;
+                        break;
+                    case 'i':
+                        if (iDatePart >= 0 && iDatePart <= 59) {
+                            out.min = iDatePart;
+                        }
+                        vTimeFlag = true;
+                        break;
+                    case 's':
+                        if (iDatePart >= 0 && iDatePart <= 59) {
+                            out.sec = iDatePart;
+                        }
+                        vTimeFlag = true;
+                        break;
+                }
+            }
+            if (vDateFlag === true && out.year && out.month && out.day) {
+                out.date = new Date(out.year, out.month - 1, out.day, out.hour, out.min, out.sec, 0);
+            } else {
+                if (vTimeFlag !== true) {
+                    return false;
+                }
+                out.date = new Date(0, 0, 0, out.hour, out.min, out.sec, 0);
+            }
+            return out.date;
+        },
+        guessDate: function guessDate(vDateStr, vFormat) {
+            if (typeof vDateStr !== 'string') {
+                return vDateStr;
+            }
+            var self = this,
+                vParts = vDateStr.replace(self.separators, '\0').split('\0'),
+                vPattern = /^[djmn]/g,
+                vFormatParts = vFormat.match(self.validParts),
+                vDate = new Date(),
+                vDigit = 0,
+                vYear,
+                i,
+                iPart,
+                iSec;
+
+            if (!vPattern.test(vFormatParts[0])) {
+                return vDateStr;
+            }
+
+            for (i = 0; i < vParts.length; i++) {
+                vDigit = 2;
+                iPart = vParts[i];
+                iSec = parseInt(iPart.substr(0, 2));
+                switch (i) {
+                    case 0:
+                        if (vFormatParts[0] === 'm' || vFormatParts[0] === 'n') {
+                            vDate.setMonth(iSec - 1);
+                        } else {
+                            vDate.setDate(iSec);
+                        }
+                        break;
+                    case 1:
+                        if (vFormatParts[0] === 'm' || vFormatParts[0] === 'n') {
+                            vDate.setDate(iSec);
+                        } else {
+                            vDate.setMonth(iSec - 1);
+                        }
+                        break;
+                    case 2:
+                        vYear = vDate.getFullYear();
+                        if (iPart.length < 4) {
+                            vDate.setFullYear(parseInt(vYear.toString().substr(0, 4 - iPart.length) + iPart));
+                            vDigit = iPart.length;
+                        } else {
+                            vDate.setFullYear = parseInt(iPart.substr(0, 4));
+                            vDigit = 4;
+                        }
+                        break;
+                    case 3:
+                        vDate.setHours(iSec);
+                        break;
+                    case 4:
+                        vDate.setMinutes(iSec);
+                        break;
+                    case 5:
+                        vDate.setSeconds(iSec);
+                        break;
+                }
+                if (iPart.substr(vDigit).length > 0) {
+                    vParts.splice(i + 1, 0, iPart.substr(vDigit));
+                }
+            }
+            return vDate;
+        },
+        parseFormat: function parseFormat(vChar, vDate) {
+            var self = this,
+                vSettings = self.dateSettings,
+                fmt,
+                backspace = /\\?(.?)/gi,
+                doFormat = function doFormat(t, s) {
+                return fmt[t] ? fmt[t]() : s;
+            };
+            fmt = {
+                /////////
+                // DAY //
+                /////////
+                /**
+                 * Day of month with leading 0: `01..31`
+                 * @return {string}
+                 */
+                d: function d() {
+                    return _lpad2(fmt.j(), 2);
+                },
+                /**
+                 * Shorthand day name: `Mon...Sun`
+                 * @return {string}
+                 */
+                D: function D() {
+                    return vSettings.daysShort[fmt.w()];
+                },
+                /**
+                 * Day of month: `1..31`
+                 * @return {number}
+                 */
+                j: function j() {
+                    return vDate.getDate();
+                },
+                /**
+                 * Full day name: `Monday...Sunday`
+                 * @return {number}
+                 */
+                l: function l() {
+                    return vSettings.days[fmt.w()];
+                },
+                /**
+                 * ISO-8601 day of week: `1[Mon]..7[Sun]`
+                 * @return {number}
+                 */
+                N: function N() {
+                    return fmt.w() || 7;
+                },
+                /**
+                 * Day of week: `0[Sun]..6[Sat]`
+                 * @return {number}
+                 */
+                w: function w() {
+                    return vDate.getDay();
+                },
+                /**
+                 * Day of year: `0..365`
+                 * @return {number}
+                 */
+                z: function z() {
+                    var a = new Date(fmt.Y(), fmt.n() - 1, fmt.j()),
+                        b = new Date(fmt.Y(), 0, 1);
+                    return Math.round((a - b) / DAY);
+                },
+
+                //////////
+                // WEEK //
+                //////////
+                /**
+                 * ISO-8601 week number
+                 * @return {number}
+                 */
+                W: function W() {
+                    var a = new Date(fmt.Y(), fmt.n() - 1, fmt.j() - fmt.N() + 3),
+                        b = new Date(a.getFullYear(), 0, 4);
+                    return _lpad2(1 + Math.round((a - b) / DAY / 7), 2);
+                },
+
+                ///////////
+                // MONTH //
+                ///////////
+                /**
+                 * Full month name: `January...December`
+                 * @return {string}
+                 */
+                F: function F() {
+                    return vSettings.months[vDate.getMonth()];
+                },
+                /**
+                 * Month w/leading 0: `01..12`
+                 * @return {string}
+                 */
+                m: function m() {
+                    return _lpad2(fmt.n(), 2);
+                },
+                /**
+                 * Shorthand month name; `Jan...Dec`
+                 * @return {string}
+                 */
+                M: function M() {
+                    return vSettings.monthsShort[vDate.getMonth()];
+                },
+                /**
+                 * Month: `1...12`
+                 * @return {number}
+                 */
+                n: function n() {
+                    return vDate.getMonth() + 1;
+                },
+                /**
+                 * Days in month: `28...31`
+                 * @return {number}
+                 */
+                t: function t() {
+                    return new Date(fmt.Y(), fmt.n(), 0).getDate();
+                },
+
+                //////////
+                // YEAR //
+                //////////
+                /**
+                 * Is leap year? `0 or 1`
+                 * @return {number}
+                 */
+                L: function L() {
+                    var Y = fmt.Y();
+                    return Y % 4 === 0 && Y % 100 !== 0 || Y % 400 === 0 ? 1 : 0;
+                },
+                /**
+                 * ISO-8601 year
+                 * @return {number}
+                 */
+                o: function o() {
+                    var n = fmt.n(),
+                        W = fmt.W(),
+                        Y = fmt.Y();
+                    return Y + (n === 12 && W < 9 ? 1 : n === 1 && W > 9 ? -1 : 0);
+                },
+                /**
+                 * Full year: `e.g. 1980...2010`
+                 * @return {number}
+                 */
+                Y: function Y() {
+                    return vDate.getFullYear();
+                },
+                /**
+                 * Last two digits of year: `00...99`
+                 * @return {string}
+                 */
+                y: function y() {
+                    return fmt.Y().toString().slice(-2);
+                },
+
+                //////////
+                // TIME //
+                //////////
+                /**
+                 * Meridian lower: `am or pm`
+                 * @return {string}
+                 */
+                a: function a() {
+                    return fmt.A().toLowerCase();
+                },
+                /**
+                 * Meridian upper: `AM or PM`
+                 * @return {string}
+                 */
+                A: function A() {
+                    var n = fmt.G() < 12 ? 0 : 1;
+                    return vSettings.meridiem[n];
+                },
+                /**
+                 * Swatch Internet time: `000..999`
+                 * @return {string}
+                 */
+                B: function B() {
+                    var H = vDate.getUTCHours() * HOUR,
+                        i = vDate.getUTCMinutes() * 60,
+                        s = vDate.getUTCSeconds();
+                    return _lpad2(Math.floor((H + i + s + HOUR) / 86.4) % 1000, 3);
+                },
+                /**
+                 * 12-Hours: `1..12`
+                 * @return {number}
+                 */
+                g: function g() {
+                    return fmt.G() % 12 || 12;
+                },
+                /**
+                 * 24-Hours: `0..23`
+                 * @return {number}
+                 */
+                G: function G() {
+                    return vDate.getHours();
+                },
+                /**
+                 * 12-Hours with leading 0: `01..12`
+                 * @return {string}
+                 */
+                h: function h() {
+                    return _lpad2(fmt.g(), 2);
+                },
+                /**
+                 * 24-Hours w/leading 0: `00..23`
+                 * @return {string}
+                 */
+                H: function H() {
+                    return _lpad2(fmt.G(), 2);
+                },
+                /**
+                 * Minutes w/leading 0: `00..59`
+                 * @return {string}
+                 */
+                i: function i() {
+                    return _lpad2(vDate.getMinutes(), 2);
+                },
+                /**
+                 * Seconds w/leading 0: `00..59`
+                 * @return {string}
+                 */
+                s: function s() {
+                    return _lpad2(vDate.getSeconds(), 2);
+                },
+                /**
+                 * Microseconds: `000000-999000`
+                 * @return {string}
+                 */
+                u: function u() {
+                    return _lpad2(vDate.getMilliseconds() * 1000, 6);
+                },
+
+                //////////////
+                // TIMEZONE //
+                //////////////
+                /**
+                 * Timezone identifier: `e.g. Atlantic/Azores, ...`
+                 * @return {string}
+                 */
+                e: function e() {
+                    var str = /\((.*)\)/.exec(String(vDate))[1];
+                    return str || 'Coordinated Universal Time';
+                },
+                /**
+                 * Timezone abbreviation: `e.g. EST, MDT, ...`
+                 * @return {string}
+                 */
+                T: function T() {
+                    var str = (String(vDate).match(self.tzParts) || [""]).pop().replace(self.tzClip, "");
+                    return str || 'UTC';
+                },
+                /**
+                 * DST observed? `0 or 1`
+                 * @return {number}
+                 */
+                I: function I() {
+                    var a = new Date(fmt.Y(), 0),
+                        c = Date.UTC(fmt.Y(), 0),
+                        b = new Date(fmt.Y(), 6),
+                        d = Date.UTC(fmt.Y(), 6);
+                    return a - c !== b - d ? 1 : 0;
+                },
+                /**
+                 * Difference to GMT in hour format: `e.g. +0200`
+                 * @return {string}
+                 */
+                O: function O() {
+                    var tzo = vDate.getTimezoneOffset(),
+                        a = Math.abs(tzo);
+                    return (tzo > 0 ? '-' : '+') + _lpad2(Math.floor(a / 60) * 100 + a % 60, 4);
+                },
+                /**
+                 * Difference to GMT with colon: `e.g. +02:00`
+                 * @return {string}
+                 */
+                P: function P() {
+                    var O = fmt.O();
+                    return O.substr(0, 3) + ':' + O.substr(3, 2);
+                },
+                /**
+                 * Timezone offset in seconds: `-43200...50400`
+                 * @return {number}
+                 */
+                Z: function Z() {
+                    return -vDate.getTimezoneOffset() * 60;
+                },
+
+                ////////////////////
+                // FULL DATE TIME //
+                ////////////////////
+                /**
+                 * ISO-8601 date
+                 * @return {string}
+                 */
+                c: function c() {
+                    return 'Y-m-d\\TH:i:sP'.replace(backspace, doFormat);
+                },
+                /**
+                 * RFC 2822 date
+                 * @return {string}
+                 */
+                r: function r() {
+                    return 'D, d M Y H:i:s O'.replace(backspace, doFormat);
+                },
+                /**
+                 * Seconds since UNIX epoch
+                 * @return {number}
+                 */
+                U: function U() {
+                    return vDate.getTime() / 1000 || 0;
+                }
+            };
+            return doFormat(vChar, vChar);
+        },
+        formatDate: function formatDate(vDate, vFormat) {
+            var self = this,
+                i,
+                n,
+                len,
+                str,
+                vChar,
+                vDateStr = '';
+            if (typeof vDate === 'string') {
+                vDate = self.parseDate(vDate, vFormat);
+                if (vDate === false) {
+                    return false;
+                }
+            }
+            if (vDate instanceof Date) {
+                len = vFormat.length;
+                for (i = 0; i < len; i++) {
+                    vChar = vFormat.charAt(i);
+                    if (vChar === 'S') {
+                        continue;
+                    }
+                    str = self.parseFormat(vChar, vDate);
+                    if (i !== len - 1 && self.intParts.test(vChar) && vFormat.charAt(i + 1) === 'S') {
+                        n = parseInt(str);
+                        str += self.dateSettings.ordinal(n);
+                    }
+                    vDateStr += str;
+                }
+                return vDateStr;
+            }
+            return '';
+        }
+    };
+})(); /**
+      * @preserve jQuery DateTimePicker plugin v2.5.4
+      * @homepage http://xdsoft.net/jqplugins/datetimepicker/
+      * @author Chupurnov Valeriy (<chupurnov@gmail.com>)
+      */
+/*global DateFormatter, document,window,jQuery,setTimeout,clearTimeout,HighlightedDate,getCurrentValue*/
+;(function (factory) {
+    if (true) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18), __webpack_require__(204)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+})(function ($) {
+    'use strict';
+
+    var currentlyScrollingTimeDiv = false;
+
+    var default_options = {
+        i18n: {
+            ar: { // Arabic
+                months: ["كانون الثاني", "شباط", "آذار", "نيسان", "مايو", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول"],
+                dayOfWeekShort: ["ن", "ث", "ع", "خ", "ج", "س", "ح"],
+                dayOfWeek: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
+            },
+            ro: { // Romanian
+                months: ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"],
+                dayOfWeekShort: ["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"],
+                dayOfWeek: ["Duminică", "Luni", "Marţi", "Miercuri", "Joi", "Vineri", "Sâmbătă"]
+            },
+            id: { // Indonesian
+                months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+                dayOfWeekShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+                dayOfWeek: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+            },
+            is: { // Icelandic
+                months: ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"],
+                dayOfWeekShort: ["Sun", "Mán", "Þrið", "Mið", "Fim", "Fös", "Lau"],
+                dayOfWeek: ["Sunnudagur", "Mánudagur", "Þriðjudagur", "Miðvikudagur", "Fimmtudagur", "Föstudagur", "Laugardagur"]
+            },
+            bg: { // Bulgarian
+                months: ["Януари", "Февруари", "Март", "Април", "Май", "Юни", "Юли", "Август", "Септември", "Октомври", "Ноември", "Декември"],
+                dayOfWeekShort: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                dayOfWeek: ["Неделя", "Понеделник", "Вторник", "Сряда", "Четвъртък", "Петък", "Събота"]
+            },
+            fa: { // Persian/Farsi
+                months: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+                dayOfWeekShort: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+                dayOfWeek: ["یک‌شنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه", "یک‌شنبه"]
+            },
+            ru: { // Russian
+                months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+                dayOfWeekShort: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+                dayOfWeek: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+            },
+            uk: { // Ukrainian
+                months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
+                dayOfWeekShort: ["Ндл", "Пнд", "Втр", "Срд", "Чтв", "Птн", "Сбт"],
+                dayOfWeek: ["Неділя", "Понеділок", "Вівторок", "Середа", "Четвер", "П'ятниця", "Субота"]
+            },
+            en: { // English
+                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                dayOfWeekShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            },
+            el: { // Ελληνικά
+                months: ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"],
+                dayOfWeekShort: ["Κυρ", "Δευ", "Τρι", "Τετ", "Πεμ", "Παρ", "Σαβ"],
+                dayOfWeek: ["Κυριακή", "Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο"]
+            },
+            de: { // German
+                months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+                dayOfWeekShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+                dayOfWeek: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"]
+            },
+            nl: { // Dutch
+                months: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
+                dayOfWeekShort: ["zo", "ma", "di", "wo", "do", "vr", "za"],
+                dayOfWeek: ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"]
+            },
+            tr: { // Turkish
+                months: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+                dayOfWeekShort: ["Paz", "Pts", "Sal", "Çar", "Per", "Cum", "Cts"],
+                dayOfWeek: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"]
+            },
+            fr: { //French
+                months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+                dayOfWeekShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+                dayOfWeek: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
+            },
+            es: { // Spanish
+                months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                dayOfWeek: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+            },
+            th: { // Thai
+                months: ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'],
+                dayOfWeekShort: ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'],
+                dayOfWeek: ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัส", "ศุกร์", "เสาร์", "อาทิตย์"]
+            },
+            pl: { // Polish
+                months: ["styczeń", "luty", "marzec", "kwiecień", "maj", "czerwiec", "lipiec", "sierpień", "wrzesień", "październik", "listopad", "grudzień"],
+                dayOfWeekShort: ["nd", "pn", "wt", "śr", "cz", "pt", "sb"],
+                dayOfWeek: ["niedziela", "poniedziałek", "wtorek", "środa", "czwartek", "piątek", "sobota"]
+            },
+            pt: { // Portuguese
+                months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+                dayOfWeekShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                dayOfWeek: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+            },
+            ch: { // Simplified Chinese
+                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"]
+            },
+            se: { // Swedish
+                months: ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],
+                dayOfWeekShort: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"]
+            },
+            kr: { // Korean
+                months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+                dayOfWeekShort: ["일", "월", "화", "수", "목", "금", "토"],
+                dayOfWeek: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
+            },
+            it: { // Italian
+                months: ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
+                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
+                dayOfWeek: ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"]
+            },
+            da: { // Dansk
+                months: ["January", "Februar", "Marts", "April", "Maj", "Juni", "July", "August", "September", "Oktober", "November", "December"],
+                dayOfWeekShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+                dayOfWeek: ["søndag", "mandag", "tirsdag", "onsdag", "torsdag", "fredag", "lørdag"]
+            },
+            no: { // Norwegian
+                months: ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
+                dayOfWeekShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+                dayOfWeek: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']
+            },
+            ja: { // Japanese
+                months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+                dayOfWeekShort: ["日", "月", "火", "水", "木", "金", "土"],
+                dayOfWeek: ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"]
+            },
+            vi: { // Vietnamese
+                months: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+                dayOfWeekShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+                dayOfWeek: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"]
+            },
+            sl: { // Slovenščina
+                months: ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"],
+                dayOfWeekShort: ["Ned", "Pon", "Tor", "Sre", "Čet", "Pet", "Sob"],
+                dayOfWeek: ["Nedelja", "Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota"]
+            },
+            cs: { // Čeština
+                months: ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"],
+                dayOfWeekShort: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"]
+            },
+            hu: { // Hungarian
+                months: ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
+                dayOfWeekShort: ["Va", "Hé", "Ke", "Sze", "Cs", "Pé", "Szo"],
+                dayOfWeek: ["vasárnap", "hétfő", "kedd", "szerda", "csütörtök", "péntek", "szombat"]
+            },
+            az: { //Azerbaijanian (Azeri)
+                months: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avqust", "Sentyabr", "Oktyabr", "Noyabr", "Dekabr"],
+                dayOfWeekShort: ["B", "Be", "Ça", "Ç", "Ca", "C", "Ş"],
+                dayOfWeek: ["Bazar", "Bazar ertəsi", "Çərşənbə axşamı", "Çərşənbə", "Cümə axşamı", "Cümə", "Şənbə"]
+            },
+            bs: { //Bosanski
+                months: ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"],
+                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+                dayOfWeek: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"]
+            },
+            ca: { //Català
+                months: ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Juliol", "Agost", "Setembre", "Octubre", "Novembre", "Desembre"],
+                dayOfWeekShort: ["Dg", "Dl", "Dt", "Dc", "Dj", "Dv", "Ds"],
+                dayOfWeek: ["Diumenge", "Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte"]
+            },
+            'en-GB': { //English (British)
+                months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                dayOfWeekShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            },
+            et: { //"Eesti"
+                months: ["Jaanuar", "Veebruar", "Märts", "Aprill", "Mai", "Juuni", "Juuli", "August", "September", "Oktoober", "November", "Detsember"],
+                dayOfWeekShort: ["P", "E", "T", "K", "N", "R", "L"],
+                dayOfWeek: ["Pühapäev", "Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev"]
+            },
+            eu: { //Euskara
+                months: ["Urtarrila", "Otsaila", "Martxoa", "Apirila", "Maiatza", "Ekaina", "Uztaila", "Abuztua", "Iraila", "Urria", "Azaroa", "Abendua"],
+                dayOfWeekShort: ["Ig.", "Al.", "Ar.", "Az.", "Og.", "Or.", "La."],
+                dayOfWeek: ['Igandea', 'Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata']
+            },
+            fi: { //Finnish (Suomi)
+                months: ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
+                dayOfWeekShort: ["Su", "Ma", "Ti", "Ke", "To", "Pe", "La"],
+                dayOfWeek: ["sunnuntai", "maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai"]
+            },
+            gl: { //Galego
+                months: ["Xan", "Feb", "Maz", "Abr", "Mai", "Xun", "Xul", "Ago", "Set", "Out", "Nov", "Dec"],
+                dayOfWeekShort: ["Dom", "Lun", "Mar", "Mer", "Xov", "Ven", "Sab"],
+                dayOfWeek: ["Domingo", "Luns", "Martes", "Mércores", "Xoves", "Venres", "Sábado"]
+            },
+            hr: { //Hrvatski
+                months: ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac"],
+                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+                dayOfWeek: ["Nedjelja", "Ponedjeljak", "Utorak", "Srijeda", "Četvrtak", "Petak", "Subota"]
+            },
+            ko: { //Korean (한국어)
+                months: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+                dayOfWeekShort: ["일", "월", "화", "수", "목", "금", "토"],
+                dayOfWeek: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"]
+            },
+            lt: { //Lithuanian (lietuvių)
+                months: ["Sausio", "Vasario", "Kovo", "Balandžio", "Gegužės", "Birželio", "Liepos", "Rugpjūčio", "Rugsėjo", "Spalio", "Lapkričio", "Gruodžio"],
+                dayOfWeekShort: ["Sek", "Pir", "Ant", "Tre", "Ket", "Pen", "Šeš"],
+                dayOfWeek: ["Sekmadienis", "Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis"]
+            },
+            lv: { //Latvian (Latviešu)
+                months: ["Janvāris", "Februāris", "Marts", "Aprīlis ", "Maijs", "Jūnijs", "Jūlijs", "Augusts", "Septembris", "Oktobris", "Novembris", "Decembris"],
+                dayOfWeekShort: ["Sv", "Pr", "Ot", "Tr", "Ct", "Pk", "St"],
+                dayOfWeek: ["Svētdiena", "Pirmdiena", "Otrdiena", "Trešdiena", "Ceturtdiena", "Piektdiena", "Sestdiena"]
+            },
+            mk: { //Macedonian (Македонски)
+                months: ["јануари", "февруари", "март", "април", "мај", "јуни", "јули", "август", "септември", "октомври", "ноември", "декември"],
+                dayOfWeekShort: ["нед", "пон", "вто", "сре", "чет", "пет", "саб"],
+                dayOfWeek: ["Недела", "Понеделник", "Вторник", "Среда", "Четврток", "Петок", "Сабота"]
+            },
+            mn: { //Mongolian (Монгол)
+                months: ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", "9-р сар", "10-р сар", "11-р сар", "12-р сар"],
+                dayOfWeekShort: ["Дав", "Мяг", "Лха", "Пүр", "Бсн", "Бям", "Ням"],
+                dayOfWeek: ["Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан", "Бямба", "Ням"]
+            },
+            'pt-BR': { //Português(Brasil)
+                months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+                dayOfWeekShort: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+                dayOfWeek: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+            },
+            sk: { //Slovenčina
+                months: ["Január", "Február", "Marec", "Apríl", "Máj", "Jún", "Júl", "August", "September", "Október", "November", "December"],
+                dayOfWeekShort: ["Ne", "Po", "Ut", "St", "Št", "Pi", "So"],
+                dayOfWeek: ["Nedeľa", "Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota"]
+            },
+            sq: { //Albanian (Shqip)
+                months: ["Janar", "Shkurt", "Mars", "Prill", "Maj", "Qershor", "Korrik", "Gusht", "Shtator", "Tetor", "Nëntor", "Dhjetor"],
+                dayOfWeekShort: ["Die", "Hën", "Mar", "Mër", "Enj", "Pre", "Shtu"],
+                dayOfWeek: ["E Diel", "E Hënë", "E Martē", "E Mërkurë", "E Enjte", "E Premte", "E Shtunë"]
+            },
+            'sr-YU': { //Serbian (Srpski)
+                months: ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"],
+                dayOfWeekShort: ["Ned", "Pon", "Uto", "Sre", "čet", "Pet", "Sub"],
+                dayOfWeek: ["Nedelja", "Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota"]
+            },
+            sr: { //Serbian Cyrillic (Српски)
+                months: ["јануар", "фебруар", "март", "април", "мај", "јун", "јул", "август", "септембар", "октобар", "новембар", "децембар"],
+                dayOfWeekShort: ["нед", "пон", "уто", "сре", "чет", "пет", "суб"],
+                dayOfWeek: ["Недеља", "Понедељак", "Уторак", "Среда", "Четвртак", "Петак", "Субота"]
+            },
+            sv: { //Svenska
+                months: ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"],
+                dayOfWeekShort: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
+                dayOfWeek: ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"]
+            },
+            'zh-TW': { //Traditional Chinese (繁體中文)
+                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"],
+                dayOfWeek: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+            },
+            zh: { //Simplified Chinese (简体中文)
+                months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                dayOfWeekShort: ["日", "一", "二", "三", "四", "五", "六"],
+                dayOfWeek: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+            },
+            he: { //Hebrew (עברית)
+                months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
+                dayOfWeekShort: ['א\'', 'ב\'', 'ג\'', 'ד\'', 'ה\'', 'ו\'', 'שבת'],
+                dayOfWeek: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
+            },
+            hy: { // Armenian
+                months: ["Հունվար", "Փետրվար", "Մարտ", "Ապրիլ", "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս", "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"],
+                dayOfWeekShort: ["Կի", "Երկ", "Երք", "Չոր", "Հնգ", "Ուրբ", "Շբթ"],
+                dayOfWeek: ["Կիրակի", "Երկուշաբթի", "Երեքշաբթի", "Չորեքշաբթի", "Հինգշաբթի", "Ուրբաթ", "Շաբաթ"]
+            },
+            kg: { // Kyrgyz
+                months: ['Үчтүн айы', 'Бирдин айы', 'Жалган Куран', 'Чын Куран', 'Бугу', 'Кулжа', 'Теке', 'Баш Оона', 'Аяк Оона', 'Тогуздун айы', 'Жетинин айы', 'Бештин айы'],
+                dayOfWeekShort: ["Жек", "Дүй", "Шей", "Шар", "Бей", "Жум", "Ише"],
+                dayOfWeek: ["Жекшемб", "Дүйшөмб", "Шейшемб", "Шаршемб", "Бейшемби", "Жума", "Ишенб"]
+            },
+            rm: { // Romansh
+                months: ["Schaner", "Favrer", "Mars", "Avrigl", "Matg", "Zercladur", "Fanadur", "Avust", "Settember", "October", "November", "December"],
+                dayOfWeekShort: ["Du", "Gli", "Ma", "Me", "Gie", "Ve", "So"],
+                dayOfWeek: ["Dumengia", "Glindesdi", "Mardi", "Mesemna", "Gievgia", "Venderdi", "Sonda"]
+            },
+            ka: { // Georgian
+                months: ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი', 'ივლისი', 'აგვისტო', 'სექტემბერი', 'ოქტომბერი', 'ნოემბერი', 'დეკემბერი'],
+                dayOfWeekShort: ["კვ", "ორშ", "სამშ", "ოთხ", "ხუთ", "პარ", "შაბ"],
+                dayOfWeek: ["კვირა", "ორშაბათი", "სამშაბათი", "ოთხშაბათი", "ხუთშაბათი", "პარასკევი", "შაბათი"]
+            }
+        },
+        value: '',
+        rtl: false,
+
+        format: 'Y/m/d H:i',
+        formatTime: 'H:i',
+        formatDate: 'Y/m/d',
+
+        startDate: false, // new Date(), '1986/12/08', '-1970/01/05','-1970/01/05',
+        step: 60,
+        monthChangeSpinner: true,
+
+        closeOnDateSelect: false,
+        closeOnTimeSelect: true,
+        closeOnWithoutClick: true,
+        closeOnInputClick: true,
+
+        timepicker: true,
+        datepicker: true,
+        weeks: false,
+
+        defaultTime: false, // use formatTime format (ex. '10:00' for formatTime:	'H:i')
+        defaultDate: false, // use formatDate format (ex new Date() or '1986/12/08' or '-1970/01/05' or '-1970/01/05')
+
+        minDate: false,
+        maxDate: false,
+        minTime: false,
+        maxTime: false,
+        disabledMinTime: false,
+        disabledMaxTime: false,
+
+        allowTimes: [],
+        opened: false,
+        initTime: true,
+        inline: false,
+        theme: '',
+
+        onSelectDate: function onSelectDate() {},
+        onSelectTime: function onSelectTime() {},
+        onChangeMonth: function onChangeMonth() {},
+        onGetWeekOfYear: function onGetWeekOfYear() {},
+        onChangeYear: function onChangeYear() {},
+        onChangeDateTime: function onChangeDateTime() {},
+        onShow: function onShow() {},
+        onClose: function onClose() {},
+        onGenerate: function onGenerate() {},
+
+        withoutCopyright: true,
+        inverseButton: false,
+        hours12: false,
+        minHours: 0,
+        next: 'xdsoft_next',
+        prev: 'xdsoft_prev',
+        dayOfWeekStart: 0,
+        parentID: 'body',
+        timeHeightInTimePicker: 25,
+        timepickerScrollbar: true,
+        todayButton: true,
+        prevButton: true,
+        nextButton: true,
+        defaultSelect: true,
+
+        scrollMonth: true,
+        scrollTime: true,
+        scrollInput: true,
+
+        lazyInit: false,
+        mask: false,
+        validateOnBlur: true,
+        allowBlank: true,
+        yearStart: 1950,
+        yearEnd: 2050,
+        monthStart: 0,
+        monthEnd: 11,
+        style: '',
+        id: '',
+        fixed: false,
+        roundTime: 'round', // ceil, floor
+        className: '',
+        weekends: [],
+        highlightedDates: [],
+        highlightedPeriods: [],
+        allowDates: [],
+        allowDateRe: null,
+        disabledDates: [],
+        disabledWeekDays: [],
+        yearOffset: 0,
+        beforeShowDay: null,
+
+        enterLikeTab: true,
+        showApplyButton: false
+    };
+
+    var dateHelper = null,
+        globalLocaleDefault = 'en',
+        globalLocale = 'en';
+
+    var dateFormatterOptionsDefault = {
+        meridiem: ['AM', 'PM']
+    };
+
+    var initDateFormatter = function initDateFormatter() {
+        var locale = default_options.i18n[globalLocale],
+            opts = {
+            days: locale.dayOfWeek,
+            daysShort: locale.dayOfWeekShort,
+            months: locale.months,
+            monthsShort: $.map(locale.months, function (n) {
+                return n.substring(0, 3);
+            })
+        };
+
+        dateHelper = new DateFormatter({
+            dateSettings: $.extend({}, dateFormatterOptionsDefault, opts)
+        });
+    };
+
+    // for locale settings
+    $.datetimepicker = {
+        setLocale: function setLocale(locale) {
+            var newLocale = default_options.i18n[locale] ? locale : globalLocaleDefault;
+            if (globalLocale != newLocale) {
+                globalLocale = newLocale;
+                // reinit date formatter
+                initDateFormatter();
+            }
+        },
+        setDateFormatter: function setDateFormatter(dateFormatter) {
+            dateHelper = dateFormatter;
+        },
+        RFC_2822: 'D, d M Y H:i:s O',
+        ATOM: 'Y-m-d\TH:i:sP',
+        ISO_8601: 'Y-m-d\TH:i:sO',
+        RFC_822: 'D, d M y H:i:s O',
+        RFC_850: 'l, d-M-y H:i:s T',
+        RFC_1036: 'D, d M y H:i:s O',
+        RFC_1123: 'D, d M Y H:i:s O',
+        RSS: 'D, d M Y H:i:s O',
+        W3C: 'Y-m-d\TH:i:sP'
+    };
+
+    $.datetimepicker.setLocale('ch');
+    // first init date formatter
+    initDateFormatter();
+
+    // fix for ie8
+    if (!window.getComputedStyle) {
+        window.getComputedStyle = function (el, pseudo) {
+            this.el = el;
+            this.getPropertyValue = function (prop) {
+                var re = /(\-([a-z]){1})/g;
+                if (prop === 'float') {
+                    prop = 'styleFloat';
+                }
+                if (re.test(prop)) {
+                    prop = prop.replace(re, function (a, b, c) {
+                        return c.toUpperCase();
+                    });
+                }
+                return el.currentStyle[prop] || null;
+            };
+            return this;
+        };
+    }
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (obj, start) {
+            var i, j;
+            for (i = start || 0, j = this.length; i < j; i += 1) {
+                if (this[i] === obj) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+    }
+    Date.prototype.countDaysInMonth = function () {
+        return new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
+    };
+    $.fn.xdsoftScroller = function (percent) {
+        return this.each(function () {
+            var timeboxparent = $(this),
+                pointerEventToXY = function pointerEventToXY(e) {
+                var out = { x: 0, y: 0 },
+                    touch;
+                if (e.type === 'touchstart' || e.type === 'touchmove' || e.type === 'touchend' || e.type === 'touchcancel') {
+                    touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+                    out.x = touch.clientX;
+                    out.y = touch.clientY;
+                } else if (e.type === 'mousedown' || e.type === 'mouseup' || e.type === 'mousemove' || e.type === 'mouseover' || e.type === 'mouseout' || e.type === 'mouseenter' || e.type === 'mouseleave') {
+                    out.x = e.clientX;
+                    out.y = e.clientY;
+                }
+                return out;
+            },
+                timebox,
+                parentHeight,
+                height,
+                scrollbar,
+                scroller,
+                maximumOffset = 100,
+                start = false,
+                startY = 0,
+                startTop = 0,
+                h1 = 0,
+                touchStart = false,
+                startTopScroll = 0,
+                calcOffset = function calcOffset() {};
+            if (percent === 'hide') {
+                timeboxparent.find('.xdsoft_scrollbar').hide();
+                return;
+            }
+            if (!$(this).hasClass('xdsoft_scroller_box')) {
+                timebox = timeboxparent.children().eq(0);
+                parentHeight = timeboxparent[0].clientHeight;
+                height = timebox[0].offsetHeight;
+                scrollbar = $('<div class="xdsoft_scrollbar"></div>');
+                scroller = $('<div class="xdsoft_scroller"></div>');
+                scrollbar.append(scroller);
+
+                timeboxparent.addClass('xdsoft_scroller_box').append(scrollbar);
+                calcOffset = function calcOffset(event) {
+                    var offset = pointerEventToXY(event).y - startY + startTopScroll;
+                    if (offset < 0) {
+                        offset = 0;
+                    }
+                    if (offset + scroller[0].offsetHeight > h1) {
+                        offset = h1 - scroller[0].offsetHeight;
+                    }
+                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [maximumOffset ? offset / maximumOffset : 0]);
+                };
+
+                scroller.on('touchstart.xdsoft_scroller mousedown.xdsoft_scroller', function (event) {
+                    if (!parentHeight) {
+                        timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percent]);
+                    }
+
+                    startY = pointerEventToXY(event).y;
+                    startTopScroll = parseInt(scroller.css('margin-top'), 10);
+                    h1 = scrollbar[0].offsetHeight;
+
+                    if (event.type === 'mousedown' || event.type === 'touchstart') {
+                        if (document) {
+                            $(document.body).addClass('xdsoft_noselect');
+                        }
+                        $([document.body, window]).on('touchend mouseup.xdsoft_scroller', function arguments_callee() {
+                            $([document.body, window]).off('touchend mouseup.xdsoft_scroller', arguments_callee).off('mousemove.xdsoft_scroller', calcOffset).removeClass('xdsoft_noselect');
+                        });
+                        $(document.body).on('mousemove.xdsoft_scroller', calcOffset);
+                    } else {
+                        touchStart = true;
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                }).on('touchmove', function (event) {
+                    if (touchStart) {
+                        event.preventDefault();
+                        calcOffset(event);
+                    }
+                }).on('touchend touchcancel', function () {
+                    touchStart = false;
+                    startTopScroll = 0;
+                });
+
+                timeboxparent.on('scroll_element.xdsoft_scroller', function (event, percentage) {
+                    if (!parentHeight) {
+                        timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percentage, true]);
+                    }
+                    percentage = percentage > 1 ? 1 : percentage < 0 || isNaN(percentage) ? 0 : percentage;
+
+                    scroller.css('margin-top', maximumOffset * percentage);
+
+                    setTimeout(function () {
+                        timebox.css('marginTop', -parseInt((timebox[0].offsetHeight - parentHeight) * percentage, 10));
+                    }, 10);
+                }).on('resize_scroll.xdsoft_scroller', function (event, percentage, noTriggerScroll) {
+                    var percent, sh;
+                    parentHeight = timeboxparent[0].clientHeight;
+                    height = timebox[0].offsetHeight;
+                    percent = parentHeight / height;
+                    sh = percent * scrollbar[0].offsetHeight;
+                    if (percent > 1) {
+                        scroller.hide();
+                    } else {
+                        scroller.show();
+                        scroller.css('height', parseInt(sh > 10 ? sh : 10, 10));
+                        maximumOffset = scrollbar[0].offsetHeight - scroller[0].offsetHeight;
+                        if (noTriggerScroll !== true) {
+                            timeboxparent.trigger('scroll_element.xdsoft_scroller', [percentage || Math.abs(parseInt(timebox.css('marginTop'), 10)) / (height - parentHeight)]);
+                        }
+                    }
+                });
+
+                timeboxparent.on('mousewheel', function (event) {
+                    var top = Math.abs(parseInt(timebox.css('marginTop'), 10));
+
+                    top = top - event.deltaY * 20;
+                    if (top < 0) {
+                        top = 0;
+                    }
+
+                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [top / (height - parentHeight)]);
+                    event.stopPropagation();
+                    return false;
+                });
+
+                timeboxparent.on('touchstart', function (event) {
+                    start = pointerEventToXY(event);
+                    startTop = Math.abs(parseInt(timebox.css('marginTop'), 10));
+                });
+
+                timeboxparent.on('touchmove', function (event) {
+                    if (start) {
+                        event.preventDefault();
+                        var coord = pointerEventToXY(event);
+                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [(startTop - (coord.y - start.y)) / (height - parentHeight)]);
+                    }
+                });
+
+                timeboxparent.on('touchend touchcancel', function () {
+                    start = false;
+                    startTop = 0;
+                });
+            }
+            timeboxparent.trigger('resize_scroll.xdsoft_scroller', [percent]);
+        });
+    };
+
+    $.fn.datetimepicker = function (opt, opt2) {
+        var result = this,
+            KEY0 = 48,
+            KEY9 = 57,
+            _KEY0 = 96,
+            _KEY9 = 105,
+            CTRLKEY = 17,
+            DEL = 46,
+            ENTER = 13,
+            ESC = 27,
+            BACKSPACE = 8,
+            ARROWLEFT = 37,
+            ARROWUP = 38,
+            ARROWRIGHT = 39,
+            ARROWDOWN = 40,
+            TAB = 9,
+            F5 = 116,
+            AKEY = 65,
+            CKEY = 67,
+            VKEY = 86,
+            ZKEY = 90,
+            YKEY = 89,
+            ctrlDown = false,
+            options = $.isPlainObject(opt) || !opt ? $.extend(true, {}, default_options, opt) : $.extend(true, {}, default_options),
+            lazyInitTimer = 0,
+            createDateTimePicker,
+            destroyDateTimePicker,
+            lazyInit = function lazyInit(input) {
+            input.on('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', function initOnActionCallback() {
+                if (input.is(':disabled') || input.data('xdsoft_datetimepicker')) {
+                    return;
+                }
+                clearTimeout(lazyInitTimer);
+                lazyInitTimer = setTimeout(function () {
+
+                    if (!input.data('xdsoft_datetimepicker')) {
+                        createDateTimePicker(input);
+                    }
+                    input.off('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', initOnActionCallback).trigger('open.xdsoft');
+                }, 100);
+            });
+        };
+
+        createDateTimePicker = function createDateTimePicker(input) {
+            var datetimepicker = $('<div class="xdsoft_datetimepicker xdsoft_noselect"></div>'),
+                xdsoft_copyright = $('<div class="xdsoft_copyright"><a target="_blank" href="http://xdsoft.net/jqplugins/datetimepicker/">xdsoft.net</a></div>'),
+                datepicker = $('<div class="xdsoft_datepicker active"></div>'),
+                month_picker = $('<div class="xdsoft_monthpicker"><button type="button" class="xdsoft_prev"></button><button type="button" class="xdsoft_today_button"></button>' + '<div class="xdsoft_label xdsoft_month"><span></span><i></i></div>' + '<div class="xdsoft_label xdsoft_year"><span></span><i></i></div>' + '<button type="button" class="xdsoft_next"></button></div>'),
+                calendar = $('<div class="xdsoft_calendar"></div>'),
+                timepicker = $('<div class="xdsoft_timepicker active"><button type="button" class="xdsoft_prev"></button><div class="xdsoft_time_box"></div><button type="button" class="xdsoft_next"></button></div>'),
+                timeboxparent = timepicker.find('.xdsoft_time_box').eq(0),
+                timebox = $('<div class="xdsoft_time_variant"></div>'),
+                applyButton = $('<button type="button" class="xdsoft_save_selected blue-gradient-button">Save Selected</button>'),
+                monthselect = $('<div class="xdsoft_select xdsoft_monthselect"><div></div></div>'),
+                yearselect = $('<div class="xdsoft_select xdsoft_yearselect"><div></div></div>'),
+                triggerAfterOpen = false,
+                XDSoft_datetime,
+                xchangeTimer,
+                timerclick,
+                current_time_index,
+                setPos,
+                timer = 0,
+                _xdsoft_datetime,
+                forEachAncestorOf,
+                throttle;
+
+            if (options.id) {
+                datetimepicker.attr('id', options.id);
+            }
+            if (options.style) {
+                datetimepicker.attr('style', options.style);
+            }
+            if (options.weeks) {
+                datetimepicker.addClass('xdsoft_showweeks');
+            }
+            if (options.rtl) {
+                datetimepicker.addClass('xdsoft_rtl');
+            }
+
+            datetimepicker.addClass('xdsoft_' + options.theme);
+            datetimepicker.addClass(options.className);
+
+            month_picker.find('.xdsoft_month span').after(monthselect);
+            month_picker.find('.xdsoft_year span').after(yearselect);
+
+            month_picker.find('.xdsoft_month,.xdsoft_year').on('touchstart mousedown.xdsoft', function (event) {
+                var select = $(this).find('.xdsoft_select').eq(0),
+                    val = 0,
+                    top = 0,
+                    visible = select.is(':visible'),
+                    items,
+                    i;
+
+                month_picker.find('.xdsoft_select').hide();
+                if (_xdsoft_datetime.currentTime) {
+                    val = _xdsoft_datetime.currentTime[$(this).hasClass('xdsoft_month') ? 'getMonth' : 'getFullYear']();
+                }
+
+                select[visible ? 'hide' : 'show']();
+                for (items = select.find('div.xdsoft_option'), i = 0; i < items.length; i += 1) {
+                    if (items.eq(i).data('value') === val) {
+                        break;
+                    } else {
+                        top += items[0].offsetHeight;
+                    }
+                }
+
+                select.xdsoftScroller(top / (select.children()[0].offsetHeight - select[0].clientHeight));
+                event.stopPropagation();
+                return false;
+            });
+
+            month_picker.find('.xdsoft_select').xdsoftScroller().on('touchstart mousedown.xdsoft', function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }).on('touchstart mousedown.xdsoft', '.xdsoft_option', function () {
+                if (_xdsoft_datetime.currentTime === undefined || _xdsoft_datetime.currentTime === null) {
+                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
+                }
+
+                var year = _xdsoft_datetime.currentTime.getFullYear();
+                if (_xdsoft_datetime && _xdsoft_datetime.currentTime) {
+                    _xdsoft_datetime.currentTime[$(this).parent().parent().hasClass('xdsoft_monthselect') ? 'setMonth' : 'setFullYear']($(this).data('value'));
+                }
+
+                $(this).parent().parent().hide();
+
+                datetimepicker.trigger('xchange.xdsoft');
+                if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
+                    options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                }
+
+                if (year !== _xdsoft_datetime.currentTime.getFullYear() && $.isFunction(options.onChangeYear)) {
+                    options.onChangeYear.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                }
+            });
+
+            datetimepicker.getValue = function () {
+                return _xdsoft_datetime.getCurrentTime();
+            };
+
+            datetimepicker.setOptions = function (_options) {
+                var highlightedDates = {};
+
+                options = $.extend(true, {}, options, _options);
+
+                if (_options.allowTimes && $.isArray(_options.allowTimes) && _options.allowTimes.length) {
+                    options.allowTimes = $.extend(true, [], _options.allowTimes);
+                }
+
+                if (_options.weekends && $.isArray(_options.weekends) && _options.weekends.length) {
+                    options.weekends = $.extend(true, [], _options.weekends);
+                }
+
+                if (_options.allowDates && $.isArray(_options.allowDates) && _options.allowDates.length) {
+                    options.allowDates = $.extend(true, [], _options.allowDates);
+                }
+
+                if (_options.allowDateRe && Object.prototype.toString.call(_options.allowDateRe) === "[object String]") {
+                    options.allowDateRe = new RegExp(_options.allowDateRe);
+                }
+
+                if (_options.highlightedDates && $.isArray(_options.highlightedDates) && _options.highlightedDates.length) {
+                    $.each(_options.highlightedDates, function (index, value) {
+                        var splitData = $.map(value.split(','), $.trim),
+                            exDesc,
+                            hDate = new HighlightedDate(dateHelper.parseDate(splitData[0], options.formatDate), splitData[1], splitData[2]),
+                            // date, desc, style
+                        keyDate = dateHelper.formatDate(hDate.date, options.formatDate);
+                        if (highlightedDates[keyDate] !== undefined) {
+                            exDesc = highlightedDates[keyDate].desc;
+                            if (exDesc && exDesc.length && hDate.desc && hDate.desc.length) {
+                                highlightedDates[keyDate].desc = exDesc + "\n" + hDate.desc;
+                            }
+                        } else {
+                            highlightedDates[keyDate] = hDate;
+                        }
+                    });
+
+                    options.highlightedDates = $.extend(true, [], highlightedDates);
+                }
+
+                if (_options.highlightedPeriods && $.isArray(_options.highlightedPeriods) && _options.highlightedPeriods.length) {
+                    highlightedDates = $.extend(true, [], options.highlightedDates);
+                    $.each(_options.highlightedPeriods, function (index, value) {
+                        var dateTest, // start date
+                        dateEnd, desc, hDate, keyDate, exDesc, style;
+                        if ($.isArray(value)) {
+                            dateTest = value[0];
+                            dateEnd = value[1];
+                            desc = value[2];
+                            style = value[3];
+                        } else {
+                            var splitData = $.map(value.split(','), $.trim);
+                            dateTest = dateHelper.parseDate(splitData[0], options.formatDate);
+                            dateEnd = dateHelper.parseDate(splitData[1], options.formatDate);
+                            desc = splitData[2];
+                            style = splitData[3];
+                        }
+
+                        while (dateTest <= dateEnd) {
+                            hDate = new HighlightedDate(dateTest, desc, style);
+                            keyDate = dateHelper.formatDate(dateTest, options.formatDate);
+                            dateTest.setDate(dateTest.getDate() + 1);
+                            if (highlightedDates[keyDate] !== undefined) {
+                                exDesc = highlightedDates[keyDate].desc;
+                                if (exDesc && exDesc.length && hDate.desc && hDate.desc.length) {
+                                    highlightedDates[keyDate].desc = exDesc + "\n" + hDate.desc;
+                                }
+                            } else {
+                                highlightedDates[keyDate] = hDate;
+                            }
+                        }
+                    });
+
+                    options.highlightedDates = $.extend(true, [], highlightedDates);
+                }
+
+                if (_options.disabledDates && $.isArray(_options.disabledDates) && _options.disabledDates.length) {
+                    options.disabledDates = $.extend(true, [], _options.disabledDates);
+                }
+
+                if (_options.disabledWeekDays && $.isArray(_options.disabledWeekDays) && _options.disabledWeekDays.length) {
+                    options.disabledWeekDays = $.extend(true, [], _options.disabledWeekDays);
+                }
+
+                if ((options.open || options.opened) && !options.inline) {
+                    input.trigger('open.xdsoft');
+                }
+
+                if (options.inline) {
+                    triggerAfterOpen = true;
+                    datetimepicker.addClass('xdsoft_inline');
+                    input.after(datetimepicker).hide();
+                }
+
+                if (options.inverseButton) {
+                    options.next = 'xdsoft_prev';
+                    options.prev = 'xdsoft_next';
+                }
+
+                if (options.datepicker) {
+                    datepicker.addClass('active');
+                } else {
+                    datepicker.removeClass('active');
+                }
+
+                if (options.timepicker) {
+                    timepicker.addClass('active');
+                } else {
+                    timepicker.removeClass('active');
+                }
+
+                if (options.value) {
+                    _xdsoft_datetime.setCurrentTime(options.value);
+                    if (input && input.val) {
+                        input.val(_xdsoft_datetime.str);
+                    }
+                }
+
+                if (isNaN(options.dayOfWeekStart)) {
+                    options.dayOfWeekStart = 0;
+                } else {
+                    options.dayOfWeekStart = parseInt(options.dayOfWeekStart, 10) % 7;
+                }
+
+                if (!options.timepickerScrollbar) {
+                    timeboxparent.xdsoftScroller('hide');
+                }
+
+                if (options.minDate && /^[\+\-](.*)$/.test(options.minDate)) {
+                    options.minDate = dateHelper.formatDate(_xdsoft_datetime.strToDateTime(options.minDate), options.formatDate);
+                }
+
+                if (options.maxDate && /^[\+\-](.*)$/.test(options.maxDate)) {
+                    options.maxDate = dateHelper.formatDate(_xdsoft_datetime.strToDateTime(options.maxDate), options.formatDate);
+                }
+
+                applyButton.toggle(options.showApplyButton);
+
+                month_picker.find('.xdsoft_today_button').css('visibility', !options.todayButton ? 'hidden' : 'visible');
+
+                month_picker.find('.' + options.prev).css('visibility', !options.prevButton ? 'hidden' : 'visible');
+
+                month_picker.find('.' + options.next).css('visibility', !options.nextButton ? 'hidden' : 'visible');
+
+                setMask(options);
+
+                if (options.validateOnBlur) {
+                    input.off('blur.xdsoft').on('blur.xdsoft', function () {
+                        if (options.allowBlank && (!$.trim($(this).val()).length || typeof options.mask == "string" && $.trim($(this).val()) === options.mask.replace(/[0-9]/g, '_'))) {
+                            $(this).val(null);
+                            datetimepicker.data('xdsoft_datetime').empty();
+                        } else {
+                            var d = dateHelper.parseDate($(this).val(), options.format);
+                            if (d) {
+                                // parseDate() may skip some invalid parts like date or time, so make it clear for user: show parsed date/time
+                                $(this).val(dateHelper.formatDate(d, options.format));
+                            } else {
+                                var splittedHours = +[$(this).val()[0], $(this).val()[1]].join(''),
+                                    splittedMinutes = +[$(this).val()[2], $(this).val()[3]].join('');
+
+                                // parse the numbers as 0312 => 03:12
+                                if (!options.datepicker && options.timepicker && splittedHours >= 0 && splittedHours < 24 && splittedMinutes >= 0 && splittedMinutes < 60) {
+                                    $(this).val([splittedHours, splittedMinutes].map(function (item) {
+                                        return item > 9 ? item : '0' + item;
+                                    }).join(':'));
+                                } else {
+                                    $(this).val(dateHelper.formatDate(_xdsoft_datetime.now(), options.format));
+                                }
+                            }
+                            datetimepicker.data('xdsoft_datetime').setCurrentTime($(this).val());
+                        }
+
+                        datetimepicker.trigger('changedatetime.xdsoft');
+                        datetimepicker.trigger('close.xdsoft');
+                    });
+                }
+                options.dayOfWeekStartPrev = options.dayOfWeekStart === 0 ? 6 : options.dayOfWeekStart - 1;
+
+                datetimepicker.trigger('xchange.xdsoft').trigger('afterOpen.xdsoft');
+            };
+
+            datetimepicker.data('options', options).on('touchstart mousedown.xdsoft', function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                yearselect.hide();
+                monthselect.hide();
+                return false;
+            });
+
+            //scroll_element = timepicker.find('.xdsoft_time_box');
+            timeboxparent.append(timebox);
+            timeboxparent.xdsoftScroller();
+
+            datetimepicker.on('afterOpen.xdsoft', function () {
+                timeboxparent.xdsoftScroller();
+            });
+
+            datetimepicker.append(datepicker).append(timepicker);
+
+            if (options.withoutCopyright !== true) {
+                datetimepicker.append(xdsoft_copyright);
+            }
+
+            datepicker.append(month_picker).append(calendar).append(applyButton);
+
+            $(options.parentID).append(datetimepicker);
+
+            XDSoft_datetime = function XDSoft_datetime() {
+                var _this = this;
+                _this.now = function (norecursion) {
+                    var d = new Date(),
+                        date,
+                        time;
+
+                    if (!norecursion && options.defaultDate) {
+                        date = _this.strToDateTime(options.defaultDate);
+                        d.setFullYear(date.getFullYear());
+                        d.setMonth(date.getMonth());
+                        d.setDate(date.getDate());
+                    }
+
+                    if (options.yearOffset) {
+                        d.setFullYear(d.getFullYear() + options.yearOffset);
+                    }
+
+                    if (!norecursion && options.defaultTime) {
+                        time = _this.strtotime(options.defaultTime);
+                        d.setHours(time.getHours());
+                        d.setMinutes(time.getMinutes());
+                    }
+                    return d;
+                };
+
+                _this.isValidDate = function (d) {
+                    if (Object.prototype.toString.call(d) !== "[object Date]") {
+                        return false;
+                    }
+                    return !isNaN(d.getTime());
+                };
+
+                _this.setCurrentTime = function (dTime, requireValidDate) {
+                    if (typeof dTime === 'string') {
+                        _this.currentTime = _this.strToDateTime(dTime);
+                    } else if (_this.isValidDate(dTime)) {
+                        _this.currentTime = dTime;
+                    } else if (!dTime && !requireValidDate && options.allowBlank) {
+                        _this.currentTime = null;
+                    } else {
+                        _this.currentTime = _this.now();
+                    }
+
+                    datetimepicker.trigger('xchange.xdsoft');
+                };
+
+                _this.empty = function () {
+                    _this.currentTime = null;
+                };
+
+                _this.getCurrentTime = function (dTime) {
+                    return _this.currentTime;
+                };
+
+                _this.nextMonth = function () {
+
+                    if (_this.currentTime === undefined || _this.currentTime === null) {
+                        _this.currentTime = _this.now();
+                    }
+
+                    var month = _this.currentTime.getMonth() + 1,
+                        year;
+                    if (month === 12) {
+                        _this.currentTime.setFullYear(_this.currentTime.getFullYear() + 1);
+                        month = 0;
+                    }
+
+                    year = _this.currentTime.getFullYear();
+
+                    _this.currentTime.setDate(Math.min(new Date(_this.currentTime.getFullYear(), month + 1, 0).getDate(), _this.currentTime.getDate()));
+                    _this.currentTime.setMonth(month);
+
+                    if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
+                        options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                    }
+
+                    if (year !== _this.currentTime.getFullYear() && $.isFunction(options.onChangeYear)) {
+                        options.onChangeYear.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                    }
+
+                    datetimepicker.trigger('xchange.xdsoft');
+                    return month;
+                };
+
+                _this.prevMonth = function () {
+
+                    if (_this.currentTime === undefined || _this.currentTime === null) {
+                        _this.currentTime = _this.now();
+                    }
+
+                    var month = _this.currentTime.getMonth() - 1;
+                    if (month === -1) {
+                        _this.currentTime.setFullYear(_this.currentTime.getFullYear() - 1);
+                        month = 11;
+                    }
+                    _this.currentTime.setDate(Math.min(new Date(_this.currentTime.getFullYear(), month + 1, 0).getDate(), _this.currentTime.getDate()));
+                    _this.currentTime.setMonth(month);
+                    if (options.onChangeMonth && $.isFunction(options.onChangeMonth)) {
+                        options.onChangeMonth.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                    }
+                    datetimepicker.trigger('xchange.xdsoft');
+                    return month;
+                };
+
+                _this.getWeekOfYear = function (datetime) {
+                    if (options.onGetWeekOfYear && $.isFunction(options.onGetWeekOfYear)) {
+                        var week = options.onGetWeekOfYear.call(datetimepicker, datetime);
+                        if (typeof week !== 'undefined') {
+                            return week;
+                        }
+                    }
+                    var onejan = new Date(datetime.getFullYear(), 0, 1);
+                    //First week of the year is th one with the first Thursday according to ISO8601
+                    if (onejan.getDay() != 4) onejan.setMonth(0, 1 + (4 - onejan.getDay() + 7) % 7);
+                    return Math.ceil(((datetime - onejan) / 86400000 + onejan.getDay() + 1) / 7);
+                };
+
+                _this.strToDateTime = function (sDateTime) {
+                    var tmpDate = [],
+                        timeOffset,
+                        currentTime;
+
+                    if (sDateTime && sDateTime instanceof Date && _this.isValidDate(sDateTime)) {
+                        return sDateTime;
+                    }
+
+                    tmpDate = /^(\+|\-)(.*)$/.exec(sDateTime);
+                    if (tmpDate) {
+                        tmpDate[2] = dateHelper.parseDate(tmpDate[2], options.formatDate);
+                    }
+                    if (tmpDate && tmpDate[2]) {
+                        timeOffset = tmpDate[2].getTime() - tmpDate[2].getTimezoneOffset() * 60000;
+                        currentTime = new Date(_this.now(true).getTime() + parseInt(tmpDate[1] + '1', 10) * timeOffset);
+                    } else {
+                        currentTime = sDateTime ? dateHelper.parseDate(sDateTime, options.format) : _this.now();
+                    }
+
+                    if (!_this.isValidDate(currentTime)) {
+                        currentTime = _this.now();
+                    }
+
+                    return currentTime;
+                };
+
+                _this.strToDate = function (sDate) {
+                    if (sDate && sDate instanceof Date && _this.isValidDate(sDate)) {
+                        return sDate;
+                    }
+
+                    var currentTime = sDate ? dateHelper.parseDate(sDate, options.formatDate) : _this.now(true);
+                    if (!_this.isValidDate(currentTime)) {
+                        currentTime = _this.now(true);
+                    }
+                    return currentTime;
+                };
+
+                _this.strtotime = function (sTime) {
+                    if (sTime && sTime instanceof Date && _this.isValidDate(sTime)) {
+                        return sTime;
+                    }
+                    var currentTime = sTime ? dateHelper.parseDate(sTime, options.formatTime) : _this.now(true);
+                    if (!_this.isValidDate(currentTime)) {
+                        currentTime = _this.now(true);
+                    }
+                    return currentTime;
+                };
+
+                _this.str = function () {
+                    return dateHelper.formatDate(_this.currentTime, options.format);
+                };
+                _this.currentTime = this.now();
+            };
+
+            _xdsoft_datetime = new XDSoft_datetime();
+
+            applyButton.on('touchend click', function (e) {
+                //pathbrite
+                e.preventDefault();
+                datetimepicker.data('changed', true);
+                _xdsoft_datetime.setCurrentTime(getCurrentValue());
+                input.val(_xdsoft_datetime.str());
+                datetimepicker.trigger('close.xdsoft');
+            });
+            month_picker.find('.xdsoft_today_button').on('touchend mousedown.xdsoft', function () {
+                datetimepicker.data('changed', true);
+                _xdsoft_datetime.setCurrentTime(0, true);
+                datetimepicker.trigger('afterOpen.xdsoft');
+            }).on('dblclick.xdsoft', function () {
+                var currentDate = _xdsoft_datetime.getCurrentTime(),
+                    minDate,
+                    maxDate;
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+                minDate = _xdsoft_datetime.strToDate(options.minDate);
+                minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+                if (currentDate < minDate) {
+                    return;
+                }
+                maxDate = _xdsoft_datetime.strToDate(options.maxDate);
+                maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
+                if (currentDate > maxDate) {
+                    return;
+                }
+                input.val(_xdsoft_datetime.str());
+                input.trigger('change');
+                datetimepicker.trigger('close.xdsoft');
+            });
+            month_picker.find('.xdsoft_prev,.xdsoft_next').on('touchend mousedown.xdsoft', function () {
+                var $this = $(this),
+                    timer = 0,
+                    stop = false;
+
+                (function arguments_callee1(v) {
+                    if ($this.hasClass(options.next)) {
+                        _xdsoft_datetime.nextMonth();
+                    } else if ($this.hasClass(options.prev)) {
+                        _xdsoft_datetime.prevMonth();
+                    }
+                    if (options.monthChangeSpinner) {
+                        if (!stop) {
+                            timer = setTimeout(arguments_callee1, v || 100);
+                        }
+                    }
+                })(500);
+
+                $([document.body, window]).on('touchend mouseup.xdsoft', function arguments_callee2() {
+                    clearTimeout(timer);
+                    stop = true;
+                    $([document.body, window]).off('touchend mouseup.xdsoft', arguments_callee2);
+                });
+            });
+
+            timepicker.find('.xdsoft_prev,.xdsoft_next').on('touchend mousedown.xdsoft', function () {
+                var $this = $(this),
+                    timer = 0,
+                    stop = false,
+                    period = 110;
+                (function arguments_callee4(v) {
+                    var pheight = timeboxparent[0].clientHeight,
+                        height = timebox[0].offsetHeight,
+                        top = Math.abs(parseInt(timebox.css('marginTop'), 10));
+                    if ($this.hasClass(options.next) && height - pheight - options.timeHeightInTimePicker >= top) {
+                        timebox.css('marginTop', '-' + (top + options.timeHeightInTimePicker) + 'px');
+                    } else if ($this.hasClass(options.prev) && top - options.timeHeightInTimePicker >= 0) {
+                        timebox.css('marginTop', '-' + (top - options.timeHeightInTimePicker) + 'px');
+                    }
+                    /**
+                     * Fixed bug:
+                     * When using css3 transition, it will cause a bug that you cannot scroll the timepicker list.
+                     * The reason is that the transition-duration time, if you set it to 0, all things fine, otherwise, this
+                     * would cause a bug when you use jquery.css method.
+                     * Let's say: * { transition: all .5s ease; }
+                     * jquery timebox.css('marginTop') will return the original value which is before you clicking the next/prev button,
+                     * meanwhile the timebox[0].style.marginTop will return the right value which is after you clicking the
+                     * next/prev button.
+                     *
+                     * What we should do:
+                     * Replace timebox.css('marginTop') with timebox[0].style.marginTop.
+                     */
+                    timeboxparent.trigger('scroll_element.xdsoft_scroller', [Math.abs(parseInt(timebox[0].style.marginTop, 10) / (height - pheight))]);
+                    period = period > 10 ? 10 : period - 10;
+                    if (!stop) {
+                        timer = setTimeout(arguments_callee4, v || period);
+                    }
+                })(500);
+                $([document.body, window]).on('touchend mouseup.xdsoft', function arguments_callee5() {
+                    clearTimeout(timer);
+                    stop = true;
+                    $([document.body, window]).off('touchend mouseup.xdsoft', arguments_callee5);
+                });
+            });
+
+            xchangeTimer = 0;
+            // base handler - generating a calendar and timepicker
+            datetimepicker.on('xchange.xdsoft', function (event) {
+                clearTimeout(xchangeTimer);
+                xchangeTimer = setTimeout(function () {
+
+                    if (_xdsoft_datetime.currentTime === undefined || _xdsoft_datetime.currentTime === null) {
+                        //In case blanks are allowed, delay construction until we have a valid date
+                        if (options.allowBlank) return;
+
+                        _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
+                    }
+
+                    var table = '',
+                        start = new Date(_xdsoft_datetime.currentTime.getFullYear(), _xdsoft_datetime.currentTime.getMonth(), 1, 12, 0, 0),
+                        i = 0,
+                        j,
+                        today = _xdsoft_datetime.now(),
+                        maxDate = false,
+                        minDate = false,
+                        hDate,
+                        day,
+                        d,
+                        y,
+                        m,
+                        w,
+                        classes = [],
+                        customDateSettings,
+                        newRow = true,
+                        time = '',
+                        h = '',
+                        line_time,
+                        description;
+
+                    while (start.getDay() !== options.dayOfWeekStart) {
+                        start.setDate(start.getDate() - 1);
+                    }
+
+                    table += '<table><thead><tr>';
+
+                    if (options.weeks) {
+                        table += '<th></th>';
+                    }
+
+                    for (j = 0; j < 7; j += 1) {
+                        table += '<th>' + options.i18n[globalLocale].dayOfWeekShort[(j + options.dayOfWeekStart) % 7] + '</th>';
+                    }
+
+                    table += '</tr></thead>';
+                    table += '<tbody>';
+
+                    if (options.maxDate !== false) {
+                        maxDate = _xdsoft_datetime.strToDate(options.maxDate);
+                        maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate(), 23, 59, 59, 999);
+                    }
+
+                    if (options.minDate !== false) {
+                        minDate = _xdsoft_datetime.strToDate(options.minDate);
+                        minDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate());
+                    }
+
+                    while (i < _xdsoft_datetime.currentTime.countDaysInMonth() || start.getDay() !== options.dayOfWeekStart || _xdsoft_datetime.currentTime.getMonth() === start.getMonth()) {
+                        classes = [];
+                        i += 1;
+
+                        day = start.getDay();
+                        d = start.getDate();
+                        y = start.getFullYear();
+                        m = start.getMonth();
+                        w = _xdsoft_datetime.getWeekOfYear(start);
+                        description = '';
+
+                        classes.push('xdsoft_date');
+
+                        if (options.beforeShowDay && $.isFunction(options.beforeShowDay.call)) {
+                            customDateSettings = options.beforeShowDay.call(datetimepicker, start);
+                        } else {
+                            customDateSettings = null;
+                        }
+
+                        if (options.allowDateRe && Object.prototype.toString.call(options.allowDateRe) === "[object RegExp]") {
+                            if (!options.allowDateRe.test(dateHelper.formatDate(start, options.formatDate))) {
+                                classes.push('xdsoft_disabled');
+                            }
+                        } else if (options.allowDates && options.allowDates.length > 0) {
+                            if (options.allowDates.indexOf(dateHelper.formatDate(start, options.formatDate)) === -1) {
+                                classes.push('xdsoft_disabled');
+                            }
+                        } else if (maxDate !== false && start > maxDate || minDate !== false && start < minDate || customDateSettings && customDateSettings[0] === false) {
+                            classes.push('xdsoft_disabled');
+                        } else if (options.disabledDates.indexOf(dateHelper.formatDate(start, options.formatDate)) !== -1) {
+                            classes.push('xdsoft_disabled');
+                        } else if (options.disabledWeekDays.indexOf(day) !== -1) {
+                            classes.push('xdsoft_disabled');
+                        } else if (input.is('[readonly]')) {
+                            classes.push('xdsoft_disabled');
+                        }
+
+                        if (customDateSettings && customDateSettings[1] !== "") {
+                            classes.push(customDateSettings[1]);
+                        }
+
+                        if (_xdsoft_datetime.currentTime.getMonth() !== m) {
+                            classes.push('xdsoft_other_month');
+                        }
+
+                        if ((options.defaultSelect || datetimepicker.data('changed')) && dateHelper.formatDate(_xdsoft_datetime.currentTime, options.formatDate) === dateHelper.formatDate(start, options.formatDate)) {
+                            classes.push('xdsoft_current');
+                        }
+
+                        if (dateHelper.formatDate(today, options.formatDate) === dateHelper.formatDate(start, options.formatDate)) {
+                            classes.push('xdsoft_today');
+                        }
+
+                        if (start.getDay() === 0 || start.getDay() === 6 || options.weekends.indexOf(dateHelper.formatDate(start, options.formatDate)) !== -1) {
+                            classes.push('xdsoft_weekend');
+                        }
+
+                        if (options.highlightedDates[dateHelper.formatDate(start, options.formatDate)] !== undefined) {
+                            hDate = options.highlightedDates[dateHelper.formatDate(start, options.formatDate)];
+                            classes.push(hDate.style === undefined ? 'xdsoft_highlighted_default' : hDate.style);
+                            description = hDate.desc === undefined ? '' : hDate.desc;
+                        }
+
+                        if (options.beforeShowDay && $.isFunction(options.beforeShowDay)) {
+                            classes.push(options.beforeShowDay(start));
+                        }
+
+                        if (newRow) {
+                            table += '<tr>';
+                            newRow = false;
+                            if (options.weeks) {
+                                table += '<th>' + w + '</th>';
+                            }
+                        }
+
+                        table += '<td data-date="' + d + '" data-month="' + m + '" data-year="' + y + '"' + ' class="xdsoft_date xdsoft_day_of_week' + start.getDay() + ' ' + classes.join(' ') + '" title="' + description + '">' + '<div>' + d + '</div>' + '</td>';
+
+                        if (start.getDay() === options.dayOfWeekStartPrev) {
+                            table += '</tr>';
+                            newRow = true;
+                        }
+
+                        start.setDate(d + 1);
+                    }
+                    table += '</tbody></table>';
+
+                    calendar.html(table);
+
+                    month_picker.find('.xdsoft_label span').eq(0).text(options.i18n[globalLocale].months[_xdsoft_datetime.currentTime.getMonth()]);
+                    month_picker.find('.xdsoft_label span').eq(1).text(_xdsoft_datetime.currentTime.getFullYear());
+
+                    // generate timebox
+                    time = '';
+                    h = '';
+                    m = '';
+
+                    line_time = function line_time(h, m) {
+                        var now = _xdsoft_datetime.now(),
+                            optionDateTime,
+                            current_time,
+                            isALlowTimesInit = options.allowTimes && $.isArray(options.allowTimes) && options.allowTimes.length;
+                        now.setHours(h);
+                        h = parseInt(now.getHours(), 10);
+                        now.setMinutes(m);
+                        m = parseInt(now.getMinutes(), 10);
+                        optionDateTime = new Date(_xdsoft_datetime.currentTime);
+                        optionDateTime.setHours(h);
+                        optionDateTime.setMinutes(m);
+                        classes = [];
+                        if (options.minDateTime !== false && options.minDateTime > optionDateTime || options.maxTime !== false && _xdsoft_datetime.strtotime(options.maxTime).getTime() < now.getTime() || options.minTime !== false && _xdsoft_datetime.strtotime(options.minTime).getTime() > now.getTime()) {
+                            classes.push('xdsoft_disabled');
+                        } else if (options.minDateTime !== false && options.minDateTime > optionDateTime || options.disabledMinTime !== false && now.getTime() > _xdsoft_datetime.strtotime(options.disabledMinTime).getTime() && options.disabledMaxTime !== false && now.getTime() < _xdsoft_datetime.strtotime(options.disabledMaxTime).getTime()) {
+                            classes.push('xdsoft_disabled');
+                        } else if (input.is('[readonly]')) {
+                            classes.push('xdsoft_disabled');
+                        }
+
+                        current_time = new Date(_xdsoft_datetime.currentTime);
+                        current_time.setHours(parseInt(_xdsoft_datetime.currentTime.getHours(), 10));
+
+                        if (!isALlowTimesInit) {
+                            current_time.setMinutes(Math[options.roundTime](_xdsoft_datetime.currentTime.getMinutes() / options.step) * options.step);
+                        }
+
+                        if ((options.initTime || options.defaultSelect || datetimepicker.data('changed')) && current_time.getHours() === parseInt(h, 10) && (!isALlowTimesInit && options.step > 59 || current_time.getMinutes() === parseInt(m, 10))) {
+                            if (options.defaultSelect || datetimepicker.data('changed')) {
+                                classes.push('xdsoft_current');
+                            } else if (options.initTime) {
+                                classes.push('xdsoft_init_time');
+                            }
+                        }
+                        if (parseInt(today.getHours(), 10) === parseInt(h, 10) && parseInt(today.getMinutes(), 10) === parseInt(m, 10)) {
+                            classes.push('xdsoft_today');
+                        }
+                        time += '<div class="xdsoft_time ' + classes.join(' ') + '" data-hour="' + h + '" data-minute="' + m + '">' + dateHelper.formatDate(now, options.formatTime) + '</div>';
+                    };
+                    if (!options.allowTimes || !$.isArray(options.allowTimes) || !options.allowTimes.length) {
+                        for (i = 0, j = 0; i < (options.hours12 ? 12 : 24); i += 1) {
+                            if (i >= options.minHours) {
+                                for (j = 0; j < 60; j += options.step) {
+                                    h = (i < 10 ? '0' : '') + i;
+                                    m = (j < 10 ? '0' : '') + j;
+                                    line_time(h, m);
+                                }
+                            }
+                        }
+                    } else {
+                        for (i = 0; i < options.allowTimes.length; i += 1) {
+                            h = _xdsoft_datetime.strtotime(options.allowTimes[i]).getHours();
+                            m = _xdsoft_datetime.strtotime(options.allowTimes[i]).getMinutes();
+                            line_time(h, m);
+                        }
+                    }
+
+                    timebox.html(time);
+
+                    opt = '';
+                    i = 0;
+
+                    for (i = parseInt(options.yearStart, 10) + options.yearOffset; i <= parseInt(options.yearEnd, 10) + options.yearOffset; i += 1) {
+                        opt += '<div class="xdsoft_option ' + (_xdsoft_datetime.currentTime.getFullYear() === i ? 'xdsoft_current' : '') + '" data-value="' + i + '">' + i + '</div>';
+                    }
+                    yearselect.children().eq(0).html(opt);
+
+                    for (i = parseInt(options.monthStart, 10), opt = ''; i <= parseInt(options.monthEnd, 10); i += 1) {
+                        opt += '<div class="xdsoft_option ' + (_xdsoft_datetime.currentTime.getMonth() === i ? 'xdsoft_current' : '') + '" data-value="' + i + '">' + options.i18n[globalLocale].months[i] + '</div>';
+                    }
+                    monthselect.children().eq(0).html(opt);
+                    $(datetimepicker).trigger('generate.xdsoft');
+                }, 10);
+                event.stopPropagation();
+            }).on('afterOpen.xdsoft', function () {
+                if (options.timepicker) {
+                    var classType, pheight, height, top;
+                    if (timebox.find('.xdsoft_current').length) {
+                        classType = '.xdsoft_current';
+                    } else if (timebox.find('.xdsoft_init_time').length) {
+                        classType = '.xdsoft_init_time';
+                    }
+                    if (classType) {
+                        pheight = timeboxparent[0].clientHeight;
+                        height = timebox[0].offsetHeight;
+                        top = timebox.find(classType).index() * options.timeHeightInTimePicker + 1;
+                        if (height - pheight < top) {
+                            top = height - pheight;
+                        }
+                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [parseInt(top, 10) / (height - pheight)]);
+                    } else {
+                        timeboxparent.trigger('scroll_element.xdsoft_scroller', [0]);
+                    }
+                }
+            });
+
+            timerclick = 0;
+            calendar.on('touchend click.xdsoft', 'td', function (xdevent) {
+                xdevent.stopPropagation(); // Prevents closing of Pop-ups, Modals and Flyouts in Bootstrap
+                timerclick += 1;
+                var $this = $(this),
+                    currentTime = _xdsoft_datetime.currentTime;
+
+                if (currentTime === undefined || currentTime === null) {
+                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
+                    currentTime = _xdsoft_datetime.currentTime;
+                }
+
+                if ($this.hasClass('xdsoft_disabled')) {
+                    return false;
+                }
+
+                currentTime.setDate(1);
+                currentTime.setFullYear($this.data('year'));
+                currentTime.setMonth($this.data('month'));
+                currentTime.setDate($this.data('date'));
+
+                datetimepicker.trigger('select.xdsoft', [currentTime]);
+
+                input.val(_xdsoft_datetime.str());
+
+                if (options.onSelectDate && $.isFunction(options.onSelectDate)) {
+                    options.onSelectDate.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), xdevent);
+                }
+
+                datetimepicker.data('changed', true);
+                datetimepicker.trigger('xchange.xdsoft');
+                datetimepicker.trigger('changedatetime.xdsoft');
+                if ((timerclick > 1 || options.closeOnDateSelect === true || options.closeOnDateSelect === false && !options.timepicker) && !options.inline) {
+                    datetimepicker.trigger('close.xdsoft');
+                }
+                setTimeout(function () {
+                    timerclick = 0;
+                }, 200);
+            });
+
+            timebox.on('touchmove', 'div', function () {
+                currentlyScrollingTimeDiv = true;
+            }).on('touchend click.xdsoft', 'div', function (xdevent) {
+                xdevent.stopPropagation();
+                if (currentlyScrollingTimeDiv) {
+                    currentlyScrollingTimeDiv = false;
+                    return;
+                }
+                var $this = $(this),
+                    currentTime = _xdsoft_datetime.currentTime;
+
+                if (currentTime === undefined || currentTime === null) {
+                    _xdsoft_datetime.currentTime = _xdsoft_datetime.now();
+                    currentTime = _xdsoft_datetime.currentTime;
+                }
+
+                if ($this.hasClass('xdsoft_disabled')) {
+                    return false;
+                }
+                currentTime.setHours($this.data('hour'));
+                currentTime.setMinutes($this.data('minute'));
+                datetimepicker.trigger('select.xdsoft', [currentTime]);
+
+                datetimepicker.data('input').val(_xdsoft_datetime.str());
+
+                if (options.onSelectTime && $.isFunction(options.onSelectTime)) {
+                    options.onSelectTime.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), xdevent);
+                }
+                datetimepicker.data('changed', true);
+                datetimepicker.trigger('xchange.xdsoft');
+                datetimepicker.trigger('changedatetime.xdsoft');
+                if (options.inline !== true && options.closeOnTimeSelect === true) {
+                    datetimepicker.trigger('close.xdsoft');
+                }
+            });
+
+            datepicker.on('mousewheel.xdsoft', function (event) {
+                if (!options.scrollMonth) {
+                    return true;
+                }
+                if (event.deltaY < 0) {
+                    _xdsoft_datetime.nextMonth();
+                } else {
+                    _xdsoft_datetime.prevMonth();
+                }
+                return false;
+            });
+
+            input.on('mousewheel.xdsoft', function (event) {
+                if (!options.scrollInput) {
+                    return true;
+                }
+                if (!options.datepicker && options.timepicker) {
+                    current_time_index = timebox.find('.xdsoft_current').length ? timebox.find('.xdsoft_current').eq(0).index() : 0;
+                    if (current_time_index + event.deltaY >= 0 && current_time_index + event.deltaY < timebox.children().length) {
+                        current_time_index += event.deltaY;
+                    }
+                    if (timebox.children().eq(current_time_index).length) {
+                        timebox.children().eq(current_time_index).trigger('mousedown');
+                    }
+                    return false;
+                }
+                if (options.datepicker && !options.timepicker) {
+                    datepicker.trigger(event, [event.deltaY, event.deltaX, event.deltaY]);
+                    if (input.val) {
+                        input.val(_xdsoft_datetime.str());
+                    }
+                    datetimepicker.trigger('changedatetime.xdsoft');
+                    return false;
+                }
+            });
+
+            datetimepicker.on('changedatetime.xdsoft', function (event) {
+                if (options.onChangeDateTime && $.isFunction(options.onChangeDateTime)) {
+                    var $input = datetimepicker.data('input');
+                    options.onChangeDateTime.call(datetimepicker, _xdsoft_datetime.currentTime, $input, event);
+                    delete options.value;
+                    $input.trigger('change');
+                }
+            }).on('generate.xdsoft', function () {
+                if (options.onGenerate && $.isFunction(options.onGenerate)) {
+                    options.onGenerate.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'));
+                }
+                if (triggerAfterOpen) {
+                    datetimepicker.trigger('afterOpen.xdsoft');
+                    triggerAfterOpen = false;
+                }
+            }).on('click.xdsoft', function (xdevent) {
+                xdevent.stopPropagation();
+            });
+
+            current_time_index = 0;
+
+            /**
+             * Runs the callback for each of the specified node's ancestors.
+             *
+             * Return FALSE from the callback to stop ascending.
+             *
+             * @param {DOMNode} node
+             * @param {Function} callback
+             * @returns {undefined}
+             */
+            forEachAncestorOf = function forEachAncestorOf(node, callback) {
+                do {
+                    node = node.parentNode;
+
+                    if (callback(node) === false) {
+                        break;
+                    }
+                } while (node.nodeName !== 'HTML');
+            };
+
+            /**
+             * Sets the position of the picker.
+             *
+             * @returns {undefined}
+             */
+            setPos = function setPos() {
+                var dateInputOffset, dateInputElem, verticalPosition, left, position, datetimepickerElem, dateInputHasFixedAncestor, $dateInput, windowWidth, verticalAnchorEdge, datetimepickerCss, windowHeight, windowScrollTop;
+
+                $dateInput = datetimepicker.data('input');
+                dateInputOffset = $dateInput.offset();
+                dateInputElem = $dateInput[0];
+
+                verticalAnchorEdge = 'top';
+                verticalPosition = dateInputOffset.top + dateInputElem.offsetHeight - 1;
+                left = dateInputOffset.left;
+                position = "absolute";
+
+                windowWidth = $(window).width();
+                windowHeight = $(window).height();
+                windowScrollTop = $(window).scrollTop();
+
+                if (document.documentElement.clientWidth - dateInputOffset.left < datepicker.parent().outerWidth(true)) {
+                    var diff = datepicker.parent().outerWidth(true) - dateInputElem.offsetWidth;
+                    left = left - diff;
+                }
+
+                if ($dateInput.parent().css('direction') === 'rtl') {
+                    left -= datetimepicker.outerWidth() - $dateInput.outerWidth();
+                }
+
+                if (options.fixed) {
+                    verticalPosition -= windowScrollTop;
+                    left -= $(window).scrollLeft();
+                    position = "fixed";
+                } else {
+                    dateInputHasFixedAncestor = false;
+
+                    forEachAncestorOf(dateInputElem, function (ancestorNode) {
+                        if (window.getComputedStyle(ancestorNode).getPropertyValue('position') === 'fixed') {
+                            dateInputHasFixedAncestor = true;
+                            return false;
+                        }
+                    });
+
+                    if (dateInputHasFixedAncestor) {
+                        position = 'fixed';
+
+                        //If the picker won't fit entirely within the viewport then display it above the date input.
+                        if (verticalPosition + datetimepicker.outerHeight() > windowHeight + windowScrollTop) {
+                            verticalAnchorEdge = 'bottom';
+                            verticalPosition = windowHeight + windowScrollTop - dateInputOffset.top;
+                        } else {
+                            verticalPosition -= windowScrollTop;
+                        }
+                    } else {
+                        if (verticalPosition + dateInputElem.offsetHeight > windowHeight + windowScrollTop) {
+                            verticalPosition = dateInputOffset.top - dateInputElem.offsetHeight + 1;
+                        }
+                    }
+
+                    if (verticalPosition < 0) {
+                        verticalPosition = 0;
+                    }
+
+                    if (left + dateInputElem.offsetWidth > windowWidth) {
+                        left = windowWidth - dateInputElem.offsetWidth;
+                    }
+                }
+
+                datetimepickerElem = datetimepicker[0];
+
+                forEachAncestorOf(datetimepickerElem, function (ancestorNode) {
+                    var ancestorNodePosition;
+
+                    ancestorNodePosition = window.getComputedStyle(ancestorNode).getPropertyValue('position');
+
+                    if (ancestorNodePosition === 'relative' && windowWidth >= ancestorNode.offsetWidth) {
+                        left = left - (windowWidth - ancestorNode.offsetWidth) / 2;
+                        return false;
+                    }
+                });
+
+                datetimepickerCss = {
+                    position: position,
+                    left: left,
+                    top: '', //Initialize to prevent previous values interfering with new ones.
+                    bottom: '' //Initialize to prevent previous values interfering with new ones.
+                };
+
+                datetimepickerCss[verticalAnchorEdge] = verticalPosition;
+
+                datetimepicker.css(datetimepickerCss);
+            };
+
+            datetimepicker.on('open.xdsoft', function (event) {
+                var onShow = true;
+                if (options.onShow && $.isFunction(options.onShow)) {
+                    onShow = options.onShow.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), event);
+                }
+                if (onShow !== false) {
+                    datetimepicker.show();
+                    setPos();
+                    $(window).off('resize.xdsoft', setPos).on('resize.xdsoft', setPos);
+
+                    if (options.closeOnWithoutClick) {
+                        $([document.body, window]).on('touchstart mousedown.xdsoft', function arguments_callee6() {
+                            datetimepicker.trigger('close.xdsoft');
+                            $([document.body, window]).off('touchstart mousedown.xdsoft', arguments_callee6);
+                        });
+                    }
+                }
+            }).on('close.xdsoft', function (event) {
+                var onClose = true;
+                month_picker.find('.xdsoft_month,.xdsoft_year').find('.xdsoft_select').hide();
+                if (options.onClose && $.isFunction(options.onClose)) {
+                    onClose = options.onClose.call(datetimepicker, _xdsoft_datetime.currentTime, datetimepicker.data('input'), event);
+                }
+                if (onClose !== false && !options.opened && !options.inline) {
+                    datetimepicker.hide();
+                }
+                event.stopPropagation();
+            }).on('toggle.xdsoft', function () {
+                if (datetimepicker.is(':visible')) {
+                    datetimepicker.trigger('close.xdsoft');
+                } else {
+                    datetimepicker.trigger('open.xdsoft');
+                }
+            }).data('input', input);
+
+            timer = 0;
+
+            datetimepicker.data('xdsoft_datetime', _xdsoft_datetime);
+            datetimepicker.setOptions(options);
+
+            function getCurrentValue() {
+                var ct = false,
+                    time;
+
+                if (options.startDate) {
+                    ct = _xdsoft_datetime.strToDate(options.startDate);
+                } else {
+                    ct = options.value || (input && input.val && input.val() ? input.val() : '');
+                    if (ct) {
+                        ct = _xdsoft_datetime.strToDateTime(ct);
+                    } else if (options.defaultDate) {
+                        ct = _xdsoft_datetime.strToDateTime(options.defaultDate);
+                        if (options.defaultTime) {
+                            time = _xdsoft_datetime.strtotime(options.defaultTime);
+                            ct.setHours(time.getHours());
+                            ct.setMinutes(time.getMinutes());
+                        }
+                    }
+                }
+
+                if (ct && _xdsoft_datetime.isValidDate(ct)) {
+                    datetimepicker.data('changed', true);
+                } else {
+                    ct = '';
+                }
+
+                return ct || 0;
+            }
+
+            function setMask(options) {
+
+                var isValidValue = function isValidValue(mask, value) {
+                    var reg = mask.replace(/([\[\]\/\{\}\(\)\-\.\+]{1})/g, '\\$1').replace(/_/g, '{digit+}').replace(/([0-9]{1})/g, '{digit$1}').replace(/\{digit([0-9]{1})\}/g, '[0-$1_]{1}').replace(/\{digit[\+]\}/g, '[0-9_]{1}');
+                    return new RegExp(reg).test(value);
+                },
+                    getCaretPos = function getCaretPos(input) {
+                    try {
+                        if (document.selection && document.selection.createRange) {
+                            var range = document.selection.createRange();
+                            return range.getBookmark().charCodeAt(2) - 2;
+                        }
+                        if (input.setSelectionRange) {
+                            return input.selectionStart;
+                        }
+                    } catch (e) {
+                        return 0;
+                    }
+                },
+                    setCaretPos = function setCaretPos(node, pos) {
+                    node = typeof node === "string" || node instanceof String ? document.getElementById(node) : node;
+                    if (!node) {
+                        return false;
+                    }
+                    if (node.createTextRange) {
+                        var textRange = node.createTextRange();
+                        textRange.collapse(true);
+                        textRange.moveEnd('character', pos);
+                        textRange.moveStart('character', pos);
+                        textRange.select();
+                        return true;
+                    }
+                    if (node.setSelectionRange) {
+                        node.setSelectionRange(pos, pos);
+                        return true;
+                    }
+                    return false;
+                };
+                if (options.mask) {
+                    input.off('keydown.xdsoft');
+                }
+                if (options.mask === true) {
+                    if (typeof moment != 'undefined') {
+                        options.mask = options.format.replace(/Y{4}/g, '9999').replace(/Y{2}/g, '99').replace(/M{2}/g, '19').replace(/D{2}/g, '39').replace(/H{2}/g, '29').replace(/m{2}/g, '59').replace(/s{2}/g, '59');
+                    } else {
+                        options.mask = options.format.replace(/Y/g, '9999').replace(/F/g, '9999').replace(/m/g, '19').replace(/d/g, '39').replace(/H/g, '29').replace(/i/g, '59').replace(/s/g, '59');
+                    }
+                }
+
+                if ($.type(options.mask) === 'string') {
+                    if (!isValidValue(options.mask, input.val())) {
+                        input.val(options.mask.replace(/[0-9]/g, '_'));
+                        setCaretPos(input[0], 0);
+                    }
+
+                    input.on('keydown.xdsoft', function (event) {
+                        var val = this.value,
+                            key = event.which,
+                            pos,
+                            digit;
+
+                        if (key >= KEY0 && key <= KEY9 || key >= _KEY0 && key <= _KEY9 || key === BACKSPACE || key === DEL) {
+                            pos = getCaretPos(this);
+                            digit = key !== BACKSPACE && key !== DEL ? String.fromCharCode(_KEY0 <= key && key <= _KEY9 ? key - KEY0 : key) : '_';
+
+                            if ((key === BACKSPACE || key === DEL) && pos) {
+                                pos -= 1;
+                                digit = '_';
+                            }
+
+                            while (/[^0-9_]/.test(options.mask.substr(pos, 1)) && pos < options.mask.length && pos > 0) {
+                                pos += key === BACKSPACE || key === DEL ? -1 : 1;
+                            }
+
+                            val = val.substr(0, pos) + digit + val.substr(pos + 1);
+                            if ($.trim(val) === '') {
+                                val = options.mask.replace(/[0-9]/g, '_');
+                            } else {
+                                if (pos === options.mask.length) {
+                                    event.preventDefault();
+                                    return false;
+                                }
+                            }
+
+                            pos += key === BACKSPACE || key === DEL ? 0 : 1;
+                            while (/[^0-9_]/.test(options.mask.substr(pos, 1)) && pos < options.mask.length && pos > 0) {
+                                pos += key === BACKSPACE || key === DEL ? -1 : 1;
+                            }
+
+                            if (isValidValue(options.mask, val)) {
+                                this.value = val;
+                                setCaretPos(this, pos);
+                            } else if ($.trim(val) === '') {
+                                this.value = options.mask.replace(/[0-9]/g, '_');
+                            } else {
+                                input.trigger('error_input.xdsoft');
+                            }
+                        } else {
+                            if ([AKEY, CKEY, VKEY, ZKEY, YKEY].indexOf(key) !== -1 && ctrlDown || [ESC, ARROWUP, ARROWDOWN, ARROWLEFT, ARROWRIGHT, F5, CTRLKEY, TAB, ENTER].indexOf(key) !== -1) {
+                                return true;
+                            }
+                        }
+
+                        event.preventDefault();
+                        return false;
+                    });
+                }
+            }
+
+            _xdsoft_datetime.setCurrentTime(getCurrentValue());
+
+            input.data('xdsoft_datetimepicker', datetimepicker).on('open.xdsoft focusin.xdsoft mousedown.xdsoft touchstart', function () {
+                if (input.is(':disabled') || input.data('xdsoft_datetimepicker').is(':visible') && options.closeOnInputClick) {
+                    return;
+                }
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    if (input.is(':disabled')) {
+                        return;
+                    }
+
+                    triggerAfterOpen = true;
+                    _xdsoft_datetime.setCurrentTime(getCurrentValue(), true);
+                    if (options.mask) {
+                        setMask(options);
+                    }
+                    datetimepicker.trigger('open.xdsoft');
+                }, 100);
+            }).on('keydown.xdsoft', function (event) {
+                var elementSelector,
+                    key = event.which;
+                if ([ENTER].indexOf(key) !== -1 && options.enterLikeTab) {
+                    elementSelector = $("input:visible,textarea:visible,button:visible,a:visible");
+                    datetimepicker.trigger('close.xdsoft');
+                    elementSelector.eq(elementSelector.index(this) + 1).focus();
+                    return false;
+                }
+                if ([TAB].indexOf(key) !== -1) {
+                    datetimepicker.trigger('close.xdsoft');
+                    return true;
+                }
+            }).on('blur.xdsoft', function () {
+                datetimepicker.trigger('close.xdsoft');
+            });
+        };
+        destroyDateTimePicker = function destroyDateTimePicker(input) {
+            var datetimepicker = input.data('xdsoft_datetimepicker');
+            if (datetimepicker) {
+                datetimepicker.data('xdsoft_datetime', null);
+                datetimepicker.remove();
+                input.data('xdsoft_datetimepicker', null).off('.xdsoft');
+                $(window).off('resize.xdsoft');
+                $([window, document.body]).off('mousedown.xdsoft touchstart');
+                if (input.unmousewheel) {
+                    input.unmousewheel();
+                }
+            }
+        };
+        $(document).off('keydown.xdsoftctrl keyup.xdsoftctrl').on('keydown.xdsoftctrl', function (e) {
+            if (e.keyCode === CTRLKEY) {
+                ctrlDown = true;
+            }
+        }).on('keyup.xdsoftctrl', function (e) {
+            if (e.keyCode === CTRLKEY) {
+                ctrlDown = false;
+            }
+        });
+
+        this.each(function () {
+            var datetimepicker = $(this).data('xdsoft_datetimepicker'),
+                $input;
+            if (datetimepicker) {
+                if ($.type(opt) === 'string') {
+                    switch (opt) {
+                        case 'show':
+                            $(this).select().focus();
+                            datetimepicker.trigger('open.xdsoft');
+                            break;
+                        case 'hide':
+                            datetimepicker.trigger('close.xdsoft');
+                            break;
+                        case 'toggle':
+                            datetimepicker.trigger('toggle.xdsoft');
+                            break;
+                        case 'destroy':
+                            destroyDateTimePicker($(this));
+                            break;
+                        case 'reset':
+                            this.value = this.defaultValue;
+                            if (!this.value || !datetimepicker.data('xdsoft_datetime').isValidDate(dateHelper.parseDate(this.value, options.format))) {
+                                datetimepicker.data('changed', false);
+                            }
+                            datetimepicker.data('xdsoft_datetime').setCurrentTime(this.value);
+                            break;
+                        case 'validate':
+                            $input = datetimepicker.data('input');
+                            $input.trigger('blur.xdsoft');
+                            break;
+                        default:
+                            if (datetimepicker[opt] && $.isFunction(datetimepicker[opt])) {
+                                result = datetimepicker[opt](opt2);
+                            }
+                    }
+                } else {
+                    datetimepicker.setOptions(opt);
+                }
+                return 0;
+            }
+            if ($.type(opt) !== 'string') {
+                if (!options.lazyInit || options.open || options.inline) {
+                    createDateTimePicker($(this));
+                } else {
+                    lazyInit($(this));
+                }
+            }
+        });
+
+        return result;
+    };
+
+    $.fn.datetimepicker.defaults = default_options;
+
+    function HighlightedDate(date, desc, style) {
+        "use strict";
+
+        this.date = date;
+        this.desc = desc;
+        this.style = style;
+    }
+});
+/*!
+ * jQuery Mousewheel 3.1.13
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license
+ * http://jquery.org/license
+ */
+
+(function (factory) {
+    if (true) {
+        // AMD. Register as an anonymous module.
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(18)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+        // Node/CommonJS style for Browserify
+        module.exports = factory;
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+})(function ($) {
+
+    var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
+        toBind = 'onwheel' in document || document.documentMode >= 9 ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
+        slice = Array.prototype.slice,
+        nullLowestDeltaTimeout,
+        lowestDelta;
+
+    if ($.event.fixHooks) {
+        for (var i = toFix.length; i;) {
+            $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
+        }
+    }
+
+    var special = $.event.special.mousewheel = {
+        version: '3.1.12',
+
+        setup: function setup() {
+            if (this.addEventListener) {
+                for (var i = toBind.length; i;) {
+                    this.addEventListener(toBind[--i], handler, false);
+                }
+            } else {
+                this.onmousewheel = handler;
+            }
+            // Store the line height and page height for this particular element
+            $.data(this, 'mousewheel-line-height', special.getLineHeight(this));
+            $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
+        },
+
+        teardown: function teardown() {
+            if (this.removeEventListener) {
+                for (var i = toBind.length; i;) {
+                    this.removeEventListener(toBind[--i], handler, false);
+                }
+            } else {
+                this.onmousewheel = null;
+            }
+            // Clean up the data we added to the element
+            $.removeData(this, 'mousewheel-line-height');
+            $.removeData(this, 'mousewheel-page-height');
+        },
+
+        getLineHeight: function getLineHeight(elem) {
+            var $elem = $(elem),
+                $parent = $elem['offsetParent' in $.fn ? 'offsetParent' : 'parent']();
+            if (!$parent.length) {
+                $parent = $('body');
+            }
+            return parseInt($parent.css('fontSize'), 10) || parseInt($elem.css('fontSize'), 10) || 16;
+        },
+
+        getPageHeight: function getPageHeight(elem) {
+            return $(elem).height();
+        },
+
+        settings: {
+            adjustOldDeltas: true, // see shouldAdjustOldDeltas() below
+            normalizeOffset: true // calls getBoundingClientRect for each event
+        }
+    };
+
+    $.fn.extend({
+        mousewheel: function mousewheel(fn) {
+            return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
+        },
+
+        unmousewheel: function unmousewheel(fn) {
+            return this.unbind('mousewheel', fn);
+        }
+    });
+
+    function handler(event) {
+        var orgEvent = event || window.event,
+            args = slice.call(arguments, 1),
+            delta = 0,
+            deltaX = 0,
+            deltaY = 0,
+            absDelta = 0,
+            offsetX = 0,
+            offsetY = 0;
+        event = $.event.fix(orgEvent);
+        event.type = 'mousewheel';
+
+        // Old school scrollwheel delta
+        if ('detail' in orgEvent) {
+            deltaY = orgEvent.detail * -1;
+        }
+        if ('wheelDelta' in orgEvent) {
+            deltaY = orgEvent.wheelDelta;
+        }
+        if ('wheelDeltaY' in orgEvent) {
+            deltaY = orgEvent.wheelDeltaY;
+        }
+        if ('wheelDeltaX' in orgEvent) {
+            deltaX = orgEvent.wheelDeltaX * -1;
+        }
+
+        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
+        if ('axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS) {
+            deltaX = deltaY * -1;
+            deltaY = 0;
+        }
+
+        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
+        delta = deltaY === 0 ? deltaX : deltaY;
+
+        // New school wheel delta (wheel event)
+        if ('deltaY' in orgEvent) {
+            deltaY = orgEvent.deltaY * -1;
+            delta = deltaY;
+        }
+        if ('deltaX' in orgEvent) {
+            deltaX = orgEvent.deltaX;
+            if (deltaY === 0) {
+                delta = deltaX * -1;
+            }
+        }
+
+        // No change actually happened, no reason to go any further
+        if (deltaY === 0 && deltaX === 0) {
+            return;
+        }
+
+        // Need to convert lines and pages to pixels if we aren't already in pixels
+        // There are three delta modes:
+        //   * deltaMode 0 is by pixels, nothing to do
+        //   * deltaMode 1 is by lines
+        //   * deltaMode 2 is by pages
+        if (orgEvent.deltaMode === 1) {
+            var lineHeight = $.data(this, 'mousewheel-line-height');
+            delta *= lineHeight;
+            deltaY *= lineHeight;
+            deltaX *= lineHeight;
+        } else if (orgEvent.deltaMode === 2) {
+            var pageHeight = $.data(this, 'mousewheel-page-height');
+            delta *= pageHeight;
+            deltaY *= pageHeight;
+            deltaX *= pageHeight;
+        }
+
+        // Store lowest absolute delta to normalize the delta values
+        absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX));
+
+        if (!lowestDelta || absDelta < lowestDelta) {
+            lowestDelta = absDelta;
+
+            // Adjust older deltas if necessary
+            if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
+                lowestDelta /= 40;
+            }
+        }
+
+        // Adjust older deltas if necessary
+        if (shouldAdjustOldDeltas(orgEvent, absDelta)) {
+            // Divide all the things by 40!
+            delta /= 40;
+            deltaX /= 40;
+            deltaY /= 40;
+        }
+
+        // Get a whole, normalized value for the deltas
+        delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
+        deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
+        deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
+
+        // Normalise offsetX and offsetY properties
+        if (special.settings.normalizeOffset && this.getBoundingClientRect) {
+            var boundingRect = this.getBoundingClientRect();
+            offsetX = event.clientX - boundingRect.left;
+            offsetY = event.clientY - boundingRect.top;
+        }
+
+        // Add information to the event object
+        event.deltaX = deltaX;
+        event.deltaY = deltaY;
+        event.deltaFactor = lowestDelta;
+        event.offsetX = offsetX;
+        event.offsetY = offsetY;
+        // Go ahead and set deltaMode to 0 since we converted to pixels
+        // Although this is a little odd since we overwrite the deltaX/Y
+        // properties with normalized deltas.
+        event.deltaMode = 0;
+
+        // Add event and delta to the front of the arguments
+        args.unshift(event, delta, deltaX, deltaY);
+
+        // Clearout lowestDelta after sometime to better
+        // handle multiple device types that give different
+        // a different lowestDelta
+        // Ex: trackpad = 3 and mouse wheel = 120
+        if (nullLowestDeltaTimeout) {
+            clearTimeout(nullLowestDeltaTimeout);
+        }
+        nullLowestDeltaTimeout = setTimeout(nullLowestDelta, 200);
+
+        return ($.event.dispatch || $.event.handle).apply(this, args);
+    }
+
+    function nullLowestDelta() {
+        lowestDelta = null;
+    }
+
+    function shouldAdjustOldDeltas(orgEvent, absDelta) {
+        // If this is an older event and the delta is divisable by 120,
+        // then we are assuming that the browser is treating this as an
+        // older mouse wheel event and that we should divide the deltas
+        // by 40 to try and get a more usable deltaFactor.
+        // Side note, this actually impacts the reported scroll distance
+        // in older browsers and can cause scrolling to be slower than native.
+        // Turn this off by setting $.event.special.mousewheel.settings.adjustOldDeltas to false.
+        return special.settings.adjustOldDeltas && orgEvent.type === 'mousewheel' && absDelta % 120 === 0;
+    }
+});
+
+/***/ }),
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(207);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(79)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../../node_modules/css-loader/index.js!./jquery.dataTables.min.css", function() {
+			var newContent = require("!!../../../../../node_modules/css-loader/index.js!./jquery.dataTables.min.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 207 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var escape = __webpack_require__(8);
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "table.dataTable{width:100%;margin:0 auto;clear:both;border-collapse:separate;border-spacing:0}table.dataTable thead th,table.dataTable tfoot th{font-weight:bold}table.dataTable thead th,table.dataTable thead td{padding:10px 18px;border-bottom:1px solid #111}table.dataTable thead th:active,table.dataTable thead td:active{outline:none}table.dataTable tfoot th,table.dataTable tfoot td{padding:10px 18px 6px 18px;border-top:1px solid #111}table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{cursor:pointer;*cursor:hand}table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dataTable thead .sorting_asc_disabled,table.dataTable thead .sorting_desc_disabled{background-repeat:no-repeat;background-position:center right}table.dataTable thead .sorting{background-image:url(" + escape(__webpack_require__(208)) + ")}table.dataTable thead .sorting_asc{background-image:url(" + escape(__webpack_require__(209)) + ")}table.dataTable thead .sorting_desc{background-image:url(" + escape(__webpack_require__(210)) + ")}table.dataTable thead .sorting_asc_disabled{background-image:url(" + escape(__webpack_require__(211)) + ")}table.dataTable thead .sorting_desc_disabled{background-image:url(" + escape(__webpack_require__(212)) + ")}table.dataTable tbody tr{background-color:#ffffff}table.dataTable tbody tr.selected{background-color:#B0BED9}table.dataTable tbody th,table.dataTable tbody td{padding:8px 10px}table.dataTable.row-border tbody th,table.dataTable.row-border tbody td,table.dataTable.display tbody th,table.dataTable.display tbody td{border-top:1px solid #ddd}table.dataTable.row-border tbody tr:first-child th,table.dataTable.row-border tbody tr:first-child td,table.dataTable.display tbody tr:first-child th,table.dataTable.display tbody tr:first-child td{border-top:none}table.dataTable.cell-border tbody th,table.dataTable.cell-border tbody td{border-top:1px solid #ddd;border-right:1px solid #ddd}table.dataTable.cell-border tbody tr th:first-child,table.dataTable.cell-border tbody tr td:first-child{border-left:1px solid #ddd}table.dataTable.cell-border tbody tr:first-child th,table.dataTable.cell-border tbody tr:first-child td{border-top:none}table.dataTable.stripe tbody tr.odd,table.dataTable.display tbody tr.odd{background-color:#f9f9f9}table.dataTable.stripe tbody tr.odd.selected,table.dataTable.display tbody tr.odd.selected{background-color:#acbad4}table.dataTable.hover tbody tr:hover,table.dataTable.display tbody tr:hover{background-color:#f6f6f6}table.dataTable.hover tbody tr:hover.selected,table.dataTable.display tbody tr:hover.selected{background-color:#aab7d1}table.dataTable.order-column tbody tr>.sorting_1,table.dataTable.order-column tbody tr>.sorting_2,table.dataTable.order-column tbody tr>.sorting_3,table.dataTable.display tbody tr>.sorting_1,table.dataTable.display tbody tr>.sorting_2,table.dataTable.display tbody tr>.sorting_3{background-color:#fafafa}table.dataTable.order-column tbody tr.selected>.sorting_1,table.dataTable.order-column tbody tr.selected>.sorting_2,table.dataTable.order-column tbody tr.selected>.sorting_3,table.dataTable.display tbody tr.selected>.sorting_1,table.dataTable.display tbody tr.selected>.sorting_2,table.dataTable.display tbody tr.selected>.sorting_3{background-color:#acbad5}table.dataTable.display tbody tr.odd>.sorting_1,table.dataTable.order-column.stripe tbody tr.odd>.sorting_1{background-color:#f1f1f1}table.dataTable.display tbody tr.odd>.sorting_2,table.dataTable.order-column.stripe tbody tr.odd>.sorting_2{background-color:#f3f3f3}table.dataTable.display tbody tr.odd>.sorting_3,table.dataTable.order-column.stripe tbody tr.odd>.sorting_3{background-color:whitesmoke}table.dataTable.display tbody tr.odd.selected>.sorting_1,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_1{background-color:#a6b4cd}table.dataTable.display tbody tr.odd.selected>.sorting_2,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_2{background-color:#a8b5cf}table.dataTable.display tbody tr.odd.selected>.sorting_3,table.dataTable.order-column.stripe tbody tr.odd.selected>.sorting_3{background-color:#a9b7d1}table.dataTable.display tbody tr.even>.sorting_1,table.dataTable.order-column.stripe tbody tr.even>.sorting_1{background-color:#fafafa}table.dataTable.display tbody tr.even>.sorting_2,table.dataTable.order-column.stripe tbody tr.even>.sorting_2{background-color:#fcfcfc}table.dataTable.display tbody tr.even>.sorting_3,table.dataTable.order-column.stripe tbody tr.even>.sorting_3{background-color:#fefefe}table.dataTable.display tbody tr.even.selected>.sorting_1,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_1{background-color:#acbad5}table.dataTable.display tbody tr.even.selected>.sorting_2,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_2{background-color:#aebcd6}table.dataTable.display tbody tr.even.selected>.sorting_3,table.dataTable.order-column.stripe tbody tr.even.selected>.sorting_3{background-color:#afbdd8}table.dataTable.display tbody tr:hover>.sorting_1,table.dataTable.order-column.hover tbody tr:hover>.sorting_1{background-color:#eaeaea}table.dataTable.display tbody tr:hover>.sorting_2,table.dataTable.order-column.hover tbody tr:hover>.sorting_2{background-color:#ececec}table.dataTable.display tbody tr:hover>.sorting_3,table.dataTable.order-column.hover tbody tr:hover>.sorting_3{background-color:#efefef}table.dataTable.display tbody tr:hover.selected>.sorting_1,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_1{background-color:#a2aec7}table.dataTable.display tbody tr:hover.selected>.sorting_2,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_2{background-color:#a3b0c9}table.dataTable.display tbody tr:hover.selected>.sorting_3,table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_3{background-color:#a5b2cb}table.dataTable.no-footer{border-bottom:1px solid #111}table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap}table.dataTable.compact thead th,table.dataTable.compact thead td{padding:4px 17px 4px 4px}table.dataTable.compact tfoot th,table.dataTable.compact tfoot td{padding:4px}table.dataTable.compact tbody th,table.dataTable.compact tbody td{padding:4px}table.dataTable th.dt-left,table.dataTable td.dt-left{text-align:left}table.dataTable th.dt-center,table.dataTable td.dt-center,table.dataTable td.dataTables_empty{text-align:center}table.dataTable th.dt-right,table.dataTable td.dt-right{text-align:right}table.dataTable th.dt-justify,table.dataTable td.dt-justify{text-align:justify}table.dataTable th.dt-nowrap,table.dataTable td.dt-nowrap{white-space:nowrap}table.dataTable thead th.dt-head-left,table.dataTable thead td.dt-head-left,table.dataTable tfoot th.dt-head-left,table.dataTable tfoot td.dt-head-left{text-align:left}table.dataTable thead th.dt-head-center,table.dataTable thead td.dt-head-center,table.dataTable tfoot th.dt-head-center,table.dataTable tfoot td.dt-head-center{text-align:center}table.dataTable thead th.dt-head-right,table.dataTable thead td.dt-head-right,table.dataTable tfoot th.dt-head-right,table.dataTable tfoot td.dt-head-right{text-align:right}table.dataTable thead th.dt-head-justify,table.dataTable thead td.dt-head-justify,table.dataTable tfoot th.dt-head-justify,table.dataTable tfoot td.dt-head-justify{text-align:justify}table.dataTable thead th.dt-head-nowrap,table.dataTable thead td.dt-head-nowrap,table.dataTable tfoot th.dt-head-nowrap,table.dataTable tfoot td.dt-head-nowrap{white-space:nowrap}table.dataTable tbody th.dt-body-left,table.dataTable tbody td.dt-body-left{text-align:left}table.dataTable tbody th.dt-body-center,table.dataTable tbody td.dt-body-center{text-align:center}table.dataTable tbody th.dt-body-right,table.dataTable tbody td.dt-body-right{text-align:right}table.dataTable tbody th.dt-body-justify,table.dataTable tbody td.dt-body-justify{text-align:justify}table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap{white-space:nowrap}table.dataTable,table.dataTable th,table.dataTable td{-webkit-box-sizing:content-box;box-sizing:content-box}.dataTables_wrapper{position:relative;clear:both;*zoom:1;zoom:1}.dataTables_wrapper .dataTables_length{float:left}.dataTables_wrapper .dataTables_filter{float:right;text-align:right}.dataTables_wrapper .dataTables_filter input{margin-left:0.5em}.dataTables_wrapper .dataTables_info{clear:both;float:left;padding-top:0.755em}.dataTables_wrapper .dataTables_paginate{float:right;text-align:right;padding-top:0.25em}.dataTables_wrapper .dataTables_paginate .paginate_button{box-sizing:border-box;display:inline-block;min-width:1.5em;padding:0.5em 1em;margin-left:2px;text-align:center;text-decoration:none !important;cursor:pointer;*cursor:hand;color:#333 !important;border:1px solid transparent;border-radius:2px}.dataTables_wrapper .dataTables_paginate .paginate_button.current,.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{color:#333 !important;border:1px solid #979797;background-color:white;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));background:-webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-moz-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-ms-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:-o-linear-gradient(top, #fff 0%, #dcdcdc 100%);background:linear-gradient(to bottom, #fff 0%, #dcdcdc 100%)}.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active{cursor:default;color:#666 !important;border:1px solid transparent;background:transparent;box-shadow:none}.dataTables_wrapper .dataTables_paginate .paginate_button:hover{color:white !important;border:1px solid #111;background-color:#585858;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));background:-webkit-linear-gradient(top, #585858 0%, #111 100%);background:-moz-linear-gradient(top, #585858 0%, #111 100%);background:-ms-linear-gradient(top, #585858 0%, #111 100%);background:-o-linear-gradient(top, #585858 0%, #111 100%);background:linear-gradient(to bottom, #585858 0%, #111 100%)}.dataTables_wrapper .dataTables_paginate .paginate_button:active{outline:none;background-color:#2b2b2b;background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #2b2b2b), color-stop(100%, #0c0c0c));background:-webkit-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-moz-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-ms-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:-o-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);background:linear-gradient(to bottom, #2b2b2b 0%, #0c0c0c 100%);box-shadow:inset 0 0 3px #111}.dataTables_wrapper .dataTables_paginate .ellipsis{padding:0 1em}.dataTables_wrapper .dataTables_processing{position:absolute;top:50%;left:50%;width:100%;height:40px;margin-left:-50%;margin-top:-25px;padding-top:20px;text-align:center;font-size:1.2em;background-color:white;background:-webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255,255,255,0)), color-stop(25%, rgba(255,255,255,0.9)), color-stop(75%, rgba(255,255,255,0.9)), color-stop(100%, rgba(255,255,255,0)));background:-webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-ms-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:-o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%);background:linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 25%, rgba(255,255,255,0.9) 75%, rgba(255,255,255,0) 100%)}.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter,.dataTables_wrapper .dataTables_info,.dataTables_wrapper .dataTables_processing,.dataTables_wrapper .dataTables_paginate{color:#333}.dataTables_wrapper .dataTables_scroll{clear:both}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody{*margin-top:-1px;-webkit-overflow-scrolling:touch}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td{vertical-align:middle}.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>th>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>thead>tr>td>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>th>div.dataTables_sizing,.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody>table>tbody>tr>td>div.dataTables_sizing{height:0;overflow:hidden;margin:0 !important;padding:0 !important}.dataTables_wrapper.no-footer .dataTables_scrollBody{border-bottom:1px solid #111}.dataTables_wrapper.no-footer div.dataTables_scrollHead>table,.dataTables_wrapper.no-footer div.dataTables_scrollBody>table{border-bottom:none}.dataTables_wrapper:after{visibility:hidden;display:block;content:\"\";clear:both;height:0}@media screen and (max-width: 767px){.dataTables_wrapper .dataTables_info,.dataTables_wrapper .dataTables_paginate{float:none;text-align:center}.dataTables_wrapper .dataTables_paginate{margin-top:0.5em}}@media screen and (max-width: 640px){.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{float:none;text-align:center}.dataTables_wrapper .dataTables_filter{margin-top:0.5em}}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 208 */
+/***/ (function(module, exports) {
+
+module.exports = "/images/sort_both.png?d012efb263431f6e63699886a239daf5";
+
+/***/ }),
+/* 209 */
+/***/ (function(module, exports) {
+
+module.exports = "/images/sort_asc.png?b55d4488b71419fa7d95fce0faa68559";
+
+/***/ }),
+/* 210 */
+/***/ (function(module, exports) {
+
+module.exports = "/images/sort_desc.png?9083637c24e74024959f962612312b20";
+
+/***/ }),
+/* 211 */
+/***/ (function(module, exports) {
+
+module.exports = "/images/sort_asc_disabled.png?7fa998ede4f84acdd88ce49e1b3882b2";
+
+/***/ }),
+/* 212 */
+/***/ (function(module, exports) {
+
+module.exports = "/images/sort_desc_disabled.png?d37e43b5328ef55e49e4b5087a5f4b9a";
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(214);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(79)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../../../node_modules/css-loader/index.js!./pagination.css", function() {
+			var newContent = require("!!../../../../../../node_modules/css-loader/index.js!./pagination.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\r\n@charset \"UTF-8\";\r\n\r\n/*ccs-1*/\r\n.whj_jqueryPaginationCss-1{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-1 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_padding{\r\n    padding: 5px 13px;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_bgc{\r\n    border-radius: 4px;\r\n    background-color: #fff;\r\n    color: #666666;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_border{\r\n    border: 1px solid #eeeeee;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_color{\r\n    color: #9a9a9a;\r\n}\r\n.whj_jqueryPaginationCss-1 .to_page_color{\r\n    color: #666666;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_hover:hover{\r\n    background-color: #33cc66;\r\n    color: #ffffff;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_checked{\r\n    background-color: #33cc66;\r\n    color: #ffffff;\r\n}\r\n.whj_jqueryPaginationCss-1 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-1 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-1 input{\r\n    padding: 0px;\r\n    width: 36px;\r\n    height: 36px;\r\n    border-radius: 4px;\r\n    outline: none;\r\n    text-align: center;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-1 div,.whj_jqueryPaginationCss-1 input,.whj_jqueryPaginationCss-1 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-2*/\r\n.whj_jqueryPaginationCss-2{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-2 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_bgc{\r\n    background-color: #5194ca;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_border{\r\n    border: 1px solid #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_color{\r\n    color: #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_hover:hover{\r\n    background-color: #d4f1ff;\r\n    color: #5194ca;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_checked{\r\n    background-color: #d4f1ff;\r\n    color: #5194ca;\r\n}\r\n.whj_jqueryPaginationCss-2 .whj_hoverDisable{\r\n    opacity: 0.7;\r\n}\r\n.whj_jqueryPaginationCss-2 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-2 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-2 div,.whj_jqueryPaginationCss-2 input,.whj_jqueryPaginationCss-2 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-3*/\r\n.whj_jqueryPaginationCss-3{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-3 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_bgc{\r\n    background-color: #7a7b7b;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_border{\r\n    border: 1px solid #929292;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_color{\r\n    color: #929292;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_hover:hover{\r\n    background-color: #e0dddd;\r\n    color: #7a7b7b;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_checked{\r\n    background-color: #e0dddd;\r\n    color: #7a7b7b;\r\n}\r\n.whj_jqueryPaginationCss-3 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-3 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-3 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-3 div,.whj_jqueryPaginationCss-3 input,.whj_jqueryPaginationCss-3 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-4*/\r\n.whj_jqueryPaginationCss-4{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-4 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_bgc{\r\n    background-color: #f5f5f5;\r\n    color: #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_border{\r\n    border: 1px solid #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_color{\r\n    color: #907272;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_hover:hover{\r\n    background-color: #afacac;\r\n    color: #fff;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_checked{\r\n    background-color: #afacac;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-4 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-4 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-4 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-4 div,.whj_jqueryPaginationCss-4 input,.whj_jqueryPaginationCss-4 select{\r\n    margin: 0 4px;\r\n}\r\n\r\n/*ccs-5*/\r\n.whj_jqueryPaginationCss-5{\r\n    display: inline-block;\r\n    padding: 5px;\r\n    user-select: none;\r\n    -webkit-user-select: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.whj_jqueryPaginationCss-5 div{\r\n    display: inline-block;\r\n    vertical-align: bottom;\r\n    /* height: 24px; */\r\n    line-height: 24px;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_padding{\r\n    padding: 1px 9px;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_bgc{\r\n    background-color: #199eaf;\r\n    color: #fff;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_border{\r\n    border: 1px solid #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_color{\r\n    color: #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_hover:hover{\r\n    background-color: #d4f1ff;\r\n    color: #199eaf;\r\n    cursor: pointer;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_checked{\r\n    background-color: #d4f1ff;\r\n    color: #199eaf;\r\n}\r\n.whj_jqueryPaginationCss-5 .whj_hoverDisable{\r\n    opacity: 0.5;\r\n}\r\n.whj_jqueryPaginationCss-5 select{\r\n    height: 28px;\r\n    vertical-align: bottom;\r\n    padding: 0px;\r\n    outline: none;\r\n}\r\n.whj_jqueryPaginationCss-5 input{\r\n    padding: 0px;\r\n    height: 26px;\r\n    outline: none;\r\n    text-align: center;\r\n    width: 60px;\r\n    vertical-align: bottom;\r\n}\r\n.whj_jqueryPaginationCss-5 div,.whj_jqueryPaginationCss-5 input,.whj_jqueryPaginationCss-5 select{\r\n    margin: 0 4px;\r\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -37533,268 +37795,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = ty
 });
 
 /***/ }),
-/* 215 */
-/***/ (function(module, exports) {
-
-(function (global, $, factory) {
-	factory(global, $);
-})(this, jQuery, function (window, $) {
-
-	var siteFns = {
-		init: function init() {
-			var self = this;
-			self.componentInit().addressPicker.init();
-		},
-
-		componentInit: function componentInit() {
-			var self = this;
-			if ($('select').length) {
-				initSelectBox();
-				$('select').each(function () {
-					var $this = $(this),
-					    obj = $(this).data('options');
-					if (obj) {
-						obj = obj.charAt(0) === '{' && obj.charAt(obj.length - 1) === '}' ? stf(obj) : stf('{' + obj + '}');
-					} else {
-						obj = {};
-					}
-					$this.selectpicker(obj);
-				});
-			}
-			if ($('.input-date-range')) {
-				$('.input-date-range').each(function () {
-					var $this = $(this),
-					    options = {
-						autoUpdateInput: false,
-						locale: {
-							applyLabel: '确定',
-							cancelLabel: '取消',
-							fromLabel: '起始时间',
-							toLabel: '结束时间',
-							daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
-							monthNames: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
-							firstDay: 1,
-							format: 'YYYY/DD/MM'
-						}
-					};
-					// if( $this. ) {
-					//
-					// }
-					$this.after('<input type="hidden" name="start-date" /><input type="hidden" name="end-date" />');
-					$this.daterangepicker(options, function (start, end, label) {
-						$this.parent().prev().addClass('has-content');
-						start = start.format('YYYY/DD/MM');
-						end = end.format('YYYY/DD/MM');
-						$this.val(start + ' - ' + end);
-						$this.nextAll().eq(0).val(start).end().eq(1).val(end);
-					});
-
-					if ($this.val()) {
-						$this.parent().prev().addClass('has-content');
-					}
-				});
-			}
-			return self;
-		},
-		addressPicker: {
-			init: function init() {
-				province = '';
-				city = '';
-				$.ajax({
-					type: "GET",
-					url: "common/common/getAllProvince",
-					dataType: "json",
-					async: false,
-					success: function success(data) {
-
-						province = data;
-					}
-				});
-				$.ajax({
-					type: "GET",
-					url: "common/common/getAllCitys",
-					dataType: "json",
-					async: false,
-					success: function success(data) {
-						city = data;
-					}
-				});
-
-				var self = this,
-				    provs = province,
-				    citys = city;
-
-				self.provs = provs;
-				self.citys = citys;
-				self.render().eventInit();
-			},
-			render: function render() {
-				var self = this;
-
-				$('.city-select').each(function () {
-					var $this = $(this),
-					    html = '',
-					    name,
-					    val;
-
-					$this.prepend('<input name="search-prov" type="hidden" /><input name="search-city" type="hidden" />');
-
-					$.each(self.provs, function (i, prov) {
-						prov = ~prov.indexOf('-') ? prov.split('-') : [prov, i + 1];
-						name = prov[0];
-						val = prov[1];
-
-						html += '<li class="drop-prov-li" data-val="' + val + '">' + name + '</li>';
-					});
-
-					$this.next().find('.drop-prov-ul').append(html);
-
-					$this.next().find('.drop-prov-ul li').each(function (i) {
-						html = '';
-
-						$.each(self.citys[i], function (i, city) {
-
-							city = ~city.indexOf('-') ? city.split('-') : [city, i + 1];
-							name = city[0];
-							val = city[1];
-
-							html += '<li class="drop-city-li" data-val="' + val + '">' + name + '</li>';
-						});
-
-						$(this).data('citys', html);
-
-						if (!i) {
-							$this.next().find('.drop-city-ul').html(html);
-						}
-					});
-				});
-
-				$(document).on('click', 'body', function (e) {
-					if (!$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length) {
-						$('.drop-down:visible').prev('.city-select').trigger('click');
-					}
-				});
-				return self;
-			},
-
-			eventInit: function eventInit() {
-				var self = this;
-
-				$(document).on('click', '.city-select', function () {
-					var $this = $(this),
-					    index = 0;
-					// $parents, $value, $hidden;
-
-					$this.next().toggle();
-
-					if ($this.next().is(':visible') && $this.next().find('.selected').length === 2) {
-						$this.next().find('.selected').each(function () {
-							var $selected = $(this),
-							    scrollTop = $selected.prevAll().length * $selected.outerHeight(true);
-
-							$selected.parent().parent().scrollTop(scrollTop);
-						});
-					} else {
-						$this.next().find('.selected').removeClass('selected');
-						$this.next().children().each(function () {
-							$(this).scrollTop(0);
-						});
-						$this.next().find('.drop-city-ul').html($this.next().children().eq(0).find('li:eq(0)').data('citys'));
-						// $parents = $this.parents('.address-search-box');
-						// $value = $parents.find('.value');
-						// $hidden = $parents.find('input:hidden');
-						//
-						// $value.each(function( i ) {
-						// 	i ? $(this).val('省') : $(this).val('市');
-						// });
-						//
-						// $hidden.val('');
-					}
-				}).on('click', '.drop-prov-ul li', function () {
-					var $this = $(this),
-					    $cityWrap;
-
-					if (!$this.hasClass('selected')) {
-						$this.addClass('selected').siblings('.selected').removeClass('selected');
-
-						$cityWrap = $this.parents('.drop-prov').next();
-						$cityWrap.find('.drop-ul').html($this.data('citys'));
-					}
-				}).on('click', '.drop-city-ul li', function () {
-					var $this = $(this),
-					    $parents,
-					    $value,
-					    $hidden;
-
-					if (!$this.hasClass('selected')) {
-						$this.addClass('selected').siblings('.selected').removeClass('selected');
-
-						$parents = $this.parents('.address-search-box');
-						$value = $parents.find('.value');
-						$hidden = $parents.find('input:hidden');
-
-						$this.parents('.drop-down').toggle().find('.selected').each(function (i) {
-							$value.eq(i).val($(this).text());
-							$hidden.eq(i).val($(this).data('val'));
-						});
-					}
-				});
-				return self;
-			}
-		}
-	};
-	function stf(s) {
-		return new Function('return ' + s)();
-	}
-	$(document).ready(function () {
-		siteFns.init();
-		$('.js-pic-box').click(function () {
-			var $this = $(this);
-			$this.hasClass('select') ? $this.removeClass('selected') : $this.addClass('selected').siblings('li').removeClass('selected');
-		});
-	});
-});
-function initGallery(parent) {
-	$('.pic-list a').fancybox({
-		parent: parent || null,
-		fixed: !parent,
-		openEffect: 'none',
-		closeEffect: 'none',
-		padding: 0,
-		prevEffect: 'none',
-		nextEffect: 'none',
-		closeBtn: false,
-		helpers: {
-			buttons: {
-				show: false
-			}
-		},
-		afterLoad: function afterLoad() {
-			this.title = this.index + 1 + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
-		}
-	});
-}
-// 省份
-function initSelectBox() {
-	var provs = ["北京", "天津", "上海", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"],
-	    citys = ["北京", "天津", "上海", "重庆", "石家庄", "张家口", "承德", "秦皇岛", "唐山", "廊坊", "保定", "衡水", "沧州", "邢台", "邯郸", "太原", "朔州", "大同", "阳泉", "长治", "晋城", "忻州", "晋中", "临汾", "吕梁", "运城", "呼和浩特", "包头", "乌海", "赤峰", "通辽", "呼伦贝尔", "鄂尔多斯", "乌兰察布", "巴彦淖尔", "兴安盟", "锡林郭勒盟", "阿拉善盟", "沈阳", "朝阳", "阜新", "铁岭", "抚顺", "本溪", "辽阳", "鞍山", "丹东", "大连", "营口", "盘锦", "锦州", "葫芦岛", "长春", "白城", "松原", "吉林", "四平", "辽源", "通化", "白山", "延边州", "哈尔滨", "齐齐哈尔", "七台河", "黑河", "大庆", "鹤岗", "伊春", "佳木斯", "双鸭山", "鸡西", "牡丹江", "绥化", "大兴安岭", "南京", "徐州", "连云港", "宿迁", "淮安", "盐城", "扬州", "泰州", "南通", "镇江", "常州", "无锡", "苏州", "杭州", "湖州", "嘉兴", "舟山", "宁波", "绍兴", "衢州", "金华", "台州", "温州", "丽水", "合肥", "宿州", "淮北", "亳州", "阜阳", "蚌埠", "淮南", "滁州", "马鞍山", "芜湖", "铜陵", "安庆", "黄山", "六安", "巢湖", "池州", "宣城", "福州", "南平", "莆田", "三明", "泉州", "厦门", "漳州", "龙岩", "宁德", "南昌", "九江", "景德镇", "鹰潭", "新余", "萍乡", "赣州", "上饶", "抚州", "宜春", "吉安", "济南", "青岛", "聊城", "德州", "东营", "淄博", "潍坊", "烟台", "威海", "日照", "临沂", "枣庄", "济宁", "泰安", "莱芜", "滨州", "菏泽", "郑州", "开封", "三门峡", "洛阳", "焦作", "新乡", "鹤壁", "安阳", "濮阳", "商丘", "许昌", "漯河", "平顶山", "南阳", "信阳", "周口", "驻马店", "济源", "武汉", "十堰", "襄阳", "荆门", "孝感", "黄冈", "鄂州", "黄石", "咸宁", "荆州", "宜昌", "随州", "仙桃", "潜江", "天门", "神农架林区", "恩施州", "长沙", "张家界", "常德", "益阳", "岳阳", "株洲", "湘潭", "衡阳", "郴州", "永州", "邵阳", "怀化", "娄底", "湘西州", "广州", "深圳", "清远", "韶关", "河源", "梅州", "潮州", "汕头", "揭阳", "汕尾", "惠州", "东莞", "珠海", "中山", "江门", "佛山", "肇庆", "云浮", "阳江", "茂名", "湛江", "南宁", "桂林", "柳州", "梧州", "贵港", "玉林", "钦州", "北海", "防城港", "崇左", "百色", "河池", "来宾", "贺州", "海口", "三亚", "文昌", "琼海", "万宁", "五指山", "东方", "儋州", "三沙", "成都", "广元", "绵阳", "德阳", "南充", "广安", "遂宁", "内江", "乐山", "自贡", "泸州", "宜宾", "攀枝花", "巴中", "达州", "资阳", "眉山", "雅安", "阿坝州", "甘孜州", "凉山州", "贵阳", "六盘水", "遵义", "安顺", "毕节", "铜仁", "黔东南州", "黔南州", "黔西南州", "昆明", "曲靖", "玉溪", "保山", "昭通", "丽江", "思茅", "临沧", "德宏州", "怒江州", "迪庆州", "大理州", "楚雄州", "红河州", "文山州", "西双版纳", "拉萨", "那曲", "昌都", "林芝", "山南", "日喀则", "阿里", "西安", "延安", "铜川", "渭南", "咸阳", "宝鸡", "汉中", "榆林", "安康", "商洛", "兰州", "嘉峪关", "白银", "天水", "武威", "酒泉", "张掖", "庆阳", "平凉", "定西", "陇南", "临夏州", "甘南州", "西宁", "海东", "海北州", "海南州", "黄南州", "果洛州", "玉树州", "海西州", "银川", "石嘴山", "吴忠", "固原", "中卫", "乌鲁木齐", "克拉玛依", "喀什", "阿克苏", "和田", "吐鲁番", "哈密", "克孜勒苏柯州", "博尔塔拉州", "昌吉州", "巴音郭楞州", "伊犁州", "塔城", "阿勒泰", "香港", "澳门", "台北", "高雄", "台中", "花莲", "基隆", "嘉义", "金门", "连江", "苗栗", "南投", "澎湖", "屏东", "台东", "台南", "桃园", "新竹", "宜兰", "云林", "彰化"],
-	    areas = ["朝阳", "阜新", "铁岭", "抚顺", "本溪", "辽阳", "鞍山", "丹东", "大连", "营口", "盘锦", "锦州", "葫芦岛", "长春", "白城", "松原", "吉林", "四平", "辽源", "通化", "白山", "延边州", "哈尔滨", "齐齐哈尔", "七台河", "黑河", "大庆", "鹤岗", "伊春", "佳木斯", "双鸭山", "鸡西", "牡丹江", "绥化"];
-
-	// 省
-	for (var index = 0; index < provs.length; index++) {
-		$("#prev-select-box").append("<option>" + provs[index] + "</option>");
-	}
-	// 市
-	for (var index = 0; index < citys.length; index++) {
-		$("#city-select-box").append("<option>" + citys[index] + "</option>");
-	}
-	// 区
-	for (var index = 0; index < areas.length; index++) {
-		$("#area-select-box").append("<option>" + areas[index] + "</option>");
-	}
-}
-
-/***/ }),
 /* 216 */
 /***/ (function(module, exports) {
 
@@ -38121,21 +38121,21 @@ module.exports = __webpack_amd_options__;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(201);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(200);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_datetimepicker_jquery_datetimepicker_full_js__ = __webpack_require__(202);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_datetimepicker_jquery_datetimepicker_full_js__ = __webpack_require__(205);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_datetimepicker_jquery_datetimepicker_full_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_datetimepicker_jquery_datetimepicker_full_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_css_jquery_dataTables_min_css__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_css_jquery_dataTables_min_css__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_css_jquery_dataTables_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__static_css_jquery_dataTables_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_pagination_pagination_css__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_pagination_pagination_css__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_pagination_pagination_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__static_js_pagination_pagination_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_min_js__ = __webpack_require__(219);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__static_js_jquery_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_plugin_js__ = __webpack_require__(212);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_plugin_js__ = __webpack_require__(201);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__static_js_jquery_plugin_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__static_js_jquery_dataTables_min_js__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__static_js_jquery_dataTables_min_js__ = __webpack_require__(215);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__static_js_jquery_dataTables_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__static_js_jquery_dataTables_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__static_js_jquery_common_js__ = __webpack_require__(215);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__static_js_jquery_common_js__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__static_js_jquery_common_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__static_js_jquery_common_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__static_js_pagination_pagination_min_js__ = __webpack_require__(216);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__static_js_pagination_pagination_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__static_js_pagination_pagination_min_js__);
@@ -40921,7 +40921,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     var o = "function" == "function" && __webpack_require__(217),
         a = "undefined" != typeof module && module.exports,
         n = "https:" == document.location.protocol ? "https:" : "http:",
-        i = "cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js";o || (a ? __webpack_require__(200)(e) : e.event.special.mousewheel || e("head").append(decodeURI("%3Cscript src=" + n + "//" + i + "%3E%3C/script%3E"))), t();
+        i = "cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js";o || (a ? __webpack_require__(204)(e) : e.event.special.mousewheel || e("head").append(decodeURI("%3Cscript src=" + n + "//" + i + "%3E%3C/script%3E"))), t();
   }(function () {
     var t,
         o = "mCustomScrollbar",

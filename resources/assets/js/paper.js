@@ -20,7 +20,15 @@ const routes = [
                  meta:{
                      title:'标识题目问题',
                  }
-             },
+            },
+            {
+                path:'paperExaminedTwo/:userKey/:taskId',
+                name:'paper-paperExaminedTwo',
+                component:resolve => require(['./page/paper/paperExaminedTwo'], resolve),
+                meta:{
+                    title:'标识试卷问题',
+                }
+            },
             // {
             //     path:'question/:userKey',
             //     name:'manage-question',

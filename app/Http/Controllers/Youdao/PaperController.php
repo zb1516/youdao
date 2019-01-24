@@ -99,6 +99,77 @@ class PaperController extends BaseController
         if($result['code']== 200){
             $paperInfo['youdao_info'] = $result['data'];
         }*/
+        $paperInfo['youdao_info'] = array(
+            'questions'=>array(
+                '0'=>array(
+                    'quesNumber'=>1,
+                    'hasOptions'=>1,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>safasfasfasfs</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'options'=>array(
+                        array(
+                            "label"=>"A", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>1
+                        ),
+                        array(
+                            "label"=>"B", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>0
+                        ),
+                        array(
+                            "label"=>"C", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>1
+                        ),
+                        array(
+                            "label"=>"D", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>0
+                        ),
+
+                    ),
+                ),
+                '1'=>array(
+                    'quesNumber'=>2,
+                    'hasOptions'=>0,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>22222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnswer'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnalysis'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                ),
+                '2'=>array(
+                    'quesNumber'=>3,
+                    'hasOptions'=>0,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>3333333333333</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnswer'=>array(
+                        'content'=>'<div>3333333333333</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnalysis'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                ),
+            )
+        );
         return $paperInfo;
     }
 
