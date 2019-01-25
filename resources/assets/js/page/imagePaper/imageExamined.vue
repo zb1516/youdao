@@ -115,9 +115,9 @@
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
                     axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
-                        if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
-                        }
+                        // if (data.data.errorMsg) {
+                        //     that.$message.error(data.data.errorMsg);
+                        // }
                         if (data.data == true) {
                             that.$message({
                                 message: '审核通过',

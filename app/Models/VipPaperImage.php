@@ -212,10 +212,12 @@ class VipPaperImage extends Model
             );
             $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($question);
+            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
+            $imagesUrl = $this->toStringArray($imagesUrl);
             if($question){
                 for($i=0;$i<$count;$i++){
                     $data = [
-                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'][$i],
+                        'image_url' => $imagesUrl[$i],
                         'is_delete' => 0,
                     ];
                     $condition = array(
@@ -229,8 +231,8 @@ class VipPaperImage extends Model
                     }
                 }
             }
-            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
-            $imagesUrl = $this->toStringArray($imagesUrl);
+
+
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'question');
             $filenameQuestion = $filename.$dateTime.$rand.'question';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
@@ -253,10 +255,12 @@ class VipPaperImage extends Model
             );
             $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($answer);
+            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
+            $imagesUrl = $this->toStringArray($imagesUrl);
             if($answer){
                 for($i=0;$i<$count;$i++){
                     $data = [
-                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'][$i],
+                        'image_url' => $imagesUrl[$i],
                         'is_delete' => 0,
                     ];
                     $condition = array(
@@ -270,7 +274,7 @@ class VipPaperImage extends Model
                     }
                 }
             }
-            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
+
             $imagesUrl = $this->toStringArray($imagesUrl);
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'answer');
             $filenameAnswer = $filename.$dateTime.$rand.'answer';
@@ -468,7 +472,11 @@ class VipPaperImage extends Model
     public function toStringArray($imageUrl)
     {
         $str = str_replace('[','',$imageUrl);
-        $array = explode(',',trim(str_replace(']','',$str)));
+        $str = str_replace(']','',$str);
+        $str = str_replace(' ','',$str);
+        $str = str_replace('"','',$str);
+        //print_R($str);exit;
+        $array = explode(',',str_replace(']','',$str));
         return $array;
     }
 

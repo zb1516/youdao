@@ -119,7 +119,7 @@ class Paper extends Model
 
         $searchArgs = [];
         if (isset($formData['taskId'])) {
-            $searchArgs['taskId'] = trim($formData['taskId']);
+            $searchArgs['taskId'] = $formData['taskId'];
         }
         if (isset($formData['subjectId'])) {
             $searchArgs['subjectId'] = $formData['subjectId'];
