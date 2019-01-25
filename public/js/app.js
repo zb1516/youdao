@@ -1,4 +1,4 @@
-webpackJsonp([5],[
+webpackJsonp([7],[
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36374,7 +36374,7 @@ var routes = [{
         path: 'paperList/:userKey',
         name: 'paper-paperList',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(11).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(83)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(2).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(83)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷审核'
@@ -36383,7 +36383,7 @@ var routes = [{
         path: 'paperExaminedOne/:userKey/:taskId',
         name: 'paper-paperExaminedOne',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(10).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(84)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(1).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(84)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '标识题目问题'
@@ -36392,7 +36392,7 @@ var routes = [{
         path: 'paperExaminedTwo/:userKey/:taskId',
         name: 'paper-paperExaminedTwo',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(9).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(249)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(5).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(85)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '标识试卷问题'
@@ -36401,7 +36401,7 @@ var routes = [{
         path: 'paperExaminedResult/:userKey/:taskId/:type',
         name: 'paper-paperExaminedResult',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(1/* empty */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(252)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(86)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷审核结果'

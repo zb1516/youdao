@@ -115,6 +115,7 @@
             },
             mounted(){
                 var that = this;
+                that.taskId = this.$route.params.taskId;
                 common.init();
                 that.doGetPaperInfo();
 
@@ -133,7 +134,7 @@
                     var that = this;
                     var searchArgs = $.extend(true, {}, that.searchArgs);
                     searchArgs.userKey = that.userKey;
-                    searchArgs.taskId = this.$route.params.taskId;
+                    searchArgs.taskId = that.taskId;
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
@@ -153,19 +154,23 @@
                     var that = this;
                     var searchArgs = $.extend(true, {}, that.searchArgs);
                     searchArgs.userKey = that.userKey;
-                    searchArgs.taskId = this.$route.params.taskId;
+                    searchArgs.taskId = this.taskId;
                     axios.post('youdao/paper/paperExaminedOne',{params:searchArgs}).then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
                                 that.$message.error(data.data.errorMsg);
                             } else {
-                                that.paperInfo =  data.data;
-                                that.questions = that.paperInfo.youdao_info.questions;
+                                if(data.data.status == 1){
+                                    that.$router.push({
+                                        name: 'paper-paperExaminedTwo',
+                                        params:{userKey:that.userKey,taskId:that.taskId}
+                                    });
+                                }else{
+                                    that.$message.error('题目问题提交失败！');
+                                }
                             }
                         }
-                        that.$nextTick(function() {
-                            common.init();
-                        });
+
                     })
                 }
             }
