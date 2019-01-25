@@ -76,7 +76,7 @@
               </div>
             </div>
             <div class="btn-wrapper cf">
-                <span class="next-btn review2-btn" @click="doPaperExaminedOne()">下一步</span>
+                <span class="next-btn review2-btn" @click="doPaperExaminedOne">下一步</span>
             </div>
           </div>
         </div>
@@ -100,6 +100,7 @@
                     paperInfo:'',
                     questions:'',
                     selected:'',
+                    errorStr:'',
                 }
             },
             computed: {
@@ -152,13 +153,12 @@
 
                 doPaperExaminedOne(){
                     var that = this;
-                    var searchArgs = $.extend(true, {}, that.searchArgs);
-                    searchArgs.userKey = that.userKey;
-                    searchArgs.taskId = this.taskId;
-                    axios.post('youdao/paper/paperExaminedOne',{params:searchArgs}).then(function(data){
+                    that.errorStr = '';//题目问题
+                    axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorStr+"'").then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                that.$message.error(data.data.errorMsg);
+                                alert(data.data.errorMsg);
+                                //that.$message.error(data.data.errorMsg);
                             } else {
                                 if(data.data.status == 1){
                                     that.$router.push({
@@ -170,7 +170,6 @@
                                 }
                             }
                         }
-
                     })
                 }
             }

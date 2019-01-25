@@ -37683,7 +37683,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return {
             paperInfo: '',
             questions: '',
-            selected: ''
+            selected: '',
+            errorStr: ''
         };
     },
 
@@ -37730,13 +37731,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         },
         doPaperExaminedOne: function doPaperExaminedOne() {
             var that = this;
-            var searchArgs = $.extend(true, {}, that.searchArgs);
-            searchArgs.userKey = that.userKey;
-            searchArgs.taskId = this.taskId;
-            axios.post('youdao/paper/paperExaminedOne', { params: searchArgs }).then(function (data) {
+            that.errorStr = ''; //题目问题
+            axios.post('youdao/paper/paperExaminedOne', "userKey='" + that.userKey + "'&taskId=" + that.taskId + "&errorStr='" + that.errorStr + "'").then(function (data) {
                 if (data.data) {
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        alert(data.data.errorMsg);
+                        //that.$message.error(data.data.errorMsg);
                     } else {
                         if (data.data.status == 1) {
                             that.$router.push({
@@ -38017,11 +38017,7 @@ var render = function() {
               "span",
               {
                 staticClass: "next-btn review2-btn",
-                on: {
-                  click: function($event) {
-                    _vm.doPaperExaminedOne()
-                  }
-                }
+                on: { click: _vm.doPaperExaminedOne }
               },
               [_vm._v("下一步")]
             )

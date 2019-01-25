@@ -36398,7 +36398,7 @@ var routes = [{
             title: '标识试卷问题'
         }
     }, {
-        path: 'paperExaminedResult/:userKey/:taskId/:type',
+        path: 'paperExaminedResult/:userKey/:taskId/:status/:error',
         name: 'paper-paperExaminedResult',
         component: function component(resolve) {
             return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(86)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
