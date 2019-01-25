@@ -9,7 +9,10 @@ export default {
     },
     setUserKey(state,userKey){
         state.userKey=userKey;
-    }
+    },
+    setTaskId(state,taskId){
+        state.taskId=taskId;
+    },
     // setPaperId(state,paperId)
     // {
     //     state.paperId=paperId;

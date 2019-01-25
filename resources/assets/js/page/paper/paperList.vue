@@ -30,8 +30,8 @@
                   <div class="input-box">
                       <div class="address-search-box">
                           <div class="city-select cf">
-                              <input class="value prov-name" type="text" v-model="province" placeholder="省" readonly="readonly">
-                              <input class="value city-name" type="text" v-model="city" placeholder="市" readonly="readonly">
+                              <input class="value prov-name" type="text"  placeholder="省" readonly="readonly">
+                              <input class="value city-name" type="text"  placeholder="市" readonly="readonly">
                           </div>
                           <div class="drop-down">
                               <div class="drop-prov">
@@ -99,44 +99,54 @@
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
-                         <th :class="isTrue?'sorting':(isShow?'sorting_desc':'sorting_asc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet">有道处理成功</th>
-                         <th class="sorting asc" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true">审核时间</th>
-                         <th class="sorting" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;">审核状态</th>
+                         <th :class="sortField!='final_processing_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet(1)" >有道处理成功</th>
+                         <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核时间</th>
+                         <th :class="sortField!='paper_examined_status'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet(3)">审核状态</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
                      </tr>
                  </thead>
                  <tbody>
-                     <template v-for="paper in paperList">
-                         <tr role="row" class="odd">
-                             <td class="sorting_1">{{paper.task_id}}</td>
-                             <td><span class="color-black">{{paper.paper_name}}</span></td>
-                             <td>{{paper.agency_name}}</td>
-                             <td>{{paper.final_processing_time}}</td>
-                             <td>{{paper.paper_examined_time}}</td>
-                             <td>
-                                 <template v-if="paper.paper_examined_status == 3">
-                                     <span class="status green">已通过</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 4">
-                                     <span class="status red">已退回</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 2">
-                                     <span class="status">待审核</span>
-                                 </template>
-                                 <template v-else-if="paper.paper_examined_status == 1">
-                                     <span class="status">处理中</span>
-                                 </template>
-                             </td>
-                             <td>
-                                 <template v-if="paper.paper_examined_status == 2">
-                                     <a href="reviewPic1.html" class="reviewBtn">审核</a>
-                                 </template>
-                             </td>
-                         </tr>
+                     <template v-if="isContent == 1">
+                         <template v-for="paper in paperList">
+                             <tr role="row" class="odd">
+                                 <td class="sorting_1">{{paper.task_id}}</td>
+                                 <td><span class="color-black">{{paper.paper_name}}</span></td>
+                                 <td>{{paper.agency_name}}</td>
+                                 <td>{{paper.final_processing_time}}</td>
+                                 <td>{{paper.paper_examined_time}}</td>
+                                 <td>
+                                     <template v-if="paper.paper_examined_status == 3">
+                                         <span class="status green">已通过</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 4">
+                                         <span class="status red">已退回</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 2">
+                                         <span class="status">待审核</span>
+                                     </template>
+                                     <template v-else-if="paper.paper_examined_status == 1">
+                                         <span class="status">处理中</span>
+                                     </template>
+                                 </td>
+                                 <td>
+                                     <template v-if="paper.paper_examined_status == 2">
+                                         <router-link  :to="{name:'paper-paperExaminedOne',params:{userKey:userKey,taskId:paper.task_id}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
+                                     </template>
+                                 </td>
+                             </tr>
+                         </template>
+                     </template>
+                     <template v-else>
+                         <!--<p style="text-align:center;">暂无数据</p>-->
                      </template>
                  </tbody>
             </table>
-            <div id="paginationBox" class="m-pages"></div>
+            <!--<template v-if="isContent == 1">-->
+                <div id="paginationBox" class="m-pages" :style="isContent?'display:block':'display:none'"></div>
+            <!--</template>-->
+            <!--<template v-else>-->
+               <!--<div id="paginationBox" class="m-pages"></div>-->
+            <!--</template>-->
           </div>
         </div>
     </div>
@@ -178,10 +188,9 @@
                 _total:0,
                 totalNum:0,
                 listCount:'',
-                isShow:0,
-                isTrue:1,
-                isSort:'desc'
-
+                sortField:'',
+                sortType:'asc',
+                isContent:1,
             }
         },
 
@@ -200,7 +209,8 @@
                     status: that.statusValue,
                     paperName: that.paperName,
                     pageSize:that.pageSize,
-                    isSort: that.isSort,
+                    sortField: that.sortField,
+                    sortType: that.sortType,
                 };
             },
             ...mapGetters({
@@ -214,8 +224,6 @@
             that.agencyList();
             that.statusList();
             that.doSearch();
-
-
         },
         watch:{
             searchArgs:function() {
@@ -305,9 +313,7 @@
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
-                            //alert(that.currentPage)
                             that.pageSize = 5;
-                            //alert(that.pageSize)
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }
@@ -316,10 +322,17 @@
                 }
 
             },
-            doSearch(){alert();
+            doSearch(){
                 var that = this;
-                that.beginDate = $("input[name='start-date']").val();
-                that.endDate = $("input[name='end-date']").val();
+                if($("input[name='start-date']").val()){
+                   that.beginDate = $("input[name='start-date']").val();
+                   that.endDate = $("input[name='end-date']").val();
+                }
+                if($(".drop-prov-ul").find('.selected').attr('data-val')){
+                    that.province = $(".drop-prov-ul").find('.selected').text();
+                    that.city = $(".drop-city-ul").find('.selected').text();
+                }
+
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
@@ -329,34 +342,47 @@
                         that.$message.error(data.data.errorMsg);
                     } else {
                         that.$nextTick(function () {
-                            that.paperList = data.data.rows;
+                            if(data.data.rows != ''){
+                                that.isContent = 1;
+                                that.paperList = data.data.rows;
+                            }else{
+                                that.isContent = 0;
+                            }
                             that._total = data.data.totalPage;
                             that.totalNum = data.data.total;
                             that.listCount = data.data.listCount;
-                            that.jsPage();
-                            $('.pic-list-wrapper').selectpicker('refresh');
+                            that.currentPage = searchArgs.currentPage;
+                            //that.jsPage();
                         });
                     }
                 })
             },
-            selectGet: function () {
-
+            selectGet: function (type) {
                 var that = this;
-                that.doSearch();
-                that.isTrue = 0;
-                if(!that.isShow){
-                    //alert('down')
-                    that.isSort = 'desc';
-                    that.isShow = 1;
-                }else{
-                    //alert('up')
-                    that.isSort = 'asc';
-                    that.isShow = 0;
+                if(type == 1){
+                    that.sortField = 'final_processing_time';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
+                    }
+
+                }else if(type == 2){
+                    that.sortField = 'paper_examined_time';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
+                    }
+                }else if(type == 3){
+                    that.sortField = 'paper_examined_status';
+                    if(that.sortType == 'desc'){
+                       that.sortType = 'asc';
+                    }else{
+                       that.sortType = 'desc';
+                    }
                 }
-
-
-                    // $('#isTag').hide();
-
+                that.doSearch();
             },
 
 

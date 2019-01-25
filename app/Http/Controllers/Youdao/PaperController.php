@@ -94,11 +94,82 @@ class PaperController extends BaseController
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
         $postData['data']['taskId'] = $taskId;
-        $common = new CommonController;
+        /*$common = new CommonController;
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
         if($result['code']== 200){
             $paperInfo['youdao_info'] = $result['data'];
-        }
+        }*/
+        $paperInfo['youdao_info'] = array(
+            'questions'=>array(
+                '0'=>array(
+                    'quesNumber'=>1,
+                    'hasOptions'=>1,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>safasfasfasfs</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'options'=>array(
+                        array(
+                            "label"=>"A", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>1
+                        ),
+                        array(
+                            "label"=>"B", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>0
+                        ),
+                        array(
+                            "label"=>"C", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>1
+                        ),
+                        array(
+                            "label"=>"D", //选项标题
+                            "latexContent"=>'<div>asdfsafsafasfsda</div>',
+                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "isAnswer"=>0
+                        ),
+
+                    ),
+                ),
+                '1'=>array(
+                    'quesNumber'=>2,
+                    'hasOptions'=>0,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>22222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnswer'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnalysis'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                ),
+                '2'=>array(
+                    'quesNumber'=>3,
+                    'hasOptions'=>0,
+                    'quesLatextContent'=>array(
+                        'content'=>'<div>3333333333333</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnswer'=>array(
+                        'content'=>'<div>3333333333333</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                    'quesLatextAnalysis'=>array(
+                        'content'=>'<div>22222222222</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
+                ),
+            )
+        );
         return $paperInfo;
     }
 
@@ -270,7 +341,8 @@ class PaperController extends BaseController
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>0,
-                    'formId'=>$formId
+                    'userId'=>$paperInfo['create_uid'],
+                    'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));
 
                 return response()->json(['status' => $result]);
@@ -286,7 +358,8 @@ class PaperController extends BaseController
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>1,
-                    'formId'=>$formId
+                    'userId'=>$paperInfo['create_uid'],
+                    'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
 
                 $error = [];
@@ -365,7 +438,8 @@ class PaperController extends BaseController
             'taskId'=>$data['taskId'],
             'openId'=>$data['openId'],
             'type'=>$data['type'],
-            'formId'=>$data['formId']
+            'userId'=>$data['userId'],
+            'content'=>$data['content']
         );
         return $wxTemplate->sendTemplate($wxTemplateData);
     }
@@ -377,19 +451,16 @@ class PaperController extends BaseController
      */
     public function batchPaperExamined(){
         try{
-            /**
-             * todo:有道处理超过9个工作日未反馈的批量审核通过：未完,发送模版消息formID目前没有办法获取
-             */
             $successTask = $this->vipYoudaoExamined->batchExamined();
-
             //批量发送微信模版消息
             if($successTask){
                 foreach ($successTask as $key=>$task){
                     $this->sendWxTemplate(array(
                         'taskId'=>$task['taskId'],
                         'openId'=>$task['openId'],
+                        'userId'=>$task['userId'],
                         'type'=>$task['type'],
-                        'formId'=>$task['formId']
+                        'content'=>$task['content']
                     ));
                 }
             }

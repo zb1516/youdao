@@ -4,6 +4,9 @@ export default {
     },
     getUserKey(state){
         return state.userKey;
+    },
+    getTaskId(state){
+        return state.taskId;
     }
     // getPaperId(state)
     // {
@@ -13,4 +16,6 @@ export default {
     // {
     //     return state.subjectList;
     // }
+
+
 }

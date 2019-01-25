@@ -34,7 +34,10 @@
 /******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		6: 0
+
+
+/******/ 		7: 0
+
 /******/ 	};
 /******/
 /******/ 	// The require function
@@ -91,7 +94,10 @@
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
-/******/ 		script.src = __webpack_require__.p + "" + ({"4":"\\js\\app","5":"\\js\\vendor"}[chunkId]||chunkId) + ".js";
+
+
+/******/ 		script.src = __webpack_require__.p + "" + ({"5":"\\js\\app","6":"\\js\\vendor"}[chunkId]||chunkId) + ".js";
+
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {

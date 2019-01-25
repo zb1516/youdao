@@ -79,6 +79,12 @@ class VipYoudaoExamined extends Model
         if (isset($formData['auditEndDate'])) {
             $searchArgs['auditEndDate'] = $formData['auditEndDate'];
         }
+        if (isset($formData['sortField'])) {
+            $searchArgs['sortField'] = $formData['sortField'];
+        }
+        if (isset($formData['sortType'])) {
+            $searchArgs['sortType'] = $formData['sortType'];
+        }
         return $searchArgs;
     }
 
@@ -142,10 +148,23 @@ class VipYoudaoExamined extends Model
         $condition = $this->paperCondition($searchArgs);
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => $recordCount);
+            return array(
+                'rows' => [],
+                'total' => $recordCount,
+                'totalPage'=>0,
+                'listCount'=>array(
+                    'totalCount'=>0,
+                    'waitCount'=>0,
+                    'passCount'=>0,
+                    'returnCount'=>0
+                ));
         }
-
-        $list = $this->findAll($condition, ['upload_time'=>'asc'], ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        if(!empty($searchArgs['sortField'])){
+            $order = [$searchArgs['sortField']=>$searchArgs['sortType']];
+        }else{
+            $order = ['upload_time'=>'asc'];
+        }
+        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         $list = $this->formatPaperList($list['data']);
         $statistic = $this->paperStatistic($condition);
         return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
@@ -1132,7 +1151,7 @@ class VipYoudaoExamined extends Model
         if($recordCount > 0){
             $this->beginTransaction();
             for($i=1; $i<=$max; $i++) {
-                $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id'], '', $join, $i, $limit);
+                $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id','vip_youdao_examined.create_uid'], '', $join, $i, $limit);
                 $result = json_decode(json_encode($result), true);
                 if($result['data']){
                     foreach ($result['data'] as $key => $row){
@@ -1148,7 +1167,8 @@ class VipYoudaoExamined extends Model
                                 'taskId' => $row['task_id'],
                                 'openId' => $row['open_id'],
                                 'type' => 2,
-                                'formId' => ''
+                                'userId' => $row['create_uid'],
+                                'content'=>'恭喜您，您提交的试卷已审核通过。'
                             );
                         }
                     }

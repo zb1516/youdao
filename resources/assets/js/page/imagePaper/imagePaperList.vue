@@ -287,7 +287,6 @@
 
                 } else {
 
-
                     $("#paginationBox").pagination({
                         totalPage: that._total,
                         showPageNum: 5,
