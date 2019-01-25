@@ -555,6 +555,19 @@ class VipYoudaoExamined extends Model
         $condition = [
             'task_id' => $searchArgs['taskId']
         ];
+        $province = new Province();
+        $provinces = $province->getProvince();//获取省份
+
+        $provinceIds = [];
+        $provinceIdNames = [];
+        foreach ($provinces as $v) {
+            $provinceIds[] = $v['id'];
+            $provinceIdNames[$v['id']] = $v['city'];
+        }
+
+        $city = new City();
+        $citys = $city->getIdCountrys($provinceIds);
+        $countrys = $city->getIdAreas($provinceIds);
         $result = $this->findOne($condition, $order=[], ['agency_id']);
         $agencyId = $result['agency_id'];
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
@@ -566,20 +579,31 @@ class VipYoudaoExamined extends Model
             $str = $common->stringTransformation($subjectName);
         }
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
-        $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
-        $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
+        $province = isset($searchArgs['province']) ? $searchArgs['province'] : 0;
+        if($searchArgs['city']){
+            $city = isset($searchArgs['city']) ? explode('-',$searchArgs['city'])[1] : '';
+        }else{
+            $city = 0;
+        }
         $country = isset($searchArgs['country']) ? $searchArgs['country'] : '';
+        $countryName = isset($countrys[$country]) ? $countrys[$country] : '';
         $school = isset($searchArgs['school']) ? $searchArgs['school'] : '';
-        $year = isset($searchArgs['yeer']) ? $searchArgs['yeer'] : 0;
-        $semester = isset($searchArgs['semester']) ? $searchArgs['semester'] : '';
+        $year = isset($searchArgs['year']) ? $searchArgs['year'] : 0;
+        $semester = isset($searchArgs['term']) ? $searchArgs['term'] : '';
         $source = isset($searchArgs['source']) ? $searchArgs['source'] : '';
         $duration = isset($searchArgs['duration']) ? $searchArgs['duration'] : 0;
         $score = isset($searchArgs['score']) ? $searchArgs['score'] : 0;
         $questionNumber = isset($searchArgs['questionNumber']) ? $searchArgs['questionNumber'] : 0;
         $other1 = isset($searchArgs['other1']) ? $searchArgs['other1'] : '';
         $other2 = isset($searchArgs['other2']) ? $searchArgs['other2'] : '';
+
         //0-套卷VIP-学部-学科-年份-省份-市-区-学校-年级-学期-考试类型-其他信息1-其他信息2-考试时长-考试满分-题目数量
-        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$province.'-'.$city.'-'.$country.'-'.$school.'-'.$grade.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+        $gradeName = config('app.GRADE_VALUE');
+        $gradeValue = isset($gradeName[$grade]) ? $gradeName[$grade] : 0;
+        $cityValue = isset($citys[$city]) ? $citys[$city] : 0;
+        $provinceValue = isset($provinceIdNames[$province]) ? $provinceIdNames[$province] : 0;
+        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$provinceValue.'-'.$cityValue.'-'.$countryName.'-'.$school.'-'.$gradeValue.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+
         $data = [
             'subject_id' => $subjectId,
             'grade' => $grade,
@@ -596,11 +620,13 @@ class VipYoudaoExamined extends Model
             'other_information_one' => $other1,
             'other_information_two' => $other2,
             'paper_name' => $paperName,
+            'image_error_type' => ''
         ];
         $condition = array(
             'task_id' => $searchArgs['taskId']
         );
         $result = $this->edit($data, $condition);
+
         if($result === false)
         {
             throw new \Exception('保存标签失败');

@@ -498,7 +498,7 @@ class CommonController extends BaseController
         foreach ($list as $v){
             $cityValue = [];
             foreach ($v['children'] as $value){
-                $cityValue[] = $value['city'];
+                $cityValue[$value['id']] = $value['city'];
             }
             $arr[] = $cityValue;
         }

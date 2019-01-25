@@ -37,19 +37,25 @@ class VipRepeatPaperRecord extends Model
                 throw new \Exception('试卷退回失败');
             }
         }
+
         $result = $this->findOne($condition);
-        if(!empty($result)){
+        if(empty($result)){
             $data = [
                 'task_id' => $taskId,
                 'paper_id' => $paperId,
                 'create_time' => $date,
             ];
+
             $result = $this->add($data);
+
             if($result === false)
             {
                 $this->rollback();
                 throw new \Exception('保存试卷记录失败');
             }
+        }else{
+            $this->rollback();
+            throw new \Exception('已经有重复记录了');
         }
         $this->commit();
         return true;

@@ -408,3 +408,9 @@ a {
     margin-top: 0; }
 
 /*# sourceMappingURL=layout.css.map */
+.error-box{
+  margin-top: 20px;
+  font-size: 15px;
+  color: red;
+  text-align: center;
+}

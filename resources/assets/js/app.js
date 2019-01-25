@@ -15,6 +15,13 @@ import store from './vuex/store'
 import imagePaper from './imagePaper'
 import paper from './paper'
 import "./http"
+import error from './error'
+import "./http"
+import Message from 'vue-multiple-message'
+
+Vue.prototype.$message = Message
+
+
 //
 // import "./static/js/jquery.min.js"
 
@@ -25,7 +32,8 @@ Vue.use(VueRouter)
 const router=new VueRouter({
     routes: [
         ...imagePaper,
-        ...paper
+        ...paper,
+        ...error
     ]
 })
 //路由拦截器

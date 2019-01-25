@@ -2,7 +2,7 @@
     <div class="main">
         <div class="pic-review1 review2">
             <div class="nav-wrapper">
-                <a href="reviewPicList.html" class="back-btn">返回</a>
+                <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:taskId,paperType:paperType}}" class="back-btn">返回</router-link>
                 <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">贴标签</span></span>
@@ -18,10 +18,10 @@
                     <template v-for="(paper,index) in paperList">
                     <p class="paper-name">
                         <template v-if="index == 0">
-                            <span class="checkbox js-radio select firstSelectValue" :data-val="paper.id"></span>
+                            <span class="checkbox js-radio2 select firstSelectValue" :data-val="paper.id"></span>
                         </template>
                         <template v-else>
-                            <span class="checkbox js-radio" :data-val="paper.id"></span>
+                            <span class="checkbox js-radio2" :data-val="paper.id"></span>
                         </template>
                         <span>
                             <template v-if="paper.showName">
@@ -78,8 +78,8 @@
                         </div>
                     </div>
                     <div class="btn-wrapper cf">
-                        <button type="button" name="button" class="next-btn review2-btn">此卷重复</button>
-                        <a href="reviewPic3.html" class="next-btn review2-btn">下一步</a>
+                        <button type="button" name="button" class="next-btn review2-btn" @click="doRepeat">此卷重复</button>
+                        <a href="jacascript:;" class="next-btn review2-btn" @click="doNext">下一步</a>
                     </div>
                 </div>
             </div>
@@ -110,6 +110,8 @@
                 paperId:0,
                 paperContent:'',
                 questionContent:'',
+                taskId:'',
+                paperType:''
             }
         },
         computed: {
@@ -169,7 +171,14 @@
                         that.$message.error(data.data.errorMsg);
                     } else {
                         //that.$nextTick(function () {
+                        if(data.data.rows !=''){
                             that.paperList = data.data.rows;
+                        }else{
+
+                            that.currentPage = 0;
+                        }
+
+
                        // });
                         //that.paperList = data.data.rows;
                         //console.log(that.paperList)
@@ -182,11 +191,11 @@
             },
             doSelect(){
                 var that = this;
-                $(document).on('click','.js-radio',function(){
+                $(document).on('click','.js-radio2',function(){
                     var $this = $(this);
                     //console.log($this.hasClass('select'));
                     $this.hasClass('select') ? $this.removeClass('select') :
-                        $this.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
+                        $this.addClass('select').parent().siblings('p').find('.js-radio2').removeClass('select');
                     that.paperId = $this.has('select') ? $this.attr('data-val') : "";
                     axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
                         that.$nextTick(function () {
@@ -216,7 +225,7 @@
             },
             doPaperContent(){
                 var $firstTab = $('.firstSelectValue');
-                $firstTab.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
+                $firstTab.addClass('select').parent().siblings('p').find('.js-radio2').removeClass('select');
                 var that = this;
                 that.paperId = $firstTab.attr('data-val');
                 axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
@@ -230,6 +239,31 @@
                         });
 
                     })
+                })
+            },
+            doNext(){
+                var that = this;
+                that.$router.push({
+                    name: 'imagePaper-imagePaperList-imageExamined',
+                    params:{userKey:that.userKey,taskId:that.taskId}
+                });
+                that.$nextTick(function() {
+                    $('.main').selectpicker('refresh');
+                });
+            },
+            doRepeat(){
+                var that = this;
+                axios.get('youdao/imagePaper/repeatPaperRecord',{params:{taskId:that.taskId,paperId:that.paperId,userKey:that.userKey}}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    }
+                    if (data.data == true) {
+                        that.$message({
+                            message: '此卷重复',
+                            type: 'success'
+                        });
+
+                    }
                 })
             },
         }

@@ -101,6 +101,7 @@ class VipPaperImage extends Model
      */
     public function paperPass($searchArgs)
     {
+
         $this->beginTransaction();
         $vipYoudaoExamined = new VipYoudaoExamined();
         $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
@@ -110,7 +111,9 @@ class VipPaperImage extends Model
         $condition = array(
             'task_id' => $searchArgs['taskId'],
         );
+
         $result = $vipYoudaoExamined->findOne($condition);
+
         $filename = $this->createFileName($searchArgs);
         if($result){
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
@@ -129,6 +132,7 @@ class VipPaperImage extends Model
                 throw new \Exception('图片退回失败');
             }
         }
+
 //        $sortTaskId = [
 //            'taskId' => [
 //                'http://www.jansonvue.org/images/002.jpg',
@@ -200,6 +204,7 @@ class VipPaperImage extends Model
             ];
             $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
         }else{
+
             //第三方oss调用
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
@@ -225,6 +230,7 @@ class VipPaperImage extends Model
                 }
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
+            $imagesUrl = $this->toStringArray($imagesUrl);
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'question');
             $filenameQuestion = $filename.$dateTime.$rand.'question';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
@@ -233,12 +239,14 @@ class VipPaperImage extends Model
             $data = [
                 'question_url' => $questionUrl,
             ];
+
             $result = $vipYoudaoExamined->edit($data,['task_id' => $searchArgs['taskId']]);
             if($result === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
+
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 2,
@@ -263,6 +271,7 @@ class VipPaperImage extends Model
                 }
             }
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
+            $imagesUrl = $this->toStringArray($imagesUrl);
             $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'answer');
             $filenameAnswer = $filename.$dateTime.$rand.'answer';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
@@ -317,10 +326,25 @@ class VipPaperImage extends Model
      */
     public function createFileName($searchArgs)
     {
+
         $condition = [
             'task_id' => $searchArgs['taskId']
         ];
         $vipYoudaoExamined = new VipYoudaoExamined();
+        $province = new Province();
+        $provinces = $province->getProvince();//获取省份
+
+        $provinceIds = [];
+        $provinceIdNames = [];
+        foreach ($provinces as $v) {
+            $provinceIds[] = $v['id'];
+            $provinceIdNames[$v['id']] = $v['city'];
+        }
+
+        $city = new City();
+        $citys = $city->getIdCountrys($provinceIds);
+        $countrys = $city->getIdAreas($provinceIds);
+
         $result = $vipYoudaoExamined->findOne($condition, $order=[], ['agency_id']);
         $agencyId = $result['agency_id'];
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
@@ -332,19 +356,28 @@ class VipPaperImage extends Model
             $str = $common->stringTransformation($subjectName);
         }
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
-        $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
-        $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
+        $province = isset($searchArgs['province']) ? $searchArgs['province'] : 0;
+        if($searchArgs['city']){
+            $city = isset($searchArgs['city']) ? explode('-',$searchArgs['city'])[1] : '';
+        }else{
+            $city = 0;
+        }
         $country = isset($searchArgs['country']) ? $searchArgs['country'] : '';
+        $countryName = isset($countrys[$country]) ? $countrys[$country] : "''";
         $school = isset($searchArgs['school']) ? $searchArgs['school'] : '';
-        $year = isset($searchArgs['yeer']) ? $searchArgs['yeer'] : 0;
-        $semester = isset($searchArgs['semester']) ? $searchArgs['semester'] : '';
+        $year = isset($searchArgs['year']) ? $searchArgs['year'] : 0;
+        $semester = isset($searchArgs['term']) ? $searchArgs['term'] : '';
         $source = isset($searchArgs['source']) ? $searchArgs['source'] : '';
         $duration = isset($searchArgs['duration']) ? $searchArgs['duration'] : 0;
         $score = isset($searchArgs['score']) ? $searchArgs['score'] : 0;
         $questionNumber = isset($searchArgs['questionNumber']) ? $searchArgs['questionNumber'] : 0;
         $other1 = isset($searchArgs['other1']) ? $searchArgs['other1'] : '';
         $other2 = isset($searchArgs['other2']) ? $searchArgs['other2'] : '';
-        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$province.'-'.$city.'-'.$country.'-'.$school.'-'.$grade.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+        $gradeName = config('app.GRADE_VALUE');
+        $gradeValue = isset($gradeName[$grade]) ? $gradeName[$grade] : 0;
+        $cityValue = isset($citys[$city]) ? $citys[$city] : 0;
+        $provinceValue = isset($provinceIdNames[$province]) ? $provinceIdNames[$province] : 0;
+        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$provinceValue.'-'.$cityValue.'-'.$countryName.'-'.$school.'-'.$gradeValue.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
         return $paperName;
     }
     /**
@@ -429,4 +462,14 @@ class VipPaperImage extends Model
         return $youdaoService->getYoudaoTask($url,$postData);
 
     }
+    /**
+     * 字符串转数组
+     */
+    public function toStringArray($imageUrl)
+    {
+        $str = str_replace('[','',$imageUrl);
+        $array = explode(',',trim(str_replace(']','',$str)));
+        return $array;
+    }
+
 }

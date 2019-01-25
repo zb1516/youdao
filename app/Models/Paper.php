@@ -18,6 +18,8 @@ class Paper extends Model
      */
     public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 15)
     {
+
+
         $vipYoudaoExamined = new VipYoudaoExamined();
         $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
         $province = new Province();
@@ -31,18 +33,21 @@ class Paper extends Model
         $city = new City();
         $citys = $city->getIdCountrys($provinceIds);
         $countrys = $city->getIdAreas($provinceIds);
+        //print_R($searchArgs);
+        $gradeName = config('app.GRADE_VALUE');
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
         }
         if (!empty($searchArgs['grade'])) {
-            $condition['grade_id'] = array('eq' => $searchArgs['grade']);
+            $condition['grades'] = array('eq' => $gradeName[$searchArgs['grade']]);
         }
         if (!empty($searchArgs['province'])) {
             $provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
             $condition['province'] = array('eq' => $provinceName);
         }
         if (!empty($searchArgs['city'])) {
-            $cityName = isset($citys[$searchArgs['city']]) ? $citys[$searchArgs['city']] : '';
+            $cityId = isset($searchArgs['city']) ? explode('-',$searchArgs['city'])[1] : '';
+            $cityName = isset($citys[$cityId]) ? $citys[$cityId] : '';
             $condition['city'] = array('eq' => $cityName);
         }
         if (!empty($searchArgs['country'])) {
@@ -79,6 +84,7 @@ class Paper extends Model
         if (empty($condition)) {
             $condition = [];
         }
+
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'totalPage' => ceil($recordCount/5));
@@ -110,7 +116,7 @@ class Paper extends Model
      */
     public function imagePaperSearchArgs($formData,$isSort=0)
     {
-        $formData['taskId'] = 1;
+
         $searchArgs = [];
         if (isset($formData['taskId'])) {
             $searchArgs['taskId'] = trim($formData['taskId']);

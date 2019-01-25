@@ -51,7 +51,7 @@ class Province extends Model
         $result = $this->findAll($condition, $order=[], ['id', 'city']);
         $list = [];
         foreach ($result as $v){
-            $list[] = $v['city'];
+            $list[$v['id']] = $v['city'];
         }
         return $list;
     }
