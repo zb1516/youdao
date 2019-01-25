@@ -205,7 +205,6 @@
     import "../../static/js/jquery.fancybox.js"
     import "../../static/js/jquery.fancybox-buttons.js"
     import {mapGetters} from 'vuex'
-
     export default {
         data(){
             return {

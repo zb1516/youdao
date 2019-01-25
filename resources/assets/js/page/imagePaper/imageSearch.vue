@@ -142,22 +142,16 @@
             that.taskId = this.$route.params.taskId;
             that.paperType = this.$route.params.paperType;
             that.imagePaperDetail();
-
             that.doSearch();
             that.doSelect();
-
             common.init();
-
-
         },
         methods:{
             imagePaperDetail(){
                 var that = this;
                 axios.get('youdao/imagePaper/imagePaperDetail',{params:{userKey:that.userKey,taskId:that.taskId,paperType:that.paperType,allType:1}}).then(function(data){
                     if(data.data){
-
-                            that.imagePaperDetailContent = data.data;
-
+                        that.imagePaperDetailContent = data.data;
                     }
                     that.$nextTick(function() {
                         common.init();
@@ -166,7 +160,6 @@
             },
             doSearch(){
                 var that = this;
-
                 var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
@@ -194,11 +187,8 @@
                     //console.log($this.hasClass('select'));
                     $this.hasClass('select') ? $this.removeClass('select') :
                         $this.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
-
-
                     that.paperId = $this.has('select') ? $this.attr('data-val') : "";
                     axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
-
                         that.$nextTick(function () {
                             that.paperContent = data.data;
                             axios.post('common/common/getQuestionClient',{questionIds:that.paperContent.ques_ids.join(','),userKey:that.userKey}).then(function(data){
@@ -209,22 +199,8 @@
 
                             })
                         });
-
-                        //console.log(that.paperContent.ques_ids);return false;
-
-
-
-
-
                     })
-
-
-
-
-
                 });
-
-
             },
             doPage(curPage){
                 var that = this;
@@ -238,22 +214,14 @@
                 that.doSearch();
 
             },
-            doPaperContent(aa){
-alert(1)
+            doPaperContent(){
                 var $firstTab = $('.firstSelectValue');
-
-
-                // $('.firstSelectValue').attr('data-val');
-                // $('.firstSelectValue').addClass('data-val')
                 $firstTab.addClass('select').parent().siblings('p').find('.js-radio').removeClass('select');
-                //console.log($firstTab.attr('data-val'));
                 var that = this;
                 that.paperId = $firstTab.attr('data-val');
-               // alert(that.paperId)
                 axios.get('common/common/getPaperClient',{params:{paperId:that.paperId,userKey:that.userKey}}).then(function(data){
 
                     that.paperContent = data.data;
-                    //console.log(that.paperContent.ques_ids);return false;
                     axios.post('common/common/getQuestionClient',{questionIds:that.paperContent.ques_ids.join(','),userKey:that.userKey}).then(function(data){
 
                         that.questionContent = data.data.rows;
@@ -262,16 +230,8 @@ alert(1)
                         });
 
                     })
-
-
-
-
                 })
             },
-            doPaperContent1(){
-                alert(12)
-            }
-
         }
 
     }
