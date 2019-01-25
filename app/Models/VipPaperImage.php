@@ -363,7 +363,7 @@ class VipPaperImage extends Model
             $city = 0;
         }
         $country = isset($searchArgs['country']) ? $searchArgs['country'] : '';
-        $countryName = isset($countrys[$country]) ? $countrys[$country] : "''";
+        $countryName = isset($countrys[$country]) ? $countrys[$country] : '';
         $school = isset($searchArgs['school']) ? $searchArgs['school'] : '';
         $year = isset($searchArgs['year']) ? $searchArgs['year'] : 0;
         $semester = isset($searchArgs['term']) ? $searchArgs['term'] : '';
