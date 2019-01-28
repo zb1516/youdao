@@ -487,6 +487,12 @@ html, body {
       font-size: 26px;
       vertical-align: middle;
       cursor: pointer; }
+.pic-review1.review3 .reviw-info-wrapper .r-option .r-error-msg {
+  width: 100px;
+  vertical-align: middle;
+  display: inline-block;
+  text-align: left;
+}
       .pic-review1.review3 .reviw-info-wrapper .r-option .checkbox::before {
         content: '\e641'; }
     .pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select {

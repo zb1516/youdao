@@ -20487,10 +20487,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 								init: function init() {
 												var self = this;
 												if ($('.address-search-box').length) {
-																//console.log('in');
-																// self.addressPicker.init();
 																self.componentInit().addressPicker.init();
 												}
+												self.componentInit();
 								},
 
 								componentInit: function componentInit() {
@@ -20541,6 +20540,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 																});
 												}
 												if ($('.pic-list a').length) {
+																console.log('in');
 																var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
 																    topRatio = $('.pic-list-wrapper').length ? '0.1' : '0.5';
 																self.initGallery(parentBox, topRatio);
@@ -20773,9 +20773,7 @@ function initSelectBox() {
 }
 
 /***/ }),
-/* 211 */,
-/* 212 */,
-/* 213 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -31348,6 +31346,8 @@ function initSelectBox() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)(module)))
 
 /***/ }),
+/* 212 */,
+/* 213 */,
 /* 214 */,
 /* 215 */,
 /* 216 */,
@@ -31388,7 +31388,7 @@ function initSelectBox() {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(213);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(211);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__);

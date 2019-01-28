@@ -9,11 +9,9 @@
 		init: function() {
 			var self = this;
             if( $('.address-search-box').length ){
-                //console.log('in');
-                // self.addressPicker.init();
                 self.componentInit().addressPicker.init();
             }
-
+            self.componentInit();
 		},
 
         componentInit: function() {
@@ -64,6 +62,7 @@
                 });
             }
             if( $('.pic-list a').length ){
+            	console.log('in');
                 var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
                     topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
                 self.initGallery(parentBox, topRatio);

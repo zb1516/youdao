@@ -167,7 +167,6 @@
                             </a>
                         </li>
                         </template>
-
                     </ul>
                     <h2 class="title2">答案</h2>
                     <ul class="pic-list cf js-st-list"  id="questionAnswer">
@@ -200,9 +199,9 @@
                         </template>
                     </ul>
                     <span class="next-btn"  @click="doSearch">下一步</span>
-                    <div class="error-box" v-show="errorShow">{{errorMssage}}</div>
                 </div>
                 </template>
+                <div class="error-box" v-show="errorShow">{{errorMssage}}</div>
             </div>
         </div>
     </div>
@@ -216,6 +215,7 @@
     import "../../static/js/jquery.fancybox.js"
     import "../../static/js/jquery.fancybox-buttons.js"
     import {mapGetters} from 'vuex'
+
     export default {
         data(){
             return {
@@ -430,7 +430,6 @@
                         params:{userKey:that.userKey,taskId:that.taskId,allType:1}
                     });
                 }
-
 
                 //location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
                 // axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
