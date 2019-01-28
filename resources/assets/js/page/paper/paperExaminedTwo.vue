@@ -2,7 +2,7 @@
     <div class="main">
       <div class="pic-review1 review3 paper-review2">
         <div class="nav-wrapper">
-          <a href="reviewPicList.html" class="back-btn">返回</a>
+            <router-link  :to="{name:'paper-paperExaminedOne',params:{userKey:userKey,taskId:taskId}}" target="_blank"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
@@ -15,18 +15,18 @@
           <div class="reviw-info-wrapper">
             <div class="r-type-box">
               <span class="r-type">
-                <span class="radio select js-radio"></span>
+                <span class="radio js-radio" @click="doCheck(1)" :class="{ 'select': 1 === isPaperError }"></span>
                 <span>试卷有问题</span>
               </span>
               <span class="r-type">
-                <span class="radio  js-radio js-error"></span>
+                <span class="radio  js-radio js-error" @click="doCheck(0)" :class="{ 'select': 0 === isPaperError }"></span>
                 <span>试卷无问题</span>
               </span>
             </div>
-            <textarea class="error-paper-info js-error-box">
+            <textarea class="error-paper-info js-error-box" v-if="isPaperError == 1" name="paperErrorDesc">
 
             </textarea>
-            <router-link  :to="{name:'paper-paperExaminedResult',params:{userKey:userKey,taskId:paper.task_id}}" target="_blank"><a class="next-btn review2-btn">下一步</a></router-link>
+            <a class="next-btn review2-btn" @click="doPaperExaminedTwo">下一步</a>
           </div>
         </div>
       </div>
@@ -41,7 +41,10 @@
     export default {
             data(){
                 return {
-
+                    taskId:0,
+                    isPaperError:'',
+                    status:'',
+                    error:'',
                 }
             },
             computed: {
@@ -52,18 +55,53 @@
                     };
                 },
                 ...mapGetters({
-                    userKey:'getUserKey',            //this.userKey  ==  this.$store.getters.getUserKey
+                    userKey:'getUserKey',
                 })
             },
             mounted(){
                 var that = this;
-                common.init();
+                that.taskId = this.$route.params.taskId;
             },
             watch:{
 
             },
             methods:{
+                doCheck(type){
+                    this.isPaperError = type;
+                },
+                doPaperExaminedTwo(){
+                    var that = this;
+                    if(that.isPaperError == 1){
+                        if($("textarea[name='paperErrorDesc']").val() == ''){
+                            alert('请填写试卷存在的问题');
+                            return false;
+                            //that.$message.error('请填写试卷存在的问题');
+                        }else{
+                            that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
+                        }
+                    }else{
+                        that.paperErrorDesc = '';
+                    }
 
+                    axios.post('youdao/paper/paperExaminedTwo',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&isPaperError="+that.isPaperError+"&paperErrorDesc='"+that.paperErrorDesc+"'").then(function(data){
+                        if(data.data){
+                            if (data.data.errorMsg) {
+                                that.$message.error(data.data.errorMsg);
+                            } else {
+                                if(data.data.status == 1){
+                                    that.status = data.data.status;
+                                    that.error = data.data.error;
+                                    /*that.$router.push({
+                                        name: 'paper-paperExaminedResult',
+                                        params:{userKey:that.userKey,taskId:that.taskId,status:that.status,error:that.error}
+                                    });*/
+                                }else{
+                                    that.$message.error('题目问题提交失败！');
+                                }
+                            }
+                        }
+                    })
+                }
             }
         }
 </script>

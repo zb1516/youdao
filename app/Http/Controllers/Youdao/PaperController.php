@@ -293,6 +293,7 @@ class PaperController extends BaseController
     public function paperExaminedOne(Request $request){
         try{
             $taskId = $request->post('taskId',0);
+
             /**
              * todo:组装提交数据
              */
@@ -328,7 +329,6 @@ class PaperController extends BaseController
             $taskId = $request->post('taskId',0);
             $isPaperError = $request->post('isPaperError',0);//试卷是否有问题
             $paperErrorDesc = $request->post('paperErrorDesc','');
-            $formId = $request->post('formId',0);
             $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
             $userInfo = $this->user->getUserInfo($this->userKey);
             $paperInfo = $this->getPaperInfo($taskId);
@@ -361,13 +361,20 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
-
+                /*
                 $error = [];
                 if(!empty($data['list'])){
                     $error[] = '题目问题';
                 }
                 if($isPaperError == 1){
                     $error[] = '试卷问题';
+                }*/
+                $error = 0;
+                if(!empty($data['list'])){
+                    $error += 1;
+                }
+                if($isPaperError == 1){
+                    $error += 1;
                 }
 
                 return response()->json(['status' => 0, 'error'=>$error]);

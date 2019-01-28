@@ -30,7 +30,7 @@ const routes = [
                 }
             },
             {
-                path:'paperExaminedResult/:userKey/:taskId/:type',
+                path:'paperExaminedResult/:userKey/:taskId/:status/:error',
                 name:'paper-paperExaminedResult',
                 component:resolve => require(['./page/paper/paperExaminedResult'], resolve),
                 meta:{
