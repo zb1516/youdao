@@ -29,19 +29,19 @@
                         <div class="error-box js-error-box">
                             <p class="r-option">
                                 <span class="checkbox js-checkbox"></span>
-                                <span>图片不清晰</span>
+                                <span class="r-error-msg">图片不清晰</span>
                             </p>
                             <p class="r-option">
                                 <span class="checkbox select js-checkbox"></span>
-                                <span>图片太暗了</span>
+                                <span class="r-error-msg">图片太暗了</span>
                             </p>
                             <p class="r-option">
                                 <span class="checkbox js-checkbox"></span>
-                                <span>图片不完整</span>
+                                <span class="r-error-msg">图片不完整</span>
                             </p>
                             <p class="r-option">
                                 <span class="checkbox js-checkbox"></span>
-                                <span>题目或答案缺失</span>
+                                <span class="r-error-msg">题目或答案缺失</span>
                             </p>
                             <input type="hidden" value="0" class="js-hidden-type-id"/>
                         </div>

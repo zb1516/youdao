@@ -145,13 +145,14 @@ class VipPaperImage extends Model
                     $condition = array(
                         'id' => $result[$i]['id'],
                     );
-                    $result = $this->edit($data, $condition);
-                    if($result === false)
+                    $resultImage = $this->edit($data, $condition);
+                    if($resultImage === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-混合');
                     }
                 }
+
             }
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
@@ -186,7 +187,7 @@ class VipPaperImage extends Model
             $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($question);
             $imagesUrl = $searchArgs['sortTaskIdQuestion'][$searchArgs['taskId']];
-            //$imagesUrl = $this->toStringArray($imagesUrl);
+
             if($question){
                 for($i=0;$i<$count;$i++){
                     $data = [
@@ -196,8 +197,8 @@ class VipPaperImage extends Model
                     $condition = array(
                         'id' => $question[$i]['id'],
                     );
-                    $result = $this->edit($data, $condition);
-                    if($result === false)
+                    $resultQuestion = $this->edit($data, $condition);
+                    if($resultQuestion === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-分离问题');
@@ -225,7 +226,6 @@ class VipPaperImage extends Model
             $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($answer);
             $imagesUrl = $searchArgs['sortTaskIdAnswer'][$searchArgs['taskId']];
-            //$imagesUrl = $this->toStringArray($imagesUrl);
             if($answer){
                 for($i=0;$i<$count;$i++){
                     $data = [
@@ -235,15 +235,15 @@ class VipPaperImage extends Model
                     $condition = array(
                         'id' => $answer[$i]['id'],
                     );
-                    $result = $this->edit($data, $condition);
-                    if($result === false)
+                    $resultAnswer = $this->edit($data, $condition);
+                    if($resultAnswer === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-分离答案');
                     }
                 }
             }
-            $imagesUrl = $this->toStringArray($imagesUrl);
+
             $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand, 'answer');
             $filenameAnswer = $filename.$dateTime.$rand.'answer';
             $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
@@ -275,6 +275,7 @@ class VipPaperImage extends Model
      */
     public function download($url, $j, $type = '')
     {
+        $url = str_replace('https://','http://',$url);
         $path = 'ossImages/';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -282,11 +283,14 @@ class VipPaperImage extends Model
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         $file = curl_exec($ch);
         curl_close($ch);
+        //
         //$filename = pathinfo($url, PATHINFO_BASENAME);
         if($type){
             $resource = fopen($path.$type.'/' . $j.'.jpg', 'a');
         }else{
+
             $resource = fopen($path. $j.'.jpg', 'a');
+
         }
         fwrite($resource, $file);
         fclose($resource);
@@ -378,6 +382,7 @@ class VipPaperImage extends Model
                         $zip->addFile('ossImages/'.$type.'/'.'0'.$i.'.jpg');
                     }
                 }else{
+
                     if($i<10){
                         $zip->addFile('ossImages/'.'00'.$i.'.jpg');
                     }
@@ -428,18 +433,5 @@ class VipPaperImage extends Model
 
     }
 
-    /**
-     * 字符串转数组
-     */
-    public function toStringArray($imageUrl)
-    {
-        $str = str_replace('[','',$imageUrl);
-        $str = str_replace(']','',$str);
-        $str = str_replace(' ','',$str);
-        $str = str_replace('"','',$str);
-        //print_R($str);exit;
-        $array = explode(',',str_replace(']','',$str));
-        return $array;
-    }
 
 }

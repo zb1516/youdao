@@ -188,15 +188,22 @@ class ImagePaperController extends BaseController
         $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
         $_GET['userKey'] = $userKey;
         try {
-            if(!isset($_GET['sortTaskId']) || !isset($_GET['sortTaskIdQuestion']) || !isset($_GET['sortTaskIdAnswer'])){
-                throw new \Exception('图片不能为空');
-            }
+
             if(empty($userKey))
             {
                 throw new \Exception('userKey不能为空');
             }
             if(empty($_GET['paperType']))
             {
+                if($_GET['paperType'] == 1){
+                    if(!isset($_GET['sortTaskId'])){
+                        throw new \Exception('图片不能为空');
+                    }
+                }else{
+                    if(!isset($_GET['sortTaskIdQuestion']) || !isset($_GET['sortTaskIdAnswer'])){
+                        throw new \Exception('图片不能为空');
+                    }
+                }
                 throw new \Exception('类型不能为空');
             }
             $isSort = 1;
