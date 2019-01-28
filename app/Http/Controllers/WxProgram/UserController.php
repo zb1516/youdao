@@ -25,11 +25,11 @@ class UserController extends Controller
             }
             if(!isset($searchArgs['userName']))
             {
-                throw new \Exception('账号或密码错误，请重新输入');
+                throw new \Exception('账号或密码错误，请重试');
             }
             if(!isset($searchArgs['password']))
             {
-                throw new \Exception('账号或密码错误，请重新输入');
+                throw new \Exception('账号或密码错误，请重试');
             }
             if(!isset($searchArgs['agencyId']) || intval($searchArgs['agencyId']) <=0)
             {
@@ -85,7 +85,7 @@ class UserController extends Controller
 
             if($result === false)
             {
-                throw new \Exception('登陆失败');
+                throw new \Exception('账号或密码错误，请重试');
             }
             return response()->json([
                 'status'=>200,
@@ -95,6 +95,10 @@ class UserController extends Controller
                 ]
             ]);
         }catch (\Exception $e){
+            if($e->getMessage() == '认证失败，密码错误')
+            {
+                return response()->json(['status'=>0,'errorMsg'=>'账号或密码错误，请重试']);
+            }
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
     }

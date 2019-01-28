@@ -137,12 +137,22 @@ if(!function_exists('gmt_iso8601'))
     }
 }
 
-if(!function_exists('key_sort_desc'))
+if(!function_exists('key_sort'))
 {
-    function key_sort_desc($data)
+    function key_sort($data,$order,$column)
     {
-        $last_names = array_column($data,'upload_time');
-        array_multisort($last_names,SORT_DESC,$data);
+        if(is_array($column)){
+            $str='';
+            foreach ($column as $key => $val)
+            {
+                $str.="'".$val."',";
+            }
+            $columnKey=trim($str , ",");
+        }else{
+            $columnKey=$column;
+        }
+        $last_names = array_column($data,$columnKey);
+        array_multisort($last_names,$order,$data);
         return $data;
     }
 }
