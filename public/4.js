@@ -27229,11 +27229,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             imagePaperDetailContent: '',
             questionContent: '',
             answerContent: '',
-            sortTaskId: '',
+            sortTaskId: [],
             errorShow: false,
             errorMssage: "请选择必填项",
-            sortTaskIdQuestion: '',
-            sortTaskIdAnswer: ''
+            sortTaskIdQuestion: [],
+            sortTaskIdAnswer: []
         };
     },
 
@@ -27254,7 +27254,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 score: that.score,
                 questionNumber: that.questionNumber,
                 other1: that.other1,
-                other2: that.other2
+                other2: that.other2,
+                sortTaskId: that.sortTaskId,
+                sortTaskIdQuestion: that.sortTaskIdQuestion,
+                sortTaskIdAnswer: that.sortTaskIdAnswer
             };
         }
     }, __WEBPACK_IMPORTED_MODULE_6_vuex__["b" /* mapGetters */]({

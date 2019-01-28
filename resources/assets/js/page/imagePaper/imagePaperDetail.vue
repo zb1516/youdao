@@ -244,11 +244,11 @@
                 imagePaperDetailContent:'',
                 questionContent:'',
                 answerContent:'',
-                sortTaskId:'',
+                sortTaskId:[],
                 errorShow:false,
                 errorMssage: "请选择必填项",
-                sortTaskIdQuestion:'',
-                sortTaskIdAnswer:''
+                sortTaskIdQuestion:[],
+                sortTaskIdAnswer:[]
             }
         },
         computed: {
@@ -269,6 +269,9 @@
                     questionNumber: that.questionNumber,
                     other1: that.other1,
                     other2: that.other2,
+                    sortTaskId: that.sortTaskId,
+                    sortTaskIdQuestion: that.sortTaskIdQuestion,
+                    sortTaskIdAnswer: that.sortTaskIdAnswer,
                 };
             },
             ...mapGetters({

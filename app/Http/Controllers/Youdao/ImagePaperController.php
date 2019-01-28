@@ -184,7 +184,7 @@ class ImagePaperController extends BaseController
      */
     public function paperPass(Request $request)
     {
-        $userKey = isset($_GET['userKey'])?$_GET['userKey']:'';
+        $userKey = isset($_GET['userKey']) ? $_GET['userKey'] : '';
         $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
         $_GET['userKey'] = $userKey;
         try {
