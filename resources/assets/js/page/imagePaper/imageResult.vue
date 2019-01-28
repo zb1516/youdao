@@ -70,19 +70,19 @@
         },
         methods:{
             doSelect(){
-                // var time = 3;
-                // var that = this;
-                // setInterval(function(){
-                //     time--;
-                //     $(".js-time-num").html(time);
-                //     if(time == 0){
-                //
-                //         that.$router.push({
-                //             name: 'imagePaper-imagePaperList',
-                //             params:{userKey:that.userKey}
-                //         });
-                //     }
-                // },1000)
+                var time = 3;
+                var that = this;
+                setInterval(function(){
+                    time--;
+                    $(".js-time-num").html(time);
+                    if(time == 0){
+
+                        that.$router.push({
+                            name: 'imagePaper-imagePaperList',
+                            params:{userKey:that.userKey}
+                        });
+                    }
+                },1000)
             }
 
         }
