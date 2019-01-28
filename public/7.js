@@ -31439,7 +31439,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {};
+        return {
+            taskId: 0,
+            isPaperError: '',
+            status: '',
+            error: ''
+        };
     },
 
     computed: _extends({
@@ -31448,15 +31453,52 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             return {};
         }
     }, __WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapGetters */]({
-        userKey: 'getUserKey' //this.userKey  ==  this.$store.getters.getUserKey
+        userKey: 'getUserKey'
     })),
     mounted: function mounted() {
         var that = this;
-        __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js___default.a.init();
+        that.taskId = this.$route.params.taskId;
     },
 
     watch: {},
-    methods: {}
+    methods: {
+        doCheck: function doCheck(type) {
+            this.isPaperError = type;
+        },
+        doPaperExaminedTwo: function doPaperExaminedTwo() {
+            var that = this;
+            if (that.isPaperError == 1) {
+                if ($("textarea[name='paperErrorDesc']").val() == '') {
+                    alert('请填写试卷存在的问题');
+                    return false;
+                    //that.$message.error('请填写试卷存在的问题');
+                } else {
+                    that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
+                }
+            } else {
+                that.paperErrorDesc = '';
+            }
+
+            axios.post('youdao/paper/paperExaminedTwo', "userKey='" + that.userKey + "'&taskId=" + that.taskId + "&isPaperError=" + that.isPaperError + "&paperErrorDesc='" + that.paperErrorDesc + "'").then(function (data) {
+                if (data.data) {
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        if (data.data.status == 1) {
+                            that.status = data.data.status;
+                            that.error = data.data.error;
+                            /*that.$router.push({
+                                name: 'paper-paperExaminedResult',
+                                params:{userKey:that.userKey,taskId:that.taskId,status:that.status,error:that.error}
+                            });*/
+                        } else {
+                            that.$message.error('题目问题提交失败！');
+                        }
+                    }
+                }
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -31469,39 +31511,79 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "main" }, [
     _c("div", { staticClass: "pic-review1 review3 paper-review2" }, [
-      _vm._m(0),
+      _c(
+        "div",
+        { staticClass: "nav-wrapper" },
+        [
+          _c(
+            "router-link",
+            {
+              attrs: {
+                to: {
+                  name: "paper-paperExaminedOne",
+                  params: { userKey: _vm.userKey, taskId: _vm.taskId }
+                },
+                target: "_blank"
+              }
+            },
+            [_c("a", { staticClass: "back-btn" }, [_vm._v("返回")])]
+          ),
+          _vm._v(" "),
+          _vm._m(0)
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "tab-con-wrapper" }, [
         _c("h2", { staticClass: "title" }, [_vm._v("第二步 标识试卷问题")]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "reviw-info-wrapper" },
-          [
-            _vm._m(1),
-            _vm._v(" "),
-            _c("textarea", { staticClass: "error-paper-info js-error-box" }),
-            _vm._v(" "),
-            _c(
-              "router-link",
-              {
-                attrs: {
-                  to: {
-                    name: "paper-paperExaminedResult",
-                    params: { userKey: _vm.userKey, taskId: _vm.paper.task_id }
-                  },
-                  target: "_blank"
+        _c("div", { staticClass: "reviw-info-wrapper" }, [
+          _c("div", { staticClass: "r-type-box" }, [
+            _c("span", { staticClass: "r-type" }, [
+              _c("span", {
+                staticClass: "radio js-radio",
+                class: { select: 1 === _vm.isPaperError },
+                on: {
+                  click: function($event) {
+                    _vm.doCheck(1)
+                  }
                 }
-              },
-              [
-                _c("a", { staticClass: "next-btn review2-btn" }, [
-                  _vm._v("下一步")
-                ])
-              ]
-            )
-          ],
-          1
-        )
+              }),
+              _vm._v(" "),
+              _c("span", [_vm._v("试卷有问题")])
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "r-type" }, [
+              _c("span", {
+                staticClass: "radio  js-radio js-error",
+                class: { select: 0 === _vm.isPaperError },
+                on: {
+                  click: function($event) {
+                    _vm.doCheck(0)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("span", [_vm._v("试卷无问题")])
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.isPaperError == 1
+            ? _c("textarea", {
+                staticClass: "error-paper-info js-error-box",
+                attrs: { name: "paperErrorDesc" }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "next-btn review2-btn",
+              on: { click: _vm.doPaperExaminedTwo }
+            },
+            [_vm._v("下一步")]
+          )
+        ])
       ])
     ])
   ])
@@ -31511,48 +31593,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "nav-wrapper" }, [
-      _c(
-        "a",
-        { staticClass: "back-btn", attrs: { href: "reviewPicList.html" } },
-        [_vm._v("返回")]
-      ),
+    return _c("span", { staticClass: "nav-con" }, [
+      _c("span", [_vm._v("操作说明：")]),
       _vm._v(" "),
-      _c("span", { staticClass: "nav-con" }, [
-        _c("span", [_vm._v("操作说明：")]),
-        _vm._v(" "),
-        _c("span", { staticClass: "tab select" }, [
-          _c("span", { staticClass: "circle" }, [_vm._v("1")]),
-          _c("span", { staticClass: "tab-text" }, [_vm._v("标识题目问题")])
-        ]),
-        _vm._v(" "),
-        _c("span", { staticClass: "tab select" }, [
-          _c("span", { staticClass: "circle" }, [_vm._v("2")]),
-          _c("span", { staticClass: "tab-text" }, [_vm._v("标识试卷问题")])
-        ]),
-        _vm._v(" "),
-        _c("span", {}, [
-          _c("span", { staticClass: "circle" }, [_vm._v("3")]),
-          _c("span", { staticClass: "tab-text" }, [_vm._v("完成审核")])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "r-type-box" }, [
-      _c("span", { staticClass: "r-type" }, [
-        _c("span", { staticClass: "radio select js-radio" }),
-        _vm._v(" "),
-        _c("span", [_vm._v("试卷有问题")])
+      _c("span", { staticClass: "tab select" }, [
+        _c("span", { staticClass: "circle" }, [_vm._v("1")]),
+        _c("span", { staticClass: "tab-text" }, [_vm._v("标识题目问题")])
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "r-type" }, [
-        _c("span", { staticClass: "radio  js-radio js-error" }),
-        _vm._v(" "),
-        _c("span", [_vm._v("试卷无问题")])
+      _c("span", { staticClass: "tab select" }, [
+        _c("span", { staticClass: "circle" }, [_vm._v("2")]),
+        _c("span", { staticClass: "tab-text" }, [_vm._v("标识试卷问题")])
+      ]),
+      _vm._v(" "),
+      _c("span", {}, [
+        _c("span", { staticClass: "circle" }, [_vm._v("3")]),
+        _c("span", { staticClass: "tab-text" }, [_vm._v("完成审核")])
       ])
     ])
   }

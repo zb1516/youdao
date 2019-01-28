@@ -88,9 +88,9 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('imagePaper/paperReturn', 'Youdao\ImagePaperController@paperReturn');
     Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
     Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
-    Route::get('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
-    Route::get('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
-    Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');
+    Route::any('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
+    Route::any('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
+    //Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');
 
 
 
@@ -100,7 +100,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
 $router->group(['prefix' => 'youdao'], function () use ($router) {
     Route::get('paper/paperExamined', 'Youdao\PaperController@paperExamined');//有道第一次处理成功回调地址
     Route::get('paper/questionError', 'Youdao\PaperController@questionError');//有道处理问题试题成功后回调地址
-    Route::get('paper/batchPaperExamin', 'Youdao\PaperController@batchPaperExamin');//计划任务批处理通过审核
+    Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');//计划任务批处理通过审核
 });
 
 
