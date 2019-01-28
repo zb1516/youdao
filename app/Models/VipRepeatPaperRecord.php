@@ -10,7 +10,7 @@ class VipRepeatPaperRecord extends Model
     /**
      * 重复试卷记录表
      */
-    public function repeatPaperRecord($taskId, $paperId,$userKey)
+    public function repeatPaperRecord($taskId, $paperId, $userKey)
     {
         $this->beginTransaction();
         $condition = array(
@@ -30,14 +30,13 @@ class VipRepeatPaperRecord extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
             ];
-            $result = $vipYoudaoExamined->edit($data,$condition);
+            $result = $vipYoudaoExamined->edit($data, $condition);
             if($result === false)
             {
                 $this->rollback();
                 throw new \Exception('试卷退回失败');
             }
         }
-
         $result = $this->findOne($condition);
         if(empty($result)){
             $data = [
@@ -45,9 +44,7 @@ class VipRepeatPaperRecord extends Model
                 'paper_id' => $paperId,
                 'create_time' => $date,
             ];
-
             $result = $this->add($data);
-
             if($result === false)
             {
                 $this->rollback();

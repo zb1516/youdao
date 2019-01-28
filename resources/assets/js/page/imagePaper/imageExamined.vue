@@ -46,7 +46,7 @@
                             <input type="hidden" value="0" class="js-hidden-type-id"/>
                         </div>
                     </div>
-                    <a href="acascript:;" class="next-btn review2-btn" @click="doNext">下一步</a>
+                    <a href="javascript:;" class="next-btn review2-btn" @click="doNext">下一步</a>
                 </div>
             </div>
         </div>

@@ -18,8 +18,6 @@ class Paper extends Model
      */
     public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 15)
     {
-
-
         $vipYoudaoExamined = new VipYoudaoExamined();
         $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
         $province = new Province();
@@ -33,7 +31,6 @@ class Paper extends Model
         $city = new City();
         $citys = $city->getIdCountrys($provinceIds);
         $countrys = $city->getIdAreas($provinceIds);
-        //print_R($searchArgs);
         $gradeName = config('app.GRADE_VALUE');
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
@@ -84,13 +81,11 @@ class Paper extends Model
         if (empty($condition)) {
             $condition = [];
         }
-
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
             return array('rows' => [], 'totalPage' => ceil($recordCount/5));
         }
         $result = $this->findAll($condition, ['created_time' => 'desc'], ['id', 'subject_id', 'show_name', 'file_name'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
-
         $list = [];
         $i = 1;
         foreach ($result['data'] as $k => $item) {
@@ -103,7 +98,6 @@ class Paper extends Model
             $i++;
         }
         return array('rows' => $list, 'totalPage' => ceil($recordCount/5));
-
     }
 
 
@@ -116,7 +110,6 @@ class Paper extends Model
      */
     public function imagePaperSearchArgs($formData,$isSort=0)
     {
-
         $searchArgs = [];
         if (isset($formData['taskId'])) {
             $searchArgs['taskId'] = $formData['taskId'];
@@ -164,10 +157,13 @@ class Paper extends Model
             $searchArgs['other2'] = $formData['other2'];
         }
         if($isSort){
-            if (isset($formData['sortTaskId'])) {
-                $searchArgs['sortTaskId'] = $formData['sortTaskId'];
-            }
             if (isset($formData['paperType'])) {
+                if($formData['paperType'] == 1){
+                    $searchArgs['sortTaskId'] = $formData['sortTaskId'];
+                }else{
+                    $searchArgs['sortTaskIdQuestion'] = $formData['sortTaskIdQuestion'];
+                    $searchArgs['sortTaskIdAnswer'] = $formData['sortTaskIdAnswer'];
+                }
                 $searchArgs['paperType'] = $formData['paperType'];
             }
             if (isset($formData['userKey'])) {

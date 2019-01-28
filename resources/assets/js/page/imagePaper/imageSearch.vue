@@ -79,7 +79,7 @@
                     </div>
                     <div class="btn-wrapper cf">
                         <button type="button" name="button" class="next-btn review2-btn" @click="doRepeat">此卷重复</button>
-                        <a href="jacascript:;" class="next-btn review2-btn" @click="doNext">下一步</a>
+                        <a href="javascript:;" class="next-btn review2-btn" @click="doNext">下一步</a>
                     </div>
                 </div>
             </div>

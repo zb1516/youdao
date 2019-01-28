@@ -6,28 +6,29 @@
  * Time: 14:10
  */
 namespace App\Http\Controllers\Youdao;
-use App\Http\Controllers\BaseController;
-use Illuminate\Http\Request;
-use App\Models\VipYoudaoExamined;
-use App\Models\SysRoles;
-use App\Models\SysUsers;
-use App\Libs\Export;
-use App\Models\Paper;
-use App\Models\VipPaperImage;
-use App\Models\VipRepeatPaperRecord;
+
 use DB;
 use App\Libs\Xxtea;
-
+use App\Libs\Export;
+use App\Models\Paper;
+use App\Models\SysRoles;
+use App\Models\SysUsers;
+use Illuminate\Http\Request;
+use App\Models\VipPaperImage;
+use App\Models\VipYoudaoExamined;
+use App\Models\VipRepeatPaperRecord;
+use App\Http\Controllers\BaseController;
 
 class ImagePaperController extends BaseController
 {
 
     public function __construct() {
+
+        $this->paper = new Paper;
         $this->sysRoles = new SysRoles;
         $this->sysUsers = new SysUsers;
-        $this->paper = new Paper;
-        $this->vipYoudaoExamined = new VipYoudaoExamined;
         $this->vipPaperImage = new VipPaperImage;
+        $this->vipYoudaoExamined = new VipYoudaoExamined;
         $this->vipRepeatPaperRecord = new VipRepeatPaperRecord;
     }
 
@@ -44,7 +45,6 @@ class ImagePaperController extends BaseController
             $_GET['IMG_AUDITOR'] = $roleId;
             $searchArgs = $this->vipYoudaoExamined->imagePaperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->getImagePaperList($searchArgs, $currentPage, $pageSize);
-            //print_r(response()->json($result));exit;
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -152,7 +152,7 @@ class ImagePaperController extends BaseController
             {
                 throw new \Exception('缺少taskId');
             }
-            $result = $this->vipRepeatPaperRecord->repeatPaperRecord($taskId, $paperId,$userKey);
+            $result = $this->vipRepeatPaperRecord->repeatPaperRecord($taskId, $paperId, $userKey);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -165,22 +165,20 @@ class ImagePaperController extends BaseController
     public function paperReturn(Request $request)
     {
         try {
-
             $taskId = $request->get('taskId', '');
-
             $imageErrorType = trim($request->get('imageErrorType', ''),',');
             $userKey = $request->get('userKey', '');
-
             if(empty($taskId))
             {
                 throw new \Exception('缺少taskId');
             }
-            $result = $this->vipPaperImage->paperReturn($taskId,$imageErrorType,$userKey);
+            $result = $this->vipPaperImage->paperReturn($taskId, $imageErrorType, $userKey);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+
     /**
      * 图片通过
      */
@@ -189,45 +187,28 @@ class ImagePaperController extends BaseController
         $userKey = isset($_GET['userKey'])?$_GET['userKey']:'';
         $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
         $_GET['userKey'] = $userKey;
-        //print_r($_GET);exit;
         try {
-            if(!isset($_GET['sortTaskId'])){
+            if(!isset($_GET['sortTaskId']) || !isset($_GET['sortTaskIdQuestion']) || !isset($_GET['sortTaskIdAnswer'])){
                 throw new \Exception('图片不能为空');
             }
             if(empty($userKey))
             {
                 throw new \Exception('userKey不能为空');
             }
+            if(empty($_GET['paperType']))
+            {
+                throw new \Exception('类型不能为空');
+            }
             $isSort = 1;
             if($_GET['paperType'] == 1){
                 $_GET['sortTaskId'][$_GET['taskId']] = $_GET['sortTaskId'];
             }else{
-                $_GET['sortTaskId'][$_GET['taskId']]['question'] = $_GET['sortTaskId'][0];
-                $_GET['sortTaskId'][$_GET['taskId']]['answer'] = $_GET['sortTaskId'][1];
+                $_GET['sortTaskIdQuestion'][$_GET['taskId']] = $_GET['sortTaskIdQuestion'];
+                $_GET['sortTaskIdAnswer'][$_GET['taskId']] = $_GET['sortTaskIdAnswer'];
+                //$_GET['sortTaskId'][$_GET['taskId']]['question'] = $_GET['sortTaskId'][0];
+                //$_GET['sortTaskId'][$_GET['taskId']]['answer'] = $_GET['sortTaskId'][1];
             }
-//            $_GET['paperType'] = 2;
-////            $_GET['sortTaskId'] = [
-////                '1' => [
-////                    'http://www.jansonvue.org/images/002.jpg',
-////                    'http://www.jansonvue.org/images/001.jpg'
-////                ]
-////            ];
-//            $_GET['sortTaskId']= [
-//            '1' => [
-//                'question' => [
-//                    'http://www.jansonvue.org/images/002.jpg',
-//                    'http://www.jansonvue.org/images/001.jpg'
-//                ],
-//                'answer' => [
-//                    'http://www.jansonvue.org/images/003.png',
-//                    'http://www.jansonvue.org/images/004.png'
-//                ],
-//            ]
-//        ];
-
-
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
-
             $result = $this->vipPaperImage->paperPass($searchArgs);
             return response()->json($result);
         } catch (\Exception $e) {

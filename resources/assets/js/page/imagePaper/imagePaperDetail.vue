@@ -246,7 +246,9 @@
                 answerContent:'',
                 sortTaskId:'',
                 errorShow:false,
-                errorMssage: "请完善搜索信息"
+                errorMssage: "请选择必填项",
+                sortTaskIdQuestion:'',
+                sortTaskIdAnswer:''
             }
         },
         computed: {
@@ -371,12 +373,8 @@
             },
             doSearch(){
                 var resultImage = new Array();
-                var imageData = new Array();
-
-
-
+                //var imageData = new Array();
                 if(this.$route.params.paperType == 1){
-
                     var i = 0;
                     $("#questionAll").find('img').each(function(){
                         resultImage[i] = $(this).attr('src');
@@ -397,8 +395,8 @@
                         resultImageAnswer[j] = $(this).attr('src');
                         j++
                     });
-                    imageData[0] = resultImageQuestion;
-                    imageData[1] = resultImageAnswer;
+                    // imageData[0] = resultImageQuestion;
+                    // imageData[1] = resultImageAnswer;
                 }
                 var that = this;
                 // $('.js-verif-input').each(function(){
@@ -417,7 +415,9 @@
                 if(this.$route.params.paperType == 1){
                     searchArgs.sortTaskId = resultImage;
                 }else{
-                    searchArgs.sortTaskId = imageData;
+                    //searchArgs.sortTaskId = imageData;
+                    searchArgs.sortTaskIdQuestion = resultImageQuestion;
+                    searchArgs.sortTaskIdAnswer = resultImageAnswer;
                 }
                 localStorage.setItem("paperSearchArgs",JSON.stringify(searchArgs));
                 localStorage.setItem("localTaskId",that.taskId);
