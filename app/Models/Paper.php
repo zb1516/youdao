@@ -31,18 +31,20 @@ class Paper extends Model
         $city = new City();
         $citys = $city->getIdCountrys($provinceIds);
         $countrys = $city->getIdAreas($provinceIds);
+        $gradeName = config('app.GRADE_VALUE');
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
         }
         if (!empty($searchArgs['grade'])) {
-            $condition['grade_id'] = array('eq' => $searchArgs['grade']);
+            $condition['grades'] = array('eq' => $gradeName[$searchArgs['grade']]);
         }
         if (!empty($searchArgs['province'])) {
             $provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
             $condition['province'] = array('eq' => $provinceName);
         }
         if (!empty($searchArgs['city'])) {
-            $cityName = isset($citys[$searchArgs['city']]) ? $citys[$searchArgs['city']] : '';
+            $cityId = isset($searchArgs['city']) ? explode('-',$searchArgs['city'])[1] : '';
+            $cityName = isset($citys[$cityId]) ? $citys[$cityId] : '';
             $condition['city'] = array('eq' => $cityName);
         }
         if (!empty($searchArgs['country'])) {
@@ -81,12 +83,12 @@ class Paper extends Model
         }
         $recordCount = $this->count($condition);
         if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => $recordCount);
+            return array('rows' => [], 'totalPage' => ceil($recordCount/5));
         }
         $result = $this->findAll($condition, ['created_time' => 'desc'], ['id', 'subject_id', 'show_name', 'file_name'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
         $list = [];
         $i = 1;
-        foreach ($result as $k => $item) {
+        foreach ($result['data'] as $k => $item) {
             $list[] = [
                 'number' => $i,
                 'id' => $item['id'],
@@ -95,8 +97,7 @@ class Paper extends Model
             ];
             $i++;
         }
-        print_R($list);exit;
-        return array('rows' => $list, 'total' => $recordCount);
+        return array('rows' => $list, 'totalPage' => ceil($recordCount/5));
     }
 
 
@@ -109,10 +110,9 @@ class Paper extends Model
      */
     public function imagePaperSearchArgs($formData,$isSort=0)
     {
-        
         $searchArgs = [];
         if (isset($formData['taskId'])) {
-            $searchArgs['taskId'] = trim($formData['taskId']);
+            $searchArgs['taskId'] = $formData['taskId'];
         }
         if (isset($formData['subjectId'])) {
             $searchArgs['subjectId'] = $formData['subjectId'];
@@ -157,10 +157,13 @@ class Paper extends Model
             $searchArgs['other2'] = $formData['other2'];
         }
         if($isSort){
-            if (isset($formData['sortTaskId'])) {
-                $searchArgs['sortTaskId'] = $formData['sortTaskId'];
-            }
             if (isset($formData['paperType'])) {
+                if($formData['paperType'] == 1){
+                    $searchArgs['sortTaskId'] = $formData['sortTaskId'];
+                }else{
+                    $searchArgs['sortTaskIdQuestion'] = $formData['sortTaskIdQuestion'];
+                    $searchArgs['sortTaskIdAnswer'] = $formData['sortTaskIdAnswer'];
+                }
                 $searchArgs['paperType'] = $formData['paperType'];
             }
             if (isset($formData['userKey'])) {

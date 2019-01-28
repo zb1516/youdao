@@ -18,15 +18,31 @@ const routes = [
                 name:'imagePaper-imagePaperList-imagePaperDetail',
                 component:resolve => require(['./page/imagePaper/imagePaperDetail'], resolve),
                 meta:{
-                    title:'套卷详情',
+                    title:'贴标签',
                 }
             },
             {
-                path:'imageSearch/:userKey/:taskId/:allType',
+                path:'imageSearch/:userKey/:taskId/:paperType/:allType',
                 name:'imagePaper-imagePaperList-imageSearch',
                 component:resolve => require(['./page/imagePaper/imageSearch'], resolve),
                 meta:{
-                    title:'套卷详情',
+                    title:'搜索排重',
+                }
+            },
+            {
+                path:'imageExamined/:userKey/:taskId',
+                name:'imagePaper-imagePaperList-imageExamined',
+                component:resolve => require(['./page/imagePaper/imageExamined'], resolve),
+                meta:{
+                    title:'审核图片',
+                }
+            },
+            {
+                path:'imageResult/:userKey/:imageStatus',
+                name:'imagePaper-imagePaperList-imageResult',
+                component:resolve => require(['./page/imagePaper/imageResult'], resolve),
+                meta:{
+                    title:'完成审核',
                 }
             },
             // {

@@ -19,8 +19,14 @@ class KlibPaperClient
                 'isStandard' => $isStandard,
                 'paperId' => $paperId
             ];
-            $user = new Client(env('KLIB_SERVICE_HOST').'/diyService/paper', false);
+            $user = new Client(env('KLIB_SERVICE_HOST').":".env('DIY_SERVICE_PORT').'/diyService/paper', false);
             $res = $user->getPaperInfo($data);
+//            foreach ($res['module'] as &$v){
+//                foreach ($v['questions'] as &$it){
+//                    $v['questions'][$it['ques_id']] = $it;
+//                }
+//            }
+            //print_r($res);exit;
             return $res;
         }catch (\Exception $e){
             throw new \Exception($e->getMessage());

@@ -25,7 +25,7 @@ class City extends Model
         $result = $this->findAll($condition, $order=[], ['id', 'oneid', 'twoid', 'city']);
         $list = [];
         foreach ($result as $item) {
-            $list[$item['id']]['id'] = $item['twoid'];
+            $list[$item['id']]['id'] = $item['twoid'].'-'.$item['id'];
             $list[$item['id']]['oneid'] = $item['oneid'];
             $list[$item['id']]['twoid'] = $item['twoid'];
             $list[$item['id']]['city'] = $item['city'];

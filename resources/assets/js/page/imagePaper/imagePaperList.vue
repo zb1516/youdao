@@ -1,6 +1,5 @@
 <template>
     <div class="main table-list">
-        <!-- search -->
         <div class="filter-form-box">
             <div class="inner cf">
                 <div class="input-wrapper">
@@ -133,11 +132,7 @@
                             </td>
                             <td>
                                 <template v-if="imagePaper.imageExaminedStatusName == '待审核'">
-
                                     <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:imagePaper.taskId,paperType:imagePaper.paperType}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
-
-
-
                                 </template>
                             </td>
                         </tr>
@@ -160,9 +155,7 @@
 </template>
 
 <script>
-    //
     import "../../static/js/jquery-1.12.2.min.js"
-
     import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
     import "../../static/css/jquery.dataTables.min.css"
     import "../../static/js/pagination/pagination.css"
@@ -171,8 +164,6 @@
     import "../../static/js/jquery.dataTables.min.js"
     import common from "../../static/js/jquery.common.js"
     import "../../static/js/pagination/pagination.min.js"
-
-
     import {mapGetters} from 'vuex'
     export default {
         data(){
@@ -301,9 +292,6 @@
 
                         }
                     });
-
-
-
                 }
             },
             doSearch(){

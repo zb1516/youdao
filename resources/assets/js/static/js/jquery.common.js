@@ -8,13 +8,17 @@
 	var siteFns = {
 		init: function() {
 			var self = this;
-			self.componentInit().addressPicker.init();
+            if( $('.address-search-box').length ){
+                //console.log('in');
+                // self.addressPicker.init();
+                self.componentInit().addressPicker.init();
+            }
+
 		},
 
         componentInit: function() {
             var self = this;
             if( $('select').length ) {
-                // initSelectBox();
                 $('select').each(function() {
                     var $this = $(this),
                         obj = $(this).data('options');
@@ -60,17 +64,19 @@
                 });
             }
             if( $('.pic-list a').length ){
-                var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null;
-                self.initGallery(parentBox);
+                var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
+                    topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
+                self.initGallery(parentBox, topRatio);
                 $('.js-pic-list,.js-st-list').sortable({
                     deactivate: function() {
                         $('> li', this).each(function functionName( i ) {
                             $(this).find('.tab-index').text( i + 1 );
                         });
-                        self.initGallery(parentBox);
+                        self.initGallery(parentBox, topRatio);
                     }
                 });
             }
+
             return self;
         },
     addressPicker: {
@@ -118,7 +124,7 @@
 				$this.prepend('<input name="search-prov" type="hidden" /><input name="search-city" type="hidden" />');
 
                 $.each( self.provs, function( i, prov ) {
-					prov = ~prov.indexOf('-') ? prov.split('-') : [ prov, i + 1 ];
+					prov = ~prov.indexOf('-') ? prov.split('-') : [ prov, i ];
 					name = prov[0];
 					val = prov[1];
 
@@ -132,7 +138,7 @@
 
 					$.each(self.citys[i], function( i, city ) {
 
-						city = ~city.indexOf('-') ? city.split('-') : [ city, i + 1 ];
+						city = ~city.indexOf('-') ? city.split('-') : [ city, i ];
 						name = city[0];
 						val = city[1];
 
@@ -221,7 +227,7 @@
         return self;
       }
     },
-        initGallery: function(parent){
+        initGallery: function(parent,topRatio){
             $('.pic-list a').fancybox({
                 parent: parent || null,
                 fixed: !parent,
@@ -230,7 +236,11 @@
                 padding: 0,
                 prevEffect : 'none',
                 nextEffect : 'none',
-                closeBtn  : false,
+                closeBtn  : true,
+                maxWidth  : 610,
+                maxHeight : 855,
+                minWidth : 580,
+                topRatio : topRatio,
                 helpers : {
                     buttons	: {
                         show: false
