@@ -51,6 +51,10 @@ class UserController extends Controller
             {
                 throw new \Exception('请开通机构私库后登陆');
             }
+            if($authUserInfo['isPrivateLibraryManage'] != 1)
+            {
+                throw new \Exception('请授权机构私库管理员权限');
+            }
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
             //添加用户绑定登陆记录
