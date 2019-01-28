@@ -358,6 +358,7 @@ class paperController extends Controller
             $list['data']=key_sort($list['data'],SORT_DESC,'upload_time');
             foreach($list['data'] as $key => $val)
             {
+                $val=(array)$val;
                 $val['upload_time']=empty($val['upload_time'])?'':formatDate(strtotime($val['upload_time']));
                 $list['data'][$key]=$val;
             }
