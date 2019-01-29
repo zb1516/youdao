@@ -19,8 +19,8 @@
                   <div class="input-box">
                       <select class="grade-select-box" id="grade-select-box" name="grade-select-box"  v-model="gradeValue" data-options="width: 100" >
                           <option value="0">全部</option>
-                          <option v-for="option in optionsGrade" :value="option.gradeId">
-                              {{option.gradeName}}
+                          <option v-for="(option,index) in optionsGrade" :value="index">
+                              {{option}}
                           </option>
                       </select>
                   </div>
@@ -160,7 +160,7 @@
     import "../../static/js/pagination/pagination.css"
     import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
     import "../../static/js/pagination/pagination.min.js"
-    import "../../static/js/jquery.common.js"
+    import common from "../../static/js/jquery.common.js"
 
 
 
@@ -224,6 +224,7 @@
             that.agencyList();
             that.statusList();
             that.doSearch();
+            common.init();
         },
         watch:{
             searchArgs:function() {

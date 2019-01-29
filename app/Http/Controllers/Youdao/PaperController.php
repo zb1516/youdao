@@ -366,6 +366,7 @@ class PaperController extends BaseController
                 //试卷通过审核，通知有道
                 //$result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 $result = 1;
+                return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -383,6 +384,14 @@ class PaperController extends BaseController
                 //试卷审核不通过，退回有道
                 //$result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
                 $result = 1;
+                $error = 0;
+                if(!empty($data['list'])){
+                    $error += 1;
+                }
+                if($isPaperError == 1){
+                    $error += 1;
+                }
+                return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -391,21 +400,7 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
-                /*
-                $error = [];
-                if(!empty($data['list'])){
-                    $error[] = '题目问题';
-                }
-                if($isPaperError == 1){
-                    $error[] = '试卷问题';
-                }*/
-                $error = 0;
-                if(!empty($data['list'])){
-                    $error += 1;
-                }
-                if($isPaperError == 1){
-                    $error += 1;
-                }
+
 
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
