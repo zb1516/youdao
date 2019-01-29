@@ -17,7 +17,7 @@ class KlibSubjectClient{
     {
         try{
             $user = new Client(env('KLIB_SERVICE_HOST') . '/teachingService/system', false);
-            $res = $user->getSubjectListYd($userId,$token,$isKms);
+            $res = $user->getSubjectListYd(['userId'=>$userId,'token'=>$token,'isKms'=>$isKms,'deptId'=>0,'page'=>1,'pageSize'=>100]);
             return $res;
         }catch (\Exception $e){
             throw new \Exception($e->getMessage());
