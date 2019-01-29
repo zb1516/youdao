@@ -8,14 +8,12 @@ use Illuminate\Support\Facades\Redis;
 
 class WxService
 {
-
-
     /**
      * 发送模板消息接口
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function sendTemplate($data)
+    public static function sendTemplate($data=[])
     {
         try{
             $searchArgs['openId']=$data['openId'];
@@ -82,7 +80,7 @@ class WxService
             }
             return true;
         }catch (\Exception $e){
-            throw new ($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -91,7 +89,7 @@ class WxService
      *
      * @return reposne
      */
-    public static function sendTemplateMessage($openId,$data,$type)
+    public static function sendTemplateMessage($openId=0,$data=[],$type=1)
     {
         try{
             $tempalteId=intval($type)==1?"umwNreURUB7KeE2y_d3ozPfZyIhpRxnEEiwIrh5cDjg":"ogryc1vv3lPF94kShdrMsfX4llpIAAlK6u9Fbnv0aNk";
