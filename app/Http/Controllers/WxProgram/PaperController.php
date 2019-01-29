@@ -104,7 +104,6 @@ class paperController extends Controller
                 //判断是分离样式还是混合样式
                 if($searchArgs['paperType'] == 1){
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -120,7 +119,6 @@ class paperController extends Controller
                     }
                 }else{
                     $questionImage=explode(',',$searchArgs['questionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -135,7 +133,6 @@ class paperController extends Controller
                         }
                     }
                     $answerImage=explode(',',$searchArgs['answerImage']);
-                    $answerImage=arrayReverse($answerImage);
                     foreach($answerImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -232,7 +229,6 @@ class paperController extends Controller
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -247,7 +243,6 @@ class paperController extends Controller
                     }
                 } else {
                     $questionImage=explode(',',$searchArgs['questionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -261,7 +256,6 @@ class paperController extends Controller
                         }
                     }
                     $answerImage=explode(',',$searchArgs['answerImage']);
-                    $answerImage=arrayReverse($answerImage);
                     foreach ($answerImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -318,7 +312,7 @@ class paperController extends Controller
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
-            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'desc'],['image_url'])->first();
+            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId']],['id'=>'desc'],['image_url'])->first();
             //取一条任务信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']])->first();
@@ -346,7 +340,7 @@ class paperController extends Controller
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by create_time asc) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by id desc) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
@@ -426,7 +420,7 @@ class paperController extends Controller
             $exainedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'paper_type');
             $where=['task_id'=>$searchArgs['taskId'],'is_delete'=>0];
             $vipPaperImageModel=new VipPaperImage();
-            $list=$vipPaperImageModel->findAll($where,['create_time'=>'asc'],['id','image_url','image_type']);
+            $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
             {
