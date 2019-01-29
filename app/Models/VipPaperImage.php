@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Model;
 use App\Services\BucketService;
+use App\Services\WxService;
 use App\Services\YoudaoService;
 
 class VipPaperImage extends Model
@@ -97,8 +98,8 @@ class VipPaperImage extends Model
             'taskId' => $taskId,
             'content' => $imageErrorType,
         );
-        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
-        $this->sendCurl($sendTemplateUrl,$postData);
+        //$sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+        WxService::sendTemplate($postData);
         $this->commit();
         return true;
     }
@@ -448,20 +449,7 @@ class VipPaperImage extends Model
             'subject' => $subjectId,
         ];
         return $youdaoService->getYoudaoTask($url,$postData);
-
     }
 
-    /**
-     * 发送模板消息
-     */
-    public function sendCurl($url,$post_data){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);// post数据
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);// post的变量
-        $buf = curl_exec($ch);
-        curl_close($ch);
-    }
 
 }
