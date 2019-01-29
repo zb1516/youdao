@@ -11,7 +11,7 @@ class KnowledgeClient{
             if(!empty($searchArgs['name'])){
                 $postData["name"]=$searchArgs['name'];
             }
-            $obj=new Client(env('KLIB_SERVICE_HOST') . ':' . env('KLIB_SERVICE_PORT') .  '/quesService',false);
+            $obj=new Client(env('KLIB_SERVICE_HOST') . '/quesService',false);
             $res = $obj->getKnowledgePoint ($postData);
             return $res;
         }catch (\Exception $e){

@@ -108,10 +108,6 @@ class UserController extends Controller
                 ]
             ]);
         }catch (\Exception $e){
-            if($e->getMessage() == '认证失败，密码错误')
-            {
-                return response()->json(['status'=>0,'errorMsg'=>'账号或密码错误，请重试']);
-            }
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
     }
