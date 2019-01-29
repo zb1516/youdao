@@ -200,13 +200,32 @@ class CommonController extends BaseController
     public static function getSubjectYD(Request $request)
     {
         try{
-//            $searchArgs['token']=$request->input('token');
-//            //获取登陆用户uid
-//            $userInfo=UserService::getUserInfo($searchArgs['token']);
+            $searchArgs['token']=$request->input('token');
+            //获取登陆用户uid
+            $userInfo=UserService::getUserInfo($searchArgs['token']);
+            //通过用户id获取教师数据
+            $teacherInfo=KlibTeacherClient::getTeacherList($userInfo['userId'],$userInfo['micro_token']);
 //            $result=KlibSubjectClient::getSubject($userInfo['userId'],$userInfo['micro_token']);
             $json='{"code":0,"message":"\u64cd\u4f5c\u6210\u529f","data":{"rows":[{"id":38,"name":"\u5c0f\u5b66\u6570\u5b66","type":"1"},{"id":2,"name":"\u5c0f\u5b66\u8bed\u6587","type":"1"},{"id":1,"name":"\u5c0f\u5b66\u601d\u7ef4","type":"1"},{"id":3,"name":"\u5c0f\u5b66\u82f1\u8bed","type":"1"},{"id":58,"name":"\u5c0f\u5b66\u827a\u672f","type":"1"},{"id":35,"name":"\u521d\u4e2d\u751f\u7269","type":"2"},{"id":47,"name":"\u521d\u4e2d\u5730\u7406","type":"2"},{"id":39,"name":"\u521d\u4e2d\u5386\u53f2","type":"2"},{"id":5,"name":"\u521d\u4e2d\u8bed\u6587","type":"2"},{"id":4,"name":"\u521d\u4e2d\u6570\u5b66","type":"2"},{"id":6,"name":"\u521d\u4e2d\u82f1\u8bed","type":"2"},{"id":7,"name":"\u521d\u4e2d\u7269\u7406","type":"2"},{"id":8,"name":"\u521d\u4e2d\u5316\u5b66","type":"2"},{"id":48,"name":"\u521d\u4e2d\u653f\u6cbb","type":"2"},{"id":60,"name":"\u521d\u4e2d\u79d1\u5b66","type":"2"},{"id":57,"name":"\u521d\u4e2d\u827a\u672f","type":"2"},{"id":11,"name":"\u9ad8\u4e2d\u8bed\u6587","type":"3"},{"id":25,"name":"\u9ad8\u4e2d\u6570\u5b66","type":"3"},{"id":12,"name":"\u9ad8\u4e2d\u82f1\u8bed","type":"3"},{"id":13,"name":"\u9ad8\u4e2d\u7269\u7406","type":"3"},{"id":14,"name":"\u9ad8\u4e2d\u5316\u5b66","type":"3"},{"id":50,"name":"\u9ad8\u4e2d\u653f\u6cbb","type":"3"},{"id":40,"name":"\u9ad8\u4e2d\u751f\u7269","type":"3"},{"id":49,"name":"\u9ad8\u4e2d\u5730\u7406","type":"3"},{"id":41,"name":"\u9ad8\u4e2d\u5386\u53f2","type":"3"},{"id":56,"name":"\u9ad8\u4e2d\u827a\u672f","type":"3"}]}}';
             $jsonArr=json_decode($json,true);
-            $result=$jsonArr['data']['rows'];
+            $res=[];
+            $result=[];
+            foreach($jsonArr['data']['rows'] as $key => $val)
+            {
+                $res[$val['id']]=$val;
+            }
+            if(!empty($teacherInfo['list']))
+            {
+                foreach($teacherInfo['list'][0]['subjectId'] as $key => $val)
+                {
+                    if(isset($res[$val]))
+                    {
+                        $result[]=$res[$val];
+                    }
+                }
+            }else{
+                $result=$jsonArr;
+            }
             return response()->json(['status'=>200,'data'=>['rows'=>$result]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg' => $e->getMessage()]);
