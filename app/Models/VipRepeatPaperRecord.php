@@ -10,7 +10,7 @@ class VipRepeatPaperRecord extends Model
     /**
      * 重复试卷记录表
      */
-    public function repeatPaperRecord($taskId, $paperId,$userKey)
+    public function repeatPaperRecord($taskId, $paperId, $userKey)
     {
         $this->beginTransaction();
         $condition = array(
@@ -30,7 +30,7 @@ class VipRepeatPaperRecord extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
             ];
-            $result = $vipYoudaoExamined->edit($data,$condition);
+            $result = $vipYoudaoExamined->edit($data, $condition);
             if($result === false)
             {
                 $this->rollback();
@@ -38,7 +38,7 @@ class VipRepeatPaperRecord extends Model
             }
         }
         $result = $this->findOne($condition);
-        if(!empty($result)){
+        if(empty($result)){
             $data = [
                 'task_id' => $taskId,
                 'paper_id' => $paperId,
@@ -50,6 +50,9 @@ class VipRepeatPaperRecord extends Model
                 $this->rollback();
                 throw new \Exception('保存试卷记录失败');
             }
+        }else{
+            $this->rollback();
+            throw new \Exception('已经有重复记录了');
         }
         $this->commit();
         return true;

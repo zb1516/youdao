@@ -69,13 +69,33 @@ class KlibTeacherClient
     {
         try{
             $client = new Client(env('MICRO_API_SERVICE_HOST') .'/userService/agency', false);
-            $result=$client->getTeaOrEmpAgencyList(array(
+            $result=$client->getTeaOrEmpAgencyList([
                 'mobile'=>$mobile,
                 'type'=>$type,
                 'page'=>1,
                 'pageSize'=>20
-            ));
+            ]);
             return $result;
-        }catch (\Exception $e){}
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * 教师列表
+     * @param $userId
+     * @param $token
+     */
+    public static function getTeacherList($userId,$token)
+    {
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/userService/teacher', false);
+            $client->setHeader('X-USER-TOKEN',$token);
+            $client->setHeader('X-REQUEST-TIME',time());
+            $res = $client->getTeacherList(['id'=>[$userId]]);
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
     }
 }

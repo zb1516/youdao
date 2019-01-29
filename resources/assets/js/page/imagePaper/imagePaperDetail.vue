@@ -2,7 +2,8 @@
     <div class="main">
         <div class="pic-review1">
             <div class="nav-wrapper">
-                <a href="reviewPicList.html" class="back-btn">返回</a>
+
+                <router-link  :to="{name:'imagePaper-imagePaperList',params:{userKey:userKey}}" class="back-btn">返回</router-link>
                 <span class="nav-con">
           <span>操作说明：</span>
           <span class="tab select"><span class="circle">1</span><span class="tab-text">贴标签</span></span>
@@ -16,7 +17,7 @@
                 <div class="search-form inner cf">
                     <div class="input-wrapper">
                         <label for="" class="in-name required min-w1">学科</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="grade-select-box5" name="grade-select-box" data-options="width: 200" v-model="subjectValue"  @change="selectPaperSource">
                                 <option value="">请选择</option>
                                 <option v-for="option in optionsSubject" v-bind:value="option.subjectId">
@@ -28,7 +29,7 @@
                     <div class="input-wrapper">
                         <label for="" class="in-name required">年份</label>
 
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
 
                             <select class="grade-select-box" id="grade-select-box" name="grade-select-box" v-model="curYear" data-options="width: 200">
 
@@ -48,7 +49,7 @@
 
                     <div class="input-wrapper">
                         <label for="" class="in-name required">来源</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="grade-select-box1" name="grade-select-box" data-options="width: 200" v-model="curPaperSource">
                                 <option value="">请选择</option>
                                 <option v-for="option in ajaxAllSubjectPaperSource" v-bind:value="option.sourceName">
@@ -59,7 +60,7 @@
                     </div>
                     <div class="input-wrapper">
                         <label for="" class="in-name required">学期</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="grade-select-box2" name="grade-select-box" data-options="width: 200" v-model="term">
                                 <option value="">请选择</option>
                                 <option value="上学期">上学期</option>
@@ -76,7 +77,7 @@
                     </div>
                     <div class="input-wrapper">
                         <label for="" class="in-name required min-w1">省</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="prev-select-box" name="grade-select-box" data-options="width: 200" v-model="curProvince" @change="selectPaperCitys">
                                 <option value="">请选择</option>
                                 <option v-for="option in optionsProvinces" v-bind:value="option.id">
@@ -87,12 +88,21 @@
                     </div>
                     <div class="input-wrapper">
                         <label for="" class="in-name required">年级</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="grade-select-box3" name="grade-select-box" data-options="width: 200" v-model="curGrade">
                                 <option value="">请选择</option>
-                                <option value="1">小学</option>
-                                <option value="2">初中</option>
-                                <option value="3">高中</option>
+                                <option value="1">一年级</option>
+                                <option value="2">二年级</option>
+                                <option value="3">三年级</option>
+                                <option value="4">四年级</option>
+                                <option value="5">五年级</option>
+                                <option value="6">六年级</option>
+                                <option value="7">初一</option>
+                                <option value="8">初二</option>
+                                <option value="9">初三</option>
+                                <option value="10">高一</option>
+                                <option value="11">高二</option>
+                                <option value="12">高三</option>
                             </select>
                         </div>
                     </div>
@@ -104,7 +114,7 @@
                     </div>
                     <div class="input-wrapper">
                         <label for="" class="in-name required min-w1">市</label>
-                        <div class="input-box">
+                        <div class="input-box js-verif-input">
                             <select class="grade-select-box" id="city-select-box" name="grade-select-box" data-options="width: 200" v-model="curCity" @change="selectPaperAreas">
                                 <option value="">请选择</option>
                                 <option v-for="option in ajaxAllPaperCitys" v-bind:value="option.id">
@@ -157,7 +167,6 @@
                             </a>
                         </li>
                         </template>
-
                     </ul>
                     <h2 class="title2">答案</h2>
                     <ul class="pic-list cf js-st-list"  id="questionAnswer">
@@ -192,6 +201,7 @@
                     <span class="next-btn"  @click="doSearch">下一步</span>
                 </div>
                 </template>
+                <div class="error-box" v-show="errorShow">{{errorMssage}}</div>
             </div>
         </div>
     </div>
@@ -235,6 +245,10 @@
                 questionContent:'',
                 answerContent:'',
                 sortTaskId:[],
+                errorShow:false,
+                errorMssage: "请选择必填项",
+                sortTaskIdQuestion:[],
+                sortTaskIdAnswer:[]
             }
         },
         computed: {
@@ -255,6 +269,9 @@
                     questionNumber: that.questionNumber,
                     other1: that.other1,
                     other2: that.other2,
+                    sortTaskId: that.sortTaskId,
+                    sortTaskIdQuestion: that.sortTaskIdQuestion,
+                    sortTaskIdAnswer: that.sortTaskIdAnswer,
                 };
             },
             ...mapGetters({
@@ -358,15 +375,16 @@
                 })
             },
             doSearch(){
+                var resultImage = new Array();
+                //var imageData = new Array();
                 if(this.$route.params.paperType == 1){
-                    var resultImage = [];
                     var i = 0;
                     $("#questionAll").find('img').each(function(){
                         resultImage[i] = $(this).attr('src');
                         i++
                     });
                 }else{
-                    var imageData = new Array();
+
                     var resultImageQuestion = new Array();
                     var resultImageAnswer = new Array();
                     var k = 0;
@@ -380,10 +398,19 @@
                         resultImageAnswer[j] = $(this).attr('src');
                         j++
                     });
-                    imageData[0] = resultImageQuestion;
-                    imageData[1] = resultImageAnswer;
+                    // imageData[0] = resultImageQuestion;
+                    // imageData[1] = resultImageAnswer;
                 }
                 var that = this;
+                $('.js-verif-input').each(function(){
+                    var $selectedBox = $(this).find('select').find("option:selected");
+
+                    if($selectedBox.val() == 0){
+                        that.errorShow = true;
+                        return false;
+                    }
+                    that.errorShow = false;
+                });
                 var searchArgs = $.extend(true, {}, that.searchArgs);
                 searchArgs.userKey = that.userKey;
                 searchArgs.taskId = that.taskId;
@@ -391,15 +418,20 @@
                 if(this.$route.params.paperType == 1){
                     searchArgs.sortTaskId = resultImage;
                 }else{
-                    searchArgs.sortTaskId = imageData;
+                    //searchArgs.sortTaskId = imageData;
+                    searchArgs.sortTaskIdQuestion = resultImageQuestion;
+                    searchArgs.sortTaskIdAnswer = resultImageAnswer;
                 }
                 localStorage.setItem("paperSearchArgs",JSON.stringify(searchArgs));
-                that.$router.push({
-                    name: 'imagePaper-imagePaperList-imageSearch',
-                    params:{userKey:that.userKey,taskId:that.taskId,allType:1}
-                });
+                localStorage.setItem("localTaskId",that.taskId);
+                if(!that.errorShow){
+                    that.$router.push({
+                        name: 'imagePaper-imagePaperList-imageSearch',
+                        params:{userKey:that.userKey,taskId:that.taskId,allType:1}
+                    });
+                }
 
-                //location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
+                // location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
                 // axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
                 //     if (data.data.errorMsg) {
                 //         that.$message.error(data.data.errorMsg);
@@ -427,6 +459,7 @@
                     });
                 })
             },
+
 
 
         }

@@ -44,14 +44,12 @@ class VipPaperImage extends Model
                 return ['question' => $question, 'answer' => $answer];
             }
         }
-
-
     }
 
     /**
      * 图片退回
      */
-    public function paperReturn($taskId, $imageErrorType,$userKey)
+    public function paperReturn($taskId, $imageErrorType, $userKey)
     {
         $this->beginTransaction();
         $condition = array(
@@ -72,26 +70,35 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
             ];
-            $result = $vipYoudaoExamined->edit($data,$condition);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('图片退回失败');
             }
         }
-        $result = $this->findAll($condition);
+        $resultAll = $this->findAll($condition);
         //第三方Oss的东西
-        if($result){
+        if($resultAll){
             $data = [
                 'is_delete' => 1,
             ];
-            $result = $this->edit($data,$condition);
+            $result = $this->edit($data, $condition);
             if($result === false)
             {
                 $this->rollback();
                 throw new \Exception('图片详情退回失败');
             }
         }
+        $postData = array(
+            'openId' => $result['open_id'],
+            'type' => 1,
+            'userId' => $result['create_uid'],
+            'taskId' => $taskId,
+            'content' => $imageErrorType,
+        );
+        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+        $this->sendCurl($sendTemplateUrl,$postData);
         $this->commit();
         return true;
     }
@@ -122,33 +129,13 @@ class VipPaperImage extends Model
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
             ];
-            $result = $vipYoudaoExamined->edit($data,$condition);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('图片退回失败');
             }
         }
-//        $sortTaskId = [
-//            'taskId' => [
-//                'http://www.jansonvue.org/images/002.jpg',
-//                'http://www.jansonvue.org/images/001.jpg'
-//            ]
-//        ];
-//
-//        $sortTaskId = [
-//            'taskId' => [
-//                'question' => [
-//                    'http://www.jansonvue.org/images/002.jpg',
-//                    'http://www.jansonvue.org/images/001.jpg'
-//                ],
-//                'answer' => [
-//                    'http://www.jansonvue.org/images/002.jpg',
-//                    'http://www.jansonvue.org/images/001.jpg'
-//                ],
-//            ]
-//        ];
-
         $dateTime = time();
         $rand = rand(1,1000);
         if($searchArgs['paperType'] == 1){
@@ -156,9 +143,9 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 3,
             );
-            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $resultAll = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($result);
-            if($result){
+            if($resultAll){
                 for($i=0;$i<$count;$i++){
                     $data = [
                         'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']][$i],
@@ -167,38 +154,39 @@ class VipPaperImage extends Model
                     $condition = array(
                         'id' => $result[$i]['id'],
                     );
-                    $result = $this->edit($data,$condition);
-                    if($result === false)
+                    $resultImage = $this->edit($data, $condition);
+                    if($resultImage === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-混合');
                     }
                 }
+
             }
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
-            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand);
+            $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand);
             $filenameAll = $filename.$dateTime.$rand;
-            $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filenameAll,$ossPATH);
+            $ossPATH="YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
+            $resultUrl = $this->uploadOssPackage($filenameAll, $ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
                 'question_url' => $questionUrl,
                 'answer_url' => '',
             ];
-            $result = $vipYoudaoExamined->edit($data,['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $result = $this->youdaoDataHandle($searchArgs,$filename,$questionUrl);
-            $result = json_decode($result,true);
+            $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
             $data = [
-                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
-            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
+            $vipYoudaoExamined->edit($data,['task_id' => $resultYoudao['data']['taskId']]);
         }else{
             //第三方oss调用
             $condition = array(
@@ -207,34 +195,35 @@ class VipPaperImage extends Model
             );
             $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($question);
+            $imagesUrl = $searchArgs['sortTaskIdQuestion'][$searchArgs['taskId']];
+
             if($question){
                 for($i=0;$i<$count;$i++){
                     $data = [
-                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'][$i],
+                        'image_url' => $imagesUrl[$i],
                         'is_delete' => 0,
                     ];
                     $condition = array(
                         'id' => $question[$i]['id'],
                     );
-                    $result = $this->edit($data,$condition);
-                    if($result === false)
+                    $resultQuestion = $this->edit($data, $condition);
+                    if($resultQuestion === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-分离问题');
                     }
                 }
             }
-            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['question'];
-            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'question');
+            $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand, 'question');
             $filenameQuestion = $filename.$dateTime.$rand.'question';
-            $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filenameQuestion,$ossPATH);
+            $ossPATH = "YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
+            $resultUrl = $this->uploadOssPackage($filenameQuestion, $ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
                 'question_url' => $questionUrl,
             ];
-            $result = $vipYoudaoExamined->edit($data,['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
@@ -245,55 +234,66 @@ class VipPaperImage extends Model
             );
             $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($answer);
+            $imagesUrl = $searchArgs['sortTaskIdAnswer'][$searchArgs['taskId']];
             if($answer){
                 for($i=0;$i<$count;$i++){
                     $data = [
-                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'][$i],
+                        'image_url' => $imagesUrl[$i],
                         'is_delete' => 0,
                     ];
                     $condition = array(
                         'id' => $answer[$i]['id'],
                     );
-                    $result = $this->edit($data,$condition);
-                    if($result === false)
+                    $resultAnswer = $this->edit($data, $condition);
+                    if($resultAnswer === false)
                     {
                         $this->rollback();
                         throw new \Exception('图片url编辑失败-分离答案');
                     }
                 }
             }
-            $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']]['answer'];
-            $this->createPackage($searchArgs,$imagesUrl,$dateTime,$rand,'answer');
+
+            $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand, 'answer');
             $filenameAnswer = $filename.$dateTime.$rand.'answer';
-            $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
-            $resultUrl = $this->uploadOssPackage($filenameAnswer,$ossPATH);
+            $ossPATH="YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
+            $resultUrl = $this->uploadOssPackage($filenameAnswer, $ossPATH);
             $answerUrl = $resultUrl['info']['url'];
             $data = [
                 'answer_url' => $answerUrl,
             ];
-            $result = $vipYoudaoExamined->edit($data,['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $result = $this->youdaoDataHandle($searchArgs,$filename,$questionUrl,$answerUrl);
-            $result = json_decode($result,true);
+            $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
             $data = [
-                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
-            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
+            $vipYoudaoExamined->edit($data,['task_id' => $resultYoudao['data']['taskId']]);
 
         }
+//        $postData = array(
+//            'openId' => $result['open_id'],
+//            'type' => 2,
+//            'userId' => $result['create_uid'],
+//            'taskId' => $result['task_id'],
+//            'content' => '恭喜您，您提交的图片已审核通过',
+//        );
+//        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+//        $this->sendCurl($sendTemplateUrl,$postData);
         $this->commit();
         return true;
     }
     /**
      * 下载图片保存到本地
      */
-    public function download($url,$j,$type='')
+    public function download($url, $j, $type = '')
     {
+        $url = str_replace('https://','http://',$url);
         $path = 'ossImages/';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -301,14 +301,15 @@ class VipPaperImage extends Model
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
         $file = curl_exec($ch);
         curl_close($ch);
+        //
         //$filename = pathinfo($url, PATHINFO_BASENAME);
-
         if($type){
             $resource = fopen($path.$type.'/' . $j.'.jpg', 'a');
         }else{
-            $resource = fopen($path. $j.'.jpg', 'a');
-        }
 
+            $resource = fopen($path. $j.'.jpg', 'a');
+
+        }
         fwrite($resource, $file);
         fclose($resource);
     }
@@ -321,6 +322,17 @@ class VipPaperImage extends Model
             'task_id' => $searchArgs['taskId']
         ];
         $vipYoudaoExamined = new VipYoudaoExamined();
+        $province = new Province();
+        $provinces = $province->getProvince();//获取省份
+        $provinceIds = [];
+        $provinceIdNames = [];
+        foreach ($provinces as $v) {
+            $provinceIds[] = $v['id'];
+            $provinceIdNames[$v['id']] = $v['city'];
+        }
+        $city = new City();
+        $citys = $city->getIdCountrys($provinceIds);
+        $countrys = $city->getIdAreas($provinceIds);
         $result = $vipYoudaoExamined->findOne($condition, $order=[], ['agency_id']);
         $agencyId = $result['agency_id'];
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
@@ -332,25 +344,34 @@ class VipPaperImage extends Model
             $str = $common->stringTransformation($subjectName);
         }
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
-        $province = isset($searchArgs['province']) ? $searchArgs['province'] : '';
-        $city = isset($searchArgs['city']) ? $searchArgs['city'] : '';
+        $province = isset($searchArgs['province']) ? $searchArgs['province'] : 0;
+        if($searchArgs['city']){
+            $city = isset($searchArgs['city']) ? explode('-',$searchArgs['city'])[1] : '';
+        }else{
+            $city = 0;
+        }
         $country = isset($searchArgs['country']) ? $searchArgs['country'] : '';
+        $countryName = isset($countrys[$country]) ? $countrys[$country] : '';
         $school = isset($searchArgs['school']) ? $searchArgs['school'] : '';
-        $year = isset($searchArgs['yeer']) ? $searchArgs['yeer'] : 0;
-        $semester = isset($searchArgs['semester']) ? $searchArgs['semester'] : '';
+        $year = isset($searchArgs['year']) ? $searchArgs['year'] : 0;
+        $semester = isset($searchArgs['term']) ? $searchArgs['term'] : '';
         $source = isset($searchArgs['source']) ? $searchArgs['source'] : '';
         $duration = isset($searchArgs['duration']) ? $searchArgs['duration'] : 0;
         $score = isset($searchArgs['score']) ? $searchArgs['score'] : 0;
         $questionNumber = isset($searchArgs['questionNumber']) ? $searchArgs['questionNumber'] : 0;
         $other1 = isset($searchArgs['other1']) ? $searchArgs['other1'] : '';
         $other2 = isset($searchArgs['other2']) ? $searchArgs['other2'] : '';
-        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$province.'-'.$city.'-'.$country.'-'.$school.'-'.$grade.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+        $gradeName = config('app.GRADE_VALUE');
+        $gradeValue = isset($gradeName[$grade]) ? $gradeName[$grade] : 0;
+        $cityValue = isset($citys[$city]) ? $citys[$city] : 0;
+        $provinceValue = isset($provinceIdNames[$province]) ? $provinceIdNames[$province] : 0;
+        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$provinceValue.'-'.$cityValue.'-'.$countryName.'-'.$school.'-'.$gradeValue.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
         return $paperName;
     }
     /**
      * 生成压缩包
      */
-    public function createPackage($searchArgs,$imagesUrl,$dateTime,$rand,$type='')
+    public function createPackage($searchArgs, $imagesUrl, $dateTime, $rand, $type = '')
     {
         $j = 1;
         foreach ($imagesUrl as $url) {
@@ -368,7 +389,6 @@ class VipPaperImage extends Model
         }else{
             $filename = $this->createFileName($searchArgs).$dateTime.$rand.'.zip';
         }
-
         if ($zip->open($filename,\ZipArchive::OVERWRITE|\ZipArchive::CREATE) === TRUE) { //然后查看是否存在test.zip这个压缩包
             $count = count($imagesUrl);
             for($i=1;$i<=$count;$i++){
@@ -380,6 +400,7 @@ class VipPaperImage extends Model
                         $zip->addFile('ossImages/'.$type.'/'.'0'.$i.'.jpg');
                     }
                 }else{
+
                     if($i<10){
                         $zip->addFile('ossImages/'.'00'.$i.'.jpg');
                     }
@@ -397,7 +418,7 @@ class VipPaperImage extends Model
     /**
      * 上传压缩包oss
      */
-    public function uploadOssPackage($filename,$ossPATH)
+    public function uploadOssPackage($filename, $ossPATH)
     {
         $bucketName = config('app.OFFICE_DOCUMENT_BUCKET');
         $localImageUrl = config('app.LOCAL_IMAGE_URL');
@@ -409,7 +430,7 @@ class VipPaperImage extends Model
     /**
      * 调用有道数据处理
      */
-    public function youdaoDataHandle($searchArgs,$filename,$questionUrl,$answerUrl='')
+    public function youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl = '')
     {
         $gradeName = config('app.GRADE_NAME');
         $url = config('app.YOUDAO_DELIVER_TASK');
@@ -429,4 +450,18 @@ class VipPaperImage extends Model
         return $youdaoService->getYoudaoTask($url,$postData);
 
     }
+
+    /**
+     * 发送模板消息
+     */
+    public function sendCurl($url,$post_data){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);// post数据
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);// post的变量
+        $buf = curl_exec($ch);
+        curl_close($ch);
+    }
+
 }

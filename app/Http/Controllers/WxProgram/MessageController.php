@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\WxProgram;
 
-use App\Clients\KlibTeacherClient;
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
 use App\Services\UserService;
 use App\Services\WxService;
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -26,11 +24,27 @@ class MessageController extends Controller
             $searchArgs['pageSize']=$request->input('pageSize');
             //获取用户信息
             $userInfo=UserService::getUserInfo($searchArgs['token']);
+            //查询所有用户已读消息记录
+            $vipMessageViewLogModel=new VipMessageViewLog();
+            $messageViewList=$vipMessageViewLogModel->findAll();
+            $messageReadIds=[];
+            foreach($messageViewList as $key => $val)
+            {
+                $messageReadIds[]=$val['message_id'];
+            }
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
-            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId']],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageReadIds]],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+
             foreach($list['data'] as $key => $val)
             {
+                if(in_array($val['id'],$messageReadIds))
+                {
+                    $val['message_read_status']=1;
+                }else
+                {
+                    $val['message_read_status']=0;
+                }
                 $val['message_content']=htmlspecialchars_decode($val['message_content']);
                 $val['addtime']=formatDateTime($val['addtime']);
                 $list['data'][$key]=$val;
@@ -66,7 +80,7 @@ class MessageController extends Controller
             }
             //统计当前用户下
             $vipMessageRemindModel=new VipMessageRemind();
-            $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds]]);
+            $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds],'uid'=>$userInfo['userId']]);
             return response()->json(['status'=>200,'data'=>['count'=>$messageCount]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);

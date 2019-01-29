@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         E421083458\Wxxcx\WxxcxServiceProvider::class,
         SwooleTW\Http\LaravelServiceProvider::class,
-//        Overtrue\LaravelWechat\ServiceProvider::class,
+        Overtrue\LaravelWechat\ServiceProvider::class,
     ],
 
     /*
@@ -281,7 +281,7 @@ return [
         '3' => '高中',
     ],
     'YOUDAO_DELIVER_TASK'=>'/api/gaosi/deliverTask',
-    'LOCAL_IMAGE_URL'=>'G:/jansonyoudao/youdao/public/',
+    'LOCAL_IMAGE_URL'=>'/data/wwwroot/youdao/public/',
     'AUTO_AUDIT_DAYS'=>9,//套卷超过9个工作日自动审核通过
     'YOUDAO_COMPLETE_URL'=>'/api/gaosi/complete',
     'UPLOAD_PHP_URL'=>'http://ksrc2.gaosiedu.com/upload_yd.php',
@@ -340,5 +340,20 @@ return [
                 'gradeName'=>'高三'
             ]
         ]
-    ]
+    ],
+    'GRADE_VALUE'=> [
+        '1' => '一年级',
+        '2' => '二年级',
+        '3' => '三年级',
+        '4' => '四年级',
+        '5' => '五年级',
+        '6' => '六年级',
+        '7' => '初一',
+        '8' => '初二',
+        '9' => '初三',
+        '10' => '高一',
+        '11' => '高二',
+        '12' => '高三',
+    ],
+    'YOUDAO_SEND_TEMPLATE'=>'/WxService/sendTemplate',
 ];

@@ -51,8 +51,19 @@ class Province extends Model
         $result = $this->findAll($condition, $order=[], ['id', 'city']);
         $list = [];
         foreach ($result as $v){
-            $list[] = $v['city'];
+            $list[$v['id']] = $v['city'];
         }
         return $list;
+    }
+
+    /**
+     * 通过省名获取信息
+     * @param $cityName
+     * @return mixed
+     */
+    public function getProvinceName($cityName)
+    {
+        $result=$this->findOne(['city'=>$cityName]);
+        return $result;
     }
 }

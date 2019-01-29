@@ -4,6 +4,8 @@ namespace App\Http\Controllers\WxProgram;
 
 use App\Clients\KlibAgencyClient;
 use App\Clients\KlibTeacherClient;
+use App\Models\CrmProvince;
+use App\Models\Province;
 use App\Models\VipYoudaoUserLoginLog;
 use App\Services\WxService;
 use Illuminate\Http\Request;
@@ -25,11 +27,11 @@ class UserController extends Controller
             }
             if(!isset($searchArgs['userName']))
             {
-                throw new \Exception('账号或密码错误，请重新输入');
+                throw new \Exception('账号或密码错误，请重试');
             }
             if(!isset($searchArgs['password']))
             {
-                throw new \Exception('账号或密码错误，请重新输入');
+                throw new \Exception('账号或密码错误，请重试');
             }
             if(!isset($searchArgs['agencyId']) || intval($searchArgs['agencyId']) <=0)
             {
@@ -53,6 +55,15 @@ class UserController extends Controller
             }
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
+            if($teacherInfo['isPrivateLibraryManage'] != 1)
+            {
+                throw new \Exception('请授权机构私库管理员权限');
+            }
+            //通过机构所选省份获取
+            $crmProvModel=new CrmProvince();
+            $crmProvInfo=$crmProvModel->findOne(['prov_id'=>$agencyDeatil['prov']]);
+            $provniceModel=new Province();
+            $provInfo=$provniceModel->getProvinceName($crmProvInfo['prov_name']);
             //添加用户绑定登陆记录
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
@@ -85,16 +96,22 @@ class UserController extends Controller
 
             if($result === false)
             {
-                throw new \Exception('登陆失败');
+                throw new \Exception('账号或密码错误，请重试');
             }
             return response()->json([
                 'status'=>200,
                 'data'=>[
                     'token'=>$searchArgs['token'],                                                  //token
-                    'realName'=>$teacherInfo['realName']                                            //用户昵称
+                    'realName'=>$teacherInfo['realName'],                                           //用户昵称
+                    'provId'=>$provInfo['id'],                                                      //机构所属省id
+                    'provName'=>$provInfo['city']                                                   //机构所属省
                 ]
             ]);
         }catch (\Exception $e){
+            if($e->getMessage() == '认证失败，密码错误')
+            {
+                return response()->json(['status'=>0,'errorMsg'=>'账号或密码错误，请重试']);
+            }
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
         }
     }
@@ -136,11 +153,15 @@ class UserController extends Controller
             //调用微服务获取机构列表
             $agencyList=KlibTeacherClient::getTeaOrEmpAgencyList($searchArgs['userName'],'teacher');
             $list=[];
-            foreach($agencyList['list'] as $key => $val)
+            if(!empty($agencyList))
             {
-                $list[$key]['agencyId']=$val['agencyId'];
-                $list[$key]['agencyName']=$val['agencyName'];
+                foreach($agencyList['list'] as $key => $val)
+                {
+                    $list[$key]['agencyId']=$val['agencyId'];
+                    $list[$key]['agencyName']=$val['agencyName'];
+                }
             }
+
             return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);

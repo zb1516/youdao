@@ -235,9 +235,10 @@ html, body {
       .pic-review1 .tab-con-wrapper .search-form .input-box {
         position: relative;
         float: left;
-        min-height: 36px; }
+        min-height: 36px;
+        max-width: 200px;}
         .pic-review1 .tab-con-wrapper .search-form .input-box .input {
-          width: 200px;
+          width: 220px;
           height: 36px;
           line-height: 36px;
           padding: 0 4px;
@@ -486,6 +487,12 @@ html, body {
       font-size: 26px;
       vertical-align: middle;
       cursor: pointer; }
+.pic-review1.review3 .reviw-info-wrapper .r-option .r-error-msg {
+  width: 100px;
+  vertical-align: middle;
+  display: inline-block;
+  text-align: left;
+}
       .pic-review1.review3 .reviw-info-wrapper .r-option .checkbox::before {
         content: '\e641'; }
     .pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select {
@@ -557,10 +564,8 @@ html, body {
 .fancybox-control {
   position: absolute;
   bottom: 40px;
-  left: 50%;
+  left: 38%;
   height: 80px;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
   padding: 0 78px;
   border-radius: 40px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -568,7 +573,6 @@ html, body {
   font-size: 30px;
   line-height: 80px;
   white-space: nowrap; }
-
 .fancybox-title {
   position: static;
   font: 30px/80px Arial;

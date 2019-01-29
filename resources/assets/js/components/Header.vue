@@ -6,12 +6,13 @@
                 <p class="picture">
                     <a href="#"><img src="../static/images/user_picture.jpg" alt="詹志明"></a>
                 </p>
-                <span class="name"><a href="#">詹志明<span class="icon"></span></a></span>
+                <span class="name"><a href="#">{{user.user_realname}}<span class="icon"></span></a></span>
             </div>
             <div class="nav">
                 <ul class="list">
                     <li class="nav-box current">
-                        <a href="reviewPicList.html">图片审核</a>
+                        <!--<a href="reviewPicList.html">图片审核</a>-->
+                        <router-link  :to="{name:'imagePaper-imagePaperList',params:{userKey:userKey}}" class="back-btn">图片审核</router-link>
                     </li>
                     <li class="nav-box">
                         <a href="reviewPaperList.html">试卷审核</a>
