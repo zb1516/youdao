@@ -144,11 +144,15 @@ class UserController extends Controller
             //调用微服务获取机构列表
             $agencyList=KlibTeacherClient::getTeaOrEmpAgencyList($searchArgs['userName'],'teacher');
             $list=[];
-            foreach($agencyList['list'] as $key => $val)
+            if(!empty($agencyList))
             {
-                $list[$key]['agencyId']=$val['agencyId'];
-                $list[$key]['agencyName']=$val['agencyName'];
+                foreach($agencyList['list'] as $key => $val)
+                {
+                    $list[$key]['agencyId']=$val['agencyId'];
+                    $list[$key]['agencyName']=$val['agencyName'];
+                }
             }
+
             return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
