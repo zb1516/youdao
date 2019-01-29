@@ -18,7 +18,7 @@ class KmsSubjects extends Model
             $vpUserSubjects = new VpUserSubjects();
             $eapSubjectIds = $vpUserSubjects->getUserSubjectIds($userKey);
             if (false == $eapSubjectIds) {
-                return json_encode([]);
+                return [];
             }
             $condition['eap_subject_id'] = array('in' => $eapSubjectIds);
         } else {
