@@ -74,7 +74,7 @@ class PaperController extends BaseController
      */
     public function paperInfo(Request $request){
         try{
-            $taskId = abs($request->taskId);
+            $taskId = trim($request->taskId);
             if($taskId){
                 $paperInfo = $this->getPaperInfo($taskId);
                 return response()->json($paperInfo);
@@ -293,11 +293,40 @@ class PaperController extends BaseController
     public function paperExaminedOne(Request $request){
         try{
             $taskId = $request->post('taskId',0);
+            $errorStr = trim($request->post('errorStr',''), '\'');
+            $errorData = [];
+            if($errorStr){
+                $errorArr = explode(',', $errorStr);
+                foreach ($errorArr as $key=>$error){
+                    $temp = explode('_', $error);
+                    $errorData[$temp[1]]['number'] = $temp[1];
+                    $errorData[$temp[1]][$temp[0]][] = $temp[2];
+                }
+                foreach ($errorData as $key=>$error){
+                    if(isset($errorData[$key]['content'])){
+                        $errorData[$key]['content'] = implode(',', $error['content']);
+                    }else{
+                        $errorData[$key]['content'] = '';
+                    }
+                    if(isset($errorData[$key]['answer'])){
+                        $errorData[$key]['answer'] = implode(',', $error['answer']);
+                    }else{
+                        $errorData[$key]['answer'] = '';
+                    }
+                    if(isset($errorData[$key]['analysis'])){
+                        $errorData[$key]['analysis'] = implode(',', $error['answer']);
+                    }else{
+                        $errorData[$key]['analysis'] = '';
+                    }
+                }
+            }
 
-            /**
-             * todo:组装提交数据
-             */
             $data = array(
+                'task_id'=>$taskId,
+                'list'=>$errorData
+            );
+
+            /*$data = array(
                 'task_id'=>$taskId,
                 'list'=>array(
                     array(
@@ -313,7 +342,7 @@ class PaperController extends BaseController
                         'analysis'=>'解析错误'
                     ),
                 )
-            );
+            );*/
             $request->session()->put($taskId,$data);
             $status = 1;
             return response()->json(['status' => $status]);

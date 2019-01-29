@@ -1,3 +1,7 @@
+<style media="screen">
+    .fancybox-overlay{ z-index: 8 }
+    .fancybox-opened{ z-index: 9 }
+</style>
 <template>
     <div class="main">
       <div class="pic-review1 review2 paper-review1">
@@ -46,27 +50,27 @@
                       <div class="q-operational">
                         <div class="q-o-con">
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干不完整'"></span>
                             <span>题干不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案不完整'" ></span>
                             <span>答案不完整</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析不完整'" ></span>
                             <span>解析不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干错误'" ></span>
                             <span>题干错误</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_错误答案'"></span>
                             <span>错误答案</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" @click="doCheck(index)" :class="{ 'select': index === selected }"></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析错误'"></span>
                             <span>解析错误</span>
                           </span>
                         </div>
@@ -100,7 +104,7 @@
                     paperInfo:'',
                     questions:'',
                     selected:'',
-                    errorStr:'',
+                    errorArr:[],
                 }
             },
             computed: {
@@ -119,16 +123,17 @@
                 that.taskId = this.$route.params.taskId;
                 common.init();
                 that.doGetPaperInfo();
-
+                that.doSelected();
             },
             watch:{
 
             },
             methods:{
-                doCheck(index){
-                    alert(index);
-                    this.selected = index;
-                    //$(this).hasClass('select') ? $(this).removeClass('select') : $(this).addClass('select');
+                doSelected(){
+                    $(document).on('click','.js-checkbox',function(){
+                        //alert($(this).attr('title'));
+                        $(this).hasClass('select') ? $(this).removeClass('select') : $(this).addClass('select');
+                    })
                 },
 
                 doGetPaperInfo(){
@@ -139,7 +144,8 @@
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                that.$message.error(data.data.errorMsg);
+                                alert(data.data.errorMsg);
+                                //that.$message.error(data.data.errorMsg);
                             } else {
                                 that.paperInfo =  data.data;
                                 that.questions = that.paperInfo.youdao_info.questions;
@@ -153,8 +159,14 @@
 
                 doPaperExaminedOne(){
                     var that = this;
-                    that.errorStr = '';//题目问题
-                    axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorStr+"'").then(function(data){
+                    that.errorArr = [];
+                    $(".js-checkbox").each(function(){
+                        if($(this).hasClass('select')){
+                            that.errorArr.push($(this).attr('title'));
+                        }
+                    });
+
+                    axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorArr+"'").then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
                                 alert(data.data.errorMsg);

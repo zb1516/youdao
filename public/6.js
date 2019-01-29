@@ -5,9 +5,9 @@ webpackJsonp([6],Array(86).concat([
 var disposed = false
 var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(254)
+var __vue_script__ = __webpack_require__(249)
 /* template */
-var __vue_template__ = __webpack_require__(247)
+var __vue_template__ = __webpack_require__(250)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -31375,7 +31375,102 @@ function initSelectBox() {
 /* 244 */,
 /* 245 */,
 /* 246 */,
-/* 247 */
+/* 247 */,
+/* 248 */,
+/* 249 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(206);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__ = __webpack_require__(203);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js__ = __webpack_require__(205);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(8);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            taskId: 0,
+            status: '',
+            timeCount: 3,
+            error: 0
+        };
+    },
+
+    computed: _extends({}, __WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapGetters */]({
+        userKey: 'getUserKey'
+    })),
+    mounted: function mounted() {
+        var that = this;
+        that.taskId = this.$route.params.taskId;
+        that.status = this.$route.params.status;
+        that.error = this.$route.params.error;
+        that.returnList();
+    },
+
+    watch: {},
+    methods: {
+        returnList: function returnList() {
+            var that = this;
+            var time = 3;
+            setInterval(function () {
+                time--;
+                $(".js-time-num").html(time);
+                if (time == 0) {
+                    that.$router.push({
+                        name: 'paper-paperList',
+                        params: { userKey: that.userKey }
+                    });
+                }
+            }, 1000);
+        }
+    }
+});
+
+/***/ }),
+/* 250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -31538,105 +31633,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-62d4832e", module.exports)
   }
 }
-
-/***/ }),
-/* 248 */,
-/* 249 */,
-/* 250 */,
-/* 251 */,
-/* 252 */,
-/* 253 */,
-/* 254 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__ = __webpack_require__(206);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_jquery_1_12_2_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__ = __webpack_require__(203);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__static_js_jquery_common_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vuex__ = __webpack_require__(8);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            taskId: 0,
-            status: '',
-            timeCount: 3,
-            error: 0
-        };
-    },
-
-    computed: _extends({}, __WEBPACK_IMPORTED_MODULE_3_vuex__["b" /* mapGetters */]({
-        userKey: 'getUserKey'
-    })),
-    mounted: function mounted() {
-        var that = this;
-        that.taskId = this.$route.params.taskId;
-        that.status = this.$route.params.status;
-        that.error = this.$route.params.error;
-        that.returnList();
-    },
-
-    watch: {},
-    methods: {
-        returnList: function returnList() {
-            var that = this;
-            var time = 3;
-            setInterval(function () {
-                time--;
-                $(".js-time-num").html(time);
-                if (time == 0) {
-                    that.$router.push({
-                        name: 'paper-paperList',
-                        params: { userKey: that.userKey }
-                    });
-                }
-            }, 1000);
-        }
-    }
-});
 
 /***/ })
 ]));

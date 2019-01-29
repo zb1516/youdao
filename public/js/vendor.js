@@ -1,6 +1,6 @@
 webpackJsonp([8],{
 
-/***/ 11:
+/***/ 12:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -480,7 +480,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(12)))
 
 /***/ }),
 
