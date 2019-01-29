@@ -35978,7 +35978,7 @@ var routes = [{
             title: '搜索排重'
         }
     }, {
-        path: 'imageExamined/:userKey/:taskId',
+        path: 'imageExamined/:userKey/:taskId/:paperType/:allType',
         name: 'imagePaper-imagePaperList-imageExamined',
         component: function component(resolve) {
             return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(85)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);

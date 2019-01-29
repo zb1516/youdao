@@ -30,7 +30,7 @@ const routes = [
                 }
             },
             {
-                path:'imageExamined/:userKey/:taskId',
+                path:'imageExamined/:userKey/:taskId/:paperType/:allType',
                 name:'imagePaper-imagePaperList-imageExamined',
                 component:resolve => require(['./page/imagePaper/imageExamined'], resolve),
                 meta:{

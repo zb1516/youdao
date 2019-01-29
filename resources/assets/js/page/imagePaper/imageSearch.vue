@@ -245,7 +245,7 @@
                 var that = this;
                 that.$router.push({
                     name: 'imagePaper-imagePaperList-imageExamined',
-                    params:{userKey:that.userKey,taskId:that.taskId}
+                    params:{userKey:that.userKey,taskId:that.taskId,paperType:that.paperType,allType:1}
                 });
                 that.$nextTick(function() {
                     $('.main').selectpicker('refresh');
