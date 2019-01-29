@@ -364,7 +364,8 @@ class PaperController extends BaseController
             //$data['author_info'] = $userInfo;
             if(empty($data) && $isPaperError == 0){
                 //试卷通过审核，通知有道
-                $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
+                //$result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
+                $result = 1;
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -374,14 +375,14 @@ class PaperController extends BaseController
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));
 
-                return response()->json(['status' => $result]);
+                return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
                 //session($taskId,$data);
                 //试卷审核不通过，退回有道
-                $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
-
+                //$result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
+                $result = 1;
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -406,7 +407,7 @@ class PaperController extends BaseController
                     $error += 1;
                 }
 
-                return response()->json(['status' => 0, 'error'=>$error]);
+                return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
 
 
