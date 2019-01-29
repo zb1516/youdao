@@ -431,17 +431,17 @@
                     });
                 }
 
-                //location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
-                // axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
-                //     if (data.data.errorMsg) {
-                //         that.$message.error(data.data.errorMsg);
-                //     } else {
-                //         that.$nextTick(function () {
-                //             console.log(data.data);
-                //             //that.jsPage();
-                //         });
-                //     }
-                // })
+                location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
+                axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.$nextTick(function () {
+                            console.log(data.data);
+                            //that.jsPage();
+                        });
+                    }
+                })
             },
             imagePaperDetail(){
                 var that = this;

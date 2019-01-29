@@ -158,7 +158,7 @@ class VipPaperImage extends Model
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand);
             $filenameAll = $filename.$dateTime.$rand;
-            $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
+            $ossPATH="YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filenameAll, $ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
@@ -207,7 +207,7 @@ class VipPaperImage extends Model
             }
             $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand, 'question');
             $filenameQuestion = $filename.$dateTime.$rand.'question';
-            $ossPATH = "YOUDAO_V1/".$searchArgs['taskId']."/";
+            $ossPATH = "YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filenameQuestion, $ossPATH);
             $questionUrl = $resultUrl['info']['url'];
             $data = [
@@ -246,7 +246,7 @@ class VipPaperImage extends Model
 
             $this->createPackage($searchArgs, $imagesUrl, $dateTime, $rand, 'answer');
             $filenameAnswer = $filename.$dateTime.$rand.'answer';
-            $ossPATH="YOUDAO_V1/".$searchArgs['taskId']."/";
+            $ossPATH="YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filenameAnswer, $ossPATH);
             $answerUrl = $resultUrl['info']['url'];
             $data = [
