@@ -55,13 +55,20 @@ class CommonController extends BaseController
     //获取用户学科信息
     public function getSubjects()
     {
-
-        $subjects = $this->kmsSubjects->getSubjects($this->userKey);
-        $subjectNames = [];
-        if ($subjects) {
-            $subjectNames = $this->kmsSubjects->getGradeSubjectNames($subjects);//年级学科名称
+        try {
+            $subjects = $this->kmsSubjects->getSubjects($this->userKey);
+            $subjectNames = [];
+            if(!$subjects)
+            {
+                throw new \Exception('该教师下没有学科');
+            }
+            if ($subjects) {
+                $subjectNames = $this->kmsSubjects->getGradeSubjectNames($subjects);//年级学科名称
+            }
+            return response()->json($subjectNames);
+        } catch (\Exception $e) {
+            return response()->json(['errorMsg' => $e->getMessage()]);
         }
-        return response()->json($subjectNames);
 
     }
 

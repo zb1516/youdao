@@ -37,24 +37,29 @@ class KmsSubjects extends Model
     public function getGradeSubjectNames($subjects)
     {
         $subjectList = [];
-        foreach ($subjects as $subject) {
-            $subjectName = str_replace('部', '', $subject['grade_name']) . $subject['title'];
-            $subjectList[] = [
-                'subjectId' => $subject['id'],
-                'subjectName' => $subjectName,
-            ];
+        if($subjects){
+            foreach ($subjects as $subject) {
+                $subjectName = str_replace('部', '', $subject['grade_name']) . $subject['title'];
+                $subjectList[] = [
+                    'subjectId' => $subject['id'],
+                    'subjectName' => $subjectName,
+                ];
+            }
         }
+
         $sort = array(
             'field' => 'subjectId',       //排序字段
         );
         $arrSort = array();
-        foreach ($subjectList AS $uniqid => $row) {
-            foreach ($row AS $key => $value) {
-                $arrSort[$key][$uniqid] = $value;
+        if($subjectList){
+            foreach ($subjectList AS $uniqid => $row) {
+                foreach ($row AS $key => $value) {
+                    $arrSort[$key][$uniqid] = $value;
+                }
             }
-        }
-        if ($subjectList) {
-            array_multisort($arrSort[$sort['field']], SORT_ASC, $subjectList);
+            if ($subjectList) {
+                array_multisort($arrSort[$sort['field']], SORT_ASC, $subjectList);
+            }
         }
         return $subjectList;
     }
