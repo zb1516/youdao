@@ -4,6 +4,8 @@ namespace App\Http\Controllers\WxProgram;
 
 use App\Clients\KlibAgencyClient;
 use App\Clients\KlibTeacherClient;
+use App\Models\CrmProvince;
+use App\Models\Province;
 use App\Models\VipYoudaoUserLoginLog;
 use App\Services\WxService;
 use Illuminate\Http\Request;
@@ -57,6 +59,11 @@ class UserController extends Controller
             {
                 throw new \Exception('请授权机构私库管理员权限');
             }
+            //通过机构所选省份获取
+            $crmProvModel=new CrmProvince();
+            $crmProvInfo=$crmProvModel->findOne(['prov_id'=>$agencyDeatil['prov']]);
+            $provniceModel=new Province();
+            $provInfo=$provniceModel->getProvinceName($crmProvInfo['prov_name']);
             //添加用户绑定登陆记录
             $vipYoudaoUserLoginLogModel=new VipYoudaoUserLoginLog();
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
@@ -95,7 +102,9 @@ class UserController extends Controller
                 'status'=>200,
                 'data'=>[
                     'token'=>$searchArgs['token'],                                                  //token
-                    'realName'=>$teacherInfo['realName']                                            //用户昵称
+                    'realName'=>$teacherInfo['realName'],                                           //用户昵称
+                    'provId'=>$provInfo['id'],                                                      //机构所属省id
+                    'provName'=>$provInfo['city']                                                   //机构所属省
                 ]
             ]);
         }catch (\Exception $e){

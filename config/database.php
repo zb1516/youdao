@@ -54,6 +54,16 @@ return [
             'strict' =>false,
             'engine' => null
         ],
+        'mysql_crm' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST_CRM'),
+            'port' => env('DB_PORT_CRM'),
+            'database' => env('DB_DATABASE_CRM'),
+            'username' => env('DB_USERNAME_CRM'),
+            'password' => env('DB_PASSWORD_CRM'),
+            'charset' => 'utf8',
+            'prefix' => '',
+        ],
         'mysql_enroll' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST_ENROLL'),
@@ -106,7 +116,6 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
         ],
-
     ],
 
     /*

@@ -76,7 +76,9 @@ class KlibTeacherClient
                 'pageSize'=>20
             ]);
             return $result;
-        }catch (\Exception $e){}
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**

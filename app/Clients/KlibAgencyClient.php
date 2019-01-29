@@ -15,6 +15,5 @@ class KlibAgencyClient
         }catch (\Exception $e){
             throw new \Exception($e->getMessage());
         }
-
     }
 }
