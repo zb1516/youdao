@@ -340,7 +340,7 @@ class paperController extends Controller
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url  from vip_paper_image where is_delete = 0 and vip_paper_image.task_id=vip_youdao_examined.task_id group by task_id order by id desc) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url from (select *  from vip_paper_image order by vip_paper_image.id desc) as paperImage where is_delete = 0 and paperImage.task_id=vip_youdao_examined.task_id  group by task_id ) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
