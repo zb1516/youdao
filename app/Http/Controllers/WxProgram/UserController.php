@@ -51,13 +51,13 @@ class UserController extends Controller
             //判断机构私库是否开通，如未开通，不让登陆
             if($agencyDeatil['questions_library_status'] != 3)
             {
-                throw new \Exception('请到元校管授权私库上传试卷权限');
+                throw new \Exception('请开通机构私库后登陆');
             }
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
             if($teacherInfo['isPrivateLibraryManage'] != 1)
             {
-                throw new \Exception('请授权机构私库管理员权限');
+                throw new \Exception('请到元校管授权私库上传试卷权限');
             }
             //通过机构所选省份获取
             $crmProvModel=new CrmProvince();
