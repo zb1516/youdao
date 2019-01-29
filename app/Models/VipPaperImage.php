@@ -70,16 +70,16 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
             ];
-            $result = $vipYoudaoExamined->edit($data, $condition);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('图片退回失败');
             }
         }
-        $result = $this->findAll($condition);
+        $resultAll = $this->findAll($condition);
         //第三方Oss的东西
-        if($result){
+        if($resultAll){
             $data = [
                 'is_delete' => 1,
             ];
@@ -90,6 +90,15 @@ class VipPaperImage extends Model
                 throw new \Exception('图片详情退回失败');
             }
         }
+        $postData = array(
+            'openId' => $result['open_id'],
+            'type' => 1,
+            'userId' => $result['create_uid'],
+            'taskId' => $taskId,
+            'content' => $imageErrorType,
+        );
+        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+        $this->sendCurl($sendTemplateUrl,$postData);
         $this->commit();
         return true;
     }
@@ -120,8 +129,8 @@ class VipPaperImage extends Model
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
             ];
-            $result = $vipYoudaoExamined->edit($data, $condition);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('图片退回失败');
@@ -134,9 +143,9 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 3,
             );
-            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $resultAll = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
             $count = count($result);
-            if($result){
+            if($resultAll){
                 for($i=0;$i<$count;$i++){
                     $data = [
                         'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']][$i],
@@ -165,19 +174,19 @@ class VipPaperImage extends Model
                 'question_url' => $questionUrl,
                 'answer_url' => '',
             ];
-            $result = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $result = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
-            $result = json_decode($result,true);
+            $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
             $data = [
-                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
-            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
+            $vipYoudaoExamined->edit($data,['task_id' => $resultYoudao['data']['taskId']]);
         }else{
             //第三方oss调用
             $condition = array(
@@ -213,8 +222,8 @@ class VipPaperImage extends Model
             $data = [
                 'question_url' => $questionUrl,
             ];
-            $result = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
@@ -252,21 +261,30 @@ class VipPaperImage extends Model
             $data = [
                 'answer_url' => $answerUrl,
             ];
-            $result = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, ['task_id' => $searchArgs['taskId']]);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
             //调用有道接口
-            $result = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
-            $result = json_decode($result,true);
+            $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
             $data = [
-                'first_youdao_receive_time' => $result['data']['youdaoReceiveTime']
+                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
-            $vipYoudaoExamined->edit($data,['task_id' => $result['data']['taskId']]);
+            $vipYoudaoExamined->edit($data,['task_id' => $resultYoudao['data']['taskId']]);
 
         }
+//        $postData = array(
+//            'openId' => $result['open_id'],
+//            'type' => 2,
+//            'userId' => $result['create_uid'],
+//            'taskId' => $result['task_id'],
+//            'content' => '恭喜您，您提交的图片已审核通过',
+//        );
+//        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+//        $this->sendCurl($sendTemplateUrl,$postData);
         $this->commit();
         return true;
     }
@@ -433,5 +451,17 @@ class VipPaperImage extends Model
 
     }
 
+    /**
+     * 发送模板消息
+     */
+    public function sendCurl($url,$post_data){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);// post数据
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);// post的变量
+        $buf = curl_exec($ch);
+        curl_close($ch);
+    }
 
 }
