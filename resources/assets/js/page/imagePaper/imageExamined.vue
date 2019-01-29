@@ -3,7 +3,7 @@
         <div class="pic-review1 review3">
             <div class="nav-wrapper">
                 <!--<a href="" class="back-btn">返回</a>-->
-                <router-link  :to="{name:'imagePaper-imagePaperList-imageSearch',params:{userKey:userKey,taskId:taskId,allType:1}}" class="back-btn">返回</router-link>
+                <router-link  :to="{name:'imagePaper-imagePaperList-imageSearch',params:{userKey:userKey,paperType:paperType,taskId:taskId,allType:1}}" class="back-btn">返回</router-link>
                 <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">贴标签</span></span>
@@ -61,7 +61,8 @@
         data(){
             return {
                 isType:0,
-                taskId:''
+                taskId:'',
+                paperType:''
             }
         },
         computed: {
@@ -78,6 +79,7 @@
         mounted(){
             var that = this;
             that.taskId = this.$route.params.taskId;
+            that.paperType = this.$route.params.paperType;
             that.doSelect();
 
             common.init();

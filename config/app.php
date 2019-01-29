@@ -355,4 +355,5 @@ return [
         '11' => '高二',
         '12' => '高三',
     ],
+    'YOUDAO_SEND_TEMPLATE'=>'/WxService/sendTemplate',
 ];
