@@ -620,7 +620,7 @@ var normalizeComponent = __webpack_require__(4)
 /* script */
 var __vue_script__ = __webpack_require__(66)
 /* template */
-var __vue_template__ = __webpack_require__(74)
+var __vue_template__ = __webpack_require__(73)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -12589,7 +12589,7 @@ module.exports = function(module) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(22);
-module.exports = __webpack_require__(80);
+module.exports = __webpack_require__(79);
 
 
 /***/ }),
@@ -12605,12 +12605,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_jquery__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vuex_store__ = __webpack_require__(50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__imagePaper__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__paper__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__paper__ = __webpack_require__(75);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__http__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__error__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__error__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_vue_multiple_message__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__statistic__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__statistic__ = __webpack_require__(78);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
@@ -35956,7 +35956,7 @@ var routes = [{
         path: 'imagePaperList/:userKey',
         name: 'imagePaper-imagePaperList',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(83)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(82)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '图片审核'
@@ -35965,7 +35965,7 @@ var routes = [{
         path: 'imagePaperDetail/:userKey/:taskId/:paperType',
         name: 'imagePaper-imagePaperList-imagePaperDetail',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(5).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(84)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(5).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(83)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '贴标签'
@@ -35974,7 +35974,7 @@ var routes = [{
         path: 'imageSearch/:userKey/:taskId/:paperType/:allType',
         name: 'imagePaper-imagePaperList-imageSearch',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(4).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(85)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(4).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(84)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '搜索排重'
@@ -35983,7 +35983,7 @@ var routes = [{
         path: 'imageExamined/:userKey/:taskId/:paperType/:allType',
         name: 'imagePaper-imagePaperList-imageExamined',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(7).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(86)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(7).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(85)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '审核图片'
@@ -35992,7 +35992,7 @@ var routes = [{
         path: 'imageResult/:userKey/:imageStatus',
         name: 'imagePaper-imagePaperList-imageResult',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(87)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(6).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(86)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '完成审核'
@@ -36038,7 +36038,7 @@ exports.i(__webpack_require__(58), "");
 exports.i(__webpack_require__(59), "");
 
 // module
-exports.push([module.i, "\n@charset \"UTF-8\";\nhtml, body {\r\n  background-color: #f2f2f2;\n}\r\n\r\n/* 图片审核 */\n.pic-list-wrapper {\r\n  margin-top: 10px;\n}\n.pic-list-wrapper .pic-number-wrapper {\r\n    height: 65px;\r\n    padding: 24px 20px 0 41px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\r\n    border-bottom: 1px solid #f2f2f2;\r\n    color: #999999;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n {\r\n      display: inline-block;\r\n      position: relative;\r\n      margin-right: 54px;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .num {\r\n        display: inline-block;\r\n        margin: 0 1px;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .yellow {\r\n        color: #ffcc00;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .green {\r\n        color: #67cc67;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .red {\r\n        color: #ff9999;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n::before {\r\n        position: absolute;\r\n        left: -21px;\r\n        font-size: 16px;\n}\n.pic-list-wrapper .pic-number-wrapper .sum::before {\r\n      content: '\\E646';\r\n      top: -1px;\n}\n.pic-list-wrapper .pic-number-wrapper .right::before {\r\n      content: '\\E648';\r\n      top: -1px;\r\n      font-size: 17px;\n}\n.pic-list-wrapper .pic-number-wrapper .pass::before {\r\n      content: '\\E647';\r\n      font-size: 17px;\n}\n.pic-list-wrapper .pic-number-wrapper .vertify::before {\r\n      content: '\\E64D';\r\n      top: -1px;\n}\n.pic-list-wrapper .pic-number-wrapper .like::before {\r\n      content: '\\E649';\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper {\r\n      position: relative;\r\n      float: right;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input {\r\n        width: 200px;\r\n        height: 26px;\r\n        padding-left: 5px;\r\n        border: 1px solid #eeeeee;\r\n        border-radius: 4px;\r\n        font-size: 14px;\r\n        color: #666666;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-webkit-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input:-ms-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-ms-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-ms-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-webkit-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn {\r\n        display: block;\r\n        position: absolute;\r\n        top: 50%;\r\n        right: 0;\r\n        -webkit-transform: translateY(-50%);\r\n                transform: translateY(-50%);\r\n        font-size: 19px;\r\n        color: #cccccc;\r\n        cursor: pointer;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn:hover {\r\n          color: #33cc66;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn::before {\r\n        content: '\\E64E';\n}\n.pic-list-wrapper .pic-form-wrapper {\r\n    min-height: 425px;\r\n    padding: 20px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\n}\r\n\r\n/* 表格列表 */\n.table-list a {\r\n  text-decoration: none;\n}\n.table-list .pic-form-box {\r\n  width: 100%;\r\n  font-size: 14px;\r\n  color: #999999;\n}\n.table-list table.dataTable.no-footer {\r\n  border-bottom: none;\n}\n.table-list table.dataTable thead th,\r\n.table-list table.dataTable thead td {\r\n  padding: 0;\r\n  border-bottom: 1px solid #eeeeee;\r\n  text-align: center;\n}\n.table-list thead tr {\r\n  height: 49px;\r\n  border-radius: 4px;\r\n  overflow: hidden;\n}\n.table-list table.dataTable tbody tr {\r\n  height: 58px;\n}\n.table-list table.dataTable tbody tr:hover {\r\n  background-color: #f5fcf7;\r\n  color: #111111;\n}\n.table-list table.dataTable tbody td {\r\n  line-height: 22px;\r\n  padding: 0;\r\n  text-align: center;\r\n  border-bottom: 1px solid #eeeeee;\n}\n.table-list table.dataTable tbody .dataTables_empty {\r\n  vertical-align: middle;\r\n  border-bottom: none !important;\n}\n.table-list table.dataTable tbody .status.green {\r\n  color: #33cc66;\n}\n.table-list table.dataTable tbody .status.red {\r\n  color: #ff6666;\n}\n.table-list table.dataTable tbody .color-black {\r\n  color: #111111;\n}\n.table-list table.dataTable tbody .reviewBtn {\r\n  display: block;\r\n  width: 80px;\r\n  height: 28px;\r\n  line-height: 28px;\r\n  background-color: #33cc66;\r\n  font-size: 14px;\r\n  text-align: center;\r\n  color: #ffffff;\r\n  cursor: pointer;\n}\r\n\r\n/* 图片审核-详情1 */\n.pic-review1 {\r\n  width: 100%;\n}\n.pic-review1 .nav-wrapper {\r\n    height: 65px;\r\n    padding: 16px 23px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\r\n    border-bottom: 1px solid #f2f2f2;\r\n    color: #cdcdcd;\n}\n.pic-review1 .nav-wrapper .back-btn {\r\n      display: inline-block;\r\n      position: relative;\r\n      width: 90px;\r\n      height: 32px;\r\n      line-height: 32px;\r\n      padding-left: 41px;\r\n      margin-right: 39px;\r\n      border-radius: 16px;\r\n      border: 1px solid #eeeeee;\r\n      font-size: 14px;\r\n      color: #cccccc;\n}\n.pic-review1 .nav-wrapper .back-btn::before {\r\n        display: block;\r\n        position: absolute;\r\n        top: 52%;\r\n        left: 15px;\r\n        -webkit-transform: translateY(-50%);\r\n                transform: translateY(-50%);\r\n        content: '\\E650';\r\n        font-size: 16px;\r\n        cursor: pointer;\n}\n.pic-review1 .nav-wrapper .tab {\r\n      position: relative;\r\n      margin-right: 69px;\n}\n.pic-review1 .nav-wrapper .tab::after {\r\n        display: block;\r\n        position: absolute;\r\n        top: -4px;\r\n        right: -42px;\r\n        content: '\\E63E';\r\n        font-size: 22px;\n}\n.pic-review1 .nav-wrapper .tab.select .circle, .pic-review1 .nav-wrapper .nav-select .circle {\r\n      background-color: #33cc66;\n}\n.pic-review1 .nav-wrapper .tab.select .tab-text, .pic-review1 .nav-wrapper .nav-select .tab-text {\r\n      color: #33cc66;\n}\n.pic-review1 .nav-wrapper .tab-text {\r\n      color: #666666;\n}\n.pic-review1 .nav-wrapper .circle {\r\n      display: inline-block;\r\n      width: 18px;\r\n      height: 18px;\r\n      line-height: 18px;\r\n      margin-right: 6px;\r\n      border-radius: 50%;\r\n      background-color: #c7c7c7;\r\n      font-size: 14px;\r\n      color: #ffffff;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper {\r\n    padding-top: 40px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\n}\n.pic-review1 .tab-con-wrapper .title {\r\n      margin-bottom: 20px;\r\n      font-size: 18px;\r\n      color: #111111;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper .title2 {\r\n      margin-top: 40px;\r\n      font-size: 18px;\r\n      color: #111111;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper .search-form {\r\n      width: 870px;\r\n      margin: 0 auto;\r\n      padding-bottom: 44px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper {\r\n        float: left;\r\n        margin: 10px 67px 0 0;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper.mr-none {\r\n        margin-right: 0;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper.mr2 {\r\n        margin-right: 39px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name {\r\n        position: relative;\r\n        float: left;\r\n        line-height: 36px;\r\n        margin-right: 5px;\r\n        color: #999999;\r\n        text-align: right;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.required::before {\r\n        position: absolute;\r\n        content: '*';\r\n        top: 2px;\r\n        left: -10px;\r\n        color: red;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w1 {\r\n        min-width: 28px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w2 {\r\n        min-width: 55px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w3 {\r\n        min-width: 65px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box {\r\n        position: relative;\r\n        float: left;\r\n        min-height: 36px;\r\n        max-width: 200px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input {\r\n          width: 220px;\r\n          height: 36px;\r\n          line-height: 36px;\r\n          padding: 0 4px;\r\n          border: 1px solid #eeeeee;\r\n          border-radius: 4px;\r\n          font-size: 14px;\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-webkit-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input:-ms-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-ms-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-ms-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-webkit-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-moz-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .pic-form {\r\n      width: 1200px;\r\n      margin: 0 auto;\r\n      padding-bottom: 50px;\r\n      border-top: 1px solid #eeeeee;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list {\r\n        margin: 0 -40px 0 0;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box {\r\n          position: relative;\r\n          float: left;\r\n          width: 270px;\r\n          height: 338px;\r\n          margin: 40px 40px 0 0;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .image {\r\n            width: 100%;\r\n            height: 100%;\r\n            overflow: hidden;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .image img {\r\n              width: 100%;\r\n              height: 100%;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .tab-index {\r\n            position: absolute;\r\n            display: block;\r\n            left: 50%;\r\n            bottom: 10px;\r\n            -webkit-transform: translateX(-50%);\r\n                    transform: translateX(-50%);\r\n            min-width: 50px;\r\n            height: 32px;\r\n            line-height: 32px;\r\n            border-radius: 16px;\r\n            background-color: rgba(0, 0, 0, 0.5);\r\n            font-size: 16px;\r\n            color: #ffffff;\r\n            text-align: center;\r\n            cursor: pointer;\n}\n.pic-review1 .next-btn {\r\n    display: block;\r\n    width: 90px;\r\n    height: 36px;\r\n    line-height: 36px;\r\n    margin: 50px auto 0 auto;\r\n    border: none;\r\n    background-color: #33cc66;\r\n    font-size: 14px;\r\n    color: #ffffff;\r\n    text-align: center;\r\n    cursor: pointer;\n}\r\n\r\n/* 图片审核-详情2 */\n.pic-review1.review2 .search-form {\r\n  width: 650px;\r\n  padding-bottom: 30px;\n}\n.pic-review1.review2 .search-form .title2 {\r\n    margin-bottom: 30px;\r\n    font-size: 14px;\r\n    color: #999999;\n}\n.pic-review1.review2 .search-form .paper-name {\r\n    position: relative;\r\n    width: 100%;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    white-space: nowrap;\r\n    text-overflow: ellipsis;\r\n    overflow: hidden;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox {\r\n      display: inline-block;\r\n      margin: 0;\r\n      color: #999999;\r\n      font-size: 24px;\r\n      vertical-align: middle;\r\n      cursor: pointer;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox::before {\r\n        content: '\\E651';\n}\n.pic-review1.review2 .search-form .paper-name .checkbox.select {\r\n      color: #33cc66;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox.select::before {\r\n        content: '\\E64A';\n}\n.pic-review1.review2 .pic-paper-form {\r\n  width: 1400px;\r\n  margin: 0 auto;\n}\n.pic-review1.review2 .pic-paper-form .page-turn {\r\n    min-width: 110px;\r\n    margin: 0 auto 42px auto;\r\n    font-size: 14px;\r\n    text-align: center;\n}\n.pic-review1.review2 .pic-paper-form .page-turn .prev, .pic-review1.review2 .pic-paper-form .page-turn .next {\r\n      display: inline-block;\r\n      cursor: pointer;\r\n      font-size: 18px;\r\n      vertical-align: middle;\n}\n.pic-review1.review2 .pic-paper-form .page-turn .prev::before {\r\n      content: '\\E643';\n}\n.pic-review1.review2 .pic-paper-form .page-turn .next::before {\r\n      content: '\\E63D';\n}\n.pic-review1.review2 .pic-paper-form .page-turn .page-number {\r\n      margin: 0 20px;\r\n      color: #9a9a9a;\r\n      vertical-align: middle;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box {\r\n    width: 100%;\r\n    height: 890px;\r\n    border-radius: 4px;\r\n    padding: 18px;\r\n    background-color: #6b6b6b;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper {\r\n      position: relative;\r\n      width: 666px;\r\n      height: 855px;\r\n      float: left;\r\n      margin: -2px -2px 0 0;\r\n      overflow: auto;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box {\r\n        position: relative;\r\n        float: left;\r\n        width: 220px;\r\n        height: 276px;\r\n        margin: 2px 2px 0 0;\r\n        cursor: pointer;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .image {\r\n          height: 100%;\r\n          overflow: hidden;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .image img {\r\n            width: 220px;\r\n            height: auto;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .tab-index {\r\n          position: absolute;\r\n          display: block;\r\n          left: 50%;\r\n          bottom: 10px;\r\n          -webkit-transform: translateX(-50%);\r\n                  transform: translateX(-50%);\r\n          min-width: 50px;\r\n          height: 32px;\r\n          line-height: 32px;\r\n          border-radius: 16px;\r\n          background-color: rgba(0, 0, 0, 0.5);\r\n          font-size: 16px;\r\n          color: #ffffff;\r\n          text-align: center;\r\n          cursor: pointer;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box.selected .image {\r\n        border: 2px solid #ffcc00;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box.selected .image img {\r\n          margin: -2px;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper {\r\n    width: 210px;\r\n    margin: 0 auto;\r\n    padding: 61px 0 100px 0;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper .next-btn:first-child {\r\n      margin-right: 30px;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper .review2-btn {\r\n      float: left;\r\n      margin: 0;\n}\n.pic-review1.review2 .pic-paper-form .paper-box {\r\n    float: right;\r\n    width: 50%;\r\n    height: 855px;\r\n    padding: 43px 29px 20px 29px;\r\n    background-color: #ffffff;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    overflow: auto;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .title {\r\n      margin-bottom: 40px;\r\n      font-size: 22px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper {\r\n      margin: 40px 0 0 27px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .question-name {\r\n        font-weight: normal;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .option {\r\n        margin: 20px 23px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .analyze {\r\n        width: 600px;\r\n        padding: 20px;\r\n        border-radius: 4px;\r\n        background-color: #f5f5f5;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .analyze .a-info {\r\n          line-height: 24px;\r\n          margin-top: 18px;\n}\r\n\r\n/* 图片审核-详情3 */\n.pic-review1.review3 .tab-con-wrapper {\r\n  height: 600px;\n}\n.pic-review1.review3 .title {\r\n  margin-bottom: 40px;\n}\n.pic-review1.review3 .reviw-info-wrapper {\r\n  width: 600px;\r\n  margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type-box {\r\n    width: 290px;\r\n    margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type {\r\n    display: inline-block;\r\n    position: relative;\r\n    margin-right: 43px;\r\n    font-size: 14px;\r\n    color: #111111;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio {\r\n      display: inline-block;\r\n      margin: 0;\r\n      vertical-align: middle;\r\n      color: #999999;\r\n      font-size: 24px;\r\n      cursor: pointer;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio::before {\r\n        content: '\\E651';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio.select {\r\n      color: #33cc66;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio.select::before {\r\n        content: '\\E64A';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type1-info {\r\n    width: 600px;\r\n    height: 168px;\r\n    padding-top: 20px;\r\n    border-radius: 4px;\r\n    background-color: #f5f5f5;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type1-info .error-box {\r\n      width: 130px;\r\n      margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option {\r\n    position: relative;\r\n    width: 100%;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    white-space: nowrap;\r\n    text-overflow: ellipsis;\r\n    overflow: hidden;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox {\r\n      display: inline-block;\r\n      margin: 0;\r\n      color: #999999;\r\n      font-size: 26px;\r\n      vertical-align: middle;\r\n      cursor: pointer;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .r-error-msg {\r\n  width: 100px;\r\n  vertical-align: middle;\r\n  display: inline-block;\r\n  text-align: left;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox::before {\r\n        content: '\\E641';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select {\r\n      color: #33cc66;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select::before {\r\n        content: '\\E644';\n}\r\n\r\n/* 图片审核-详情4 */\n.pic-review1.review4 .result-wrapper {\r\n  width: 100%;\r\n  height: 660px;\r\n  padding-top: 230px;\r\n  background-color: #ffffff;\n}\n.pic-review1.review4 .result-wrapper .time-box {\r\n    font-size: 16px;\r\n    color: #999999;\n}\n.pic-review1.review4 .result-wrapper .time-box .time {\r\n      color: #33cc66;\n}\n.pic-review1.review4 .result-wrapper .time-box a {\r\n      color: #999999;\n}\n.pic-review1.review4 .scuess-box {\r\n  width: 150px;\r\n  margin: 0 auto;\r\n  text-align: center;\n}\n.pic-review1.review4 .scuess-box .icon-scuess {\r\n    width: 58px;\r\n    height: 58px;\r\n    margin: 0 auto;\r\n    background: url(" + escape(__webpack_require__(63)) + ") no-repeat;\r\n    background-size: 100%;\n}\n.pic-review1.review4 .scuess-box .scuess-text {\r\n    margin: 20px 0;\r\n    font-size: 24px;\r\n    color: #33cc66;\n}\n.pic-review1.review4 .error-box {\r\n  width: 480px;\r\n  margin: 0 auto;\r\n  text-align: center;\n}\n.pic-review1.review4 .error-box .icon-error {\r\n    width: 56px;\r\n    height: 52px;\r\n    margin: 0 auto;\r\n    background: url(" + escape(__webpack_require__(64)) + ") no-repeat;\r\n    background-size: 100%;\n}\n.pic-review1.review4 .error-box .error-title {\r\n    margin: 20px 0;\r\n    font-size: 24px;\r\n    color: #ff6666;\n}\n.pic-review1.review4 .error-box .error-info-box {\r\n    width: 480px;\r\n    padding: 22px 25px;\r\n    margin-bottom: 30px;\r\n    border-radius: 4px;\r\n    border: 1px solid #eeeeee;\r\n    color: #666666;\r\n    text-align: left;\n}\n.pic-review1.review4 .error-box .error-info-box .mb {\r\n      margin-bottom: 12px;\n}\n.pic-review1.review4 .error-box .error-info-box .mb:last-child {\r\n        margin-bottom: 0;\n}\r\n\r\n/* 图片查看器 */\n.fancybox-opened .fancybox-skin {\r\n  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);\r\n          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);\n}\n.fancybox-overlay {\r\n  background: rgba(0, 0, 0, 0.3);\n}\n.fancybox-control {\r\n  position: absolute;\r\n  bottom: 40px;\r\n  left: 38%;\r\n  height: 80px;\r\n  padding: 0 78px;\r\n  border-radius: 40px;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  color: #ffffff;\r\n  font-size: 30px;\r\n  line-height: 80px;\r\n  white-space: nowrap;\n}\n.fancybox-title {\r\n  position: static;\r\n  font: 30px/80px Arial;\r\n  display: inline-block;\r\n  padding-top: 0;\n}\n.fancybox-nav {\r\n  width: auto;\r\n  color: #ffffff;\r\n  vertical-align: top;\n}\n.fancybox-nav:hover {\r\n    color: #ffffff;\n}\n.fancybox-nav span {\r\n    position: static;\r\n    display: block;\r\n    visibility: visible;\r\n    width: 78px;\r\n    background: none;\r\n    margin: 0;\r\n    font-size: 50px;\r\n    text-align: center;\n}\n.fancybox-prev {\r\n  left: 0;\n}\n.fancybox-next {\r\n  right: 0;\n}\n.fancybox-prev span:before {\r\n  content: \"\\E643\";\n}\n.fancybox-next span:before {\r\n  content: \"\\E63D\";\n}\r\n\r\n/* 试卷审核详情1 */\n.paper-review1 .tab-con-wrapper .title {\r\n  margin-bottom: 40px;\n}\n.paper-review1 .q-operational {\r\n  width: 600px;\r\n  padding-bottom: 12px;\r\n  margin-top: 10px;\r\n  border-radius: 4px;\r\n  border: 1px solid #ffbb00;\n}\n.paper-review1 .q-operational .q-o-con {\r\n    width: 370px;\r\n    margin: 0 auto;\n}\n.paper-review1 .q-operational .r-option {\r\n    position: relative;\r\n    display: inline-block;\r\n    width: 88px;\r\n    margin: 12px 49px 0 0;\r\n    font-size: 14px;\r\n    color: #111111;\n}\n.paper-review1 .q-operational .r-option.mr-n {\r\n    margin-right: 0;\n}\n.paper-review1 .q-operational .checkbox {\r\n    display: inline-block;\r\n    margin: -6px;\r\n    color: #999999;\r\n    font-size: 26px;\r\n    vertical-align: middle;\r\n    cursor: pointer;\n}\n.paper-review1 .q-operational .checkbox:before {\r\n      content: '\\E641';\n}\n.paper-review1 .q-operational .checkbox.select {\r\n    color: #33cc66;\n}\n.paper-review1 .q-operational .checkbox.select:before {\r\n      content: '\\E644';\n}\r\n\r\n/* 试卷审核详情2 */\n.paper-review2 .error-paper-info {\r\n  width: 600px;\r\n  height: 155px;\r\n  line-height: 20px;\r\n  padding: 20px;\r\n  border: none;\r\n  border-radius: 4px;\r\n  background-color: #f5f5f5;\r\n  font-size: 14px;\r\n  color: #111111;\r\n  overflow: auto;\n}\r\n\r\n/* 数据统计-图片审核 */\n.statistic-pic .tool-box, .statistic-paper .tool-box {\r\n  float: right;\n}\n.statistic-pic .tool-box .search-wrapper, .statistic-paper .tool-box .search-wrapper {\r\n    display: inline-block;\r\n    float: none;\n}\r\n\r\n/* 数据统计-试卷审核 */\n.statistic-paper .review-process-wrapper {\r\n  display: none;\r\n  position: absolute;\r\n  width: 560px;\r\n  max-height: 360px;\r\n  padding-top: 17px;\r\n  background-color: #ffffff;\r\n  border-radius: 3px;\r\n  font-size: 14px;\r\n  color: #111111;\r\n  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\r\n  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\r\n  -ms-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\n}\n.statistic-paper .review-process-wrapper::after {\r\n    display: block;\r\n    content: ' ';\r\n    position: absolute;\r\n    top: 20px;\r\n    right: -5px;\r\n    width: 0;\r\n    height: 0;\r\n    border-width: 6px 0 6px 6px;\r\n    border-style: solid;\r\n    border-color: transparent transparent transparent #ffffff;\n}\n.statistic-paper .title {\r\n  text-align: center;\n}\n.statistic-paper .process-list {\r\n  width: 520px;\r\n  max-height: 310px;\r\n  margin: 0 auto;\r\n  overflow: auto;\n}\n.statistic-paper .table {\r\n  width: 100%;\n}\n.statistic-paper .table th, .statistic-paper .table td {\r\n    text-align: center;\r\n    border-bottom: 1px solid #eeeeee;\n}\n.statistic-paper .table .w9 {\r\n    width: 9%;\n}\n.statistic-paper .table .w24 {\r\n    width: 24%;\n}\n.statistic-paper .table .w35 {\r\n    width: 35%;\n}\n.statistic-paper .table .w13 {\r\n    width: 13%;\n}\n.statistic-paper .table .tr-row td {\r\n    height: 60px;\r\n    vertical-align: middle;\n}\n.statistic-paper .table .tr-row:last-child td {\r\n    border-bottom: none;\n}\n.statistic-paper .table .status.yes {\r\n    color: #33cc66;\n}\n.statistic-paper .table .status.no {\r\n    color: #ff6666;\n}\r\n\r\n/* 试卷详情弹框 */\n.dialog-balck-cover {\r\n  display: none;\r\n  position: fixed;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  background-color: rgba(0, 0, 0, 0.3);\r\n  z-index: 10;\n}\n.dialog-paper-detial-wrapper {\r\n  display: none;\r\n  position: fixed;\r\n  top: 50%;\r\n  left: 50%;\r\n  -webkit-transform: translate(-50%, -50%);\r\n          transform: translate(-50%, -50%);\r\n  width: 1000px;\r\n  max-height: 800px;\r\n  padding: 58px 50px 25px 50px;\r\n  border-radius: 3px;\r\n  background-color: #ffffff;\r\n  font-size: 14px;\r\n  color: #2a3245;\r\n  overflow: auto;\r\n  z-index: 11;\n}\n.dialog-paper-detial-wrapper .title {\r\n    margin-bottom: 55px;\r\n    font-size: 24px;\r\n    text-align: center;\n}\n.dialog-paper-detial-wrapper .question-type {\r\n    margin-bottom: 35px;\r\n    font-size: 16px;\r\n    font-weight: bold;\n}\n.dialog-paper-detial-wrapper .question-wrapper {\r\n    margin: 0 0 17px 32px;\n}\n.dialog-paper-detial-wrapper .question-wrapper .question-name {\r\n      margin-bottom: 31px;\r\n      font-weight: normal;\n}\n.dialog-paper-detial-wrapper .question-wrapper .option {\r\n      display: inline-block;\r\n      width: 47%;\r\n      margin-left: 21px;\r\n      margin-bottom: 20px;\r\n      white-space: nowrap;\r\n      text-overflow: ellipsis;\r\n      overflow: hidden;\n}\n.dialog-paper-detial-wrapper .question-wrapper .q-answer-con {\r\n      line-height: 22px;\n}\n.dialog-paper-detial-wrapper .question-wrapper .q-answer-con.mb {\r\n      margin-bottom: 25px;\n}\r\n", ""]);
+exports.push([module.i, "\n@charset \"UTF-8\";\nhtml, body {\r\n  background-color: #f2f2f2;\n}\r\n\r\n/* 图片审核 */\n.pic-list-wrapper {\r\n  margin-top: 10px;\n}\n.pic-list-wrapper .pic-number-wrapper {\r\n    height: 65px;\r\n    padding: 24px 20px 0 41px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\r\n    border-bottom: 1px solid #f2f2f2;\r\n    color: #999999;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n {\r\n      display: inline-block;\r\n      position: relative;\r\n      margin-right: 54px;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .num {\r\n        display: inline-block;\r\n        margin: 0 1px;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .yellow {\r\n        color: #ffcc00;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .green {\r\n        color: #67cc67;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n .red {\r\n        color: #ff9999;\n}\n.pic-list-wrapper .pic-number-wrapper .info-n::before {\r\n        position: absolute;\r\n        left: -21px;\r\n        font-size: 16px;\n}\n.pic-list-wrapper .pic-number-wrapper .sum::before {\r\n      content: '\\E646';\r\n      top: -1px;\n}\n.pic-list-wrapper .pic-number-wrapper .right::before {\r\n      content: '\\E648';\r\n      top: -1px;\r\n      font-size: 17px;\n}\n.pic-list-wrapper .pic-number-wrapper .pass::before {\r\n      content: '\\E647';\r\n      font-size: 17px;\n}\n.pic-list-wrapper .pic-number-wrapper .vertify::before {\r\n      content: '\\E64D';\r\n      top: -1px;\n}\n.pic-list-wrapper .pic-number-wrapper .like::before {\r\n      content: '\\E649';\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper {\r\n      position: relative;\r\n      float: right;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input {\r\n        width: 200px;\r\n        height: 26px;\r\n        padding-left: 5px;\r\n        border: 1px solid #eeeeee;\r\n        border-radius: 4px;\r\n        font-size: 14px;\r\n        color: #666666;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-webkit-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input:-ms-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-ms-input-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-ms-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .s-input::-webkit-placeholder {\r\n          color: #cccccc;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn {\r\n        display: block;\r\n        position: absolute;\r\n        top: 50%;\r\n        right: 0;\r\n        -webkit-transform: translateY(-50%);\r\n                transform: translateY(-50%);\r\n        font-size: 19px;\r\n        color: #cccccc;\r\n        cursor: pointer;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn:hover {\r\n          color: #33cc66;\n}\n.pic-list-wrapper .pic-number-wrapper .search-wrapper .search-btn::before {\r\n        content: '\\E64E';\n}\n.pic-list-wrapper .pic-form-wrapper {\r\n    min-height: 425px;\r\n    padding: 20px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\n}\r\n\r\n/* 表格列表 */\n.table-list a {\r\n  text-decoration: none;\n}\n.table-list .pic-form-box {\r\n  width: 100%;\r\n  font-size: 14px;\r\n  color: #999999;\n}\n.table-list table.dataTable.no-footer {\r\n  border-bottom: none;\n}\n.table-list table.dataTable thead th,\r\n.table-list table.dataTable thead td {\r\n  padding: 0;\r\n  border-bottom: 1px solid #eeeeee;\r\n  text-align: center;\n}\n.table-list thead tr {\r\n  height: 49px;\r\n  border-radius: 4px;\r\n  overflow: hidden;\n}\n.table-list table.dataTable tbody tr {\r\n  height: 58px;\n}\n.table-list table.dataTable tbody tr:hover {\r\n  background-color: #f5fcf7;\r\n  color: #111111;\n}\n.table-list table.dataTable tbody td {\r\n  line-height: 22px;\r\n  padding: 0;\r\n  text-align: center;\r\n  border-bottom: 1px solid #eeeeee;\n}\n.table-list table.dataTable tbody .dataTables_empty {\r\n  vertical-align: middle;\r\n  border-bottom: none !important;\n}\n.table-list table.dataTable tbody .status.green {\r\n  color: #33cc66;\n}\n.table-list table.dataTable tbody .status.red {\r\n  color: #ff6666;\n}\n.table-list table.dataTable tbody .color-black {\r\n  color: #111111;\n}\n.table-list table.dataTable tbody .reviewBtn {\r\n  display: block;\r\n  width: 80px;\r\n  height: 28px;\r\n  line-height: 28px;\r\n  background-color: #33cc66;\r\n  font-size: 14px;\r\n  text-align: center;\r\n  color: #ffffff;\r\n  cursor: pointer;\n}\r\n\r\n/* 图片审核-详情1 */\n.pic-review1 {\r\n  width: 100%;\n}\n.pic-review1 .nav-wrapper {\r\n    height: 65px;\r\n    padding: 16px 23px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\r\n    border-bottom: 1px solid #f2f2f2;\r\n    color: #cdcdcd;\n}\n.pic-review1 .nav-wrapper .back-btn {\r\n      display: inline-block;\r\n      position: relative;\r\n      width: 90px;\r\n      height: 32px;\r\n      line-height: 32px;\r\n      padding-left: 41px;\r\n      margin-right: 39px;\r\n      border-radius: 16px;\r\n      border: 1px solid #eeeeee;\r\n      font-size: 14px;\r\n      color: #cccccc;\n}\n.pic-review1 .nav-wrapper .back-btn::before {\r\n        display: block;\r\n        position: absolute;\r\n        top: 52%;\r\n        left: 15px;\r\n        -webkit-transform: translateY(-50%);\r\n                transform: translateY(-50%);\r\n        content: '\\E650';\r\n        font-size: 16px;\r\n        cursor: pointer;\n}\n.pic-review1 .nav-wrapper .tab {\r\n      position: relative;\r\n      margin-right: 69px;\n}\n.pic-review1 .nav-wrapper .tab::after {\r\n        display: block;\r\n        position: absolute;\r\n        top: -4px;\r\n        right: -42px;\r\n        content: '\\E63E';\r\n        font-size: 22px;\n}\n.pic-review1 .nav-wrapper .tab.select .circle, .pic-review1 .nav-wrapper .nav-select .circle {\r\n      background-color: #33cc66;\n}\n.pic-review1 .nav-wrapper .tab.select .tab-text, .pic-review1 .nav-wrapper .nav-select .tab-text {\r\n      color: #33cc66;\n}\n.pic-review1 .nav-wrapper .tab-text {\r\n      color: #666666;\n}\n.pic-review1 .nav-wrapper .circle {\r\n      display: inline-block;\r\n      width: 18px;\r\n      height: 18px;\r\n      line-height: 18px;\r\n      margin-right: 6px;\r\n      border-radius: 50%;\r\n      background-color: #c7c7c7;\r\n      font-size: 14px;\r\n      color: #ffffff;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper {\r\n    padding-top: 40px;\r\n    border-radius: 4px;\r\n    background-color: #ffffff;\n}\n.pic-review1 .tab-con-wrapper .title {\r\n      margin-bottom: 20px;\r\n      font-size: 18px;\r\n      color: #111111;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper .title2 {\r\n      margin-top: 40px;\r\n      font-size: 18px;\r\n      color: #111111;\r\n      text-align: center;\n}\n.pic-review1 .tab-con-wrapper .search-form {\r\n      width: 870px;\r\n      margin: 0 auto;\r\n      padding-bottom: 44px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper {\r\n        float: left;\r\n        margin: 10px 67px 0 0;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper.mr-none {\r\n        margin-right: 0;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-wrapper.mr2 {\r\n        margin-right: 39px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name {\r\n        position: relative;\r\n        float: left;\r\n        line-height: 36px;\r\n        margin-right: 5px;\r\n        color: #999999;\r\n        text-align: right;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.required::before {\r\n        position: absolute;\r\n        content: '*';\r\n        top: 2px;\r\n        left: -10px;\r\n        color: red;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w1 {\r\n        min-width: 28px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w2 {\r\n        min-width: 55px;\n}\n.pic-review1 .tab-con-wrapper .search-form .in-name.min-w3 {\r\n        min-width: 65px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box {\r\n        position: relative;\r\n        float: left;\r\n        min-height: 36px;\r\n        max-width: 200px;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input {\r\n          width: 220px;\r\n          \r\n          height: 36px;\r\n          line-height: 36px;\r\n          padding: 0 4px;\r\n          border: 1px solid #eeeeee;\r\n          border-radius: 4px;\r\n          font-size: 14px;\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-webkit-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input:-ms-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-ms-input-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-ms-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-webkit-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .search-form .input-box .input::-moz-placeholder {\r\n          color: #999999;\n}\n.pic-review1 .tab-con-wrapper .pic-form {\r\n      width: 1200px;\r\n      margin: 0 auto;\r\n      padding-bottom: 50px;\r\n      border-top: 1px solid #eeeeee;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list {\r\n        margin: 0 -40px 0 0;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box {\r\n          position: relative;\r\n          float: left;\r\n          width: 270px;\r\n          height: 338px;\r\n          margin: 40px 40px 0 0;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .image {\r\n            width: 100%;\r\n            height: 100%;\r\n            overflow: hidden;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .image img {\r\n              width: 100%;\r\n              height: 100%;\n}\n.pic-review1 .tab-con-wrapper .pic-form .pic-list .pic-box .tab-index {\r\n            position: absolute;\r\n            display: block;\r\n            left: 50%;\r\n            bottom: 10px;\r\n            -webkit-transform: translateX(-50%);\r\n                    transform: translateX(-50%);\r\n            min-width: 50px;\r\n            height: 32px;\r\n            line-height: 32px;\r\n            border-radius: 16px;\r\n            background-color: rgba(0, 0, 0, 0.5);\r\n            font-size: 16px;\r\n            color: #ffffff;\r\n            text-align: center;\r\n            cursor: pointer;\n}\n.pic-review1 .next-btn {\r\n    display: block;\r\n    width: 90px;\r\n    height: 36px;\r\n    line-height: 36px;\r\n    margin: 50px auto 0 auto;\r\n    border: none;\r\n    background-color: #33cc66;\r\n    font-size: 14px;\r\n    color: #ffffff;\r\n    text-align: center;\r\n    cursor: pointer;\n}\r\n\r\n/* 图片审核-详情2 */\n.pic-review1.review2 .search-form {\r\n  width: 650px;\r\n  padding-bottom: 30px;\n}\n.pic-review1.review2 .search-form .title2 {\r\n    margin-bottom: 30px;\r\n    font-size: 14px;\r\n    color: #999999;\n}\n.pic-review1.review2 .search-form .paper-name {\r\n    position: relative;\r\n    width: 100%;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    white-space: nowrap;\r\n    text-overflow: ellipsis;\r\n    overflow: hidden;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox {\r\n      display: inline-block;\r\n      margin: 0;\r\n      color: #999999;\r\n      font-size: 24px;\r\n      vertical-align: middle;\r\n      cursor: pointer;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox::before {\r\n        content: '\\E651';\n}\n.pic-review1.review2 .search-form .paper-name .checkbox.select {\r\n      color: #33cc66;\n}\n.pic-review1.review2 .search-form .paper-name .checkbox.select::before {\r\n        content: '\\E64A';\n}\n.pic-review1.review2 .pic-paper-form {\r\n  width: 1400px;\r\n  margin: 0 auto;\n}\n.pic-review1.review2 .pic-paper-form .page-turn {\r\n    min-width: 110px;\r\n    margin: 0 auto 42px auto;\r\n    font-size: 14px;\r\n    text-align: center;\n}\n.pic-review1.review2 .pic-paper-form .page-turn .prev, .pic-review1.review2 .pic-paper-form .page-turn .next {\r\n      display: inline-block;\r\n      cursor: pointer;\r\n      font-size: 18px;\r\n      vertical-align: middle;\n}\n.pic-review1.review2 .pic-paper-form .page-turn .prev::before {\r\n      content: '\\E643';\n}\n.pic-review1.review2 .pic-paper-form .page-turn .next::before {\r\n      content: '\\E63D';\n}\n.pic-review1.review2 .pic-paper-form .page-turn .page-number {\r\n      margin: 0 20px;\r\n      color: #9a9a9a;\r\n      vertical-align: middle;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box {\r\n    width: 100%;\r\n    height: 890px;\r\n    border-radius: 4px;\r\n    padding: 18px;\r\n    background-color: #6b6b6b;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper {\r\n      position: relative;\r\n      width: 666px;\r\n      height: 855px;\r\n      float: left;\r\n      margin: -2px -2px 0 0;\r\n      overflow: auto;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box {\r\n        position: relative;\r\n        float: left;\r\n        width: 220px;\r\n        height: 276px;\r\n        margin: 2px 2px 0 0;\r\n        cursor: pointer;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .image {\r\n          height: 100%;\r\n          overflow: hidden;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .image img {\r\n            width: 220px;\r\n            height: auto;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box .tab-index {\r\n          position: absolute;\r\n          display: block;\r\n          left: 50%;\r\n          bottom: 10px;\r\n          -webkit-transform: translateX(-50%);\r\n                  transform: translateX(-50%);\r\n          min-width: 50px;\r\n          height: 32px;\r\n          line-height: 32px;\r\n          border-radius: 16px;\r\n          background-color: rgba(0, 0, 0, 0.5);\r\n          font-size: 16px;\r\n          color: #ffffff;\r\n          text-align: center;\r\n          cursor: pointer;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box.selected .image {\r\n        border: 2px solid #ffcc00;\n}\n.pic-review1.review2 .pic-paper-form .pic-paper-box .pic-list-wrapper .pic-box.selected .image img {\r\n          margin: -2px;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper {\r\n    width: 210px;\r\n    margin: 0 auto;\r\n    padding: 61px 0 100px 0;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper .next-btn:first-child {\r\n      margin-right: 30px;\n}\n.pic-review1.review2 .pic-paper-form .btn-wrapper .review2-btn {\r\n      float: left;\r\n      margin: 0;\n}\n.pic-review1.review2 .pic-paper-form .paper-box {\r\n    float: right;\r\n    width: 50%;\r\n    height: 855px;\r\n    padding: 43px 29px 20px 29px;\r\n    background-color: #ffffff;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    overflow: auto;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .title {\r\n      margin-bottom: 40px;\r\n      font-size: 22px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper {\r\n      margin: 40px 0 0 27px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .question-name {\r\n        font-weight: normal;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .option {\r\n        margin: 20px 23px;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .analyze {\r\n        width: 600px;\r\n        padding: 20px;\r\n        border-radius: 4px;\r\n        background-color: #f5f5f5;\n}\n.pic-review1.review2 .pic-paper-form .paper-box .question-wrapper .analyze .a-info {\r\n          line-height: 24px;\r\n          margin-top: 18px;\n}\r\n\r\n/* 图片审核-详情3 */\n.pic-review1.review3 .tab-con-wrapper {\r\n  height: 600px;\n}\n.pic-review1.review3 .title {\r\n  margin-bottom: 40px;\n}\n.pic-review1.review3 .reviw-info-wrapper {\r\n  width: 600px;\r\n  margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type-box {\r\n    width: 290px;\r\n    margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type {\r\n    display: inline-block;\r\n    position: relative;\r\n    margin-right: 43px;\r\n    font-size: 14px;\r\n    color: #111111;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio {\r\n      display: inline-block;\r\n      margin: 0;\r\n      vertical-align: middle;\r\n      color: #999999;\r\n      font-size: 24px;\r\n      cursor: pointer;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio::before {\r\n        content: '\\E651';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio.select {\r\n      color: #33cc66;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type .radio.select::before {\r\n        content: '\\E64A';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type1-info {\r\n    width: 600px;\r\n    height: 168px;\r\n    padding-top: 20px;\r\n    border-radius: 4px;\r\n    background-color: #f5f5f5;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-type1-info .error-box {\r\n      width: 130px;\r\n      margin: 0 auto;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option {\r\n    position: relative;\r\n    width: 100%;\r\n    font-size: 14px;\r\n    color: #111111;\r\n    white-space: nowrap;\r\n    text-overflow: ellipsis;\r\n    overflow: hidden;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox {\r\n      display: inline-block;\r\n      margin: 0;\r\n      color: #999999;\r\n      font-size: 26px;\r\n      vertical-align: middle;\r\n      cursor: pointer;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .r-error-msg {\r\n  width: 100px;\r\n  vertical-align: middle;\r\n  display: inline-block;\r\n  text-align: left;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox::before {\r\n        content: '\\E641';\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select {\r\n      color: #33cc66;\n}\n.pic-review1.review3 .reviw-info-wrapper .r-option .checkbox.select::before {\r\n        content: '\\E644';\n}\r\n\r\n/* 图片审核-详情4 */\n.pic-review1.review4 .result-wrapper {\r\n  width: 100%;\r\n  height: 660px;\r\n  padding-top: 230px;\r\n  background-color: #ffffff;\n}\n.pic-review1.review4 .result-wrapper .time-box {\r\n    font-size: 16px;\r\n    color: #999999;\n}\n.pic-review1.review4 .result-wrapper .time-box .time {\r\n      color: #33cc66;\n}\n.pic-review1.review4 .result-wrapper .time-box a {\r\n      color: #999999;\n}\n.pic-review1.review4 .scuess-box {\r\n  width: 150px;\r\n  margin: 0 auto;\r\n  text-align: center;\n}\n.pic-review1.review4 .scuess-box .icon-scuess {\r\n    width: 58px;\r\n    height: 58px;\r\n    margin: 0 auto;\r\n    background: url(" + escape(__webpack_require__(63)) + ") no-repeat;\r\n    background-size: 100%;\n}\n.pic-review1.review4 .scuess-box .scuess-text {\r\n    margin: 20px 0;\r\n    font-size: 24px;\r\n    color: #33cc66;\n}\n.pic-review1.review4 .error-box {\r\n  width: 480px;\r\n  margin: 0 auto;\r\n  text-align: center;\n}\n.pic-review1.review4 .error-box .icon-error {\r\n    width: 56px;\r\n    height: 52px;\r\n    margin: 0 auto;\r\n    background: url(" + escape(__webpack_require__(64)) + ") no-repeat;\r\n    background-size: 100%;\n}\n.pic-review1.review4 .error-box .error-title {\r\n    margin: 20px 0;\r\n    font-size: 24px;\r\n    color: #ff6666;\n}\n.pic-review1.review4 .error-box .error-info-box {\r\n    width: 480px;\r\n    padding: 22px 25px;\r\n    margin-bottom: 30px;\r\n    border-radius: 4px;\r\n    border: 1px solid #eeeeee;\r\n    color: #666666;\r\n    text-align: left;\n}\n.pic-review1.review4 .error-box .error-info-box .mb {\r\n      margin-bottom: 12px;\n}\n.pic-review1.review4 .error-box .error-info-box .mb:last-child {\r\n        margin-bottom: 0;\n}\r\n\r\n/* 图片查看器 */\n.fancybox-opened .fancybox-skin {\r\n  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);\r\n          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);\n}\n.fancybox-overlay {\r\n  background: rgba(0, 0, 0, 0.3);\n}\n.fancybox-control {\r\n  position: absolute;\r\n  bottom: 40px;\r\n  left: 38%;\r\n  height: 80px;\r\n  padding: 0 78px;\r\n  border-radius: 40px;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  color: #ffffff;\r\n  font-size: 30px;\r\n  line-height: 80px;\r\n  white-space: nowrap;\n}\n.fancybox-title {\r\n  position: static;\r\n  font: 30px/80px Arial;\r\n  display: inline-block;\r\n  padding-top: 0;\n}\n.fancybox-nav {\r\n  width: auto;\r\n  color: #ffffff;\r\n  vertical-align: top;\n}\n.fancybox-nav:hover {\r\n    color: #ffffff;\n}\n.fancybox-nav span {\r\n    position: static;\r\n    display: block;\r\n    visibility: visible;\r\n    width: 78px;\r\n    background: none;\r\n    margin: 0;\r\n    font-size: 50px;\r\n    text-align: center;\n}\n.fancybox-prev {\r\n  left: 0;\n}\n.fancybox-next {\r\n  right: 0;\n}\n.fancybox-prev span:before {\r\n  content: \"\\E643\";\n}\n.fancybox-next span:before {\r\n  content: \"\\E63D\";\n}\r\n\r\n/* 试卷审核详情1 */\n.paper-review1 .tab-con-wrapper .title {\r\n  margin-bottom: 40px;\n}\n.paper-review1 .q-operational {\r\n  width: 600px;\r\n  padding-bottom: 12px;\r\n  margin-top: 10px;\r\n  border-radius: 4px;\r\n  border: 1px solid #ffbb00;\n}\n.paper-review1 .q-operational .q-o-con {\r\n    width: 370px;\r\n    margin: 0 auto;\n}\n.paper-review1 .q-operational .r-option {\r\n    position: relative;\r\n    display: inline-block;\r\n    width: 88px;\r\n    margin: 12px 49px 0 0;\r\n    font-size: 14px;\r\n    color: #111111;\n}\n.paper-review1 .q-operational .r-option.mr-n {\r\n    margin-right: 0;\n}\n.paper-review1 .q-operational .checkbox {\r\n    display: inline-block;\r\n    margin: -6px;\r\n    color: #999999;\r\n    font-size: 26px;\r\n    vertical-align: middle;\r\n    cursor: pointer;\n}\n.paper-review1 .q-operational .checkbox:before {\r\n      content: '\\E641';\n}\n.paper-review1 .q-operational .checkbox.select {\r\n    color: #33cc66;\n}\n.paper-review1 .q-operational .checkbox.select:before {\r\n      content: '\\E644';\n}\r\n\r\n/* 试卷审核详情2 */\n.paper-review2 .error-paper-info {\r\n  width: 600px;\r\n  height: 155px;\r\n  line-height: 20px;\r\n  padding: 20px;\r\n  border: none;\r\n  border-radius: 4px;\r\n  background-color: #f5f5f5;\r\n  font-size: 14px;\r\n  color: #111111;\r\n  overflow: auto;\n}\r\n\r\n/* 数据统计-图片审核 */\n.statistic-pic .tool-box, .statistic-paper .tool-box {\r\n  float: right;\n}\n.statistic-pic .tool-box .search-wrapper, .statistic-paper .tool-box .search-wrapper {\r\n    display: inline-block;\r\n    float: none;\n}\r\n\r\n/* 数据统计-试卷审核 */\n.statistic-paper .review-process-wrapper {\r\n  display: none;\r\n  position: absolute;\r\n  width: 560px;\r\n  max-height: 360px;\r\n  padding-top: 17px;\r\n  background-color: #ffffff;\r\n  border-radius: 3px;\r\n  font-size: 14px;\r\n  color: #111111;\r\n  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\r\n  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\r\n  -ms-box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);\n}\n.statistic-paper .review-process-wrapper::after {\r\n    display: block;\r\n    content: ' ';\r\n    position: absolute;\r\n    top: 20px;\r\n    right: -5px;\r\n    width: 0;\r\n    height: 0;\r\n    border-width: 6px 0 6px 6px;\r\n    border-style: solid;\r\n    border-color: transparent transparent transparent #ffffff;\n}\n.statistic-paper .title {\r\n  text-align: center;\n}\n.statistic-paper .process-list {\r\n  width: 520px;\r\n  max-height: 310px;\r\n  margin: 0 auto;\r\n  overflow: auto;\n}\n.statistic-paper .table {\r\n  width: 100%;\n}\n.statistic-paper .table th, .statistic-paper .table td {\r\n    text-align: center;\r\n    border-bottom: 1px solid #eeeeee;\n}\n.statistic-paper .table .w9 {\r\n    width: 9%;\n}\n.statistic-paper .table .w24 {\r\n    width: 24%;\n}\n.statistic-paper .table .w35 {\r\n    width: 35%;\n}\n.statistic-paper .table .w13 {\r\n    width: 13%;\n}\n.statistic-paper .table .tr-row td {\r\n    height: 60px;\r\n    vertical-align: middle;\n}\n.statistic-paper .table .tr-row:last-child td {\r\n    border-bottom: none;\n}\n.statistic-paper .table .status.yes {\r\n    color: #33cc66;\n}\n.statistic-paper .table .status.no {\r\n    color: #ff6666;\n}\r\n\r\n/* 试卷详情弹框 */\n.dialog-balck-cover {\r\n  display: none;\r\n  position: fixed;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  background-color: rgba(0, 0, 0, 0.3);\r\n  z-index: 10;\n}\n.dialog-paper-detial-wrapper {\r\n  display: none;\r\n  position: fixed;\r\n  top: 50%;\r\n  left: 50%;\r\n  -webkit-transform: translate(-50%, -50%);\r\n          transform: translate(-50%, -50%);\r\n  width: 1000px;\r\n  max-height: 800px;\r\n  padding: 58px 50px 25px 50px;\r\n  border-radius: 3px;\r\n  background-color: #ffffff;\r\n  font-size: 14px;\r\n  color: #2a3245;\r\n  overflow: auto;\r\n  z-index: 11;\n}\n.dialog-paper-detial-wrapper .title {\r\n    margin-bottom: 55px;\r\n    font-size: 24px;\r\n    text-align: center;\n}\n.dialog-paper-detial-wrapper .question-type {\r\n    margin-bottom: 35px;\r\n    font-size: 16px;\r\n    font-weight: bold;\n}\n.dialog-paper-detial-wrapper .question-wrapper {\r\n    margin: 0 0 17px 32px;\n}\n.dialog-paper-detial-wrapper .question-wrapper .question-name {\r\n      margin-bottom: 31px;\r\n      font-weight: normal;\n}\n.dialog-paper-detial-wrapper .question-wrapper .option {\r\n      display: inline-block;\r\n      width: 47%;\r\n      margin-left: 21px;\r\n      margin-bottom: 20px;\r\n      white-space: nowrap;\r\n      text-overflow: ellipsis;\r\n      overflow: hidden;\n}\n.dialog-paper-detial-wrapper .question-wrapper .q-answer-con {\r\n      line-height: 22px;\n}\n.dialog-paper-detial-wrapper .question-wrapper .q-answer-con.mb {\r\n      margin-bottom: 25px;\n}\r\n", ""]);
 
 // exports
 
@@ -36462,8 +36462,7 @@ if (false) {
 module.exports = "/images/logo.png?f34de66ef277147d16f1b6dbc284125d";
 
 /***/ }),
-/* 73 */,
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -36492,8 +36491,102 @@ if (false) {
 }
 
 /***/ }),
-/* 75 */,
-/* 76 */
+/* 74 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 75 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36508,7 +36601,7 @@ var routes = [{
         path: 'paperList/:userKey',
         name: 'paper-paperList',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(2).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(88)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(2).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(87)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷审核'
@@ -36517,7 +36610,7 @@ var routes = [{
         path: 'paperExaminedOne/:userKey/:taskId',
         name: 'paper-paperExaminedOne',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(3).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(89)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(3).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(88)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '标识题目问题'
@@ -36526,7 +36619,7 @@ var routes = [{
         path: 'paperExaminedTwo/:userKey/:taskId',
         name: 'paper-paperExaminedTwo',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(8).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(90)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(8).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(89)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '标识试卷问题'
@@ -36535,7 +36628,7 @@ var routes = [{
         path: 'paperExaminedResult/:userKey/:taskId/:status/:error',
         name: 'paper-paperExaminedResult',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(9).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(91)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(9).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(90)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷审核结果'
@@ -36545,14 +36638,14 @@ var routes = [{
 /* harmony default export */ __webpack_exports__["a"] = (routes);
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ([{
     path: '/404',
     component: function component(resolve) {
-        return __webpack_require__.e/* require */(10).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(92)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        return __webpack_require__.e/* require */(10).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(91)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
     },
     meta: {
         title: '页面不存在',
@@ -36570,13 +36663,13 @@ var routes = [{
 }]);
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(A,s){ true?module.exports=s(__webpack_require__(3)):"function"==typeof define&&define.amd?define(["vue"],s):"object"==typeof exports?exports.message=s(require("vue")):A.message=s(A.Vue)}(this,function(A){return function(A){function s(t){if(e[t])return e[t].exports;var n=e[t]={i:t,l:!1,exports:{}};return A[t].call(n.exports,n,n.exports,s),n.l=!0,n.exports}var e={};return s.m=A,s.c=e,s.i=function(A){return A},s.d=function(A,e,t){s.o(A,e)||Object.defineProperty(A,e,{configurable:!1,enumerable:!0,get:t})},s.n=function(A){var e=A&&A.__esModule?function(){return A.default}:function(){return A};return s.d(e,"a",e),e},s.o=function(A,s){return Object.prototype.hasOwnProperty.call(A,s)},s.p="",s(s.s=4)}([function(A,s){A.exports="data:application/vnd.ms-fontobject;base64,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"},function(A,s,e){"use strict";var t=e(16),n=e.n(t),B=e(5),r=n.a.extend(e(13)),o={},i=void 0,C=[],w=1,I=2e3,g=-1,Q=function A(s){if(!n.a.prototype.$isServer){if(s=s||{},"loading"===s.type&&i&&i.vm.visible)return i.vm;"string"==typeof s&&(s={message:s}),"zIndex"in s&&"number"==typeof s.zIndex&&s.zIndex>-1&&(g=s.zIndex),!s.duration&&void 0===s.duration&&o.duration&&(s.duration=o.duration);var t=s.onClose,Q="message_"+w++;return s.onClose=function(){A.close(Q,t)},i=new r({data:s}),i.id=Q,e.i(B.a)(i.message)&&(i.$slots.default=[i.message],i.message=null),i.vm=i.$mount(),document.body.appendChild(i.vm.$el),i.vm.visible=!0,i.dom=i.vm.$el,i.dom.style.zIndex=g<0?I++:g,"top"in o&&"number"==typeof o.top&&(i.dom.style.top=o.top+"px"),C.push(i),i.vm}};Q.config=function(A){"zIndex"in(o=A||{})&&"number"==typeof o.zIndex&&o.zIndex>-1&&(g=o.zIndex)},["success","warning","info","error","loading"].forEach(function(A){Q[A]=function(s){return"string"==typeof s&&(s={message:s}),s.type=A,Q(s)}}),Q.close=function(A,s){for(var e=0,t=C.length;e<t;e++)if(C[e].id===A){"function"==typeof s&&s(C[e]),C.splice(e,1);break}},Q.closeAll=function(){for(var A=C.length-1;A>=0;A--)C[A].close()},s.a=Q},function(A,s,e){var t=e(6);"string"==typeof t&&(t=[[A.i,t,""]]);var n={};n.transform=void 0;e(9)(t,n);t.locals&&(A.exports=t.locals)},function(A,s,e){"use strict";Object.defineProperty(s,"__esModule",{value:!0}),s.default={name:"VmMessage",componentName:"VmMessage",data:function(){return{visible:!1,message:"",duration:3e3,type:"info",iconClass:"",customClass:"",onClose:null,showClose:!1,closed:!1,timer:null}},watch:{closed:function(A){A&&(this.visible=!1,this.$el.addEventListener("transitionend",this.destoryElement))}},methods:{destoryElement:function(){this.$el.removeEventListener("transitionend",this.destoryElement),this.$destroy(),this.$el.parentNode.removeChild(this.$el)},close:function(){this.closed=!0,"function"==typeof this.onClose&&this.onClose(this)},clearTimer:function(){clearTimeout(this.timer)},startTimer:function(){var A=this;this.duration>0&&(this.timer=setTimeout(function(){A.closed||A.close()},this.duration))}},mounted:function(){this.visible=!0,this.startTimer()}}},function(A,s,e){"use strict";Object.defineProperty(s,"__esModule",{value:!0});var t=e(1),n=e(2);e.n(n);s.default=t.a},function(A,s,e){"use strict";function t(A,s){return r.call(A,s)}function n(A){return"object"===(void 0===A?"undefined":B(A))&&t(A,"componentOptions")}s.a=n;var B="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(A){return typeof A}:function(A){return A&&"function"==typeof Symbol&&A.constructor===Symbol&&A!==Symbol.prototype?"symbol":typeof A},r=Object.prototype.hasOwnProperty},function(A,s,e){s=A.exports=e(7)(void 0),s.push([A.i,'@font-face {\n  font-family: "iconfont";\n  src: url('+e(0)+");\n  /* IE9*/\n  src: url("+e(0)+"#iefix) format('embedded-opentype'),  url("+e(12)+") format('woff'),  url("+e(11)+") format('truetype'),  url("+e(8)+'#iconfont) format(\'svg\');\n  /* iOS 4.1- */\n}\n[class^="vm-message-icon"],\n[class*=" vm-message-icon"] {\n  font-family: "iconfont" !important;\n  font-size: 16px;\n  font-style: normal;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.vm-message-icon--success {\n  color: #13ce66;\n}\n.vm-message-icon--success:before {\n  content: "\\E8E4";\n}\n.vm-message-icon--error {\n  color: #ff4949;\n}\n.vm-message-icon--error:before {\n  content: "\\E8E7";\n}\n.vm-message-icon--info {\n  color: #50bfff;\n}\n.vm-message-icon--info:before {\n  content: "\\E8EA";\n}\n.vm-message-icon--warning {\n  color: #f7ba2a;\n}\n.vm-message-icon--warning:before {\n  content: "\\E8EC";\n}\n.vm-message-icon--loading {\n  color: #bfcbd9;\n  animation: rotating 1s linear infinite;\n}\n.vm-message-icon--loading:before {\n  content: "\\E8FD";\n}\n.vm-message-icon--close:before {\n  content: "\\E8E8";\n}\n@keyframes rotating {\n  0% {\n    transform: rotateZ(0deg);\n  }\n  100% {\n    transform: rotateZ(360deg);\n  }\n}\n.vm-message {\n  position: fixed;\n  left: 50%;\n  top: 20px;\n  transform: translateX(-50%);\n  min-width: 224px;\n  padding: 10px 12px;\n  background-color: #fff;\n  box-sizing: border-box;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);\n  border-radius: 4px;\n  transition: opacity .3s, transform .4s;\n  overflow: hidden;\n}\n.vm-message__group {\n  position: relative;\n  display: flex;\n  height: 21px;\n  align-items: center;\n}\n.vm-message__inner {\n  margin: 0 34px 0 0;\n  font-size: 14px;\n  white-space: nowrap;\n  color: #8391a5;\n  text-align: justify;\n}\n.vm-message__icon {\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 8px;\n}\n.vm-message__close {\n  position: absolute;\n  top: 0;\n  right: 0;\n  color: #bfcbd9;\n  font-size: 21px;\n  cursor: pointer;\n}\n.vm-message__close:hover {\n  color: #97a8be;\n}\n.vm-message-fade-enter,\n.vm-message-fade-leave-active {\n  opacity: 0;\n  transform: translate(-50%, -100%);\n}\n',""])},function(A,s){function e(A,s){var e=A[1]||"",n=A[3];if(!n)return e;if(s&&"function"==typeof btoa){var B=t(n);return[e].concat(n.sources.map(function(A){return"/*# sourceURL="+n.sourceRoot+A+" */"})).concat([B]).join("\n")}return[e].join("\n")}function t(A){return"/*# sourceMappingURL=data:application/json;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(A))))+" */"}A.exports=function(A){var s=[];return s.toString=function(){return this.map(function(s){var t=e(s,A);return s[2]?"@media "+s[2]+"{"+t+"}":t}).join("")},s.i=function(A,e){"string"==typeof A&&(A=[[null,A,""]]);for(var t={},n=0;n<this.length;n++){var B=this[n][0];"number"==typeof B&&(t[B]=!0)}for(n=0;n<A.length;n++){var r=A[n];"number"==typeof r[0]&&t[r[0]]||(e&&!r[2]?r[2]=e:e&&(r[2]="("+r[2]+") and ("+e+")"),s.push(r))}},s}},function(A,s,e){A.exports=e.p+"iconfont.svg?c27fa08a7b564cde2a86cbec61adb199"},function(A,s,e){function t(A,s){for(var e=0;e<A.length;e++){var t=A[e],n=L[t.id];if(n){n.refs++;for(var B=0;B<n.parts.length;B++)n.parts[B](t.parts[B]);for(;B<t.parts.length;B++)n.parts.push(w(t.parts[B],s))}else{for(var r=[],B=0;B<t.parts.length;B++)r.push(w(t.parts[B],s));L[t.id]={id:t.id,refs:1,parts:r}}}}function n(A,s){for(var e=[],t={},n=0;n<A.length;n++){var B=A[n],r=s.base?B[0]+s.base:B[0],o=B[1],i=B[2],C=B[3],w={css:o,media:i,sourceMap:C};t[r]?t[r].parts.push(w):e.push(t[r]={id:r,parts:[w]})}return e}function B(A,s){var e=a(A.insertInto);if(!e)throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");var t=u[u.length-1];if("top"===A.insertAt)t?t.nextSibling?e.insertBefore(s,t.nextSibling):e.appendChild(s):e.insertBefore(s,e.firstChild),u.push(s);else{if("bottom"!==A.insertAt)throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");e.appendChild(s)}}function r(A){if(null===A.parentNode)return!1;A.parentNode.removeChild(A);var s=u.indexOf(A);s>=0&&u.splice(s,1)}function o(A){var s=document.createElement("style");return A.attrs.type="text/css",C(s,A.attrs),B(A,s),s}function i(A){var s=document.createElement("link");return A.attrs.type="text/css",A.attrs.rel="stylesheet",C(s,A.attrs),B(A,s),s}function C(A,s){Object.keys(s).forEach(function(e){A.setAttribute(e,s[e])})}function w(A,s){var e,t,n,B;if(s.transform&&A.css){if(!(B=s.transform(A.css)))return function(){};A.css=B}if(s.singleton){var C=l++;e=c||(c=o(s)),t=I.bind(null,e,C,!1),n=I.bind(null,e,C,!0)}else A.sourceMap&&"function"==typeof URL&&"function"==typeof URL.createObjectURL&&"function"==typeof URL.revokeObjectURL&&"function"==typeof Blob&&"function"==typeof btoa?(e=i(s),t=Q.bind(null,e,s),n=function(){r(e),e.href&&URL.revokeObjectURL(e.href)}):(e=o(s),t=g.bind(null,e),n=function(){r(e)});return t(A),function(s){if(s){if(s.css===A.css&&s.media===A.media&&s.sourceMap===A.sourceMap)return;t(A=s)}else n()}}function I(A,s,e,t){var n=e?"":t.css;if(A.styleSheet)A.styleSheet.cssText=y(s,n);else{var B=document.createTextNode(n),r=A.childNodes;r[s]&&A.removeChild(r[s]),r.length?A.insertBefore(B,r[s]):A.appendChild(B)}}function g(A,s){var e=s.css,t=s.media;if(t&&A.setAttribute("media",t),A.styleSheet)A.styleSheet.cssText=e;else{for(;A.firstChild;)A.removeChild(A.firstChild);A.appendChild(document.createTextNode(e))}}function Q(A,s,e){var t=e.css,n=e.sourceMap,B=void 0===s.convertToAbsoluteUrls&&n;(s.convertToAbsoluteUrls||B)&&(t=b(t)),n&&(t+="\n/*# sourceMappingURL=data:application/json;base64,"+btoa(unescape(encodeURIComponent(JSON.stringify(n))))+" */");var r=new Blob([t],{type:"text/css"}),o=A.href;A.href=URL.createObjectURL(r),o&&URL.revokeObjectURL(o)}var L={},E=function(A){var s;return function(){return void 0===s&&(s=A.apply(this,arguments)),s}}(function(){return window&&document&&document.all&&!window.atob}),a=function(A){var s={};return function(e){return void 0===s[e]&&(s[e]=A.call(this,e)),s[e]}}(function(A){return document.querySelector(A)}),c=null,l=0,u=[],b=e(10);A.exports=function(A,s){if("undefined"!=typeof DEBUG&&DEBUG&&"object"!=typeof document)throw new Error("The style-loader cannot be used in a non-browser environment");s=s||{},s.attrs="object"==typeof s.attrs?s.attrs:{},s.singleton||(s.singleton=E()),s.insertInto||(s.insertInto="head"),s.insertAt||(s.insertAt="bottom");var e=n(A,s);return t(e,s),function(A){for(var B=[],r=0;r<e.length;r++){var o=e[r],i=L[o.id];i.refs--,B.push(i)}if(A){t(n(A,s),s)}for(var r=0;r<B.length;r++){var i=B[r];if(0===i.refs){for(var C=0;C<i.parts.length;C++)i.parts[C]();delete L[i.id]}}}};var y=function(){var A=[];return function(s,e){return A[s]=e,A.filter(Boolean).join("\n")}}()},function(A,s){A.exports=function(A){var s="undefined"!=typeof window&&window.location;if(!s)throw new Error("fixUrls requires window.location");if(!A||"string"!=typeof A)return A;var e=s.protocol+"//"+s.host,t=e+s.pathname.replace(/\/[^\/]*$/,"/");return A.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi,function(A,s){var n=s.trim().replace(/^"(.*)"$/,function(A,s){return s}).replace(/^'(.*)'$/,function(A,s){return s});if(/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(n))return A;var B;return B=0===n.indexOf("//")?n:0===n.indexOf("/")?e+n:t+n.replace(/^\.\//,""),"url("+JSON.stringify(B)+")"})}},function(A,s){A.exports="data:application/x-font-ttf;base64,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"},function(A,s){A.exports="data:application/font-woff;base64,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"},function(A,s,e){var t=e(14)(e(3),e(15),null,null,null);t.options.__file="F:\\DailyLearning\\message\\src\\components\\message.vue",t.esModule&&Object.keys(t.esModule).some(function(A){return"default"!==A&&"__"!==A.substr(0,2)})&&console.error("named exports are not supported in *.vue files."),t.options.functional&&console.error("[vue-loader] message.vue: functional components are not supported with templates, they should use render functions."),A.exports=t.exports},function(A,s){A.exports=function(A,s,e,t,n){var B,r=A=A||{},o=typeof A.default;"object"!==o&&"function"!==o||(B=A,r=A.default);var i="function"==typeof r?r.options:r;s&&(i.render=s.render,i.staticRenderFns=s.staticRenderFns),t&&(i._scopeId=t);var C;if(n?(C=function(A){A=A||this.$vnode&&this.$vnode.ssrContext||this.parent&&this.parent.$vnode&&this.parent.$vnode.ssrContext,A||"undefined"==typeof __VUE_SSR_CONTEXT__||(A=__VUE_SSR_CONTEXT__),e&&e.call(this,A),A&&A._registeredComponents&&A._registeredComponents.add(n)},i._ssrRegister=C):e&&(C=e),C){var w=i.functional,I=w?i.render:i.beforeCreate;w?i.render=function(A,s){return C.call(s),I(A,s)}:i.beforeCreate=I?[].concat(I,C):[C]}return{esModule:B,exports:r,options:i}}},function(A,s,e){A.exports={render:function(){var A=this,s=A.$createElement,e=A._self._c||s;return e("transition",{attrs:{name:"vm-message-fade"}},[e("div",{directives:[{name:"show",rawName:"v-show",value:A.visible,expression:"visible"}],staticClass:"vm-message",class:A.customClass,on:{mouseenter:A.clearTimer,mouseleave:A.startTimer}},[e("div",{staticClass:"vm-message__group"},[e("p",{staticClass:"vm-message__inner"},[e("i",{staticClass:"vm-message__icon",class:[A.iconClass?A.iconClass:"vm-message-icon--"+A.type]}),A._t("default",[A._v(A._s(A.message))])],2),A._v(" "),A.showClose?e("div",{staticClass:"vm-message__close vm-message-icon--close",on:{click:A.close}}):A._e()])])])},staticRenderFns:[]},A.exports.render._withStripped=!0},function(s,e){s.exports=A}])});
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36591,7 +36684,7 @@ var routes = [{
         path: 'paperStatistic/:userKey',
         name: 'statistic-paperStatistic',
         component: function component(resolve) {
-            return __webpack_require__.e/* require */(1).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(93)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+            return __webpack_require__.e/* require */(1).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(92)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
         },
         meta: {
             title: '试卷统计'
@@ -36601,10 +36694,370 @@ var routes = [{
 /* harmony default export */ __webpack_exports__["a"] = (routes);
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 80 */,
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			memo[selector] = fn.call(this, selector);
+		}
+
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(74);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton) options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
 
 /***/ })
 ],[21]);
