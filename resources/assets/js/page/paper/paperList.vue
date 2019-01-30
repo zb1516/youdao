@@ -108,7 +108,7 @@
                  <tbody>
                      <template v-if="isContent == 1">
                          <template v-for="paper in paperList">
-                             <tr role="row" class="odd">
+                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
                                  <td class="sorting_1">{{paper.task_id}}</td>
                                  <td><span class="color-black">{{paper.paper_name}}</span></td>
                                  <td>{{paper.agency_name}}</td>
@@ -314,7 +314,6 @@
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
-                            that.pageSize = 5;
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }

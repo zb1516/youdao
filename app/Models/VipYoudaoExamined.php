@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\Common\CommonController;
 use App\http\Controllers\Youdao\PaperController;
 
@@ -164,7 +165,7 @@ class VipYoudaoExamined extends Model
         }else{
             $order = ['upload_time'=>'asc'];
         }
-        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','upload_time','image_processing_days','final_processing_days','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         $list = $this->formatPaperList($list['data']);
         $statistic = $this->paperStatistic($condition);
         return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
@@ -222,9 +223,9 @@ class VipYoudaoExamined extends Model
                 if(isset($row['subject_id']) && !empty($row['subject_id'])){
                     $subjectIdArr[] = $row['subject_id'];
                 }
-                if(isset($row['grade']) && !empty($row['grade'])){
+                /*if(isset($row['grade']) && !empty($row['grade'])){
                     $gradeIdArr[] = $row['grade'];
-                }
+                }*/
                 if(isset($row['image_examined_auditor_id']) && !empty($row['image_examined_auditor_id'])){
                     $authorIdArr[] = $row['image_examined_auditor_id'];
                 }
@@ -260,7 +261,7 @@ class VipYoudaoExamined extends Model
                 }
             }
 
-            $vipDict = new VipDict;
+            /*$vipDict = new VipDict;
             $gradeIdArr = array_unique($gradeIdArr);
             $gradeArr = [];
             if($gradeIdArr){
@@ -270,7 +271,7 @@ class VipYoudaoExamined extends Model
                         $gradeArr[$row['id']] = $row['title'];
                     }
                 }
-            }
+            }*/
 
             //获取审核人
             $user = new User;
@@ -285,6 +286,7 @@ class VipYoudaoExamined extends Model
                 }
             }
 
+            $gradeArr = Config('app.GRADE_VALUE');
             foreach ($list as $key=>$row){
                 if(!empty($row['agency_id'])){
                     $list[$key]['agency_name'] = $agencyArr[$row['agency_id']];
@@ -1198,6 +1200,93 @@ class VipYoudaoExamined extends Model
             $this->commit();
         }
         return $successArr;
+    }
+
+
+    public function getProcessList($taskId){
+        $processList = [];
+        $taskInfo = $this->findOne(array('task_id'=>$taskId), [], ['agency_id', 'upload_time', 'image_examined_time', 'image_examined_status', 'image_examined_auditor_id', 'create_uid']);
+        $vip_paper_examined_details = new VipPaperExaminedDetails;
+        $examinedDetails = $vip_paper_examined_details->findAll(array('task_id'=>$taskId), ['id'=>'asc']);
+        if($taskInfo){
+            if($taskInfo['image_examined_auditor_id']){
+                $userIdArr[] = $taskInfo['image_examined_auditor_id'];
+            }
+            if($taskInfo['create_uid']){
+                $userIdArr[] = $taskInfo['create_uid'];
+            }
+            if($examinedDetails){
+                foreach ($examinedDetails as $key=>$detail){
+                    $userIdArr[] = $detail['author_id'];
+                }
+            }
+
+            //获取用户姓名
+            $user = new User;
+            $userIdArr = array_unique($userIdArr);
+            $userArr = [];
+            if(!empty($userIdArr)){
+                $users = $user->getUsersByIds($userIdArr);
+                if(!empty($users)){
+                    foreach ($users  as $key=>$row){
+                        $userArr[$row['id']] = $row['user_realname'];
+                    }
+                }
+            }
+        }
+
+        if($taskInfo['create_uid'] && $taskInfo['agency_id']){
+            $data =  array(
+                'platform' => env('MICRO_API_SERVICE_TYPE'), //平台类型
+                'secret' => env('MICRO_API_SERVICE_KEY'),//秘钥
+                'userId' => $taskInfo['create_uid'], //用户id
+                'agencyId' =>$taskInfo['agency_id'],
+            );
+            $klibTeacherClient = new KlibTeacherClient();
+            $freeToken = $klibTeacherClient->getFreeToken($data);
+            $teacherInfo = $klibTeacherClient->getTeacherInfo($taskInfo['create_uid'], $freeToken);
+            if(!$teacherInfo){
+                throw new \Exception('抱歉，查询不到上传该任务的教师信息');
+            }
+        }
+
+        $processList[0] = array(
+            'process_name'=>'上传图片',
+            'process_time'=>$taskInfo['upload_time'],
+            'process_user'=>$teacherInfo['realName'],
+            'status'=>''
+        );
+        $processList[1] = array(
+            'process_name'=>'审核图片',
+            'process_time'=>$taskInfo['image_examined_time'],
+            'process_user'=>$userArr[$taskInfo['image_examined_auditor_id']],
+            'status'=>1
+        );
+
+        if($examinedDetails){
+            foreach ($examinedDetails as $key=>$detail){
+                $processList[] = array(
+                    'process_name'=>'第'.($key+1).'次有道接收',
+                    'process_time'=>$detail['youdao_receive_time'],
+                    'process_user'=>'有道',
+                    'status'=>''
+                );
+                $processList[] = array(
+                    'process_name'=>'第'.($key+1).'次有道处理',
+                    'process_time'=>$detail['youdao_processing_time'],
+                    'process_user'=>'有道',
+                    'status'=>''
+
+                );
+                $processList[] = array(
+                    'process_name'=>'第'.($key+1).'次审核试题',
+                    'process_time'=>$detail['youdao_processing_time'],
+                    'process_user'=>$userArr[$detail['author_id']],
+                    'status'=>($detail['audit_status']==1)?1:0
+                );
+            }
+        }
+        return $processList;
     }
 }
 
