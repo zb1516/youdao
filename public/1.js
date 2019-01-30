@@ -38491,25 +38491,24 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     methods: {
         detailMouseEnter: function detailMouseEnter(taskId) {
             // 查看详情 移入
-            var $this = $(this),
-                $processList = $('.js-process'),
-                offsetTop = $this.offset().top,
-                offsetLeft = $this.offset().left,
-                positionTop = parseInt(offsetTop - 20),
-                positionLeft = parseInt(offsetLeft - 570),
-                positionStr = 'top:' + positionTop + 'px;' + 'left:' + positionLeft + 'px';
+            var $this = $('#detail' + taskId);
+            var $processList = $('.js-process');
+            var offsetTop = $this.offset().top;
+            var offsetLeft = $this.offset().left;
+            var positionTop = parseInt(offsetTop - 20);
+            var positionLeft = parseInt(offsetLeft - 570);
+            var positionStr = 'top:' + positionTop + 'px;' + 'left:' + positionLeft + 'px';
+
             // 渲染数据
             var that = this;
-            /*axios.get('youdao/paper/getProcessList',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
+            that.processList = [];
+            axios.get('youdao/paper/getProcessList', { params: { userKey: that.userKey, taskId: taskId } }).then(function (data) {
                 if (data.data.errorMsg) {
                     that.$message.error(data.data.errorMsg);
                 } else {
                     that.processList = data.data;
-                     //that.$nextTick(function() {
-                    //    $('#mechanism-select-box').selectpicker('refresh');
-                    //});
                 }
-            })*/
+            });
 
             // 定位 显示
             $processList.attr('style', positionStr);
@@ -38518,8 +38517,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         detailMouseLeave: function detailMouseLeave(taskId) {
             var that = this;
             // 查看详情 移出
-            var $this = $(this),
-                $processList = $('.js-process');
+            var $processList = $('.js-process');
             that.timer = setTimeout(function () {
                 $processList.hide();
             }, 300);
@@ -38530,9 +38528,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         },
         processMouseLeave: function processMouseLeave() {
             var that = this;
-            var $this = $(this);
+            var $processList = $('.js-process');
             that.timer = setTimeout(function () {
-                $this.hide();
+                $processList.hide();
             }, 300);
         },
         agencyList: function agencyList() {
@@ -39330,12 +39328,17 @@ var render = function() {
                                   "a",
                                   {
                                     staticClass: "status green js-detial",
-                                    attrs: { href: "javascript:;" },
+                                    attrs: {
+                                      href: "javascript:;",
+                                      id: "detail" + paper.task_id
+                                    },
                                     on: {
                                       mouseenter: function($event) {
+                                        $event.preventDefault()
                                         _vm.detailMouseEnter(paper.task_id)
                                       },
                                       mouseleave: function($event) {
+                                        $event.preventDefault()
                                         _vm.detailMouseLeave(paper.task_id)
                                       }
                                     }
@@ -39391,13 +39394,13 @@ var render = function() {
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(process.process_user))]),
                           _vm._v(" "),
-                          process.status == 1
+                          process.status === 1
                             ? _c("td", { staticClass: "status yes" }, [
                                 _vm._v("通过")
                               ])
                             : _vm._e(),
                           _vm._v(" "),
-                          process.status == 0
+                          process.status === 0
                             ? _c("td", { staticClass: "status no" }, [
                                 _vm._v("退回")
                               ])

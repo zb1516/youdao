@@ -123,7 +123,7 @@
                                 <td>{{paper.image_examined_auditor_name}}</td>
                                 <td>{{paper.paper_examined_auditor_name}}</td>
                                 <td>
-                                    <a href='javascript:;' class='status green js-detial' @mouseenter="detailMouseEnter(paper.task_id)" @mouseleave="detailMouseLeave(paper.task_id)">查看详情</a>
+                                    <a href='javascript:;' class='status green js-detial' :id="'detail' + paper.task_id" @mouseenter.prevent="detailMouseEnter(paper.task_id)" @mouseleave.prevent="detailMouseLeave(paper.task_id)">查看详情</a>
                                 </td>
                             </tr>
                         </template>
@@ -152,8 +152,8 @@
                               <td>{{process.process_name}}</td>
                               <td>{{process.process_time}}</td>
                               <td>{{process.process_user}}</td>
-                              <td v-if="process.status == 1" class="status yes">通过</td>
-                              <td v-if="process.status == 0" class="status no">退回</td>
+                              <td v-if="process.status === 1" class="status yes">通过</td>
+                              <td v-if="process.status === 0" class="status no">退回</td>
                           </tr>
                       </template>
                   </tbody>
@@ -274,37 +274,34 @@
             methods:{
                 detailMouseEnter(taskId){
                     // 查看详情 移入
-                    var $this = $(this),
-                    $processList = $('.js-process'),
-                    offsetTop = $this.offset().top,
-                    offsetLeft = $this.offset().left,
-                    positionTop = parseInt(offsetTop - 20),
-                    positionLeft = parseInt(offsetLeft - 570),
-                    positionStr = 'top:'+ positionTop + 'px;' + 'left:' + positionLeft + 'px';
+                    var $this = $('#detail' + taskId);
+                    var $processList = $('.js-process');
+                    var offsetTop = $this.offset().top;
+                    var offsetLeft = $this.offset().left;
+                    var positionTop = parseInt(offsetTop - 20);
+                    var positionLeft = parseInt(offsetLeft - 570);
+                    var positionStr = 'top:'+ positionTop + 'px;' + 'left:' + positionLeft + 'px';
+
                     // 渲染数据
                     var that = this;
-                    /*axios.get('youdao/paper/getProcessList',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
+                    that.processList = [];
+                    axios.get('youdao/paper/getProcessList',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
                         } else {
                             that.processList = data.data;
-
-                            //that.$nextTick(function() {
-                            //    $('#mechanism-select-box').selectpicker('refresh');
-                            //});
                         }
-                    })*/
+                    })
 
                     // 定位 显示
-                    $processList.attr('style',positionStr);
-                    $processList.show();
+                     $processList.attr('style',positionStr);
+                     $processList.show();
 
                 },
                 detailMouseLeave(taskId){
                     var that = this;
                     // 查看详情 移出
-                    var $this = $(this),
-                    $processList = $('.js-process');
+                    var $processList = $('.js-process');
                     that.timer = setTimeout(function(){
                         $processList.hide();
                     },300);
@@ -315,9 +312,9 @@
                 },
                 processMouseLeave(){
                     var that = this;
-                    var $this = $(this);
+                    var $processList = $('.js-process');
                     that.timer = setTimeout(function(){
-                        $this.hide();
+                        $processList.hide();
                     },300);
                 },
                 agencyList(){
