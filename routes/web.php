@@ -90,7 +90,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken']], function (
     Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
     Route::any('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
     Route::any('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
-    //Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');
+    Route::get('paper/getProcessList', 'Youdao\PaperController@getProcessList');
 
 
 

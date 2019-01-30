@@ -89,12 +89,12 @@
                                 that.$message.error(data.data.errorMsg);
                             } else {
                                 if(data.data.status == 1){
-                                    that.status = data.data.status;
+                                    that.type = data.data.type;
                                     that.error = data.data.error;
-                                    /*that.$router.push({
+                                    that.$router.push({
                                         name: 'paper-paperExaminedResult',
-                                        params:{userKey:that.userKey,taskId:that.taskId,status:that.status,error:that.error}
-                                    });*/
+                                        params:{userKey:that.userKey,taskId:that.taskId,status:that.type,error:that.error}
+                                    });
                                 }else{
                                     that.$message.error('题目问题提交失败！');
                                 }
