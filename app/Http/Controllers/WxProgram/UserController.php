@@ -51,7 +51,7 @@ class UserController extends Controller
             //判断机构私库是否开通，如未开通，不让登陆
             if($agencyDeatil['questions_library_status'] != 3)
             {
-                throw new \Exception('请开通机构私库后登陆');
+                throw new \Exception('抱歉，您的机构未开通私库！');
             }
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
