@@ -58,7 +58,7 @@ class CommonController extends BaseController
         try {
             $subjects = $this->kmsSubjects->getSubjects($this->userKey);
             $subjectNames = [];
-            if(!$subjects)
+            if(empty($subjects))
             {
                 throw new \Exception('该教师下没有学科');
             }
