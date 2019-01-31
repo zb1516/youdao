@@ -85,7 +85,6 @@ class PaperController extends BaseController
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
             }
-
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }

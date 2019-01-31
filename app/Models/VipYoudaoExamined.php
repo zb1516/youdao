@@ -753,6 +753,7 @@ class VipYoudaoExamined extends Model
                     $question['name'] = $data['source'];
                     $question['agency_id'] = $data['agency_id'];
                     $question['yd_question_type'] = $q['quesType'];
+                    $question['is_yd'] = 1;
                     $newQuesId = $ques->add($question);
                     if(!$newQuesId){
                         $this->rollback();
@@ -1018,10 +1019,13 @@ class VipYoudaoExamined extends Model
                     'paper_examined_status'=>2
                 );
             }else{
-                //若有道审核未通过，则关闭任务
+                //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
                 $newData = array(
                     'image_examined_status'=>7,
                     'paper_examined_status'=>5,
+                    'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                    'final_processing_time'=>$data['youdaoProcessingTime'],
+                    'final_processing_days'=>$processing_days,
                 );
             }
 
@@ -1082,7 +1086,7 @@ class VipYoudaoExamined extends Model
         $result = json_decode($result, true);
         if($result['code'] !== 200){
             $this->rollback();
-            throw new \Exception('审核不通过反馈失败:'.$result['message']);
+            throw new \Exception('审核不通过反馈有道失败:'.$result['message']);
         }
 
         //插入新的有道处理记录
@@ -1302,7 +1306,7 @@ class VipYoudaoExamined extends Model
                     'process_name'=>'第'.($key+1).'次有道处理',
                     'process_time'=>$detail['youdao_processing_time'],
                     'process_user'=>'有道',
-                    'status'=>''
+                    'status'=>$detail['youdao_status']
 
                 );
                 $processList[] = array(
