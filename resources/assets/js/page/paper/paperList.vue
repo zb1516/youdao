@@ -48,11 +48,17 @@
                   <label for="" class="title">有道处理成功</label>
                   <div class="input-box">
                       <div class="date-range-box paper-list">
+                          <input type="hidden" name="">
+                      </div>
+                      <div class="input-inner">
+                          <input type="text" class="input-text input-date-range" readonly="readonly">
+                      </div>
+                      <!--<div class="date-range-box paper-list">
                           <input type="hidden" name="" v-model="beginDate" ref="beginDate">
                       </div>
                       <div class="input-inner">
                           <input type="text" v-model="endDate" ref="endDate" class="input-text input-date-range" readonly="readonly">
-                      </div>
+                      </div>-->
                   </div>
               </div>
               <div class="input-wrapper">
