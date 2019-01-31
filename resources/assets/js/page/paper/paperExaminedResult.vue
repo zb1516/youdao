@@ -16,7 +16,7 @@
             <p class="scuess-text">试卷审核通过</p>
             <p class="time-box"><span class="time"><span class="time-num js-time-num">3</span>秒</span><router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回列表</a></router-link></p>
           </div>
-          <div class="error-box" v-if="status == 0">
+          <div class="error-box" v-if="status == 2">
             <p class="icon-error"></p>
             <p class="error-title">试卷审核未通过</p>
             <div class="error-info-box" v-if="error > 0">

@@ -184,7 +184,28 @@ class PaperController extends BaseController
             $data = [];
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $list = $this->vipYoudaoExamined->paperAll($searchArgs);
-
+            $headerArr = [
+                '序号',
+                '试卷ID',
+                '试卷名称',
+                '学科',
+                '年级',
+                '省份',
+                '市',
+                '区',
+                '机构ID',
+                '机构名称',
+                '图片上传时间',
+                '图片审核时间',
+                '最终有道接收时间',
+                '最终有道处理时间',
+                '最终审核试卷时间',
+                '图片审核人',
+                '试卷审核人',
+                '审核图片工作日',
+                '有道加工工作日',
+                '审核试卷工作日'
+            ];
             if($list){
                 foreach ($list as $key=>$row){
                     $data[$key]['id'] = $key+1;
@@ -207,31 +228,7 @@ class PaperController extends BaseController
                     $data[$key]['image_processing_days'] = $row['image_processing_days'];
                     $data[$key]['final_processing_days'] = $row['final_processing_days'];
                     $data[$key]['paper_examined_days'] = $this->vipYoudaoExamined->getDiffDaysCount($row['final_processing_time'], $row['paper_examined_time']);//审核试卷工作日
-
                 }
-
-                $headerArr = [
-                    '序号',
-                    '试卷ID',
-                    '试卷名称',
-                    '学科',
-                    '年级',
-                    '省份',
-                    '市',
-                    '区',
-                    '机构ID',
-                    '机构名称',
-                    '图片上传时间',
-                    '图片审核时间',
-                    '最终有道接收时间',
-                    '最终有道处理时间',
-                    '最终审核试卷时间',
-                    '图片审核人',
-                    '试卷审核人',
-                    '审核图片工作日',
-                    '有道加工工作日',
-                    '审核试卷工作日'
-                ];
             }
             Export::export('试卷列表', $headerArr, $data);
         }catch (\Exception $e){
@@ -250,6 +247,18 @@ class PaperController extends BaseController
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $vipYoudaoQuestion = new VipYoudaoQuestion;
             $list = $vipYoudaoQuestion->questionAll($searchArgs);
+            $headerArr = [
+                '序号',
+                '试卷ID',
+                '试卷名称',
+                '试题ID',
+                '第几次',
+                '有道接收时间',
+                '有道处理时间',
+                '有道加工工作日',
+                '试卷审核通过时间',
+                '退回原因'
+            ];
             if($list){
                 foreach ($list as $key=>$row){
                     $data[$key]['id'] = $key+1;
@@ -263,19 +272,6 @@ class PaperController extends BaseController
                     $data[$key]['paper_examined_time'] = $row['paper_examined_time'];
                     $data[$key]['return_reason'] = $row['return_reason_content1'].' '.$row['return_reason_content2'].' '.$row['return_reason_answer1'].' '.$row['return_reason_answer2'].' '.$row['return_reason_analysis1'].' '.$row['return_reason_analysis2'];
                 }
-
-                $headerArr = [
-                    '序号',
-                    '试卷ID',
-                    '试卷名称',
-                    '试题ID',
-                    '第几次',
-                    '有道接收时间',
-                    '有道处理时间',
-                    '有道加工工作日',
-                    '试卷审核通过时间',
-                    '退回原因'
-                ];
             }
             Export::export('试题列表', $headerArr, $data);
         }catch(\Exception $e){
@@ -364,7 +360,9 @@ class PaperController extends BaseController
             //$data['author_info'] = $userInfo;
             if(empty($data) && $isPaperError == 0){
                 //试卷通过审核，通知有道
-                $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
+                //$result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
+                $result = 1;
+                return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -374,14 +372,22 @@ class PaperController extends BaseController
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));
 
-                return response()->json(['status' => $result]);
+                return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
                 //session($taskId,$data);
                 //试卷审核不通过，退回有道
-                $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
-
+                //$result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
+                $result = 1;
+                $error = 0;
+                if(!empty($data['list'])){
+                    $error += 1;
+                }
+                if($isPaperError == 1){
+                    $error += 1;
+                }
+                return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -390,23 +396,9 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
-                /*
-                $error = [];
-                if(!empty($data['list'])){
-                    $error[] = '题目问题';
-                }
-                if($isPaperError == 1){
-                    $error[] = '试卷问题';
-                }*/
-                $error = 0;
-                if(!empty($data['list'])){
-                    $error += 1;
-                }
-                if($isPaperError == 1){
-                    $error += 1;
-                }
 
-                return response()->json(['status' => 0, 'error'=>$error]);
+
+                return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
 
 
@@ -504,6 +496,21 @@ class PaperController extends BaseController
             return response()->json(['successTask'=>$successTask]);
         }catch (\Exception $e){
             file_put_contents('/dev/shm/'.date('YmdHis').'.txt',$e->getMessage());
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    /*获取任务的所有审核流程*/
+    public function getProcessList(Request $request){
+        try{
+            $taskId = $request->get('taskId','');
+            $processList = [];
+            if($taskId){
+                $processList = $this->vipYoudaoExamined->getProcessList($taskId);
+            }
+            return response()->json($processList);
+        }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }

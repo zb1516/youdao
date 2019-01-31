@@ -12610,6 +12610,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__error__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message__ = __webpack_require__(78);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_vue_multiple_message__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__statistic__ = __webpack_require__(269);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /**
@@ -12632,6 +12633,7 @@ window.Vue = __webpack_require__(3);
 
 
 
+
 Vue.prototype.$message = __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message___default.a;
 
 //
@@ -12642,7 +12644,7 @@ Vue.prototype.$message = __WEBPACK_IMPORTED_MODULE_8_vue_multiple_message___defa
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
-    routes: [].concat(_toConsumableArray(__WEBPACK_IMPORTED_MODULE_4__imagePaper__["a" /* default */]), _toConsumableArray(__WEBPACK_IMPORTED_MODULE_5__paper__["a" /* default */]), _toConsumableArray(__WEBPACK_IMPORTED_MODULE_7__error__["a" /* default */]))
+    routes: [].concat(_toConsumableArray(__WEBPACK_IMPORTED_MODULE_4__imagePaper__["a" /* default */]), _toConsumableArray(__WEBPACK_IMPORTED_MODULE_5__paper__["a" /* default */]), _toConsumableArray(__WEBPACK_IMPORTED_MODULE_7__error__["a" /* default */]), _toConsumableArray(__WEBPACK_IMPORTED_MODULE_9__statistic__["a" /* default */]))
 });
 //路由拦截器
 router.beforeEach(function (to, from, next) {
@@ -36292,6 +36294,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -36320,7 +36326,7 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "head-user-box" }, [
-        _vm._m(1),
+        _c("p", { staticClass: "picture" }),
         _vm._v(" "),
         _c("span", { staticClass: "name" }, [
           _c("a", { attrs: { href: "#" } }, [
@@ -36353,9 +36359,57 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(2),
+          _c(
+            "li",
+            { staticClass: "nav-box" },
+            [
+              _c(
+                "router-link",
+                {
+                  staticClass: "back-btn",
+                  attrs: {
+                    to: {
+                      name: "paper-paperList",
+                      params: { userKey: _vm.userKey }
+                    }
+                  }
+                },
+                [_vm._v("试卷审核")]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
-          _vm._m(3)
+          _c("li", { staticClass: "nav-box" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "child-nav" }, [
+              _c("ul", { staticClass: "list" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  { staticClass: "link-box" },
+                  [
+                    _c(
+                      "router-link",
+                      {
+                        staticClass: "back-btn",
+                        attrs: {
+                          to: {
+                            name: "statistic-paperStatistic",
+                            params: { userKey: _vm.userKey }
+                          }
+                        }
+                      },
+                      [_vm._v("试卷审核统计")]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
         ])
       ])
     ])
@@ -36376,49 +36430,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "picture" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _c("img", {
-          attrs: {
-            src: __webpack_require__(73),
-            alt: "詹志明"
-          }
-        })
-      ])
+    return _c("a", { attrs: { href: "#" } }, [
+      _vm._v("数据统计"),
+      _c("span", { staticClass: "icon" })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-box" }, [
-      _c("a", { attrs: { href: "reviewPaperList.html" } }, [_vm._v("试卷审核")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-box" }, [
-      _c("a", { attrs: { href: "#" } }, [
-        _vm._v("数据统计"),
-        _c("span", { staticClass: "icon" })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "child-nav" }, [
-        _c("ul", { staticClass: "list" }, [
-          _c("li", { staticClass: "link-box" }, [
-            _c("a", { attrs: { href: "statisticPicList.html" } }, [
-              _vm._v("图片审核统计")
-            ])
-          ]),
-          _vm._v(" "),
-          _c("li", { staticClass: "link-box" }, [
-            _c("a", { attrs: { href: "statisticPaperList.html" } }, [
-              _vm._v("试卷审核统计")
-            ])
-          ])
-        ])
+    return _c("li", { staticClass: "link-box" }, [
+      _c("a", { attrs: { href: "statisticPicList.html" } }, [
+        _vm._v("图片审核统计")
       ])
     ])
   }
@@ -36439,12 +36462,7 @@ if (false) {
 module.exports = "/images/logo.png?f34de66ef277147d16f1b6dbc284125d";
 
 /***/ }),
-/* 73 */
-/***/ (function(module, exports) {
-
-module.exports = "/images/user_picture.jpg?1f31f9967ff23e207f3b717c2e17daba";
-
-/***/ }),
+/* 73 */,
 /* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -36562,6 +36580,220 @@ var routes = [{
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */,
+/* 119 */,
+/* 120 */,
+/* 121 */,
+/* 122 */,
+/* 123 */,
+/* 124 */,
+/* 125 */,
+/* 126 */,
+/* 127 */,
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */,
+/* 138 */,
+/* 139 */,
+/* 140 */,
+/* 141 */,
+/* 142 */,
+/* 143 */,
+/* 144 */,
+/* 145 */,
+/* 146 */,
+/* 147 */,
+/* 148 */,
+/* 149 */,
+/* 150 */,
+/* 151 */,
+/* 152 */,
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */,
+/* 157 */,
+/* 158 */,
+/* 159 */,
+/* 160 */,
+/* 161 */,
+/* 162 */,
+/* 163 */,
+/* 164 */,
+/* 165 */,
+/* 166 */,
+/* 167 */,
+/* 168 */,
+/* 169 */,
+/* 170 */,
+/* 171 */,
+/* 172 */,
+/* 173 */,
+/* 174 */,
+/* 175 */,
+/* 176 */,
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */,
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */,
+/* 244 */,
+/* 245 */,
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */,
+/* 250 */,
+/* 251 */,
+/* 252 */,
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_main_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_main_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__page_main_vue__);
+
+
+var routes = [{
+    path: '/statistic',
+    component: __WEBPACK_IMPORTED_MODULE_0__page_main_vue___default.a,
+    children: [{
+        path: 'paperStatistic/:userKey',
+        name: 'statistic-paperStatistic',
+        component: function component(resolve) {
+            return __webpack_require__.e/* require */(13).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(270)]; (resolve.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}.bind(this)).catch(__webpack_require__.oe);
+        },
+        meta: {
+            title: '试卷统计'
+        }
+    }]
+}];
+/* harmony default export */ __webpack_exports__["a"] = (routes);
 
 /***/ })
 ],[21]);

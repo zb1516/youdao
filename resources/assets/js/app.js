@@ -18,6 +18,7 @@ import "./http"
 import error from './error'
 import "./http"
 import Message from 'vue-multiple-message'
+import statistic from './statistic'
 
 Vue.prototype.$message = Message
 
@@ -33,7 +34,8 @@ const router=new VueRouter({
     routes: [
         ...imagePaper,
         ...paper,
-        ...error
+        ...error,
+        ...statistic
     ]
 })
 //路由拦截器

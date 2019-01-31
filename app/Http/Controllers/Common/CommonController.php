@@ -157,7 +157,8 @@ class CommonController extends BaseController
     public function getAllGrade(Request $request)
     {
         try {
-            $allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
+            //$allGrade = $this->vipDict->getAllGrade($category = 'GRADE');//获取所有年级
+            $allGrade = Config('app.GRADE_VALUE');
             return response()->json($allGrade);
         } catch (\Exception $e) {
             return [

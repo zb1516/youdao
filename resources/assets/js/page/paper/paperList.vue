@@ -19,8 +19,8 @@
                   <div class="input-box">
                       <select class="grade-select-box" id="grade-select-box" name="grade-select-box"  v-model="gradeValue" data-options="width: 100" >
                           <option value="0">全部</option>
-                          <option v-for="option in optionsGrade" :value="option.gradeId">
-                              {{option.gradeName}}
+                          <option v-for="(option,index) in optionsGrade" :value="index">
+                              {{option}}
                           </option>
                       </select>
                   </div>
@@ -107,8 +107,8 @@
                  </thead>
                  <tbody>
                      <template v-if="isContent == 1">
-                         <template v-for="paper in paperList">
-                             <tr role="row" class="odd">
+                         <template v-for="(paper,index) in paperList">
+                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
                                  <td class="sorting_1">{{paper.task_id}}</td>
                                  <td><span class="color-black">{{paper.paper_name}}</span></td>
                                  <td>{{paper.agency_name}}</td>
@@ -160,7 +160,7 @@
     import "../../static/js/pagination/pagination.css"
     import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
     import "../../static/js/pagination/pagination.min.js"
-    import "../../static/js/jquery.common.js"
+    import common from "../../static/js/jquery.common.js"
 
 
 
@@ -224,6 +224,7 @@
             that.agencyList();
             that.statusList();
             that.doSearch();
+            common.init();
         },
         watch:{
             searchArgs:function() {
@@ -313,7 +314,6 @@
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
-                            that.pageSize = 5;
                             that.doSearch();
                             console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }

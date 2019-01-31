@@ -98,4 +98,22 @@ class KlibTeacherClient
             throw new \Exception($e->getMessage());
         }
     }
+
+
+    /**
+     * 获取免密token
+     * @param $data
+     * @return mixed
+     */
+    public static function getFreeToken($data)
+    {
+        try{
+            $client = new Client(env('MICRO_API_SERVICE_HOST') .'/authService/TeacherAuth', false);
+            $res = $client->getFreeToken($data);
+            return $res;
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+
+    }
 }
