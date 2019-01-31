@@ -13,7 +13,14 @@ const routes = [
                     title:'试卷统计',
                 }
             },
-
+            {
+                path:'imagePaperStatistic/:userKey',
+                name:'statistic-imagePaperStatistic',
+                component:resolve => require(['./page/statistic/imagePaperStatistic'], resolve),
+                meta:{
+                    title:'图片审核统计',
+                }
+            },
 
         ]
     }
