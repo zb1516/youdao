@@ -342,6 +342,10 @@
                     that.isUploadTimeSort = 'desc';
                     that.isUploadTimeShow = 0;
                 }
+                that.isExaminedTimeTrue = 1;
+                that.isExaminedStatusTrue = 1;
+                that.isExaminedStatusSort = 'desc';
+                that.isExaminedTimeSort = 'desc';
                 that.doSearch();
             },
             selectExaminedTimeGet: function () {
@@ -354,6 +358,10 @@
                     that.isExaminedTimeSort = 'desc';
                     that.isExaminedTimeShow = 0;
                 }
+                that.isUploadTimeTrue = 1;
+                that.isExaminedStatusTrue = 1;
+                that.isUploadTimeSort = 'desc';
+                that.isExaminedStatusSort = 'desc';
                 that.doSearch();
             },
             selectExaminedStatusGet: function () {
@@ -366,6 +374,10 @@
                     that.isExaminedStatusSort = 'desc';
                     that.isExaminedStatusShow = 0;
                 }
+                that.isUploadTimeTrue = 1;
+                that.isExaminedTimeTrue = 1;
+                that.isUploadTimeSort = 'desc';
+                that.isExaminedTimeSort = 'desc';
                 that.doSearch();
             },
 
