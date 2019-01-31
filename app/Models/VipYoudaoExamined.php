@@ -56,10 +56,10 @@ class VipYoudaoExamined extends Model
         }
         //有道最终处理日期
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
+            $searchArgs['beginDate'] = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$formData['beginDate'])));
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
+            $searchArgs['endDate'] = date('Y-m-d H:i:s',strtotime(str_replace('/','-',$formData['endDate'])));
         }
         if(isset($formData['status'])){
             $searchArgs['status'] = abs($formData['status']);
