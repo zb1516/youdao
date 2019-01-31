@@ -208,6 +208,8 @@
 </template>
 
 <script>
+    import "../../static/js/jquery.mloading.js"
+    import "../../static/css/jquery.mloading.css"
     import "../../static/css/jquery.fancybox.css"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery-ui.min.js"
@@ -248,7 +250,7 @@
                 errorShow:false,
                 errorMssage: "请选择必填项",
                 sortTaskIdQuestion:[],
-                sortTaskIdAnswer:[]
+                sortTaskIdAnswer:[],
             }
         },
         computed: {
@@ -375,6 +377,7 @@
                 })
             },
             doSearch(){
+                //if (this.isLoading) return;
                 var resultImage = new Array();
                 //var imageData = new Array();
                 if(this.$route.params.paperType == 1){
@@ -445,7 +448,9 @@
             },
             imagePaperDetail(){
                 var that = this;
+                $("body").mLoading('show');
                 axios.get('youdao/imagePaper/imagePaperDetail',{params:{userKey:that.userKey,taskId:that.taskId,paperType:that.paperType}}).then(function(data){
+                    $("body").mLoading('hide');
                     if(data.data){
                         if(that.paperType == 1){
                             that.imagePaperDetailContent = data.data;
