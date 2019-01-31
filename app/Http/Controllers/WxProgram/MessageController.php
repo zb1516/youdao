@@ -26,7 +26,7 @@ class MessageController extends Controller
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //查询所有用户已读消息记录
             $vipMessageViewLogModel=new VipMessageViewLog();
-            $messageViewList=$vipMessageViewLogModel->findAll();
+            $messageViewList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId']]);
             $messageReadIds=[];
             foreach($messageViewList as $key => $val)
             {
@@ -35,7 +35,6 @@ class MessageController extends Controller
             //获取模板消息
             $vipMessageRemindModel=new VipMessageRemind();
             $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageReadIds]],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
-
             foreach($list['data'] as $key => $val)
             {
                 if(in_array($val['id'],$messageReadIds))
