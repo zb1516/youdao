@@ -10,11 +10,11 @@ namespace App\http\Controllers\Youdao;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Common\CommonController;
-use App\Http\Controllers\WxProgram\WxController;
 use App\Libs\Export;
 use App\Models\User;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
+use App\Services\WxService;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
@@ -23,7 +23,8 @@ class PaperController extends BaseController
 {
 
     protected $getUserKey;
-    public function __construct(){
+    public function __construct()
+    {
         parent::__construct();
         $this->user = new User;
         //$this->getUserKey = $this->userKey;
@@ -37,7 +38,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperList(Request $request){
+    public function paperList(Request $request)
+    {
         try{
             //$userInfo = $this->user->getUserInfo($this->userKey);
             $currentPage = abs($request->get('currentPage', 1));
@@ -57,7 +59,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperStatistic(Request $request){
+    public function paperStatistic(Request $request)
+    {
         try{
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->paperStatistic($searchArgs);
@@ -72,7 +75,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperInfo(Request $request){
+    public function paperInfo(Request $request)
+    {
         try{
             $taskId = trim($request->taskId);
             if($taskId){
@@ -89,7 +93,8 @@ class PaperController extends BaseController
 
 
 
-    public function getPaperInfo($taskId){
+    public function getPaperInfo($taskId)
+    {
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
@@ -179,7 +184,8 @@ class PaperController extends BaseController
      * 试卷导出
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExport(){
+    public function paperExport()
+    {
         try{
             $data = [];
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
@@ -241,7 +247,8 @@ class PaperController extends BaseController
      * 试题导出
      * @return \Illuminate\Http\JsonResponse
      */
-    public function questionExport(){
+    public function questionExport()
+    {
         try{
             $data = [];
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
@@ -286,7 +293,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExaminedOne(Request $request){
+    public function paperExaminedOne(Request $request)
+    {
         try{
             $taskId = $request->post('taskId',0);
             $errorStr = trim($request->post('errorStr',''), '\'');
@@ -310,37 +318,22 @@ class PaperController extends BaseController
                         $errorData[$key]['answer'] = '';
                     }
                     if(isset($errorData[$key]['analysis'])){
-                        $errorData[$key]['analysis'] = implode(',', $error['answer']);
+                        $errorData[$key]['analysis'] = implode(',', $error['analysis']);
                     }else{
                         $errorData[$key]['analysis'] = '';
                     }
                 }
             }
-
+            $request->session()->put($taskId,'');//清空session
             $data = array(
                 'task_id'=>$taskId,
                 'list'=>$errorData
             );
-
-            /*$data = array(
-                'task_id'=>$taskId,
-                'list'=>array(
-                    array(
-                        'number'=>2,
-                        'content'=>'题干不完整，题干错误',
-                        'answer'=>'答案不完整',
-                        'analysis'=>'解析不完整'
-                    ),
-                    array(
-                        'number'=>5,
-                        'content'=>'题干错误',
-                        'answer'=>'答案不完整',
-                        'analysis'=>'解析错误'
-                    ),
-                )
-            );*/
             $request->session()->put($taskId,$data);
-            $status = 1;
+            $status = 0;
+            if($request->session()->has($taskId)){
+                $status = 1;
+            }
             return response()->json(['status' => $status]);
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -349,7 +342,8 @@ class PaperController extends BaseController
 
 
 
-    public function paperExaminedTwo(Request $request){
+    public function paperExaminedTwo(Request $request)
+    {
         try{
             $taskId = $request->post('taskId',0);
             $isPaperError = $request->post('isPaperError',0);//试卷是否有问题
@@ -357,8 +351,7 @@ class PaperController extends BaseController
             $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
             $userInfo = $this->user->getUserInfo($this->userKey);
             $paperInfo = $this->getPaperInfo($taskId);
-            //$data['author_info'] = $userInfo;
-            if(empty($data) && $isPaperError == 0){
+            if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
                 //$result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 $result = 1;
@@ -371,22 +364,24 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));
-
                 return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
-                //session($taskId,$data);
                 //试卷审核不通过，退回有道
                 //$result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
                 $result = 1;
                 $error = 0;
-                if(!empty($data['list'])){
-                    $error += 1;
+                if(!empty($data['list']) && $isPaperError == 0){
+                    $error = 1;
                 }
-                if($isPaperError == 1){
-                    $error += 1;
+                if($isPaperError == 1 && empty($data['list'])){
+                    $error = 2;
                 }
+                if(!empty($data['list']) && $isPaperError == 1){
+                    $error = 3;
+                }
+
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
@@ -396,7 +391,6 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
                 ));
-
 
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
@@ -413,7 +407,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function questionError(Request $request){
+    public function questionError(Request $request)
+    {
         try{
             $code = $request->post('code',0);
             $message = $request->post('message','');
@@ -436,7 +431,8 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExamined(Request $request){
+    public function paperExamined(Request $request)
+    {
         try{
             $code = $request->post('code',0);
             $message = $request->post('message','');
@@ -444,9 +440,19 @@ class PaperController extends BaseController
             $status = 0;
             if($code == 200){
                 $postData = json_decode($data,true);
-                //todo 有道反馈时可能没有通过有道审核，这边需要做处理
-                //更新任务的有道接收、处理时间
+                //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($postData);
+                if($postData['isPass'] == 0){
+                    //若未通过有道审核，则关闭任务，给用户发模板消息
+                    $paperInfo = $this->getPaperInfo($postData['taskId']);
+                    $this->sendWxTemplate(array(
+                        'taskId'=>$postData['taskId'],
+                        'openId'=>$paperInfo['open_id'],
+                        'type'=>1,
+                        'userId'=>$paperInfo['create_uid'],
+                        'content'=>'抱歉，您提交的图片未通过有道审核，已被关闭。'
+                    ));
+                }
             }
             return response()->json(['status'=>$status]);
         }catch (\Exception $e){
@@ -460,8 +466,10 @@ class PaperController extends BaseController
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendWxTemplate($data){
-        $wxTemplate = new WxController;
+    public function sendWxTemplate($data)
+    {
+        //$wxTemplate = new WxController;
+        $wxTemplate = new WxService();
         $wxTemplateData =  array(
             'taskId'=>$data['taskId'],
             'openId'=>$data['openId'],
@@ -477,7 +485,8 @@ class PaperController extends BaseController
      * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过
      * @return \Illuminate\Http\JsonResponse
      */
-    public function batchPaperExamined(){
+    public function batchPaperExamined()
+    {
         try{
             $successTask = $this->vipYoudaoExamined->batchExamined();
             //批量发送微信模版消息
@@ -502,7 +511,8 @@ class PaperController extends BaseController
 
 
     /*获取任务的所有审核流程*/
-    public function getProcessList(Request $request){
+    public function getProcessList(Request $request)
+    {
         try{
             $taskId = $request->get('taskId','');
             $processList = [];

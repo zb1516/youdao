@@ -131,7 +131,6 @@
             methods:{
                 doSelected(){
                     $(document).on('click','.js-checkbox',function(){
-                        //alert($(this).attr('title'));
                         $(this).hasClass('select') ? $(this).removeClass('select') : $(this).addClass('select');
                     })
                 },
@@ -144,8 +143,7 @@
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                alert(data.data.errorMsg);
-                                //that.$message.error(data.data.errorMsg);
+                                that.$message.error(data.data.errorMsg);
                             } else {
                                 that.paperInfo =  data.data;
                                 that.questions = that.paperInfo.youdao_info.questions;
@@ -169,8 +167,7 @@
                     axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorArr+"'").then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                alert(data.data.errorMsg);
-                                //that.$message.error(data.data.errorMsg);
+                                that.$message.error(data.data.errorMsg);
                             } else {
                                 if(data.data.status == 1){
                                     that.$router.push({

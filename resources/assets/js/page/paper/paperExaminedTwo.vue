@@ -73,9 +73,7 @@
                     var that = this;
                     if(that.isPaperError == 1){
                         if($("textarea[name='paperErrorDesc']").val() == ''){
-                            alert('请填写试卷存在的问题');
-                            return false;
-                            //that.$message.error('请填写试卷存在的问题');
+                            that.$message.error('请填写试卷存在的问题');
                         }else{
                             that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
                         }
