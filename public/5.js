@@ -21008,7 +21008,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 																});
 												}
 												if ($('.pic-list a').length) {
-																console.log('in');
 																var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
 																    topRatio = $('.pic-list-wrapper').length ? '0.1' : '0.5';
 																self.initGallery(parentBox, topRatio);
