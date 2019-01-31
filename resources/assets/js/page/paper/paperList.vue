@@ -152,7 +152,6 @@
     </div>
 </template>
 <script>
-    //
     import "../../static/js/jquery-1.12.2.min.js"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery.dataTables.min.js"
@@ -161,10 +160,8 @@
     import "../../static/js/datetimepicker/jquery.datetimepicker.full.js"
     import "../../static/js/pagination/pagination.min.js"
     import common from "../../static/js/jquery.common.js"
-
-
-
     import {mapGetters} from 'vuex'
+
     export default {
         data(){
             return {
@@ -382,7 +379,9 @@
                        that.sortType = 'desc';
                     }
                 }
+                that.currentPage = 1;
                 that.doSearch();
+
             },
 
 

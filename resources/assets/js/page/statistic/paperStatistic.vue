@@ -456,6 +456,7 @@
                            that.sortType = 'desc';
                         }
                     }
+                    that.currentPage = 1;
                     that.doSearch();
                 },
                 showPaper(taskId){
