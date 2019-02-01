@@ -346,8 +346,8 @@ class VipYoudaoExamined extends Model
             $provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
             $condition['province'] = array('eq' => $provinceName);
         }
-        if (!empty($searchArgs['country'])) {
-            $countryName = isset($countrys[$searchArgs['country']]) ? $countrys[$searchArgs['country']] : '';
+        if (!empty($searchArgs['city'])) {
+            $countryName = isset($countrys[$searchArgs['city']]) ? $countrys[$searchArgs['city']] : '';
             $condition['city'] = array('eq' => $countryName);
         }
         if (!empty($searchArgs['grade'])) {
@@ -360,7 +360,7 @@ class VipYoudaoExamined extends Model
             $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
         }
         if (!empty($searchArgs['paperName'])) {
-            $condition['paper_name'] = array('like' => "%" . $searchArgs['paperName'] . "%");
+            $condition['paper_name'] = array('like' => '%' . $searchArgs['paperName'] . '%');
         }
         if (empty($condition)) {
             $condition = [];
@@ -389,8 +389,8 @@ class VipYoudaoExamined extends Model
                 'id' => $item['id'],
                 'taskId' => $item['task_id'],
                 'paperType' => $item['paper_type'],
-                'province' => $item['province'],
-                'city' => $item['city'],
+                'province' => isset($provinceIdNames[$item['province']]) ? $provinceIdNames[$item['province']] : '',
+                'city' => isset($countrys[$item['city']]) ? $countrys[$item['city']] : '',
                 'paperName' => $item['paper_name'],
                 'uploadTime' => $item['upload_time'],
                 'imageExaminedTime' => $item['image_examined_time'],
@@ -430,8 +430,8 @@ class VipYoudaoExamined extends Model
         if (isset($formData['province'])) {
             $searchArgs['province'] = $formData['province'];
         }
-        if (isset($formData['country'])) {
-            $searchArgs['country'] = $formData['country'];
+        if (isset($formData['city'])) {
+            $searchArgs['city'] = $formData['city'];
         }
         if (isset($formData['grade'])) {
             $searchArgs['grade'] = $formData['grade'];

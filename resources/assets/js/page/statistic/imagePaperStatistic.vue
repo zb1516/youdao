@@ -1,5 +1,6 @@
 <template>
     <div class="main table-list">
+        <!-- search -->
         <div class="filter-form-box">
             <div class="inner cf">
                 <div class="input-wrapper">
@@ -53,7 +54,7 @@
                     </div>
                 </div>
                 <div class="input-wrapper">
-                    <label for="" class="title">上传时间</label>
+                    <label for="" class="title">审核图片</label>
                     <div class="input-box">
                         <div class="date-range-box">
                             <input type="hidden" name="">
@@ -64,13 +65,13 @@
                     </div>
                 </div>
                 <div class="input-wrapper">
-                    <label for="" class="title">状态</label>
+                    <label for="" class="title">审核人</label>
                     <div class="input-box">
-                        <select class="status-select-box" id="status-select-box" name="status-select-box" v-model="curImageExaminedStatus" data-options="width: 100">
-                            <option value="1">待审核</option>
-                            <option value="2">已通过</option>
-                            <option value="3">退回</option>
-                            <option value="4">试卷重复</option>
+                        <select class="status-select-box" id="status-select-box" name="status-select-box" data-options="width: 100">
+                            <option value="0">全部</option>
+                            <option value="1">张新乐</option>
+                            <option value="2">刘佳</option>
+                            <option value="3">陈紫曦</option>
                         </select>
                     </div>
                 </div>
@@ -85,83 +86,66 @@
                         </select>
                     </div>
                 </div>
-                <button type="button" name="button" class="list-search-btn"  @click="doSearch">搜索</button>
+                <button type="button" name="button" class="list-search-btn">搜索</button>
             </div>
         </div>
         <!-- list -->
-        <div class="pic-list-wrapper">
+        <div class="pic-list-wrapper statistic-pic">
             <div class="pic-number-wrapper">
                 <span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>
-                <span class="info-n vertify">待审核<span class="num yellow">
-                    <template v-if="listCount['待审核']">{{listCount['待审核']}}</template><template v-else>0</template></span>套</span>
-                <span class="info-n right">已通过<span class="num green">
-                    <template v-if="listCount['已通过']">{{listCount['已通过']}}</template><template v-else>0</template></span>套</span>
-                <span class="info-n pass">退回<span class="num red">
-                    <template v-if="listCount['退回']">{{listCount['退回']}}</template><template v-else>0</template></span>套</span>
-                <span class="info-n like">试卷重复<span class="num red">
-                    <template v-if="listCount['试卷重复']">{{listCount['试卷重复']}}</template><template v-else>0</template>
-                </span>套</span>
-                <div class="search-wrapper">
-                    <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
-                    <span class="search-btn"  @click="doSearch"></span>
+                <div class="tool-box">
+                    <div class="search-wrapper">
+                        <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
+                        <span class="search-btn"  @click="doSearch"></span>
+                    </div>
+                    <button type="button" name="button" class="export-btn">导出</button>
                 </div>
             </div>
             <div class="pic-form-wrapper">
                 <table id="pic-form-box" class="pic-form-box dataTable no-footer" role="grid" style="width: 1400px;">
                     <thead>
                     <tr role="row">
-                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">任务ID</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="序号" style="width: 84px;">序号</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="学科" style="width: 308px;">学科</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="省/市" style="width: 308px;">省/市</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
                         <th :class="isUploadTimeTrue?'sorting':(isUploadTimeShow?'sorting_asc':'sorting_desc')" id="paginationBox1" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;" @click="selectUploadTimeGet">上传时间</th>
                         <th :class="isExaminedTimeTrue?'sorting':(isExaminedTimeShow?'sorting_asc':'sorting_desc')" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectExaminedTimeGet">审核时间</th>
-                        <th :class="isExaminedStatusTrue?'sorting':(isExaminedStatusShow?'sorting_asc':'sorting_desc')" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectExaminedStatusGet">审核状态</th>
-                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="处理天数" style="width: 308px;">处理天数</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="审核人" style="width: 308px;">审核人</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <template v-if="isContent == 1">
-                    <template v-for="imagePaper in imagePaperList">
-                        <tr role="row" class="odd">
-                            <td class="sorting_1">{{imagePaper.number}}</td>
-                            <td><span class="color-black">{{imagePaper.paperName}}</span></td>
-                            <td>{{imagePaper.agencyName}}</td>
-                            <td>{{imagePaper.uploadTime}}</td>
-                            <td>{{imagePaper.imageExaminedTime}}</td>
-                            <td>
-                                <template v-if="imagePaper.imageExaminedStatusName == '已通过'">
-                                    <span class="status green">{{imagePaper.imageExaminedStatusName}}</span>
-                                </template>
-                                <template v-else-if="imagePaper.imageExaminedStatusName == '退回'">
-                                    <span class="status red">{{imagePaper.imageExaminedStatusName}}</span>
-                                </template>
-                                <template v-else>
-                                    <span class="status">{{imagePaper.imageExaminedStatusName}}</span>
-                                </template>
-                            </td>
-                            <td>
-                                <template v-if="imagePaper.imageExaminedStatusName == '待审核'">
-                                    <router-link  :to="{name:'imagePaper-imagePaperList-imagePaperDetail',params:{userKey:userKey,taskId:imagePaper.taskId,paperType:imagePaper.paperType}}" target="_blank"><a class="reviewBtn">审核</a></router-link>
-                                </template>
-                            </td>
-                        </tr>
-                    </template>
+                        <template v-for="imagePaper in imagePaperList">
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">{{imagePaper.number}}</td>
+                                <td><span class="color-black">{{imagePaper.paperName}}</span></td>
+                                <td>{{imagePaper.subjectName}}</td>
+                                <td>{{imagePaper.province}}/{{imagePaper.city}}</td>
+                                <td>{{imagePaper.agencyName}}</td>
+                                <td>{{imagePaper.uploadTime}}</td>
+                                <td>{{imagePaper.imageExaminedTime}}</td>
+                                <td>{{imagePaper.imageProcessingDays}}</td>
+                                <td>{{imagePaper.imageExaminedAuditorName}}</td>
+                            </tr>
+                        </template>
                     </template>
                     <template v-else>
                         <!--<p style="text-align:center;">暂无数据</p>-->
                     </template>
                     </tbody>
                 </table>
-                <!--<template v-if="isContent == 1">-->
+
                 <div id="paginationBox" class="m-pages" :style="isContent?'display:block':'display:none'"></div>
-                <!--</template>-->
-                <!--<template v-else>-->
-                    <!--<div id="paginationBox" class="m-pages"></div>-->
-                <!--</template>-->
+
             </div>
         </div>
     </div>
 </template>
+
 
 <script>
     import "../../static/js/jquery-1.12.2.min.js"
@@ -372,26 +356,10 @@
                 that.isUploadTimeSort = 'desc';
                 that.isExaminedStatusSort = 'desc';
                 that.doSearch();
-            },
-            selectExaminedStatusGet: function () {
-                var that = this;
-                that.isExaminedStatusTrue = 0;
-                if(!that.isExaminedStatusShow){
-                    that.isExaminedStatusShow = 1;
-                    that.isExaminedStatusSort = 'asc';
-                }else{
-                    that.isExaminedStatusSort = 'desc';
-                    that.isExaminedStatusShow = 0;
-                }
-                that.isUploadTimeTrue = 1;
-                that.isExaminedTimeTrue = 1;
-                that.isUploadTimeSort = 'desc';
-                that.isExaminedTimeSort = 'desc';
-                that.doSearch();
-            },
+            }
+
 
         }
     }
 
 </script>
-
