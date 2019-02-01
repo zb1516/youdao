@@ -21,7 +21,7 @@ class VipPaperImage extends Model
             $condition = array(
                 'task_id' => $taskId,
             );
-            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             return $result;
         }else{
             if($paperType == 1){
@@ -29,19 +29,19 @@ class VipPaperImage extends Model
                     'task_id' => $taskId,
                     'image_type' => 3,
                 );
-                $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return $result;
             }else{
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 1,
                 );
-                $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 2,
                 );
-                $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return ['question' => $question, 'answer' => $answer];
             }
         }
@@ -144,7 +144,7 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 3,
             );
-            $resultAll = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $resultAll = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($result);
             if($resultAll){
                 for($i=0;$i<$count;$i++){
@@ -195,7 +195,7 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 1,
             );
-            $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($question);
             $imagesQuestionUrl = $searchArgs['sortTaskIdQuestion'][$searchArgs['taskId']];
 
@@ -235,7 +235,7 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 2,
             );
-            $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($answer);
             $imagesAnswerUrl = $searchArgs['sortTaskIdAnswer'][$searchArgs['taskId']];
             if($answer){

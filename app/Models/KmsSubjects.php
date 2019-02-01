@@ -46,21 +46,21 @@ class KmsSubjects extends Model
                 ];
             }
         }
-
-        $sort = array(
-            'field' => 'subjectId',       //排序字段
-        );
-        $arrSort = array();
-        if($subjectList){
-            foreach ($subjectList AS $uniqid => $row) {
-                foreach ($row AS $key => $value) {
-                    $arrSort[$key][$uniqid] = $value;
-                }
-            }
-            if ($subjectList) {
-                array_multisort($arrSort[$sort['field']], SORT_ASC, $subjectList);
-            }
-        }
+//
+//        $sort = array(
+//            'field' => 'subjectId',       //排序字段
+//        );
+//        $arrSort = array();
+//        if($subjectList){
+//            foreach ($subjectList AS $uniqid => $row) {
+//                foreach ($row AS $key => $value) {
+//                    $arrSort[$key][$uniqid] = $value;
+//                }
+//            }
+//            if ($subjectList) {
+//                array_multisort($arrSort[$sort['field']], SORT_ASC, $subjectList);
+//            }
+//        }
         return $subjectList;
     }
 
