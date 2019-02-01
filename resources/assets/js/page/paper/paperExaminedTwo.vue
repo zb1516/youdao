@@ -71,34 +71,38 @@
                 },
                 doPaperExaminedTwo(){
                     var that = this;
-                    if(that.isPaperError == 1){
-                        if($("textarea[name='paperErrorDesc']").val() == ''){
-                            that.$message.error('请填写试卷存在的问题');
-                        }else{
-                            that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
-                        }
+                    if(that.isPaperError === ''){
+                        that.$message.error('请选择标识试卷问题');
                     }else{
-                        that.paperErrorDesc = '';
-                    }
-
-                    axios.post('youdao/paper/paperExaminedTwo',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&isPaperError="+that.isPaperError+"&paperErrorDesc='"+that.paperErrorDesc+"'").then(function(data){
-                        if(data.data){
-                            if (data.data.errorMsg) {
-                                that.$message.error(data.data.errorMsg);
-                            } else {
-                                if(data.data.status == 1){
-                                    that.type = data.data.type;
-                                    that.error = data.data.error;
-                                    that.$router.push({
-                                        name: 'paper-paperExaminedResult',
-                                        params:{userKey:that.userKey,taskId:that.taskId,status:that.type,error:that.error}
-                                    });
-                                }else{
-                                    that.$message.error('题目问题提交失败！');
+                        if(that.isPaperError === 1){
+                            if($("textarea[name='paperErrorDesc']").val() == ''){
+                                that.$message.error('请填写试卷存在的问题');
+                            }else{
+                                that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
+                            }
+                        }else{
+                            that.paperErrorDesc = '';
+                        }
+                        axios.post('youdao/paper/paperExaminedTwo',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&isPaperError="+that.isPaperError+"&paperErrorDesc="+that.paperErrorDesc+"").then(function(data){
+                            if(data.data){
+                                if (data.data.errorMsg) {
+                                    that.$message.error(data.data.errorMsg);
+                                } else {
+                                    if(data.data.status == 1){
+                                        that.type = data.data.type;
+                                        that.error = data.data.error;
+                                        that.$router.push({
+                                            name: 'paper-paperExaminedResult',
+                                            params:{userKey:that.userKey,taskId:that.taskId,status:that.type,error:that.error}
+                                        });
+                                    }else{
+                                        that.$message.error('题目问题提交失败！');
+                                    }
                                 }
                             }
-                        }
-                    })
+                        })
+                    }
+
                 }
             }
         }

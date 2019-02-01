@@ -104,10 +104,13 @@ class PaperController extends BaseController
             $paperInfo['youdao_info'] = $result['data'];
         }*/
         $paperInfo['youdao_info'] = array(
+            "isPaper"=>1,
+            "paperFilePath"=>"http://xxxxxxxx/paper/{taskId}.docx",
             'questions'=>array(
                 '0'=>array(
                     'quesNumber'=>1,
                     'hasOptions'=>1,
+                    'quesType'=>'单选题', //题型
                     'quesLatextContent'=>array(
                         'content'=>'<div>safasfasfasfs</div>',
                         'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
@@ -139,10 +142,15 @@ class PaperController extends BaseController
                         ),
 
                     ),
+                    'quesLatextAnalysis'=>array(
+                        'content'=>'<div>asdfsafsafasfsda</div>',
+                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                    ),
                 ),
                 '1'=>array(
                     'quesNumber'=>2,
                     'hasOptions'=>0,
+                    'quesType'=>'解答题', //题型
                     'quesLatextContent'=>array(
                         'content'=>'<div>22222222</div>',
                         'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
@@ -156,7 +164,7 @@ class PaperController extends BaseController
                         'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
                     ),
                 ),
-                '2'=>array(
+                /*'2'=>array(
                     'quesNumber'=>3,
                     'hasOptions'=>0,
                     'quesLatextContent'=>array(
@@ -171,7 +179,7 @@ class PaperController extends BaseController
                         'content'=>'<div>22222222222</div>',
                         'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
                     ),
-                ),
+                ),*/
             )
         );
         return $paperInfo;
@@ -352,8 +360,8 @@ class PaperController extends BaseController
             $paperInfo = $this->getPaperInfo($taskId);
             if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
-                //$result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
-                $result = 1;
+                $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
+                //$result = 1;
                 return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
@@ -368,8 +376,8 @@ class PaperController extends BaseController
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
                 //试卷审核不通过，退回有道
-                //$result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
-                $result = 1;
+                $result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
+                //$result = 1;
                 $error = 0;
                 if(!empty($data['list']) && $isPaperError == 0){
                     $error = 1;

@@ -689,7 +689,7 @@ class VipYoudaoExamined extends Model
                 'created_time' => $time,
                 'file_name' => $data['paper_name'],
                 'file_name_md5' => md5($data['paper_name']),
-                'show_name' => $data['youdao_info']['paper_name'],
+                'show_name' => isset($data['youdao_info']['paper_name'])?:$data['paper_name'],
                 'agency_id' => $data['agency_id'],
                 'paper_type' => 2,//1教研，2有道
             );
@@ -706,8 +706,8 @@ class VipYoudaoExamined extends Model
                                         'paper_examined_auditor_id' => $userInfo['id'],
                                         'paper_examined_time' => date('Y-m-d H:i:s'),
                                         'final_youdao_receive_time' => $lastYoudaoTime['last_receive_time'],
-                                        'final_processing_time' => $lastYoudaoTime['youdao_processing_time'],
-                                        'final_processing_days' => $lastYoudaoTime['processing_days']),
+                                        'final_processing_time' => $lastYoudaoTime['last_processing_time'],
+                                        'final_processing_days' => $lastYoudaoTime['last_processing_days']),
                                 array('task_id' => $data['task_id'])
             );
             if(!$result){
@@ -732,6 +732,7 @@ class VipYoudaoExamined extends Model
                 $opt = new VipQuestionOption;
                 $ans = new VipQuestionAnswer;
                 foreach ($data['youdao_info']['questions'] as $key => $q){
+                    $question = [];
                     $question['number'] = $q['quesNumber'];
                     $question['yd_question_type'] = $q['quesType'];
                     $question['content'] = $q['quesLatextContent']['content'];
@@ -760,7 +761,7 @@ class VipYoudaoExamined extends Model
                         throw new \Exception('试题添加失败');
                     }else{
                         $fileArr['questions'][$key]['question_id'] = $newQuesId;
-                        $fileArr['questions'][$key]['content_file'] = $data['youdao_info']['questions']['quesLatextContent']['fileUrl'];
+                        $fileArr['questions'][$key]['content_file'] = $q['quesLatextContent']['fileUrl'];
 
                         //解析文档
                         $fileArr['questions'][$key]['analysis_file'] = $q['quesLatextAnalysis']['fileUrl'];
@@ -875,17 +876,18 @@ class VipYoudaoExamined extends Model
             }
 
             //审核通过反馈给有道
+            /*
             $result = $common->doYoudaoComplete(config('YOUDAO_COMPLETE_URL'), $data['task_id']);
             $result = json_decode($result, true);
             if($result['code'] !== 200){
                 $this->rollback();
                 throw new \Exception('审核通过反馈失败:'.$result['message']);
-            }
+            }*/
 
             /**
              * 试题的题干、选项、答案、解析latex内容文件上传到题库服务器
              */
-            $common->uploadPaperFile($fileArr);
+            //$common->uploadPaperFile($fileArr);
 
             $this->commit();
             $status = 1;
@@ -1081,13 +1083,14 @@ class VipYoudaoExamined extends Model
         }
 
         //审核不通过反馈给有道
+        /*
         $common = new CommonController;
         $result = $common->doYoudaoFeedback(config('YOUDAO_FEEDBACK_URL'), $data);
         $result = json_decode($result, true);
         if($result['code'] !== 200){
             $this->rollback();
             throw new \Exception('审核不通过反馈有道失败:'.$result['message']);
-        }
+        }*/
 
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(
@@ -1103,7 +1106,8 @@ class VipYoudaoExamined extends Model
             $newPaperError = array(
                 'task_id' => $data['task_id'],
                 'paper_name' => $paperInfo['paper_name'],
-                'content' => $data['paperErrorDesc']
+                'content' => $data['paperErrorDesc'],
+                'create_time'=>$nowTime
             );
             $vip_youdao_paper = new VipYoudaoPaper;
             $newErrorId = $vip_youdao_paper->add($newPaperError);

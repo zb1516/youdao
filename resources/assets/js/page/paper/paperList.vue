@@ -318,7 +318,7 @@
                         callBack: function (currPage, pageSize) {
                             that.currentPage = currPage;
                             that.doSearch();
-                            console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                            //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                         }
                     });
 
@@ -332,8 +332,8 @@
                     that.endDate = $("input[name='end-date']").val();
                 }
                 if($(".drop-prov-ul").find('.selected').attr('data-val')){
-                    that.province = $(".drop-prov-ul").find('.selected').text();
-                    that.city = $(".drop-city-ul").find('.selected').text();
+                    that.province = $(".drop-prov-ul").find('.selected').attr('data-val');;
+                    that.city = $(".drop-city-ul").find('.selected').attr('data-val');
                 }
 
                 var searchArgs = $.extend(true, {}, that.searchArgs);
