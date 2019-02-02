@@ -402,6 +402,9 @@ class VipYoudaoExamined extends Model
             ];
             $i++;
         }
+        if(empty($searchArgs['imageExaminedStatus'])){
+            $condition['image_examined_status'] = array('lt' => 5);
+        }
         $result = $this->groupCount($condition, $order = ['image_examined_status' => 'asc'], ['image_examined_status'], $group = 'image_examined_status');
         $listCount = [];
         foreach ($result as $v) {
