@@ -207,7 +207,7 @@
                 endDate:'',
                 isContent:1,
                 paperName:'',
-                isRouterAlive:true
+                isType:1
             }
         },
         computed: {
@@ -227,6 +227,7 @@
                     province:that.curProvince,
                     city:that.curCity,
                     paperName:that.paperName,
+                    isType:that.isType
                 };
             },
             ...mapGetters({

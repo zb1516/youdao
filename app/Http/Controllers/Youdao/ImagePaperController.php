@@ -61,6 +61,7 @@ class ImagePaperController extends BaseController
             $imgAuditor = config('app.IMG_AUDITOR');
             $roleId = $this->sysRoles->getRoleId ($imgAuditor);
             $_GET['IMG_AUDITOR'] = $roleId;
+            $_GET['isType'] = 3;
             $searchArgs = $this->vipYoudaoExamined->imagePaperSearchArgs ($_GET);
             $result = $this->vipYoudaoExamined->getImageExport ($searchArgs);
             if ($result) {
