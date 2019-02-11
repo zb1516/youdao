@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('index');
 });
 //小程序接口
-Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
+Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
