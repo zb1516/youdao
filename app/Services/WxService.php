@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Redis;
 class WxService
 {
     /**
-     * 发送模板消息接口
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * 发送消息模板接口
+     * @param array $data
+     * @return bool
+     * @throws \Exception
      */
     public static function sendTemplate($data=[])
     {
@@ -86,8 +87,11 @@ class WxService
 
     /**
      * 模板消息通知
-     *
-     * @return reposne
+     * @param int $openId
+     * @param array $data
+     * @param int $type
+     * @return mixed
+     * @throws \Exception
      */
     public static function sendTemplateMessage($openId=0,$data=[],$type=1)
     {
