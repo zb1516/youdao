@@ -462,14 +462,12 @@ class CommonController extends BaseController
                                 $sdate = date('Ymd');
                                 $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
                                 //$result = $this->curlUploadFile($q['content_file'], $newFileName);
-                                $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['content_file'], 'newFileName'=>$newFileName)));
-                                var_dump($result);exit;
-                                if($result){
-                                    //更新vip_question中uid和sdate字段
-                                    $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
-                                }else{
+                                $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['content_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                //更新vip_question中uid和sdate字段
+                                $result = $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
+                                if(!$result){
                                     $question->rollback();
-                                    throw new \Exception('试题文件上传失败');
+                                    throw new \Exception('试题目录更新失败');
                                 }
 
                                 //上传选项文档
@@ -477,17 +475,14 @@ class CommonController extends BaseController
                                     foreach ($q['options'] as $k=>$o){
                                         $shorUuid = shortUuid($uuid);
                                         $newFileName = $sdate.'_test-'.$uuid.'_'.$shorUuid.'_'.$shorUuid.'.docx';
-                                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$o['option_file'], 'newFileName'=>$newFileName)));
+                                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$o['option_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
 
-                                        //$result = $this->curlUploadFile($o['option_file'], $newFileName);
-                                        if($result){
-                                            //更新vip_question_option中uid字段
-                                            $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
-                                        }else{
+                                        //更新vip_question_option中uid字段
+                                        $result = $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
+                                        if(!$result){
                                             $question->rollback();
-                                            throw new \Exception('试题选项文件上传失败');
+                                            throw new \Exception('试题选项目录更新失败');
                                         }
-
                                     }
                                 }
 
@@ -495,27 +490,20 @@ class CommonController extends BaseController
                                 if(isset($q['answer_file'])){
                                     $newFileName = $sdate.'_test-'.$uuid.'_'.'answers'.'_answers.docx';
                                     //$result = $this->curlUploadFile($q['answer_file'], $newFileName);
-                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['answer_file'], 'newFileName'=>$newFileName)));
-                                    if(!$result){
-                                        $question->rollback();
-                                        throw new \Exception('试题答案文件上传失败');
-                                    }
+                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['answer_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+
                                 }
 
                                 //上传解析文档
                                 if(isset($q['analysis_file'])){
                                     $newFileName = $sdate.'_test-'.$uuid.'_'.'analysis'.'_analysis.docx';
                                     //$result = $this->curlUploadFile($q['analysis_file'], $newFileName);
-                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['analysis_file'], 'newFileName'=>$newFileName)));
-                                    if(!$result){
-                                        $question->rollback();
-                                        throw new \Exception('试题解析文件上传失败');
-                                    }
+                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['analysis_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
                                 }
                             }
                         }
                         $now = date('Y-m-d H:i:s');
-                        $result = $vip_youdao_paper_file_upload_task->edit(array('is_upload'=>1,'upload_time'=>$now),array('task_id'=>$data['task_id']));
+                        $result = $vip_youdao_paper_file_upload_task->edit(array('is_upload'=>1,'upload_time'=>$now),array('task_id'=>$task['task_id']));
                         if(!$result){
                             $question->rollback();
                             throw new \Exception('试题解析文件上传失败');
