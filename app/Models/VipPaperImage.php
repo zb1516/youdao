@@ -130,7 +130,7 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
-                'paper_examined_status' => 1
+                'paper_examined_status' => 1,
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
             if($resultEdit === false)
@@ -147,7 +147,7 @@ class VipPaperImage extends Model
                 'image_type' => 3,
             );
             $resultAll = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
-            $count = count($result);
+            $count = count($resultAll);
             if($resultAll){
                 for($i=0;$i<$count;$i++){
                     $dataAll = [
@@ -155,7 +155,7 @@ class VipPaperImage extends Model
                         'is_delete' => 0,
                     ];
                     $conditionAll = array(
-                        'id' => $result[$i]['id'],
+                        'id' => $resultAll[$i]['id'],
                     );
                     $resultImage = $this->edit($dataAll, $conditionAll);
                     if($resultImage === false)
@@ -166,6 +166,7 @@ class VipPaperImage extends Model
                 }
 
             }
+
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $searchArgs['randName'] = time().rand(1,10000);
