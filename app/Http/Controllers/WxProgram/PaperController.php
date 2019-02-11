@@ -180,6 +180,7 @@ class paperController extends Controller
             if($request->isMethod('post')) {
                 $searchArgs['token']=$request->input('token');
                 $searchArgs['taskId'] = $request->input('taskId');
+                $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['blendQuestionImage']=$request->input('blendQuestionImage');
                 $searchArgs['questionImage'] = $request->input('questionImage');
@@ -192,6 +193,9 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
+                if(intval($searchArgs['agencyId']) <= 0){
+                    throw new \Exception('缺少机构id');
+                }
                 if (!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])) {
                     throw new \Exception('缺少任务ID');
                 }
