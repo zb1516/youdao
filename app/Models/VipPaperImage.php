@@ -20,6 +20,7 @@ class VipPaperImage extends Model
         if($allType == true){
             $condition = array(
                 'task_id' => $taskId,
+                'is_delete' => 0,
             );
             $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             return $result;
@@ -28,6 +29,7 @@ class VipPaperImage extends Model
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 3,
+                    'is_delete' => 0,
                 );
                 $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return $result;
@@ -35,11 +37,13 @@ class VipPaperImage extends Model
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 1,
+                    'is_delete' => 0,
                 );
                 $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 2,
+                    'is_delete' => 0,
                 );
                 $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return ['question' => $question, 'answer' => $answer];
@@ -130,7 +134,7 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
-                'paper_examined_status' => 1
+                'paper_examined_status' => 1,
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
             if($resultEdit === false)
@@ -145,9 +149,10 @@ class VipPaperImage extends Model
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 3,
+                'is_delete' => 0,
             );
             $resultAll = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
-            $count = count($result);
+            $count = count($resultAll);
             if($resultAll){
                 for($i=0;$i<$count;$i++){
                     $dataAll = [
@@ -155,7 +160,7 @@ class VipPaperImage extends Model
                         'is_delete' => 0,
                     ];
                     $conditionAll = array(
-                        'id' => $result[$i]['id'],
+                        'id' => $resultAll[$i]['id'],
                     );
                     $resultImage = $this->edit($dataAll, $conditionAll);
                     if($resultImage === false)
@@ -166,6 +171,7 @@ class VipPaperImage extends Model
                 }
 
             }
+
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $searchArgs['randName'] = time().rand(1,10000);
@@ -196,10 +202,12 @@ class VipPaperImage extends Model
 //            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
 //            $vipPaperExaminedDetails->add($dataDetails);
         }else{
+
             //第三方oss调用
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 1,
+                'is_delete' => 0,
             );
             $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($question);
@@ -222,6 +230,7 @@ class VipPaperImage extends Model
                     }
                 }
             }
+
             $searchArgs['randNameQuestion'] = 'question'.time().rand(1,10000);
             $this->createPackage($searchArgs, $imagesQuestionUrl, $dateTime, $rand, 'Question');
             $filenameQuestion = $filename.$dateTime.$rand.'Question';
@@ -240,6 +249,7 @@ class VipPaperImage extends Model
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 2,
+                'is_delete' => 0,
             );
             $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($answer);
