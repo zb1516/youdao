@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers\WxProgram;
 
-use App\Clients\KlibPaperClient;
-use App\Clients\KlibQuestionClient;
-use App\Clients\KlibTeacherClient;
 use App\Models\Common;
-use App\Models\VipDictGrade;
-use App\Models\VipDictSubject;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;

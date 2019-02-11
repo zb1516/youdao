@@ -18,31 +18,28 @@ Route::get('/', function () {
     return view('index');
 });
 //小程序接口
-Route::group(['prefix'=>'wxprogram'],function($router){
+Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
     $router->get('wx/login','WxProgram\WxController@login');
     $router->post('user/login','WxProgram\UserController@login');
     $router->get('user/getAgencyList','WxProgram\UserController@getAgencyList');
     $router->get('wx/getShareTemplate','WxProgram\WxController@getShareTemplate');
     $router->any('wx/serve','WxProgram\WxController@serve');
     $router->post('wx/sendTemplate','WxProgram\WxController@sendTemplate');
-});
-
-Route::group(['prefix'=>'wxprogram','middleware'=>'checkUserToken'],function($router){
-    $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage');
-    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList');
-    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList');
-    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo');
-    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage');
-    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus');
-    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo');
-    $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount');
-    $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList');
-    $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage');
-    $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount');
-    $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage');
-    $router->get('user/logout','WxProgram\UserController@logout');
-    $router->post('upload/getSignature','WxProgram\UploadController@getSignature');
-    $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject');
+    $router->post('paper/addPaperImage','WxProgram\PaperController@addPaperImage')->middleware('checkUserToken');
+    $router->get('paper/getPaperImageList','WxProgram\PaperController@getPaperImageList')->middleware('checkUserToken');
+    $router->get('message/getMessageList','WxProgram\MessageController@getMessageList')->middleware('checkUserToken');
+    $router->get('paper/getPaperInfo','WxProgram\PaperController@getPaperInfo')->middleware('checkUserToken');
+    $router->get('paper/getPaperFirstImage','WxProgram\PaperController@getPaperFirstImage')->middleware('checkUserToken');
+    $router->get('paper/getPaperStatus','WxProgram\PaperController@getPaperStatus')->middleware('checkUserToken');
+    $router->get('paper/getPaperExaminedInfo','WxProgram\PaperController@getPaperExaminedInfo')->middleware('checkUserToken');
+    $router->get('paper/getPaperCount','WxProgram\PaperController@getPaperCount')->middleware('checkUserToken');
+    $router->get('paper/getPaperExaminedList','WxProgram\PaperController@getPaperExaminedList')->middleware('checkUserToken');
+    $router->post('paper/editPaperImage','WxProgram\PaperController@editPaperImage')->middleware('checkUserToken');
+    $router->get('message/getMessageCount','WxProgram\MessageController@getMessageCount')->middleware('checkUserToken');
+    $router->post('message/setReadMessage','WxProgram\MessageController@setReadMessage')->middleware('checkUserToken');
+    $router->get('user/logout','WxProgram\UserController@logout')->middleware('checkUserToken');
+    $router->post('upload/getSignature','WxProgram\UploadController@getSignature')->middleware('checkUserToken');
+    $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject')->middleware('checkUserToken');
 
 });
 
@@ -58,13 +55,13 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getPaperCitysAjaxSearch', 'Common\CommonController@getPaperCitysAjaxSearch');
     $router->get('common/getSubjects', 'Common\CommonController@getSubjects');
     $router->get('common/getProvince', 'Common\CommonController@getProvince');
-    $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD');
+    $router->get('common/getSubjectYD', 'Common\CommonController@getSubjectYD')->middleware('checkUserToken');
     $router->get('common/getYoudaoTask', 'Common\CommonController@getYoudaoTask');
     $router->get('common/getYoudaoAgency', 'Common\CommonController@getYoudaoAgency');
     $router->get('common/getPaperStatus', 'Common\CommonController@getPaperStatus');
     $router->get('common/getImageStatus', 'Common\CommonController@getImageStatus');
     $router->get('common/getAuditors', 'Common\CommonController@getAuditors');
-    $router->get('common/getCitys','Common\CommonController@getCitys');
+    $router->get('common/getCitys','Common\CommonController@getCitys')->middleware('checkUserToken');
     $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
     $router->post('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
     $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');//获取试卷信息
