@@ -99,7 +99,6 @@ class paperController extends Controller
                 //判断是分离样式还是混合样式
                 if($searchArgs['paperType'] == 1){
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -115,7 +114,6 @@ class paperController extends Controller
                     }
                 }else{
                     $questionImage=explode(',',$searchArgs['questionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach($questionImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -130,7 +128,6 @@ class paperController extends Controller
                         }
                     }
                     $answerImage=explode(',',$searchArgs['answerImage']);
-                    $answerImage=arrayReverse($answerImage);
                     foreach($answerImage as $key => $val)
                     {
                         $result=$vipPaperImageModel->add([
@@ -231,7 +228,6 @@ class paperController extends Controller
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -246,7 +242,6 @@ class paperController extends Controller
                     }
                 } else {
                     $questionImage=explode(',',$searchArgs['questionImage']);
-                    $questionImage=arrayReverse($questionImage);
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -260,7 +255,6 @@ class paperController extends Controller
                         }
                     }
                     $answerImage=explode(',',$searchArgs['answerImage']);
-                    $answerImage=arrayReverse($answerImage);
                     foreach ($answerImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
@@ -428,7 +422,7 @@ class paperController extends Controller
             $vipPaperImageModel=new VipPaperImage();
             $imageInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'desc']);
             $where=['task_id'=>$searchArgs['taskId'],'create_time'=>$imageInfo['create_time']];
-            $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
+            $list=$vipPaperImageModel->findAll($where,['create_time'=>'desc'],['id','image_url','image_type']);
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
             {
