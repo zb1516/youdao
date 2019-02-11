@@ -327,10 +327,14 @@
             provinceList(){
                 var that = this;
                 axios.get('common/common/getProvince',{params:{userKey:that.userKey}}).then(function(data){
-                    that.optionsProvinces = data.data;
-                    that.$nextTick(function() {
-                        $('#prev-select-box').selectpicker('refresh');
-                    });
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.optionsProvinces = data.data;
+                        that.$nextTick(function() {
+                            $('#prev-select-box').selectpicker('refresh');
+                        });
+                    }
                 })
             },
             selectPaperCitys() {
@@ -369,11 +373,14 @@
             yearList(){
                 var that = this;
                 axios.get('common/common/getYear',{params:{userKey:that.userKey}}).then(function(data){
-
-                    that.optionsYears = data.data;
-                    that.$nextTick(function() {
-                        $('.grade-select-box').selectpicker('refresh');
-                    });
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.optionsYears = data.data;
+                        that.$nextTick(function() {
+                            $('.grade-select-box').selectpicker('refresh');
+                        });
+                    }
                 })
             },
             doSearch(){
@@ -451,17 +458,21 @@
                 $("body").mLoading('show');
                 axios.get('youdao/imagePaper/imagePaperDetail',{params:{userKey:that.userKey,taskId:that.taskId,paperType:that.paperType}}).then(function(data){
                     $("body").mLoading('hide');
-                    if(data.data){
-                        if(that.paperType == 1){
-                            that.imagePaperDetailContent = data.data;
-                        }else{
-                            that.questionContent = data.data['question'];
-                            that.answerContent = data.data['answer'];
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        if(data.data){
+                            if(that.paperType == 1){
+                                that.imagePaperDetailContent = data.data;
+                            }else{
+                                that.questionContent = data.data['question'];
+                                that.answerContent = data.data['answer'];
+                            }
                         }
+                        that.$nextTick(function() {
+                            common.init();
+                        });
                     }
-                    that.$nextTick(function() {
-                        common.init();
-                    });
                 })
             },
 

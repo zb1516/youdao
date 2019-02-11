@@ -91,6 +91,7 @@ class VipPaperImage extends Model
                 throw new \Exception('图片详情退回失败');
             }
         }
+
         $postData = array(
             'openId' => $result['open_id'],
             'type' => 1,
@@ -129,6 +130,7 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
+                'paper_examined_status' => 1
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
             if($resultEdit === false)
@@ -189,6 +191,10 @@ class VipPaperImage extends Model
                 'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
             $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
+//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
+//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
+//            $vipPaperExaminedDetails->add($dataDetails);
         }else{
             //第三方oss调用
             $condition = array(
@@ -277,6 +283,10 @@ class VipPaperImage extends Model
                 'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
             $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
+//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
+//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
+//            $vipPaperExaminedDetails->add($dataDetails);
 
         }
 //        $postData = array(

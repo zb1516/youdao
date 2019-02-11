@@ -174,6 +174,7 @@ class ImagePaperController extends BaseController
                 throw new \Exception('缺少taskId');
             }
             $result = $this->vipPaperImage->paperReturn($taskId, $imageErrorType, $userKey);
+
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);

@@ -59,7 +59,7 @@
                 that.paperShow = 1;
                 that.imageShow = 0;
                 that.statisticShow = 0;
-            }else if(strName[2] == 'imagePaperList'){
+            }else if(strName[2] == 'imagePaperList' || strName[2] == 'imagePaperDetail' || strName[2] == 'imageSearch' || strName[2] == 'imageExamined' || strName[2] == 'imageResult'){
                 that.paperShow = 0;
                 that.imageShow = 1;
                 that.statisticShow = 0;

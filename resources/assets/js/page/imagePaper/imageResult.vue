@@ -26,8 +26,12 @@
                         <p class="error-title">图片审核未通过</p>
                         <div class="error-info-box">
                             <p class="mb">未通过原因</p>
-                            <p class="mb">1.已确认试卷重复</p>
-                            <p class="mb">2.图片不清晰、图片太暗了、图片不完整、题目或答案缺失</p>
+                            <template v-if="imageStatus == ''">
+                                <p class="mb">已确认试卷重复</p>
+                            </template>
+                            <template v-else>
+                                <p class="mb">{{imageStatus}}</p>
+                            </template>
                         </div>
                         <p class="time-box"><span class="time"><span class="time-num js-time-num">3</span>秒</span><a href="reviewPicList.html">后返回列表</a></p>
                     </div>
@@ -44,7 +48,7 @@
     export default {
         data(){
             return {
-                imageStatus:0,
+                imageStatus:'',
                 taskId:''
             }
         },
@@ -61,11 +65,16 @@
         },
         mounted(){
             var that = this;
-
             that.taskId =  localStorage.getItem("localTaskId");
             that.imageStatus = this.$route.params.imageStatus;
+            if(that.imageStatus != 1 && that.imageStatus != ''){
+                that.imageStatus = that.imageStatus + ",";
+                that.imageStatus = that.imageStatus.replace(",,", "");
+            }
+            if(that.imageStatus == ''){
+                that.imageStatus = '';
+            }
             that.doSelect();
-
             common.init();
         },
         methods:{
