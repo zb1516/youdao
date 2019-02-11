@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers\WxProgram;
 
-use App\Models\VipMessageRemind;
 use App\Models\VipPaperImage;
-use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoUserLoginLog;
-use App\Services\TaskService;
-use App\Services\UserService;
-use App\Services\WxService;
 use E421083458\Wxxcx\Wxxcx;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

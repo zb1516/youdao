@@ -7,6 +7,7 @@ use App\Clients\KlibTeacherClient;
 use App\Models\CrmProvince;
 use App\Models\Province;
 use App\Models\VipYoudaoUserLoginLog;
+use App\Services\UserService;
 use App\Services\WxService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

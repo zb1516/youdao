@@ -21,7 +21,7 @@ class VipPaperImage extends Model
             $condition = array(
                 'task_id' => $taskId,
             );
-            $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             return $result;
         }else{
             if($paperType == 1){
@@ -29,19 +29,19 @@ class VipPaperImage extends Model
                     'task_id' => $taskId,
                     'image_type' => 3,
                 );
-                $result = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return $result;
             }else{
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 1,
                 );
-                $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 $condition = array(
                     'task_id' => $taskId,
                     'image_type' => 2,
                 );
-                $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+                $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
                 return ['question' => $question, 'answer' => $answer];
             }
         }
@@ -91,6 +91,7 @@ class VipPaperImage extends Model
                 throw new \Exception('图片详情退回失败');
             }
         }
+
         $postData = array(
             'openId' => $result['open_id'],
             'type' => 1,
@@ -129,6 +130,7 @@ class VipPaperImage extends Model
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
                 'paper_name' => $filename,
+                'paper_examined_status' => 1
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
             if($resultEdit === false)
@@ -144,7 +146,7 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 3,
             );
-            $resultAll = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $resultAll = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($result);
             if($resultAll){
                 for($i=0;$i<$count;$i++){
@@ -189,13 +191,17 @@ class VipPaperImage extends Model
                 'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
             $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
+//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
+//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
+//            $vipPaperExaminedDetails->add($dataDetails);
         }else{
             //第三方oss调用
             $condition = array(
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 1,
             );
-            $question = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($question);
             $imagesQuestionUrl = $searchArgs['sortTaskIdQuestion'][$searchArgs['taskId']];
 
@@ -235,7 +241,7 @@ class VipPaperImage extends Model
                 'task_id' => $searchArgs['taskId'],
                 'image_type' => 2,
             );
-            $answer = $this->findAll($condition, $order=[], ['id', 'image_url', 'create_time']);
+            $answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
             $count = count($answer);
             $imagesAnswerUrl = $searchArgs['sortTaskIdAnswer'][$searchArgs['taskId']];
             if($answer){
@@ -277,6 +283,10 @@ class VipPaperImage extends Model
                 'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
             ];
             $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
+//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
+//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
+//            $vipPaperExaminedDetails->add($dataDetails);
 
         }
 //        $postData = array(

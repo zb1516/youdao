@@ -67,6 +67,7 @@
                     <label for="" class="title">状态</label>
                     <div class="input-box">
                         <select class="status-select-box" id="status-select-box" name="status-select-box" v-model="curImageExaminedStatus" data-options="width: 100">
+                            <option value="0">全部</option>
                             <option value="1">待审核</option>
                             <option value="2">已通过</option>
                             <option value="3">退回</option>
@@ -86,6 +87,7 @@
                     </div>
                 </div>
                 <button type="button" name="button" class="list-search-btn"  @click="doSearch">搜索</button>
+                <!--<button type="reset" name="button" class="list-search-btn"  @click="doReset">重置</button>-->
             </div>
         </div>
         <!-- list -->
@@ -197,14 +199,15 @@
                 isExaminedStatusShow:0,
                 isExaminedStatusTrue:1,
                 isExaminedStatusSort:'desc',
-                curImageExaminedStatus:1,
+                curImageExaminedStatus:0,
                 agencyId:0,
                 curProvince:'',
                 curCity:'',
                 beginDate:'',
                 endDate:'',
                 isContent:1,
-                paperName:''
+                paperName:'',
+                isType:1
             }
         },
         computed: {
@@ -224,6 +227,7 @@
                     province:that.curProvince,
                     city:that.curCity,
                     paperName:that.paperName,
+                    isType:that.isType
                 };
             },
             ...mapGetters({
@@ -353,8 +357,8 @@
                 }
                 that.isExaminedTimeTrue = 1;
                 that.isExaminedStatusTrue = 1;
-                that.isExaminedStatusSort = 'desc';
-                that.isExaminedTimeSort = 'desc';
+                that.isExaminedStatusSort = '';
+                that.isExaminedTimeSort = '';
                 that.doSearch();
             },
             selectExaminedTimeGet: function () {
@@ -369,8 +373,8 @@
                 }
                 that.isUploadTimeTrue = 1;
                 that.isExaminedStatusTrue = 1;
-                that.isUploadTimeSort = 'desc';
-                that.isExaminedStatusSort = 'desc';
+                that.isUploadTimeSort = '';
+                that.isExaminedStatusSort = '';
                 that.doSearch();
             },
             selectExaminedStatusGet: function () {
@@ -385,12 +389,17 @@
                 }
                 that.isUploadTimeTrue = 1;
                 that.isExaminedTimeTrue = 1;
-                that.isUploadTimeSort = 'desc';
-                that.isExaminedTimeSort = 'desc';
+                that.isUploadTimeSort = '';
+                that.isExaminedTimeSort = '';
                 that.doSearch();
             },
+            doReset: function () {
+                var that = this;
+                Object.assign(that.$data, that.$options.data());
+                that.doSearch();
+            },
+        },
 
-        }
     }
 
 </script>

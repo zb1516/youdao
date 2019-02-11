@@ -52,6 +52,23 @@
                 user:'getUser'
             })
         },
+        mounted(){
+            var strName = this.$route.path.split("/");
+            var that = this;
+            if(strName[2] == 'paperList'){
+                that.paperShow = 1;
+                that.imageShow = 0;
+                that.statisticShow = 0;
+            }else if(strName[2] == 'imagePaperList' || strName[2] == 'imagePaperDetail' || strName[2] == 'imageSearch' || strName[2] == 'imageExamined' || strName[2] == 'imageResult'){
+                that.paperShow = 0;
+                that.imageShow = 1;
+                that.statisticShow = 0;
+            }else{
+                that.paperShow = 0;
+                that.imageShow = 0;
+                that.statisticShow = 1;
+            }
+        },
         methods:{
             selectImage: function () {
                 var that = this;

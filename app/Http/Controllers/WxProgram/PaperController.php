@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers\WxProgram;
 
-use App\Clients\KlibPaperClient;
-use App\Clients\KlibQuestionClient;
-use App\Clients\KlibTeacherClient;
 use App\Models\Common;
-use App\Models\VipDictGrade;
-use App\Models\VipDictSubject;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
@@ -185,6 +180,7 @@ class paperController extends Controller
             if($request->isMethod('post')) {
                 $searchArgs['token']=$request->input('token');
                 $searchArgs['taskId'] = $request->input('taskId');
+                $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['blendQuestionImage']=$request->input('blendQuestionImage');
                 $searchArgs['questionImage'] = $request->input('questionImage');
@@ -197,6 +193,9 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
+                if(intval($searchArgs['agencyId']) <= 0){
+                    throw new \Exception('缺少机构id');
+                }
                 if (!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])) {
                     throw new \Exception('缺少任务ID');
                 }
@@ -318,10 +317,10 @@ class paperController extends Controller
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
-            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>['in'=>[1,3]]],['id'=>'desc'],['image_url'])->first();
+            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>['in'=>[1,3]]],['create_time'=>'desc'],['image_url']);
             //取一条任务信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']])->first();
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             return response()->json(['status'=>200,'data'=>[
                 'taskId'=>$searchArgs['taskId'],
                 'paperType'=>$paperInfo['paper_type'],
@@ -346,7 +345,7 @@ class paperController extends Controller
             //获取登陆用户uid
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             //创建子查询sql语句
-            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url from (select *  from vip_paper_image order by vip_paper_image.id desc) as paperImage where is_delete = 0 and paperImage.task_id=vip_youdao_examined.task_id and (image_type=1 or image_type=3) group by task_id ) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
+            $sql = ("(select id,task_id,paper_name,upload_time,image_examined_status,image_error_type,image_examined_time,(select image_url from (select *  from vip_paper_image order by vip_paper_image.create_time desc) as paperImage where  paperImage.task_id=vip_youdao_examined.task_id and (image_type=1 or image_type=3) group by task_id ) as image_url from vip_youdao_examined where vip_youdao_examined.create_uid=".$userInfo['userId']." order by vip_youdao_examined.upload_time desc ) cc");
             $list = DB::connection('mysql_kms')->table(DB::connection('mysql_kms')->raw($sql))->paginate($searchArgs['pageSize'],['*'],'page',$searchArgs['page'])->toArray();
             foreach($list['data'] as $key => $val){
                 $val=(array)$val;
@@ -386,12 +385,14 @@ class paperController extends Controller
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperMonthCount=$vipYoudaoExaminedModel->count(['upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
+            $condition['upload_time'] = array('between' => array($dayData[0].' 00:00:00',$dayData[1].' 11:59:59'));
+            $paperMonthCount=$vipYoudaoExaminedModel->count($condition);
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
             //统计入库的有道套卷数
             $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$userInfo['userId'],'paper_examined_status'=>3]);
             //获取本月上传试卷数
-            $useCount=$vipYoudaoExaminedModel->count(['agency_id'=>$userInfo['agencyId'],'upload_time'=>['egt'=>$dayData[0].' 00:00:00'],'upload_time'=>['elt'=>$dayData[1].' 11:59:59']]);
+            $condition['agency_id'] = array('eq' => $userInfo['agencyId']);
+            $useCount=$vipYoudaoExaminedModel->count($condition);
             $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
             //获取上传额度，先从配置文件中获取上传额度
             $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
@@ -424,8 +425,9 @@ class paperController extends Controller
             //查询任务
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
             $exainedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'paper_type');
-            $where=['task_id'=>$searchArgs['taskId'],'is_delete'=>0];
             $vipPaperImageModel=new VipPaperImage();
+            $imageInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['create_time'=>'desc']);
+            $where=['task_id'=>$searchArgs['taskId'],'create_time'=>$imageInfo['create_time']];
             $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
@@ -531,20 +533,24 @@ class paperController extends Controller
             //判断试卷类型
             if($paperInfo['paper_type'] == 1)
             {
-                $rows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>3,'is_delete'=>0]);
+                //取出最新一条图片记录
+                $imageInfo=$vipPpaerImageModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>3],['create_time'=>'desc']);
+                $rows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>3,'create_time'=>$imageInfo['create_time']]);
                 foreach ($rows as $key => $val)
                 {
                     $rows[$key]['url']=$val['image_url'];
                 }
                 $paperInfo['rows']=!empty($rows)?$rows:[];
             }else{
-                $questionRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>1,'is_delete'=>0]);
+                $imageInfo=$vipPpaerImageModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>1],['create_time'=>'desc']);
+                $questionRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>1,'create_time'=>$imageInfo['create_time']]);
                 foreach ($questionRows as $key => $val)
                 {
                     $questionRows[$key]['url']=$val['image_url'];
                 }
                 $paperInfo['question_rows']=!empty($questionRows)?$questionRows:[];
-                $ansterRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>2,'is_delete'=>0]);
+                $imageInfo=$vipPpaerImageModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>2],['create_time'=>'desc']);
+                $ansterRows=$vipPpaerImageModel->findAll(['task_id'=>$searchArgs['taskId'],'image_type'=>2,'create_time'=>$imageInfo['create_time']]);
                 foreach ($ansterRows as $key => $val)
                 {
                     $ansterRows[$key]['url']=$val['image_url'];

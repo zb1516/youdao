@@ -525,6 +525,7 @@ class CommonController extends BaseController
     {
         //return 1;
         $result = $this->province->getAllProvince();
+        array_unshift($result,"全部");
         return response()->json($result);
 
     }
@@ -543,6 +544,7 @@ class CommonController extends BaseController
             }
             $arr[] = $cityValue;
         }
+        array_unshift($arr,['0'=>"全部"]);
         return response()->json($arr);
     }
 }
