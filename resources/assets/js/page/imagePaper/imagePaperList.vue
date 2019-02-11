@@ -357,8 +357,8 @@
                 }
                 that.isExaminedTimeTrue = 1;
                 that.isExaminedStatusTrue = 1;
-                that.isExaminedStatusSort = 'desc';
-                that.isExaminedTimeSort = 'desc';
+                that.isExaminedStatusSort = '';
+                that.isExaminedTimeSort = '';
                 that.doSearch();
             },
             selectExaminedTimeGet: function () {
@@ -373,8 +373,8 @@
                 }
                 that.isUploadTimeTrue = 1;
                 that.isExaminedStatusTrue = 1;
-                that.isUploadTimeSort = 'desc';
-                that.isExaminedStatusSort = 'desc';
+                that.isUploadTimeSort = '';
+                that.isExaminedStatusSort = '';
                 that.doSearch();
             },
             selectExaminedStatusGet: function () {
@@ -389,8 +389,8 @@
                 }
                 that.isUploadTimeTrue = 1;
                 that.isExaminedTimeTrue = 1;
-                that.isUploadTimeSort = 'desc';
-                that.isExaminedTimeSort = 'desc';
+                that.isUploadTimeSort = '';
+                that.isExaminedTimeSort = '';
                 that.doSearch();
             },
             doReset: function () {

@@ -388,12 +388,27 @@ class VipYoudaoExamined extends Model
             if (0 == abs($recordCount)) {
                 return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
             }
-            $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
+            if ($searchArgs['isUploadTimeSort']) {
+                $orderSort = ['upload_time' => $searchArgs['isUploadTimeSort']];
+            }
+            if ($searchArgs['isExaminedTimeSort']) {
+                $orderSort = ['image_examined_time' => $searchArgs['isExaminedTimeSort']];
+            }
+            if ($searchArgs['isExaminedStatusSort']) {
+                $orderSort = ['image_examined_status' => $searchArgs['isExaminedStatusSort']];
+            }
+
         }else{
             if (0 == abs($recordCount)) {
                 return array('rows' => [], 'total' => ceil($recordCount/5), 'totalNum' => $recordCount);
             }
-            $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort']];
+            if ($searchArgs['isUploadTimeSort']) {
+                $orderSort = ['upload_time' => $searchArgs['isUploadTimeSort']];
+            }
+            if ($searchArgs['isExaminedTimeSort']) {
+                $orderSort = ['image_examined_time' => $searchArgs['isExaminedTimeSort']];
+            }
+
         }
         $result = $this->findAll($condition, $orderSort, ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','task_id','paper_type'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
         $vipYoudaoAgency = new VipYoudaoAgency();
