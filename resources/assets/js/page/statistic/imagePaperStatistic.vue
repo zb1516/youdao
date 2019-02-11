@@ -67,11 +67,11 @@
                 <div class="input-wrapper">
                     <label for="" class="title">审核人</label>
                     <div class="input-box">
-                        <select class="status-select-box" id="status-select-box" name="status-select-box" data-options="width: 100">
+                        <select class="author-select-box" id="author-select-box" name="status-select-box" v-model="authorValue" data-options="width: 100">
                             <option value="0">全部</option>
-                            <option value="1">张新乐</option>
-                            <option value="2">刘佳</option>
-                            <option value="3">陈紫曦</option>
+                            <option v-for="(option,index) in optionsAuthor" :value="index">
+                                {{ option }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="button" name="button" class="list-search-btn">搜索</button>
+                <button type="button" name="button" class="list-search-btn" @click="doSearch">搜索</button>
             </div>
         </div>
         <!-- list -->
@@ -98,7 +98,7 @@
                         <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
                         <span class="search-btn"  @click="doSearch"></span>
                     </div>
-                    <button type="button" name="button" class="export-btn">导出</button>
+                    <button type="button" name="button" class="export-btn" @click="doExport">导出</button>
                 </div>
             </div>
             <div class="pic-form-wrapper">
@@ -179,16 +179,16 @@
                 isExaminedTimeTrue:1,
                 isExaminedTimeSort:'desc',
                 isExaminedStatusShow:0,
-                isExaminedStatusTrue:1,
-                isExaminedStatusSort:'desc',
-                curImageExaminedStatus:1,
                 agencyId:0,
                 curProvince:'',
                 curCity:'',
                 beginDate:'',
                 endDate:'',
                 isContent:1,
-                paperName:''
+                paperName:'',
+                isType:2,
+                optionsAuthor:'',
+                authorValue:0,
             }
         },
         computed: {
@@ -200,14 +200,14 @@
                     pageSize:that.pageSize,
                     isUploadTimeSort: that.isUploadTimeSort,
                     isExaminedTimeSort: that.isExaminedTimeSort,
-                    isExaminedStatusSort: that.isExaminedStatusSort,
-                    imageExaminedStatus:that.curImageExaminedStatus,
                     agencyId:that.agencyId,
                     beginDate:that.beginDate,
                     endDate:that.endDate,
                     province:that.curProvince,
                     city:that.curCity,
                     paperName:that.paperName,
+                    isType:that.isType,
+                    authorId:that.authorValue,
                 };
             },
             ...mapGetters({
@@ -218,6 +218,7 @@
             var that = this;
             that.subjectList();
             that.agencyList();
+            that.authorList();
             that.doSearch();
             common.init();
         },
@@ -316,7 +317,6 @@
                             }
                             that._total = data.data.total;
                             that.totalNum = data.data.totalNum;
-                            that.listCount = data.data.listCount;
                             that.currentPage = searchArgs.currentPage;
                             //that.jsPage();
                         });
@@ -336,8 +336,6 @@
                     that.isUploadTimeShow = 0;
                 }
                 that.isExaminedTimeTrue = 1;
-                that.isExaminedStatusTrue = 1;
-                that.isExaminedStatusSort = 'desc';
                 that.isExaminedTimeSort = 'desc';
                 that.doSearch();
             },
@@ -352,11 +350,45 @@
                     that.isExaminedTimeShow = 0;
                 }
                 that.isUploadTimeTrue = 1;
-                that.isExaminedStatusTrue = 1;
                 that.isUploadTimeSort = 'desc';
-                that.isExaminedStatusSort = 'desc';
                 that.doSearch();
-            }
+            },
+            authorList(){
+                var that = this;
+                axios.get('common/common/getAuditors',{params:{userKey:that.userKey,roleName:'图片审核人'}}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    } else {
+                        that.$nextTick(function(){
+                            that.optionsAuthor = data.data;
+                            that.$nextTick(function() {
+                                $('#author-select-box').selectpicker('refresh');
+                            });
+
+                        })
+
+                    }
+                })
+            },
+
+            doExport: function () {
+                var that = this;
+                var imageExportUrl = 'youdao/imagePaper/imageExport?userKey='+that.userKey;
+                var searchArgs = $.extend(true, {}, that.searchArgs);
+                if (confirm('确定要导出Excel吗?')) {
+                    location.href =
+                        imageExportUrl +
+                        '&subjectId=' + searchArgs.subjectId +
+                        '&grade=' + searchArgs.grade +
+                        '&province=' + searchArgs.province +
+                        '&city=' + searchArgs.city +
+                        '&beginDate=' + searchArgs.beginDate +
+                        '&endDate=' + searchArgs.endDate+
+                        '&paperName=' + that.paperName+
+                        '&authorId=' + searchArgs.authorId+
+                        '&agencyId=' + searchArgs.agencyId;
+                }
+            },
 
 
         }

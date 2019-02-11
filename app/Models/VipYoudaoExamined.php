@@ -330,14 +330,34 @@ class VipYoudaoExamined extends Model
         }
         $city = new City();
         $countrys = $city->getIdCountrys($provinceIds);
-        if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('lt' => $searchArgs['endDate']);
-        }
-        if (!empty($searchArgs['beginDate']) && empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('gt' => $searchArgs['beginDate']);
-        }
-        if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('between' => array($searchArgs['beginDate'],$searchArgs['endDate']));
+        if($searchArgs['isType'] == 1){
+            //图片审核
+            if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
+                $condition['upload_time'] = array('lt' => $searchArgs['endDate']);
+            }
+            if (!empty($searchArgs['beginDate']) && empty($searchArgs['endDate'])) {
+                $condition['upload_time'] = array('gt' => $searchArgs['beginDate']);
+            }
+            if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
+                $condition['upload_time'] = array('between' => array($searchArgs['beginDate'],$searchArgs['endDate']));
+            }
+            if (!empty($searchArgs['imageExaminedStatus'])) {
+                $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
+            }
+        }else{
+            //图片审核统计
+            if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
+                $condition['image_examined_time'] = array('lt' => $searchArgs['endDate']);
+            }
+            if (!empty($searchArgs['beginDate']) && empty($searchArgs['endDate'])) {
+                $condition['image_examined_time'] = array('gt' => $searchArgs['beginDate']);
+            }
+            if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
+                $condition['image_examined_time'] = array('between' => array($searchArgs['beginDate'],$searchArgs['endDate']));
+            }
+            if (!empty($searchArgs['authorId'])) {
+                $condition['image_examined_auditor_id'] = array('eq' => $searchArgs['authorId']);
+            }
         }
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
@@ -356,21 +376,25 @@ class VipYoudaoExamined extends Model
         if (!empty($searchArgs['agencyId'])) {
             $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
         }
-        if (!empty($searchArgs['imageExaminedStatus'])) {
-            $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
-        }
         if (!empty($searchArgs['paperName'])) {
             $condition['paper_name'] = array('like' => '%' . $searchArgs['paperName'] . '%');
         }
         if (empty($condition)) {
             $condition = [];
         }
-        $statusStartValue = ['待审核' => 0,'已通过' => 0,'退回' => 0,'试卷重复' => 0];
         $recordCount = $this->count($condition);
-        if (0 == abs($recordCount)) {
-            return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
+        if($searchArgs['isType'] == 1){
+            $statusStartValue = ['待审核' => 0,'已通过' => 0,'退回' => 0,'试卷重复' => 0];
+            if (0 == abs($recordCount)) {
+                return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
+            }
+            $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
+        }else{
+            if (0 == abs($recordCount)) {
+                return array('rows' => [], 'total' => ceil($recordCount/5), 'totalNum' => $recordCount);
+            }
+            $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort']];
         }
-        $orderSort = ['id' => $searchArgs['isUploadTimeSort'],'image_examined_time' => $searchArgs['isExaminedTimeSort'],'image_examined_status' => $searchArgs['isExaminedStatusSort']];
         $result = $this->findAll($condition, $orderSort, ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','task_id','paper_type'],$group="",$join=[], $page = $currentPage, $pageSize = $pageSize);
         $vipYoudaoAgency = new VipYoudaoAgency();
         $agencyResult = $vipYoudaoAgency->getYoudaoAgency();
@@ -402,13 +426,21 @@ class VipYoudaoExamined extends Model
             ];
             $i++;
         }
-        $result = $this->groupCount($condition, $order = ['image_examined_status' => 'asc'], ['image_examined_status'], $group = 'image_examined_status');
-        $listCount = [];
-        foreach ($result as $v) {
-            $listCount[$imageExaminedStatus[$v['image_examined_status']]] = $v['total'];
+        if($searchArgs['isType'] == 1){
+            if(empty($searchArgs['imageExaminedStatus'])){
+                $condition['image_examined_status'] = array('lt' => 5);
+            }
+            $result = $this->groupCount($condition, $order = ['image_examined_status' => 'asc'], ['image_examined_status'], $group = 'image_examined_status');
+            $listCount = [];
+            foreach ($result as $v) {
+                $listCount[$imageExaminedStatus[$v['image_examined_status']]] = $v['total'];
+            }
+            $arrayMerge = array_merge($statusStartValue,$listCount);
+            return array('rows' => $list, 'total' => ceil($recordCount/5), 'listCount' => $arrayMerge,'totalNum' => $recordCount);
+        }else{
+            return array('rows' => $list, 'total' => ceil($recordCount/5), 'totalNum' => $recordCount);
         }
-        $arrayMerge = array_merge($statusStartValue,$listCount);
-        return array('rows' => $list, 'total' => ceil($recordCount/5), 'listCount' => $arrayMerge,'totalNum' => $recordCount);
+
     }
     /**
      * 转换图片审核查询参数
@@ -436,18 +468,26 @@ class VipYoudaoExamined extends Model
         if (isset($formData['grade'])) {
             $searchArgs['grade'] = $formData['grade'];
         }
-        if (isset($formData['imageExaminedStatus'])) {
-            $searchArgs['imageExaminedStatus'] = $formData['imageExaminedStatus'];
-        }
         if (isset($formData['agencyId'])) {
             $searchArgs['agencyId'] = $formData['agencyId'];
         }
         if (isset($formData['paperName'])) {
             $searchArgs['paperName'] = $formData['paperName'];
         }
-        $searchArgs['isUploadTimeSort'] = trim($formData['isUploadTimeSort']);
-        $searchArgs['isExaminedTimeSort'] = trim($formData['isExaminedTimeSort']);
-        $searchArgs['isExaminedStatusSort'] = trim($formData['isExaminedStatusSort']);
+        $searchArgs['isType'] = abs($formData['isType']);
+        if($formData['isType'] != 3){
+            $searchArgs['isUploadTimeSort'] = trim($formData['isUploadTimeSort']);
+            $searchArgs['isExaminedTimeSort'] = trim($formData['isExaminedTimeSort']);
+        }
+        if($formData['isType'] == 1){
+            if (isset($formData['imageExaminedStatus'])) {
+                $searchArgs['imageExaminedStatus'] = $formData['imageExaminedStatus'];
+            }
+            $searchArgs['isExaminedStatusSort'] = trim($formData['isExaminedStatusSort']);
+        }
+        if($formData['isType'] == 2 || $formData['isType'] == 3){
+            $searchArgs['authorId'] = $formData['authorId'];
+        }
         $searchArgs['IMG_AUDITOR'] = trim($formData['IMG_AUDITOR']);
         return $searchArgs;
     }
@@ -472,13 +512,13 @@ class VipYoudaoExamined extends Model
         $city = new City();
         $countrys = $city->getIdCountrys($provinceIds);
         if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('lt' => $searchArgs['endDate']);
+            $condition['image_examined_time'] = array('lt' => $searchArgs['endDate']);
         }
         if (!empty($searchArgs['beginDate']) && empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('gt' => $searchArgs['beginDate']);
+            $condition['image_examined_time'] = array('gt' => $searchArgs['beginDate']);
         }
         if (!empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
-            $condition['upload_time'] = array('between' => array($searchArgs['beginDate'],$searchArgs['endDate']));
+            $condition['image_examined_time'] = array('between' => array($searchArgs['beginDate'],$searchArgs['endDate']));
         }
         if (!empty($searchArgs['subjectId'])) {
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
@@ -492,21 +532,21 @@ class VipYoudaoExamined extends Model
             $condition['city'] = array('eq' => $countryName);
         }
         if (!empty($searchArgs['grade'])) {
-            $condition['grade_id'] = array('eq' => $searchArgs['grade']);
+            $condition['grade'] = array('eq' => $searchArgs['grade']);
         }
-        if (!empty($searchArgs['agency_id'])) {
-            $condition['agencyId'] = array('eq' => $searchArgs['agency_id']);
-        }
-        if (!empty($searchArgs['imageExaminedStatus'])) {
-            $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
+        if (!empty($searchArgs['agencyId'])) {
+            $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
         }
         if (!empty($searchArgs['paperName'])) {
             $condition['paper_name'] = array('like' => "%" . $searchArgs['paperName'] . "%");
         }
+        if (!empty($searchArgs['authorId'])) {
+            $condition['image_examined_auditor_id'] = array('eq' => $searchArgs['authorId']);
+        }
         if (empty($condition)) {
             $condition = [];
         }
-        $result = $this->findAll($condition, ['upload_time' => 'desc'], ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city']);
+        $result = $this->findAll($condition, ['upload_time' => 'desc'], ['id', 'agency_id', 'paper_name', 'upload_time', 'image_examined_time', 'image_examined_status','subject_id','image_processing_days','image_examined_auditor_id','province','city','paper_id']);
         $vipYoudaoAgency = new VipYoudaoAgency();
         $agencyResult = $vipYoudaoAgency->getYoudaoAgency();
         $listAgency = [];
@@ -522,10 +562,10 @@ class VipYoudaoExamined extends Model
             $list[] = [
                 'number' => $i,
                 'id' => $item['id'],
-                'province' => $item['province'],
+                'agencyId' => $item['agency_id'],
                 'paperId' => $item['paper_id'],
-                'province' => $item['agency_id'],
-                'city' => $item['city'],
+                'province' => isset($provinceIdNames[$item['province']]) ? $provinceIdNames[$item['province']] : '',
+                'city' => isset($countrys[$item['city']]) ? $countrys[$item['city']] : '',
                 'paperName' => $item['paper_name'],
                 'uploadTime' => $item['upload_time'],
                 'imageExaminedTime' => $item['image_examined_time'],
