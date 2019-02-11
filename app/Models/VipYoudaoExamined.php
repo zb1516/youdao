@@ -671,7 +671,7 @@ class VipYoudaoExamined extends Model
             'question_number' => $questionNumber,
             'other_information_one' => $other1,
             'other_information_two' => $other2,
-            'paper_name' => $paperName,
+            //'paper_name' => $paperName,
             'image_error_type' => ''
         ];
         $condition = array(
