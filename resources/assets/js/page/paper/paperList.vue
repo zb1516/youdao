@@ -115,7 +115,7 @@
                     <template v-if="isContent == 1">
                         <template v-for="(paper,index) in paperList">
                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
-                                <td class="sorting_1">{{paper.task_id}}</td>
+                                <td class="sorting_1">{{paper.num}}</td>
                                 <td><span class="color-black">{{paper.paper_name}}</span></td>
                                 <td>{{paper.agency_name}}</td>
                                 <td>{{paper.final_processing_time}}</td>

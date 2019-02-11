@@ -121,6 +121,8 @@ class VipYoudaoExamined extends Model
         }
         if (!empty($searchArgs['status'])) {
             $condition['paper_examined_status'] = array('eq' => $searchArgs['status']);
+        }else{
+            $condition['paper_examined_status'] = array('gt' => 0);
         }
         if (!empty($searchArgs['agencyId'])) {
             $condition['agency_id'] = array('eq' => $searchArgs['agencyId']);
@@ -166,8 +168,13 @@ class VipYoudaoExamined extends Model
             $order = ['upload_time'=>'asc'];
         }
         $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','upload_time','image_processing_days','final_processing_days','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        if($list['data']){
+            foreach ($list['data'] as $key=>$row){
+                $list['data'][$key]['num'] = abs(( $key + 1 )+ ( $currentPage - 1 ) * $pageSize );
+            }
+        }
         $list = $this->formatPaperList($list['data']);
-        $statistic = $this->paperStatistic($condition);
+        $statistic = $this->paperStatistic($searchArgs);
         return array('rows' => $list, 'total' => $recordCount, 'totalPage'=>ceil($recordCount / $pageSize), 'listCount'=>$statistic);
     }
 
@@ -884,10 +891,23 @@ class VipYoudaoExamined extends Model
                 throw new \Exception('审核通过反馈失败:'.$result['message']);
             }*/
 
-            /**
-             * 试题的题干、选项、答案、解析latex内容文件上传到题库服务器
-             */
+
             //$common->uploadPaperFile($fileArr);
+            /**
+             * 录入有道试卷文件上传任务表（计划任务自动上传有道解析的试题文件至题库服务器相应目录）
+             */
+            $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask();
+            $result = $vip_youdao_paper_file_upload_task->add(
+                array(
+                    'task_id'=>$data['task_id'],
+                    'file_json'=>json_encode($fileArr),
+                    'create_time'=>date('Y-m-d H:i:s')
+                )
+            );
+            if(!$result){
+                $this->rollback();
+                throw new \Exception('试卷文件上传任务录入失败');
+            }
 
             $this->commit();
             $status = 1;

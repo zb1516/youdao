@@ -113,38 +113,38 @@ class PaperController extends BaseController
                     'quesType'=>'单选题', //题型
                     'quesLatextContent'=>array(
                         'content'=>'<div>safasfasfasfs</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                        'fileUrl'=>"http://vip.gaosiedu.com/static/images/eap_loginbg2.png"
                     ),
                     'options'=>array(
                         array(
                             "label"=>"A", //选项标题
                             "latexContent"=>'<div>asdfsafsafasfsda</div>',
-                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "latexFilePath"=>"http://teacher.aitifen.com/static/images/logo.png",
                             "isAnswer"=>1
                         ),
                         array(
                             "label"=>"B", //选项标题
                             "latexContent"=>'<div>asdfsafsafasfsda</div>',
-                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "latexFilePath"=>"http://teacher.aitifen.com/static/images/logo.png",
                             "isAnswer"=>0
                         ),
                         array(
                             "label"=>"C", //选项标题
                             "latexContent"=>'<div>asdfsafsafasfsda</div>',
-                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "latexFilePath"=>"http://teacher.aitifen.com/static/images/logo.png",
                             "isAnswer"=>1
                         ),
                         array(
                             "label"=>"D", //选项标题
                             "latexContent"=>'<div>asdfsafsafasfsda</div>',
-                            "latexFilePath"=>"http://xxxxxxx/ques/{quesId}/options/A.docx",
+                            "latexFilePath"=>"http://teacher.aitifen.com/static/images/logo.png",
                             "isAnswer"=>0
                         ),
 
                     ),
                     'quesLatextAnalysis'=>array(
                         'content'=>'<div>asdfsafsafasfsda</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                        'fileUrl'=>"http://teacher.aitifen.com/static/images/logo.png"
                     ),
                 ),
                 '1'=>array(
@@ -153,15 +153,15 @@ class PaperController extends BaseController
                     'quesType'=>'解答题', //题型
                     'quesLatextContent'=>array(
                         'content'=>'<div>22222222</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                        'fileUrl'=>"http://teacher.aitifen.com/static/images/loginbg2.png"
                     ),
                     'quesLatextAnswer'=>array(
                         'content'=>'<div>22222222222</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                        'fileUrl'=>"http://teacher.aitifen.com/static/images/logo.png"
                     ),
                     'quesLatextAnalysis'=>array(
                         'content'=>'<div>22222222222</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
+                        'fileUrl'=>"http://teacher.aitifen.com/static/images/logo.png"
                     ),
                 ),
                 /*'2'=>array(

@@ -1,5 +1,5 @@
-webpackJsonp([5],Array(74).concat([
-/* 74 */
+webpackJsonp([5],Array(73).concat([
+/* 73 */
 /***/ (function(module, exports) {
 
 
@@ -94,13 +94,13 @@ module.exports = function (css) {
 
 
 /***/ }),
+/* 74 */,
 /* 75 */,
 /* 76 */,
 /* 77 */,
 /* 78 */,
 /* 79 */,
-/* 80 */,
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -146,7 +146,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(74);
+var	fixUrls = __webpack_require__(73);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -459,6 +459,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
+/* 81 */,
 /* 82 */,
 /* 83 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -466,9 +467,9 @@ function updateLink (link, options, obj) {
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(236)
+var __vue_script__ = __webpack_require__(242)
 /* template */
-var __vue_template__ = __webpack_require__(237)
+var __vue_template__ = __webpack_require__(243)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -485,7 +486,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\page\\imagePaper\\imagePaperDetail.vue"
+Component.options.__file = "resources\\assets\\js\\page\\imagePaper\\imageSearch.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -494,9 +495,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a7ed8242", Component.options)
+    hotAPI.createRecord("data-v-3e6d0f94", Component.options)
   } else {
-    hotAPI.reload("data-v-a7ed8242", Component.options)
+    hotAPI.reload("data-v-3e6d0f94", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -4983,7 +4984,7 @@ return hooks;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
 
 /***/ }),
 /* 94 */
@@ -21271,7 +21272,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(81)(content, options);
+var update = __webpack_require__(80)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -21292,7 +21293,7 @@ if(false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var escape = __webpack_require__(10);
-exports = module.exports = __webpack_require__(1)(false);
+exports = module.exports = __webpack_require__(3)(false);
 // imports
 
 
@@ -26963,237 +26964,302 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 })(jQuery);
 
 /***/ }),
-/* 234 */,
-/* 235 */,
+/* 234 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {var __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/* Author：mingyuhisoft@163.com
+ * Github:https://github.com/imingyu/jquery.mloading
+ * Npm:npm install jquery.mloading.js
+ * Date：2016-7-4
+ */
+
+;(function (root, factory) {
+    'use strict';
+
+    if (( false ? 'undefined' : _typeof(module)) === 'object' && _typeof(module.exports) === 'object') {
+        factory(__webpack_require__(8), root);
+    }if (true) {
+        if (__webpack_require__(235).cmd) {
+            !(__WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, module) {
+                var $ = __webpack_require__(8);
+                factory($, root);
+            }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+        } else {
+            !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(8)], __WEBPACK_AMD_DEFINE_RESULT__ = function ($) {
+                factory($, root);
+            }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+        }
+    } else {
+        factory(root.jQuery, root);
+    }
+})(typeof window !== "undefined" ? window : this, function ($, root, undefined) {
+    'use strict';
+
+    if (!$) {
+        $ = root.jQuery || null;
+    }
+    if (!$) {
+        throw new TypeError("必须引入jquery库方可正常使用！");
+    }
+
+    var arraySlice = Array.prototype.slice,
+        comparison = function comparison(obj1, obj2) {
+        var result = true;
+        for (var pro in obj1) {
+            if (obj1[pro] !== obj2[obj1]) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    };
+
+    function MLoading(dom, options) {
+        options = options || {};
+        this.dom = dom;
+        this.options = $.extend(true, {}, MLoading.defaultOptions, options);
+        this.curtain = null;
+        this.render().show();
+    }
+    MLoading.prototype = {
+        constructor: MLoading,
+        initElement: function initElement() {
+            var dom = this.dom,
+                ops = this.options;
+            var curtainElement = dom.children(".mloading"),
+                bodyElement = curtainElement.children('.mloading-body'),
+                barElement = bodyElement.children('.mloading-bar'),
+                iconElement = barElement.children('.mloading-icon'),
+                textElement = barElement.find(".mloading-text");
+            if (curtainElement.length == 0) {
+                curtainElement = $('<div class="mloading"></div>');
+                dom.append(curtainElement);
+            }
+            if (bodyElement.length == 0) {
+                bodyElement = $('<div class="mloading-body"></div>');
+                curtainElement.append(bodyElement);
+            }
+            if (barElement.length == 0) {
+                barElement = $('<div class="mloading-bar"></div>');
+                bodyElement.append(barElement);
+            }
+            if (iconElement.length == 0) {
+                var _iconElement = document.createElement(ops.iconTag);
+                iconElement = $(_iconElement);
+                iconElement.addClass("mloading-icon");
+                barElement.append(iconElement);
+            }
+            if (textElement.length == 0) {
+                textElement = $('<span class="mloading-text"></span>');
+                barElement.append(textElement);
+            }
+
+            this.curtainElement = curtainElement;
+            this.bodyElement = bodyElement;
+            this.barElement = barElement;
+            this.iconElement = iconElement;
+            this.textElement = textElement;
+            return this;
+        },
+        render: function render() {
+            var dom = this.dom,
+                ops = this.options;
+            this.initElement();
+            if (dom.is("html") || dom.is("body")) {
+                this.curtainElement.addClass("mloading-full");
+            } else {
+                this.curtainElement.removeClass("mloading-full");
+
+                if (!dom.hasClass("mloading-container")) {
+                    dom.addClass("mloading-container");
+                }
+            }
+            if (ops.mask) {
+                this.curtainElement.addClass("mloading-mask");
+            } else {
+                this.curtainElement.removeClass("mloading-mask");
+            }
+            if (ops.content != "" && typeof ops.content != "undefined") {
+                if (ops.html) {
+                    this.bodyElement.html(ops.content);
+                } else {
+                    this.bodyElement.text(ops.content);
+                }
+            } else {
+                this.iconElement.attr("src", ops.icon);
+                if (ops.html) {
+                    this.textElement.html(ops.text);
+                } else {
+                    this.textElement.text(ops.text);
+                }
+            }
+
+            return this;
+        },
+        setOptions: function setOptions(options) {
+            options = options || {};
+            var oldOptions = this.options;
+            this.options = $.extend(true, {}, this.options, options);
+            if (!comparison(oldOptions, this.options)) this.render();
+        },
+        show: function show() {
+            var dom = this.dom,
+                ops = this.options,
+                barElement = this.barElement;
+            this.curtainElement.addClass("active");
+            barElement.css({
+                "marginTop": "-" + barElement.outerHeight() / 2 + "px",
+                "marginLeft": "-" + barElement.outerWidth() / 2 + "px"
+            });
+
+            return this;
+        },
+        hide: function hide() {
+            var dom = this.dom,
+                ops = this.options;
+            this.curtainElement.removeClass("active");
+            if (!dom.is("html") && !dom.is("body")) {
+                dom.removeClass("mloading-container");
+            }
+            return this;
+        },
+        destroy: function destroy() {
+            var dom = this.dom,
+                ops = this.options;
+            this.curtainElement.remove();
+            if (!dom.is("html") && !dom.is("body")) {
+                dom.removeClass("mloading-container");
+            }
+            dom.removeData(MLoading.dataKey);
+            return this;
+        }
+    };
+    MLoading.dataKey = "MLoading";
+    MLoading.defaultOptions = {
+        text: "加载中...",
+        iconTag: "img",
+        icon: "data:image/gif;base64,R0lGODlhDwAPAKUAAEQ+PKSmpHx6fNTW1FxaXOzu7ExOTIyOjGRmZMTCxPz6/ERGROTi5Pz29JyanGxubMzKzIyKjGReXPT29FxWVGxmZExGROzq7ERCRLy6vISChNze3FxeXPTy9FROTJSSlMTGxPz+/OTm5JyenNTOzGxqbExKTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJBgAhACwAAAAADwAPAAAGd8CQcEgsChuTZMNIDFgsC1Nn9GEwDwDAoqMBWEDFiweA2YoiZevwA9BkDAUhW0MkADYhiEJYwJj2QhYGTBwAE0MUGGp5IR1+RBEAEUMVDg4AAkQMJhgfFyEIWRgDRSALABKgWQ+HRQwaCCEVC7R0TEITHbmtt0xBACH5BAkGACYALAAAAAAPAA8AhUQ+PKSmpHRydNTW1FxWVOzu7MTCxIyKjExKTOTi5LSytHx+fPz6/ERGROTe3GxqbNTS1JyWlFRSVKympNze3FxeXPT29MzKzFROTOzq7ISGhERCRHx6fNza3FxaXPTy9MTGxJSSlExOTOTm5LS2tISChPz+/ExGRJyenKyqrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZ6QJNQeIkUhsjkp+EhMZLITKgBAGigQgiiCtiAKJdkBgNYgDYLhmDjQIbKwgfF9C4hPYC5KSMsbBBIJyJYFQAWQwQbI0J8Jh8nDUgHAAcmDA+LKAAcSAkIEhYTAAEoGxsdSSAKIyJcGyRYJiQbVRwDsVkPXrhDDCQBSUEAIfkECQYAEAAsAAAAAA8ADwCFRD48pKKkdHZ01NLUXFpc7OrsTE5MlJKU9Pb03N7cREZExMbEhIKEbGpsXFZUVFZU/P78tLa0fH583NrcZGJk9PL0VE5MnJ6c/Pb05ObkTEZEREJErKqsfHp81NbUXF5c7O7slJaU5OLkzMrMjIaEdG5sVFJU/Pr8TEpMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABndAiHA4DICISCIllBQWQgSNY6NJJAcoAMCw0XaQBQtAYj0ANgcE0SwZlgSe04hI2FiFAyEFRdQYmh8AakIOJhgQHhVCFQoaRAsVGSQWihAXAF9EHFkNEBUXGxsTSBxaGx9dGxFJGKgKAAoSEydNIwoFg01DF7oQQQAh+QQJBgAYACwAAAAADwAPAIVEPjykoqR0cnTU0tRUUlSMiozs6uxMSkx8fnzc3txcXlyUlpT09vRcWlxMRkS0trR8enzc2txcVlSUkpRUTkyMhoTk5uScnpz8/vxEQkR8dnTU1tRUVlSMjoz08vRMTkyEgoTk4uRkYmSclpT8+vy8urwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGc0CMcEgsGo9Gw6LhkHRCmICFODgAAJ8M4FDJTIUGCgCRwIQKV+9wMiaWtIAvRqOACiMKwucjJzFIJEN+gEQiHAQcJUMeBROCBFcLRBcAEESQAB0GGB4XGRkbghwCnxkiWhkPRRMMCSAfABkIoUhCDLW4Q0EAIfkECQYAGQAsAAAAAA8ADwCFRD48pKKkdHJ01NLU7OrsXFZUjIqMvLq8TEpM3N7c9Pb0lJaUxMbErK6sfH58bGpsVFJUTEZE3Nrc9PL0XF5clJKUxMLEVE5M5Obk/P78nJ6ctLa0hIaEREJE1NbU7O7sXFpcjI6MvL68TE5M5OLk/Pr8nJqczM7MtLK0hIKEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnPAjHBILBqPRsICFCmESMcBAgAYdQAIi9HzSCUyJEOnAx0GBqUSsQJwYFAZyTiFGZZEgHGlJKACQBIZEwJXVR8iYwANE0MTAVMNGSISHAAhRSUYC2pCJFMhH4IaEAdGDGMdFFcdG0cJKSNYDoFIQgqctblBADs=",
+        html: false,
+        content: "", //设置content后，text和icon设置将无效
+        mask: true //是否显示遮罩（半透明背景）
+    };
+
+    $.fn.mLoading = function (options) {
+        var ops = {},
+            funName = "",
+            funArgs = [];
+        if ((typeof options === 'undefined' ? 'undefined' : _typeof(options)) === "object") {
+            ops = options;
+        } else if (typeof options === "string") {
+            funName = options;
+            funArgs = arraySlice.call(arguments).splice(0, 1);
+        }
+        return this.each(function (i, element) {
+            var dom = $(element),
+                plsInc = dom.data(MLoading.dataKey);
+            if (!plsInc) {
+                plsInc = new MLoading(dom, ops);
+            }
+
+            if (funName) {
+                var fun = plsInc[funName];
+                if (typeof fun === "function") {
+                    fun.apply(plsInc, funArgs);
+                }
+            }
+        });
+    };
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)(module)))
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+	throw new Error("define cannot be used indirect");
+};
+
+
+/***/ }),
 /* 236 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(237);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(80)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../../node_modules/css-loader/index.js!./jquery.mloading.css", function() {
+			var newContent = require("!!../../../../../node_modules/css-loader/index.js!./jquery.mloading.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "/* Author：mingyuhisoft@163.com\r\n * Github:https://github.com/imingyu/jquery.mloading\r\n * Npm:npm install jquery.mloading.js\r\n * Date：2016-7-4\r\n */\r\n.mloading-container {\r\n  position: relative;\r\n  min-height: 70px;\r\n  -webkit-transition: height 0.6s ease-in-out;\r\n  -o-transition: height 0.6s ease-in-out;\r\n  transition: height 0.6s ease-in-out;\r\n}\r\n.mloading {\r\n  position: absolute;\r\n  background: #E9E9E8;\r\n  font: normal 12px/22px \"Microsoft Yahei\", \"\\5FAE\\8F6F\\96C5\\9ED1\", \"\\5B8B\\4F53\";\r\n  display: none;\r\n  z-index: 1600;\r\n  background: rgba(233, 233, 232, 0);\r\n}\r\n.mloading.active {\r\n  display: block;\r\n}\r\n.mloading.mloading-mask {\r\n  background: rgba(233, 233, 232, 0.75);\r\n  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=75);\r\n}\r\n.mloading-full {\r\n  position: fixed;\r\n  width: 100%;\r\n  height: 100%;\r\n  top: 0;\r\n  left: 0;\r\n}\r\n.mloading-container > .mloading {\r\n  top: 0px;\r\n  left: 0px;\r\n  width: 100%;\r\n  height: 100%;\r\n}\r\n.mloading-body {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n}\r\n.mloading-bar {\r\n  width: 250px;\r\n  min-height: 22px;\r\n  text-align: center;\r\n  background: #fff;\r\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.27);\r\n  border-radius: 7px;\r\n  padding: 20px 15px;\r\n  font-size: 14px;\r\n  color: #999;\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 50%;\r\n  margin-left: -140px;\r\n  margin-top: -30px;\r\n  word-break: break-all;\r\n}\r\n@media (max-width: 300px) {\r\n  .mloading-bar {\r\n    width: 62px;\r\n    height: 56px;\r\n    margin-left: -30px !important;\r\n    margin-top: -30px !important;\r\n    padding: 0;\r\n    line-height: 56px;\r\n  }\r\n  .mloading-bar > .mloading-text {\r\n    display: none;\r\n  }\r\n}\r\n.mloading-bar-sm {\r\n  width: 62px;\r\n  height: 56px;\r\n  margin-left: -30px !important;\r\n  margin-top: -30px !important;\r\n  padding: 0;\r\n  line-height: 56px;\r\n}\r\n.mloading-bar-sm > .mloading-text {\r\n  display: none;\r\n}\r\n.mloading-icon {\r\n  width: 16px;\r\n  height: 16px;\r\n  vertical-align: middle;\r\n}\r\n.mloading-text {\r\n  margin-left: 10px;\r\n}\r\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_css_jquery_fancybox_css__ = __webpack_require__(228);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_css_jquery_fancybox_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_css_jquery_fancybox_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__ = __webpack_require__(209);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_js_jquery_plugin_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_ui_min_js__ = __webpack_require__(231);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_js_jquery_ui_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__static_js_jquery_ui_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_common_js__ = __webpack_require__(211);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_common_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__static_js_jquery_common_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_fancybox_js__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_fancybox_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__static_js_jquery_fancybox_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_fancybox_buttons_js__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_fancybox_buttons_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__static_js_jquery_fancybox_buttons_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_vuex__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_mloading_js__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__static_js_jquery_mloading_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__static_js_jquery_mloading_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_jquery_mloading_css__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_jquery_mloading_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_css_jquery_mloading_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_css_jquery_fancybox_css__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__static_css_jquery_fancybox_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__static_css_jquery_fancybox_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_plugin_js__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_plugin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__static_js_jquery_plugin_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_ui_min_js__ = __webpack_require__(231);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__static_js_jquery_ui_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__static_js_jquery_ui_min_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__static_js_jquery_fancybox_js__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__static_js_jquery_fancybox_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__static_js_jquery_fancybox_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__static_js_jquery_fancybox_buttons_js__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__static_js_jquery_fancybox_buttons_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__static_js_jquery_fancybox_buttons_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_vuex__ = __webpack_require__(9);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -27204,251 +27270,184 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            curYear: '',
-            optionsYears: '',
-            subjectValue: '',
-            optionsSubject: '',
-            curPaperSource: '',
-            ajaxAllSubjectPaperSource: '',
-            curProvince: '',
-            optionsProvinces: '',
-            curCity: '',
-            ajaxAllPaperCitys: '',
-            curArea: '',
-            ajaxAllPaperAreas: '',
-            curGrade: '',
-            school: '',
-            term: '',
-            duration: '',
-            score: '',
-            questionNumber: '',
-            other1: '',
-            other2: '',
-            taskId: '',
-            paperType: '',
-            imagePaperDetailContent: '',
-            questionContent: '',
-            answerContent: '',
-            sortTaskId: [],
-            errorShow: false,
-            errorMssage: "请选择必填项",
-            sortTaskIdQuestion: [],
-            sortTaskIdAnswer: []
-        };
-    },
+  data: function data() {
+    return {
+      imagePaperDetailContent: '',
+      paperList: '',
+      isShow: 0,
+      papeNum: 0,
+      currentPage: 1,
+      pageSize: 4,
+      paperId: 0,
+      paperContent: '',
+      questionContent: '',
+      taskId: '',
+      paperType: ''
+    };
+  },
 
-    computed: _extends({
-        searchArgs: function searchArgs() {
-            var that = this;
-            return {
-                subjectId: that.subjectValue,
-                year: that.curYear,
-                grade: that.curGrade,
-                province: that.curProvince,
-                city: that.curCity,
-                country: that.curArea,
-                source: that.curPaperSource,
-                term: that.term,
-                school: that.school,
-                duration: that.duration,
-                score: that.score,
-                questionNumber: that.questionNumber,
-                other1: that.other1,
-                other2: that.other2,
-                sortTaskId: that.sortTaskId,
-                sortTaskIdQuestion: that.sortTaskIdQuestion,
-                sortTaskIdAnswer: that.sortTaskIdAnswer
-            };
-        }
-    }, __WEBPACK_IMPORTED_MODULE_6_vuex__["b" /* mapGetters */]({
-        userKey: 'getUserKey' //this.userKey  ==  this.$store.getters.getUserKey
-    })),
+  computed: _extends({
+    searchArgs: function searchArgs() {
+      var that = this;
+      return {
 
-    mounted: function mounted() {
+        pageSize: that.pageSize
 
-        var that = this;
-        that.taskId = this.$route.params.taskId;
-        that.paperType = this.$route.params.paperType;
-        that.yearList();
-        that.subjectList();
-        that.provinceList();
-        that.imagePaperDetail();
-        __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_common_js___default.a.init();
-    },
-
-    methods: {
-        subjectList: function subjectList() {
-            var that = this;
-            axios.get('common/common/getSubjects', { params: { userKey: that.userKey } }).then(function (data) {
-                if (data.data.errorMsg) {
-                    that.$message.error(data.data.errorMsg);
-                } else {
-                    that.optionsSubject = data.data;
-                    that.$nextTick(function () {
-                        $('.grade-select-box').selectpicker('refresh');
-                    });
-                }
-            });
-        },
-        selectPaperSource: function selectPaperSource() {
-            var that = this;
-            that.curPaperSource = '';
-            axios.get('common/common/getPaperSourceAjaxSearch', { params: { subjectId: that.subjectValue, userKey: that.userKey } }).then(function (data) {
-                that.$nextTick(function () {
-                    if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
-                    } else {
-                        that.ajaxAllSubjectPaperSource = data.data;
-                        that.$nextTick(function () {
-                            $('.grade-select-box').selectpicker('refresh');
-                        });
-                    }
-                });
-            });
-        },
-        provinceList: function provinceList() {
-            var that = this;
-            axios.get('common/common/getProvince', { params: { userKey: that.userKey } }).then(function (data) {
-                that.optionsProvinces = data.data;
-                that.$nextTick(function () {
-                    $('#prev-select-box').selectpicker('refresh');
-                });
-            });
-        },
-        selectPaperCitys: function selectPaperCitys() {
-            var that = this;
-            that.curCity = '';
-            axios.get('common/common/getPaperCitysAjaxSearch', { params: { provinceId: that.curProvince, userKey: that.userKey } }).then(function (data) {
-                that.$nextTick(function () {
-                    if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
-                    } else {
-                        that.ajaxAllPaperCitys = data.data;
-                        that.$nextTick(function () {
-                            $('#city-select-box').selectpicker('refresh');
-                        });
-                    }
-                });
-            });
-        },
-        selectPaperAreas: function selectPaperAreas() {
-            var that = this;
-            that.curArea = '';
-            axios.get('common/common/getPaperAreasAjaxSearch', { params: { provinceId: that.curProvince + '-' + that.curCity, userKey: that.userKey } }).then(function (data) {
-                that.$nextTick(function () {
-                    if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
-                    } else {
-                        that.ajaxAllPaperAreas = data.data;
-                        that.$nextTick(function () {
-                            $('.grade-select-box').selectpicker('refresh');
-                        });
-                    }
-                });
-            });
-        },
-        yearList: function yearList() {
-            var that = this;
-            axios.get('common/common/getYear', { params: { userKey: that.userKey } }).then(function (data) {
-
-                that.optionsYears = data.data;
-                that.$nextTick(function () {
-                    $('.grade-select-box').selectpicker('refresh');
-                });
-            });
-        },
-        doSearch: function doSearch() {
-            var resultImage = new Array();
-            //var imageData = new Array();
-            if (this.$route.params.paperType == 1) {
-                var i = 0;
-                $("#questionAll").find('img').each(function () {
-                    resultImage[i] = $(this).attr('src');
-                    i++;
-                });
-            } else {
-
-                var resultImageQuestion = new Array();
-                var resultImageAnswer = new Array();
-                var k = 0;
-                var j = 0;
-                $("#questionImage").find('img').each(function () {
-                    resultImageQuestion[k] = $(this).attr('src');
-                    //alert($(this).attr('src'))
-                    k++;
-                });
-                $("#questionAnswer").find('img').each(function () {
-                    resultImageAnswer[j] = $(this).attr('src');
-                    j++;
-                });
-                // imageData[0] = resultImageQuestion;
-                // imageData[1] = resultImageAnswer;
-            }
-            var that = this;
-            $('.js-verif-input').each(function () {
-                var $selectedBox = $(this).find('select').find("option:selected");
-
-                if ($selectedBox.val() == 0) {
-                    that.errorShow = true;
-                    return false;
-                }
-                that.errorShow = false;
-            });
-            var searchArgs = $.extend(true, {}, that.searchArgs);
-            searchArgs.userKey = that.userKey;
-            searchArgs.taskId = that.taskId;
-            searchArgs.paperType = that.paperType;
-            if (this.$route.params.paperType == 1) {
-                searchArgs.sortTaskId = resultImage;
-            } else {
-                //searchArgs.sortTaskId = imageData;
-                searchArgs.sortTaskIdQuestion = resultImageQuestion;
-                searchArgs.sortTaskIdAnswer = resultImageAnswer;
-            }
-            localStorage.setItem("paperSearchArgs", JSON.stringify(searchArgs));
-            localStorage.setItem("localTaskId", that.taskId);
-            if (!that.errorShow) {
-                that.$router.push({
-                    name: 'imagePaper-imagePaperList-imageSearch',
-                    params: { userKey: that.userKey, taskId: that.taskId, allType: 1 }
-                });
-            }
-
-            // location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
-            // axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
-            //     if (data.data.errorMsg) {
-            //         that.$message.error(data.data.errorMsg);
-            //     } else {
-            //         that.$nextTick(function () {
-            //             console.log(data.data);
-            //             //that.jsPage();
-            //         });
-            //     }
-            // })
-        },
-        imagePaperDetail: function imagePaperDetail() {
-            var that = this;
-            axios.get('youdao/imagePaper/imagePaperDetail', { params: { userKey: that.userKey, taskId: that.taskId, paperType: that.paperType } }).then(function (data) {
-                if (data.data) {
-                    if (that.paperType == 1) {
-                        that.imagePaperDetailContent = data.data;
-                    } else {
-                        that.questionContent = data.data['question'];
-                        that.answerContent = data.data['answer'];
-                    }
-                }
-                that.$nextTick(function () {
-                    __WEBPACK_IMPORTED_MODULE_3__static_js_jquery_common_js___default.a.init();
-                });
-            });
-        }
+      };
     }
+  }, __WEBPACK_IMPORTED_MODULE_8_vuex__["b" /* mapGetters */]({
+    userKey: 'getUserKey' //this.userKey  ==  this.$store.getters.getUserKey
+  })),
+  watch: {
+    searchArgs: function searchArgs() {
+      var that = this;
+      that.currentPage = 1;
+    }
+    // paperList:function(){
+    //     var that = this;
+    //     that.doPage(that.currentPage);
+    // }
+
+  },
+  mounted: function mounted() {
+
+    var that = this;
+    that.taskId = this.$route.params.taskId;
+    that.paperType = this.$route.params.paperType;
+    that.imagePaperDetail();
+    that.doSearch();
+    that.doSelect();
+    __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js___default.a.init();
+  },
+
+  methods: {
+    imagePaperDetail: function imagePaperDetail() {
+      var that = this;
+      $("body").mLoading('show');
+      axios.get('youdao/imagePaper/imagePaperDetail', { params: { userKey: that.userKey, taskId: that.taskId, paperType: that.paperType, allType: 1 } }).then(function (data) {
+        $("body").mLoading('hide');
+        if (data.data) {
+          that.imagePaperDetailContent = data.data;
+        }
+        that.$nextTick(function () {
+          __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js___default.a.init();
+        });
+      });
+    },
+    doSearch: function doSearch() {
+      var that = this;
+      var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
+      searchArgs.currentPage = that.currentPage;
+      searchArgs.pageSize = that.pageSize;
+      // console.log(searchArgs);
+      axios.get('youdao/imagePaper/paperList', { params: searchArgs }).then(function (data) {
+        if (data.data.errorMsg) {
+          that.$message.error(data.data.errorMsg);
+        } else {
+          //that.$nextTick(function () {
+          if (data.data.rows != '') {
+            that.paperList = data.data.rows;
+            that.papeNum = data.data.totalPage;
+            that.$nextTick(function () {
+              that.doPaperContent();
+            });
+          } else {
+
+            that.currentPage = 0;
+          }
+
+          // });
+          //that.paperList = data.data.rows;
+          //console.log(that.paperList)
+        }
+      });
+    },
+    doSelect: function doSelect() {
+      var that = this;
+      $(document).on('click', '.js-radio2', function () {
+        var $this = $(this);
+        //console.log($this.hasClass('select'));
+        $this.hasClass('select') ? $this.removeClass('select') : $this.addClass('select').parent().siblings('p').find('.js-radio2').removeClass('select');
+        that.paperId = $this.has('select') ? $this.attr('data-val') : "";
+        axios.get('common/common/getPaperClient', { params: { paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
+          that.$nextTick(function () {
+            if (data.data.errorMsg) {
+              that.$message.error(data.data.errorMsg);
+            } else {
+              that.paperContent = data.data;
+            }
+            axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
+              that.questionContent = data.data.rows;
+              that.$nextTick(function () {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
+              });
+            });
+          });
+        });
+      });
+    },
+    doPage: function doPage(curPage) {
+      var that = this;
+      if (curPage == 0) {
+        curPage = 1;
+      }
+      if (curPage > that.papeNum) {
+        curPage = that.papeNum;
+      }
+      that.currentPage = curPage;
+      that.doSearch();
+    },
+    doPaperContent: function doPaperContent() {
+      var $firstTab = $('.firstSelectValue');
+      $firstTab.addClass('select').parent().siblings('p').find('.js-radio2').removeClass('select');
+      var that = this;
+      that.paperId = $firstTab.attr('data-val');
+      axios.get('common/common/getPaperClient', { params: { paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
+        if (data.data.errorMsg) {
+          that.$message.error(data.data.errorMsg);
+        } else {
+          that.paperContent = data.data;
+        }
+
+        axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
+
+          that.questionContent = data.data.rows;
+          that.$nextTick(function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
+          });
+        });
+      });
+    },
+    doNext: function doNext() {
+      var that = this;
+      that.$router.push({
+        name: 'imagePaper-imagePaperList-imageExamined',
+        params: { userKey: that.userKey, taskId: that.taskId, paperType: that.paperType, allType: 1 }
+      });
+      that.$nextTick(function () {
+        $('.main').selectpicker('refresh');
+      });
+    },
+    doRepeat: function doRepeat() {
+      var that = this;
+      axios.get('youdao/imagePaper/repeatPaperRecord', { params: { taskId: that.taskId, paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
+        if (data.data.errorMsg) {
+          that.$message.error(data.data.errorMsg);
+        }
+        if (data.data == true) {
+          that.$message({
+            message: '此卷重复',
+            type: 'success'
+          });
+        }
+      });
+    }
+  }
+
 });
 
 /***/ }),
-/* 237 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -27456,7 +27455,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "main" }, [
-    _c("div", { staticClass: "pic-review1" }, [
+    _c("div", { staticClass: "pic-review1 review2" }, [
       _c(
         "div",
         { staticClass: "nav-wrapper" },
@@ -27467,8 +27466,12 @@ var render = function() {
               staticClass: "back-btn",
               attrs: {
                 to: {
-                  name: "imagePaper-imagePaperList",
-                  params: { userKey: _vm.userKey }
+                  name: "imagePaper-imagePaperList-imagePaperDetail",
+                  params: {
+                    userKey: _vm.userKey,
+                    taskId: _vm.taskId,
+                    paperType: _vm.paperType
+                  }
                 }
               }
             },
@@ -27480,861 +27483,239 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "tab-con-wrapper" },
-        [
-          _c("h2", { staticClass: "title" }, [_vm._v("第一步 贴标签")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "search-form inner cf" }, [
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required min-w1", attrs: { for: "" } },
-                [_vm._v("学科")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
+      _c("div", { staticClass: "tab-con-wrapper" }, [
+        _c("h2", { staticClass: "title" }, [_vm._v("第二步 搜索排重")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "search-form" },
+          [
+            _c("h3", { staticClass: "title2" }, [
+              _vm._v("自动根据标签搜索的试卷")
+            ]),
+            _vm._v(" "),
+            _vm._l(_vm.paperList, function(paper, index) {
+              return [
                 _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.subjectValue,
-                        expression: "subjectValue"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "grade-select-box5",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.subjectValue = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.selectPaperSource
-                      ]
-                    }
-                  },
+                  "p",
+                  { staticClass: "paper-name" },
                   [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.optionsSubject, function(option) {
-                      return _c(
-                        "option",
-                        { domProps: { value: option.subjectId } },
-                        [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(option.subjectName) +
-                              "\n                            "
-                          )
+                    index == 0
+                      ? [
+                          _c("span", {
+                            staticClass:
+                              "checkbox js-radio2 select firstSelectValue",
+                            attrs: { "data-val": paper.id }
+                          })
                         ]
-                      )
-                    })
+                      : [
+                          _c("span", {
+                            staticClass: "checkbox js-radio2",
+                            attrs: { "data-val": paper.id }
+                          })
+                        ],
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      [
+                        paper.showName
+                          ? [
+                              _vm._v(
+                                "\r                               " +
+                                  _vm._s(paper.showName) +
+                                  "\r                            "
+                              )
+                            ]
+                          : [
+                              _vm._v(
+                                "\r                                " +
+                                  _vm._s(paper.fileName) +
+                                  "\r                            "
+                              )
+                            ]
+                      ],
+                      2
+                    )
                   ],
                   2
                 )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required", attrs: { for: "" } },
-                [_vm._v("年份")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curYear,
-                        expression: "curYear"
+              ]
+            })
+          ],
+          2
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "pic-paper-form" },
+          [
+            _vm.paperList
+              ? [
+                  _c("div", { staticClass: "page-turn" }, [
+                    _c("span", {
+                      staticClass: "prev",
+                      on: {
+                        click: function($event) {
+                          _vm.doPage(_vm.currentPage - 1)
+                        }
                       }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "grade-select-box",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.curYear = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
+                    }),
                     _vm._v(" "),
-                    _vm._l(_vm.optionsYears, function(option) {
-                      return _c(
-                        "option",
-                        { domProps: { value: option.yearText } },
-                        [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(option.yearValue) +
-                              "\n                            "
-                          )
-                        ]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper mr-none" }, [
-              _c(
-                "label",
-                { staticClass: "in-name min-w3", attrs: { for: "" } },
-                [_vm._v("考试总分")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.score,
-                      expression: "score"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.score },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.score = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required", attrs: { for: "" } },
-                [_vm._v("来源")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curPaperSource,
-                        expression: "curPaperSource"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "grade-select-box1",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.curPaperSource = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.ajaxAllSubjectPaperSource, function(option) {
-                      return _c(
-                        "option",
-                        { domProps: { value: option.sourceName } },
-                        [
-                          _vm._v(
-                            "\n                                " +
-                              _vm._s(option.sourceName) +
-                              "\n                            "
-                          )
-                        ]
-                      )
-                    })
-                  ],
-                  2
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required", attrs: { for: "" } },
-                [_vm._v("学期")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.term,
-                        expression: "term"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "grade-select-box2",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.term = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "上学期" } }, [
-                      _vm._v("上学期")
+                    _c("span", { staticClass: "page-number" }, [
+                      _c("span", { staticClass: "curren-p" }, [
+                        _vm._v(_vm._s(_vm.currentPage))
+                      ]),
+                      _vm._v("/"),
+                      _c("span", { staticClass: "sum-p" }, [
+                        _vm._v(_vm._s(_vm.papeNum))
+                      ])
                     ]),
                     _vm._v(" "),
-                    _c("option", { attrs: { value: "下学期" } }, [
-                      _vm._v("下学期")
-                    ])
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper mr-none" }, [
-              _c(
-                "label",
-                { staticClass: "in-name min-w3", attrs: { for: "" } },
-                [_vm._v("题目数量")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.questionNumber,
-                      expression: "questionNumber"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.questionNumber },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                    _c("span", {
+                      staticClass: "next",
+                      on: {
+                        click: function($event) {
+                          _vm.doPage(_vm.currentPage + 1)
+                        }
                       }
-                      _vm.questionNumber = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
+                    })
+                  ])
+                ]
+              : _vm._e(),
             _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required min-w1", attrs: { for: "" } },
-                [_vm._v("省")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
+            _c("div", { staticClass: "pic-paper-box" }, [
+              _c("div", { staticClass: "pic-list-wrapper" }, [
                 _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curProvince,
-                        expression: "curProvince"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "prev-select-box",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.curProvince = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.selectPaperCitys
-                      ]
-                    }
-                  },
+                  "ul",
+                  { staticClass: "pic-list cf" },
                   [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.optionsProvinces, function(option) {
-                      return _c("option", { domProps: { value: option.id } }, [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(option.city) +
-                            "\n                            "
-                        )
-                      ])
+                    _vm._l(_vm.imagePaperDetailContent, function(item, index) {
+                      return [
+                        _c("li", { staticClass: "pic-box js-pic-box" }, [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: item.image_url,
+                                "data-fancybox-group": "gallery"
+                              }
+                            },
+                            [
+                              _c("p", { staticClass: "image" }, [
+                                _c("img", {
+                                  attrs: { src: item.image_url, alt: "" }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "tab-index" }, [
+                                _vm._v(_vm._s(index + 1))
+                              ])
+                            ]
+                          )
+                        ])
+                      ]
                     })
                   ],
                   2
                 )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required", attrs: { for: "" } },
-                [_vm._v("年级")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curGrade,
-                        expression: "curGrade"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "grade-select-box3",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.curGrade = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "1" } }, [_vm._v("一年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "2" } }, [_vm._v("二年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "3" } }, [_vm._v("三年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "4" } }, [_vm._v("四年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "5" } }, [_vm._v("五年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "6" } }, [_vm._v("六年级")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "7" } }, [_vm._v("初一")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "8" } }, [_vm._v("初二")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "9" } }, [_vm._v("初三")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "10" } }, [_vm._v("高一")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "11" } }, [_vm._v("高二")]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "12" } }, [_vm._v("高三")])
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper mr-none" }, [
-              _c(
-                "label",
-                { staticClass: "in-name min-w3", attrs: { for: "" } },
-                [_vm._v("其他信息1")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.other1,
-                      expression: "other1"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.other1 },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.other1 = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c(
-                "label",
-                { staticClass: "in-name required min-w1", attrs: { for: "" } },
-                [_vm._v("市")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box js-verif-input" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curCity,
-                        expression: "curCity"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "city-select-box",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.curCity = $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        },
-                        _vm.selectPaperAreas
-                      ]
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.ajaxAllPaperCitys, function(option) {
-                      return _c("option", { domProps: { value: option.id } }, [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(option.city) +
-                            "\n                            "
-                        )
-                      ])
-                    })
-                  ],
-                  2
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c("label", { staticClass: "in-name", attrs: { for: "" } }, [
-                _vm._v("学校")
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.school,
-                      expression: "school"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.school },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.school = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper mr-none" }, [
               _c(
-                "label",
-                { staticClass: "in-name min-w3", attrs: { for: "" } },
-                [_vm._v("其他信息2")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.other2,
-                      expression: "other2"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.other2 },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.other2 = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper mr2" }, [
-              _c(
-                "label",
-                { staticClass: "in-name min-w1", attrs: { for: "" } },
-                [_vm._v("区")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.curArea,
-                        expression: "curArea"
-                      }
-                    ],
-                    staticClass: "grade-select-box",
-                    attrs: {
-                      id: "area-select-box",
-                      name: "grade-select-box",
-                      "data-options": "width: 200"
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.curArea = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }, [_vm._v("请选择")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.ajaxAllPaperAreas, function(option) {
-                      return _c("option", { domProps: { value: option.id } }, [
+                "div",
+                { staticClass: "paper-box", attrs: { id: "paper-box" } },
+                [
+                  _c("h2", { staticClass: "title" }, [
+                    _vm._v(_vm._s(_vm.paperContent.title))
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.paperContent.module, function(item) {
+                    return [
+                      _c("p", { staticClass: "question-type" }, [
                         _vm._v(
-                          "\n                                " +
-                            _vm._s(option.city) +
-                            "\n                            "
+                          _vm._s(item.title) +
+                            "（合计" +
+                            _vm._s(item.total_score) +
+                            "分）"
                         )
-                      ])
-                    })
-                  ],
-                  2
-                )
-              ])
+                      ]),
+                      _vm._v(" "),
+                      item.questions
+                        ? [
+                            _vm._l(item.questions, function(it, index) {
+                              return [
+                                _c("dl", { staticClass: "question-wrapper" }, [
+                                  _c("dt", {
+                                    staticClass: "question-name",
+                                    domProps: {
+                                      innerHTML: _vm._s(
+                                        _vm.questionContent[it.ques_id].content
+                                      )
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("dd", { staticClass: "analyze" }, [
+                                    _c("p", { staticClass: "a-answer" }, [
+                                      _vm._v("答案：")
+                                    ]),
+                                    _c("div", {
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.questionContent[it.ques_id].answer
+                                        )
+                                      }
+                                    }),
+                                    _c("p"),
+                                    _vm._v(" "),
+                                    _c("p", { staticClass: "a-info" }, [
+                                      _vm._v("解析：")
+                                    ]),
+                                    _c("div", {
+                                      domProps: {
+                                        innerHTML: _vm._s(
+                                          _vm.questionContent[it.ques_id]
+                                            .analysis
+                                        )
+                                      }
+                                    }),
+                                    _c("p")
+                                  ])
+                                ])
+                              ]
+                            })
+                          ]
+                        : _vm._e()
+                    ]
+                  })
+                ],
+                2
+              )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "input-wrapper" }, [
-              _c("label", { staticClass: "in-name", attrs: { for: "" } }, [
-                _vm._v("考试时长")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "input-box" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.duration,
-                      expression: "duration"
-                    }
-                  ],
-                  staticClass: "input",
-                  attrs: { type: "text", value: "", placeholder: "请输入" },
-                  domProps: { value: _vm.duration },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.duration = $event.target.value
-                    }
-                  }
-                })
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _vm.paperType == 2
-            ? [
-                _c("div", { staticClass: "pic-form" }, [
-                  _c("h2", { staticClass: "title2" }, [_vm._v("试题")]),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    {
-                      staticClass: "pic-list cf js-pic-list",
-                      attrs: { id: "questionImage" }
-                    },
-                    [
-                      _vm._l(_vm.questionContent, function(item, index) {
-                        return [
-                          _c("li", { staticClass: "pic-box" }, [
-                            _c(
-                              "a",
-                              {
-                                attrs: {
-                                  href: item.image_url,
-                                  "data-fancybox-group": "gallery"
-                                }
-                              },
-                              [
-                                _c("p", { staticClass: "image" }, [
-                                  _c("img", {
-                                    attrs: { src: item.image_url, alt: "" }
-                                  })
-                                ]),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "tab-index" }, [
-                                  _vm._v(_vm._s(index + 1))
-                                ])
-                              ]
-                            )
-                          ])
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c("h2", { staticClass: "title2" }, [_vm._v("答案")]),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    {
-                      staticClass: "pic-list cf js-st-list",
-                      attrs: { id: "questionAnswer" }
-                    },
-                    [
-                      _vm._l(_vm.answerContent, function(item, index) {
-                        return [
-                          _c("li", { staticClass: "pic-box" }, [
-                            _c(
-                              "a",
-                              {
-                                attrs: {
-                                  href: item.image_url,
-                                  "data-fancybox-group": "gallery"
-                                }
-                              },
-                              [
-                                _c("p", { staticClass: "image" }, [
-                                  _c("img", {
-                                    attrs: { src: item.image_url, alt: "" }
-                                  })
-                                ]),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "tab-index" }, [
-                                  _vm._v(_vm._s(index + 1))
-                                ])
-                              ]
-                            )
-                          ])
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    { staticClass: "next-btn", on: { click: _vm.doSearch } },
-                    [_vm._v("下一步")]
-                  )
-                ])
-              ]
-            : [
-                _c("div", { staticClass: "pic-form" }, [
-                  _c(
-                    "ul",
-                    {
-                      staticClass: "pic-list cf js-pic-list",
-                      attrs: { id: "questionAll" }
-                    },
-                    [
-                      _vm._l(_vm.imagePaperDetailContent, function(
-                        item,
-                        index
-                      ) {
-                        return [
-                          _c("li", { staticClass: "pic-box" }, [
-                            _c(
-                              "a",
-                              {
-                                attrs: {
-                                  href: item.image_url,
-                                  "data-fancybox-group": "gallery"
-                                }
-                              },
-                              [
-                                _c("p", { staticClass: "image" }, [
-                                  _c("img", {
-                                    attrs: { src: item.image_url, alt: "" }
-                                  })
-                                ]),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "tab-index" }, [
-                                  _vm._v(_vm._s(index + 1))
-                                ])
-                              ]
-                            )
-                          ])
-                        ]
-                      })
-                    ],
-                    2
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    { staticClass: "next-btn", on: { click: _vm.doSearch } },
-                    [_vm._v("下一步")]
-                  )
-                ])
-              ],
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
+            _c("div", { staticClass: "btn-wrapper cf" }, [
+              _c(
+                "button",
                 {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.errorShow,
-                  expression: "errorShow"
-                }
-              ],
-              staticClass: "error-box"
-            },
-            [_vm._v(_vm._s(_vm.errorMssage))]
-          )
-        ],
-        2
-      )
+                  staticClass: "next-btn review2-btn",
+                  attrs: { type: "button", name: "button" },
+                  on: { click: _vm.doRepeat }
+                },
+                [_vm._v("此卷重复")]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "next-btn review2-btn",
+                  attrs: { href: "javascript:;" },
+                  on: { click: _vm.doNext }
+                },
+                [_vm._v("下一步")]
+              )
+            ])
+          ],
+          2
+        )
+      ])
     ])
   ])
 }
@@ -28351,7 +27732,7 @@ var staticRenderFns = [
         _c("span", { staticClass: "tab-text" }, [_vm._v("贴标签")])
       ]),
       _vm._v(" "),
-      _c("span", { staticClass: "tab" }, [
+      _c("span", { staticClass: "tab select" }, [
         _c("span", { staticClass: "circle" }, [_vm._v("2")]),
         _c("span", { staticClass: "tab-text" }, [_vm._v("搜索排重")])
       ]),
@@ -28373,7 +27754,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a7ed8242", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-3e6d0f94", module.exports)
   }
 }
 

@@ -68,7 +68,7 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/getPaperAreasAjaxSearch', 'Common\CommonController@getPaperAreasAjaxSearch');
     $router->post('common/getQuestionClient', 'Common\CommonController@getQuestionClient');//获取试题信息
     $router->get('common/getPaperClient', 'Common\CommonController@getPaperClient');//获取试卷信息
-    $router->get('common/uploadPaperFile', 'Common\CommonController@uploadPaperFile');//获取试卷信息
+    $router->get('common/uploadPaperFile', 'Common\CommonController@uploadPaperFile');//上传试卷相关文档
     $router->get('common/getAllProvince', 'Common\CommonController@getAllProvince');
     $router->get('common/getAllCitys','Common\CommonController@getAllCitys');
 });
@@ -100,5 +100,6 @@ $router->group(['prefix' => 'youdao'], function () use ($router) {
     Route::get('paper/questionError', 'Youdao\PaperController@questionError');//有道处理问题试题成功后回调地址
     Route::get('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');//计划任务批处理通过审核
 });
+
 
 

@@ -240,7 +240,7 @@
                         auditEndDate: that.endDate,
                         agencyId: that.agencyValue,
                         status: that.status,
-                        authorId:that.authorValue,
+                        auditorId:that.authorValue,
                         paperName: that.paperName,
                         pageSize:that.pageSize,
                         sortField: that.sortField,
@@ -409,8 +409,8 @@
                        that.endDate = $("input[name='end-date']").val();
                     }
                     if($(".drop-prov-ul").find('.selected').attr('data-val')){
-                        that.province = $(".drop-prov-ul").find('.selected').text();
-                        that.city = $(".drop-city-ul").find('.selected').text();
+                        that.province = $(".drop-prov-ul").find('.selected').attr('data-val');;
+                        that.city = $(".drop-city-ul").find('.selected').attr('data-val');
                     }
 
                     var searchArgs = $.extend(true, {}, that.searchArgs);

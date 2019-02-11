@@ -48,6 +48,7 @@ class UploadQueue implements ShouldQueue
                 $aStatus = curl_getinfo($curl);
                 curl_close($curl);
                 @unlink($targetFile);
+
             }
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
