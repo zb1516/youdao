@@ -47,12 +47,18 @@
               <div class="input-wrapper">
                   <label for="" class="title">最终审核试卷</label>
                   <div class="input-box">
-                      <div class="date-range-box">
+                      <div class="date-range-box paper-list">
+                          <input type="hidden" name="">
+                      </div>
+                      <div class="input-inner">
+                          <input type="text" class="input-text input-date-range" readonly="readonly">
+                      </div>
+                      <!--<div class="date-range-box">
                           <input type="hidden" name="" v-model="beginDate" ref="beginDate">
                       </div>
                       <div class="input-inner">
                           <input type="text" v-model="endDate" ref="endDate" class="input-text input-date-range" readonly="readonly">
-                      </div>
+                      </div>-->
                   </div>
               </div>
               <div class="input-wrapper">
@@ -104,6 +110,7 @@
                          <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="最终审核试卷: activate to sort column ascending" style="width: 9%;" orderable="true" @click="selectGet(2)">最终审核试卷</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="审核图片" style="width: 6%;" >审核图片</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="有道加工" style="width: 6%;" >有道加工</th>
+                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="审核试题" style="width: 6%;" >审核试题</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="图片审核" style="width: 6%;" >图片审核</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷审核" style="width: 6%;" >试卷审核</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
@@ -113,13 +120,14 @@
                     <template v-if="isContent == 1">
                         <template v-for="(paper,index) in paperList">
                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
-                                <td class="sorting_1">{{index+1}}</td>
+                                <td class="sorting_1">{{paper.num}}</td>
                                 <td><span class="color-black" @click="showPaper(paper.task_id)">{{paper.paper_name}}</span></td>
                                 <td>{{paper.agency_name}}</td>
                                 <td>{{paper.upload_time}}</td>
                                 <td>{{paper.paper_examined_time}}</td>
                                 <td>{{paper.image_processing_days}}</td>
                                 <td>{{paper.final_processing_days}}</td>
+                                <td>{{paper.paper_examined_days}}</td>
                                 <td>{{paper.image_examined_auditor_name}}</td>
                                 <td>{{paper.paper_examined_auditor_name}}</td>
                                 <td>
@@ -257,6 +265,12 @@
                 that.gradeList();
                 that.agencyList();
                 that.authorList();
+
+                var nowdate = new Date();
+                that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+                that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + '01';
+                $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
+
                 that.doSearch();
                 common.init();
 

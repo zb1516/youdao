@@ -425,6 +425,7 @@ class PaperController extends BaseController
                 $postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
+                $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
             }
             return response()->json(['status'=>$status]);
         }catch (\Exception $e){
@@ -508,10 +509,10 @@ class PaperController extends BaseController
                     ));
                 }
             }
-            file_put_contents('/dev/shm/'.date('YmdHis').'.txt',json_encode($successTask));
+            file_put_contents('/dev/shm/batchExamined-'.date('YmdHis').'.txt',json_encode($successTask));
             return response()->json(['successTask'=>$successTask]);
         }catch (\Exception $e){
-            file_put_contents('/dev/shm/'.date('YmdHis').'.txt',$e->getMessage());
+            file_put_contents('/dev/shm/batchExamined-'.date('YmdHis').'.txt',$e->getMessage());
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }

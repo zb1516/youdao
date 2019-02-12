@@ -106,7 +106,7 @@
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
                         <th :class="sortField!='final_processing_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id='finalProcessingTime' tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="有道处理成功时间: activate to sort column ascending" style="width: 140px;" @click="selectGet(1)" >有道处理成功</th>
-                        <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核时间</th>
+                        <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核时间: activate to sort column ascending" style="width: 140px;" orderable="true" @click="selectGet(2)">审核试卷时间</th>
                         <th :class="sortField!='paper_examined_status'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_status" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="审核状态: activate to sort column ascending" style="width: 112px;" @click="selectGet(3)">审核状态</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
                     </tr>
@@ -118,7 +118,14 @@
                                 <td class="sorting_1">{{paper.num}}</td>
                                 <td><span class="color-black">{{paper.paper_name}}</span></td>
                                 <td>{{paper.agency_name}}</td>
-                                <td>{{paper.final_processing_time}}</td>
+                                <td>
+                                    <template v-if="paper.final_processing_time == null">
+                                        {{paper.first_processing_time}}
+                                    </template>
+                                    <template v-else-if="paper.final_processing_time != null">
+                                        {{paper.final_processing_time}}
+                                    </template>
+                                </td>
                                 <td>{{paper.paper_examined_time}}</td>
                                 <td>
                                     <template v-if="paper.paper_examined_status == 3">
@@ -132,6 +139,9 @@
                                     </template>
                                     <template v-else-if="paper.paper_examined_status == 1">
                                         <span class="status">处理中</span>
+                                    </template>
+                                    <template v-else-if="paper.paper_examined_status == 5">
+                                        <span class="status">已关闭</span>
                                     </template>
                                 </td>
                                 <td>
@@ -226,6 +236,13 @@
             that.gradeList();
             that.agencyList();
             that.statusList();
+
+            var nowdate = new Date();
+            that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            nowdate.setMonth(nowdate.getMonth()-1);
+            that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
+
             that.doSearch();
             common.init();
         },

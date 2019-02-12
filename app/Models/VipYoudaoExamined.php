@@ -167,10 +167,11 @@ class VipYoudaoExamined extends Model
         }else{
             $order = ['upload_time'=>'asc'];
         }
-        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','upload_time','image_processing_days','final_processing_days','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
+        $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','upload_time','image_processing_days', 'first_processing_time', 'final_processing_days','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         if($list['data']){
             foreach ($list['data'] as $key=>$row){
                 $list['data'][$key]['num'] = abs(( $key + 1 )+ ( $currentPage - 1 ) * $pageSize );
+                $list['data'][$key]['paper_examined_days'] = $this->getDiffDaysCount($row['final_processing_time'], $row['paper_examined_time']);
             }
         }
         $list = $this->formatPaperList($list['data']);
@@ -1093,7 +1094,10 @@ class VipYoudaoExamined extends Model
                 }
                 //若有道审核通过，则激活任务待审状态
                 $newData = array(
-                    'paper_examined_status'=>2
+                    'paper_examined_status'=>2,
+                    'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                    'final_processing_time'=>$data['youdaoProcessingTime'],
+                    'final_processing_days'=>$processing_days,
                 );
             }else{
                 //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
@@ -1335,6 +1339,7 @@ class VipYoudaoExamined extends Model
             $user = new User;
             $userIdArr = array_unique($userIdArr);
             $userArr = [];
+            $userArr['-1'] = '自动审核';
             if(!empty($userIdArr)){
                 $users = $user->getUsersByIds($userIdArr);
                 if(!empty($users)){
@@ -1390,7 +1395,7 @@ class VipYoudaoExamined extends Model
                 );
                 $processList[] = array(
                     'process_name'=>'第'.($key+1).'次审核试题',
-                    'process_time'=>$detail['youdao_processing_time'],
+                    'process_time'=>$detail['audit_time'],
                     'process_user'=>$userArr[$detail['author_id']],
                     'status'=>($detail['audit_status']==1)?1:0
                 );

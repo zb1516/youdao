@@ -36272,7 +36272,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     mounted: function mounted() {
         var strName = this.$route.path.split("/");
         var that = this;
-        if (strName[2] == 'paperList') {
+        if (strName[2] == 'paperList' || strName[2] == 'paperExaminedOne' || strName[2] == 'paperExaminedTwo' || strName[2] == 'paperExaminedResult') {
             that.paperShow = 1;
             that.imageShow = 0;
             that.statisticShow = 0;

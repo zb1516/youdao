@@ -2,7 +2,7 @@
     <div class="main">
       <div class="pic-review1 review3 paper-review2">
         <div class="nav-wrapper">
-            <router-link  :to="{name:'paper-paperExaminedOne',params:{userKey:userKey,taskId:taskId}}" target="_blank"><a class="back-btn">返回</a></router-link>
+            <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
@@ -73,10 +73,12 @@
                     var that = this;
                     if(that.isPaperError === ''){
                         that.$message.error('请选择标识试卷问题');
+                        return false;
                     }else{
                         if(that.isPaperError === 1){
                             if($("textarea[name='paperErrorDesc']").val() == ''){
                                 that.$message.error('请填写试卷存在的问题');
+                                return false;
                             }else{
                                 that.paperErrorDesc = $("textarea[name='paperErrorDesc']").val();
                             }
@@ -87,6 +89,7 @@
                             if(data.data){
                                 if (data.data.errorMsg) {
                                     that.$message.error(data.data.errorMsg);
+                                    return false;
                                 } else {
                                     if(data.data.status == 1){
                                         that.type = data.data.type;
@@ -97,6 +100,7 @@
                                         });
                                     }else{
                                         that.$message.error('题目问题提交失败！');
+                                        return false;
                                     }
                                 }
                             }
