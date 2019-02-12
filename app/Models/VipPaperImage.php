@@ -22,7 +22,7 @@ class VipPaperImage extends Model
                 'task_id' => $taskId,
                 'is_delete' => 0,
             );
-            $result = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
+            $result = $this->findAll($condition, $order=['id' => 'desc','image_type' => 'asc'], ['id', 'image_url', 'create_time']);
             return $result;
         }else{
             if($paperType == 1){
