@@ -30,6 +30,7 @@
             }
             if( $('.input-date-range') ) {
                 $('.input-date-range').each(function() {
+
                     var $this = $(this),
                         options = {
                             autoUpdateInput: false,
@@ -41,8 +42,8 @@
                                 daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
                                 monthNames: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
                                 firstDay: 1,
-                                format: 'YYYY/DD/MM'
-                            }
+                                format: 'YYYY/MM/DD',
+                            },
                         };
                     // if( $this. ) {
                     //
@@ -50,8 +51,8 @@
                     $this.after('<input type="hidden" name="start-date" /><input type="hidden" name="end-date" />');
                     $this.daterangepicker(options, function(start, end, label) {
                         $this.parent().prev().addClass('has-content');
-                        start = start.format('YYYY/DD/MM');
-                        end = end.format('YYYY/DD/MM');
+                        start = start.format('YYYY/MM/DD');
+                        end = end.format('YYYY/MM/DD');
                         $this.val(start + ' - ' + end);
                         $this.nextAll().eq(0).val( start ).end().eq(1).val( end );
                     });

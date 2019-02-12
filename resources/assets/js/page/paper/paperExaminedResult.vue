@@ -2,7 +2,7 @@
     <div class="main">
       <div class="pic-review1 review4">
         <div class="nav-wrapper">
-          <router-link  :to="{name:'paper-paperExaminedOne',params:{userKey:userKey,taskId:taskId}}" target="_blank"><a class="back-btn">返回</a></router-link>
+          <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
@@ -21,8 +21,12 @@
             <p class="error-title">试卷审核未通过</p>
             <div class="error-info-box" v-if="error > 0">
               <p class="mb">未通过原因</p>
-              <p class="mb" v-if="error >= 1">1.题目问题</p>
-              <p class="mb" v-if="error >= 2">2.试卷问题</p>
+              <p class="mb" v-if="error == 1">1.题目问题</p>
+              <p class="mb" v-if="error == 2">1.试卷问题</p>
+              <template v-if="error == 3">
+                  <p class="mb">1.题目问题</p>
+                  <p class="mb">2.试卷问题</p>
+              </template>
             </div>
             <p class="time-box"><span class="time"><span class="time-num js-time-num">3</span>秒</span><router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回列表</a></router-link></p>
           </div>

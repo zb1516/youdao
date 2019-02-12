@@ -6,7 +6,7 @@
     <div class="main">
       <div class="pic-review1 review2 paper-review1">
         <div class="nav-wrapper">
-          <a href="reviewPaperList.html" class="back-btn">返回</a>
+            <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
@@ -66,8 +66,8 @@
                             <span>题干错误</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_错误答案'"></span>
-                            <span>错误答案</span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案错误'"></span>
+                            <span>答案错误</span>
                           </span>
                           <span class="r-option mr-n">
                             <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析错误'"></span>
@@ -131,7 +131,6 @@
             methods:{
                 doSelected(){
                     $(document).on('click','.js-checkbox',function(){
-                        //alert($(this).attr('title'));
                         $(this).hasClass('select') ? $(this).removeClass('select') : $(this).addClass('select');
                     })
                 },
@@ -144,8 +143,8 @@
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                alert(data.data.errorMsg);
-                                //that.$message.error(data.data.errorMsg);
+                                that.$message.error(data.data.errorMsg);
+                                return false;
                             } else {
                                 that.paperInfo =  data.data;
                                 that.questions = that.paperInfo.youdao_info.questions;
@@ -169,8 +168,8 @@
                     axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorArr+"'").then(function(data){
                         if(data.data){
                             if (data.data.errorMsg) {
-                                alert(data.data.errorMsg);
-                                //that.$message.error(data.data.errorMsg);
+                                that.$message.error(data.data.errorMsg);
+                                return false;
                             } else {
                                 if(data.data.status == 1){
                                     that.$router.push({
@@ -179,6 +178,7 @@
                                     });
                                 }else{
                                     that.$message.error('题目问题提交失败！');
+                                    return false;
                                 }
                             }
                         }

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Logging\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,7 +51,8 @@ class UploadQueue implements ShouldQueue
                 @unlink($targetFile);
             }
         } catch (\Exception $e) {
-            return response()->json(['errorMsg' => $e->getMessage()]);
+            \EasyWeChat\Support\Log::info($data['task_id'].':'.$targetFile.', errorMsg:'.$e->getMessage());
+            //return response()->json(['errorMsg' => $e->getMessage()]);
         }
 
     }

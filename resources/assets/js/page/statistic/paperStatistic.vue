@@ -47,12 +47,18 @@
               <div class="input-wrapper">
                   <label for="" class="title">最终审核试卷</label>
                   <div class="input-box">
-                      <div class="date-range-box">
+                      <div class="date-range-box paper-list">
+                          <input type="hidden" name="">
+                      </div>
+                      <div class="input-inner">
+                          <input type="text" class="input-text input-date-range" readonly="readonly">
+                      </div>
+                      <!--<div class="date-range-box">
                           <input type="hidden" name="" v-model="beginDate" ref="beginDate">
                       </div>
                       <div class="input-inner">
                           <input type="text" v-model="endDate" ref="endDate" class="input-text input-date-range" readonly="readonly">
-                      </div>
+                      </div>-->
                   </div>
               </div>
               <div class="input-wrapper">
@@ -104,6 +110,7 @@
                          <th :class="sortField!='paper_examined_time'?'sorting':(sortType=='asc'?'sorting_asc':'sorting_desc')" id="paper_examined_time" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="最终审核试卷: activate to sort column ascending" style="width: 9%;" orderable="true" @click="selectGet(2)">最终审核试卷</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="审核图片" style="width: 6%;" >审核图片</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="有道加工" style="width: 6%;" >有道加工</th>
+                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="审核试题" style="width: 6%;" >审核试题</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="图片审核" style="width: 6%;" >图片审核</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷审核" style="width: 6%;" >试卷审核</th>
                          <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="操作" style="width: 98px;">操作</th>
@@ -113,13 +120,14 @@
                     <template v-if="isContent == 1">
                         <template v-for="(paper,index) in paperList">
                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
-                                <td class="sorting_1">{{index+1}}</td>
-                                <td><span class="color-black" @click="showPaper(paper.task_id)">{{paper.paper_name}}</span></td>
+                                <td class="sorting_1">{{paper.num}}</td>
+                                <td><span class="color-black" @click="showPaper(paper.task_id)" style="cursor: pointer">{{paper.paper_name}}</span></td>
                                 <td>{{paper.agency_name}}</td>
                                 <td>{{paper.upload_time}}</td>
                                 <td>{{paper.paper_examined_time}}</td>
                                 <td>{{paper.image_processing_days}}</td>
                                 <td>{{paper.final_processing_days}}</td>
+                                <td>{{paper.paper_examined_days}}</td>
                                 <td>{{paper.image_examined_auditor_name}}</td>
                                 <td>{{paper.paper_examined_auditor_name}}</td>
                                 <td>
@@ -166,7 +174,7 @@
         <div class="dialog-balck-cover" @click="hidePaper()"></div>
         <!-- 试卷详情 -->
         <div class="dialog-paper-detial-wrapper">
-          <h2 class="title">{{paperInfo.paper_name}}</h2>
+          <h2 class="title" >{{paperInfo.paper_name}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
               <dl class="question-wrapper q-radio" v-if="question.hasOptions == 1">
@@ -240,7 +248,7 @@
                         auditEndDate: that.endDate,
                         agencyId: that.agencyValue,
                         status: that.status,
-                        authorId:that.authorValue,
+                        auditorId:that.authorValue,
                         paperName: that.paperName,
                         pageSize:that.pageSize,
                         sortField: that.sortField,
@@ -257,6 +265,12 @@
                 that.gradeList();
                 that.agencyList();
                 that.authorList();
+
+                var nowdate = new Date();
+                that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+                that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + '01';
+                $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
+
                 that.doSearch();
                 common.init();
 
@@ -409,8 +423,8 @@
                        that.endDate = $("input[name='end-date']").val();
                     }
                     if($(".drop-prov-ul").find('.selected').attr('data-val')){
-                        that.province = $(".drop-prov-ul").find('.selected').text();
-                        that.city = $(".drop-city-ul").find('.selected').text();
+                        that.province = $(".drop-prov-ul").find('.selected').attr('data-val');;
+                        that.city = $(".drop-city-ul").find('.selected').attr('data-val');
                     }
 
                     var searchArgs = $.extend(true, {}, that.searchArgs);
@@ -456,6 +470,7 @@
                            that.sortType = 'desc';
                         }
                     }
+                    that.currentPage = 1;
                     that.doSearch();
                 },
                 showPaper(taskId){
