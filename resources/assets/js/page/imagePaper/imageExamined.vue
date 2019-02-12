@@ -135,6 +135,12 @@
                     $(".js-error-box").find('.select').next('span').each(function(){
                         str += $(this).text()+',';
                     });
+                    if (str == ',') {
+                        that.$message({
+                            message: '必须选择其中一项',
+                            type: 'error'
+                        });
+                    }
                     axios.get('youdao/imagePaper/paperReturn',{params:{userKey:that.userKey,taskId:that.taskId,imageErrorType:str}}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
