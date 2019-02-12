@@ -27326,12 +27326,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       $("body").mLoading('show');
       axios.get('youdao/imagePaper/imagePaperDetail', { params: { userKey: that.userKey, taskId: that.taskId, paperType: that.paperType, allType: 1 } }).then(function (data) {
         $("body").mLoading('hide');
-        if (data.data) {
-          that.imagePaperDetailContent = data.data;
+        if (data.data.errorMsg) {
+          that.$message.error(data.data.errorMsg);
+        } else {
+          if (data.data) {
+            that.imagePaperDetailContent = data.data;
+          }
+          that.$nextTick(function () {
+            __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js___default.a.init();
+          });
         }
-        that.$nextTick(function () {
-          __WEBPACK_IMPORTED_MODULE_5__static_js_jquery_common_js___default.a.init();
-        });
       });
     },
     doSearch: function doSearch() {
@@ -27377,10 +27381,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
               that.paperContent = data.data;
             }
             axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
-              that.questionContent = data.data.rows;
-              that.$nextTick(function () {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
-              });
+              if (data.data.errorMsg) {
+                that.$message.error(data.data.errorMsg);
+              } else {
+                that.questionContent = data.data.rows;
+                that.$nextTick(function () {
+                  MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
+                });
+              }
             });
           });
         });
@@ -27410,11 +27418,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         }
 
         axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
-
-          that.questionContent = data.data.rows;
-          that.$nextTick(function () {
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
-          });
+          if (data.data.errorMsg) {
+            that.$message.error(data.data.errorMsg);
+          } else {
+            that.questionContent = data.data.rows;
+            that.$nextTick(function () {
+              MathJax.Hub.Queue(["Typeset", MathJax.Hub], document.getElementById('paper-box'));
+            });
+          }
         });
       });
     },
@@ -27440,6 +27451,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             type: 'success'
           });
         }
+      });
+      that.$router.push({
+        name: 'imagePaper-imagePaperList-imageResult',
+        params: { userKey: that.userKey, imageStatus: '' }
       });
     }
   }
@@ -27691,27 +27706,36 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "btn-wrapper cf" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "next-btn review2-btn",
-                  attrs: { type: "button", name: "button" },
-                  on: { click: _vm.doRepeat }
-                },
-                [_vm._v("此卷重复")]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  staticClass: "next-btn review2-btn",
-                  attrs: { href: "javascript:;" },
-                  on: { click: _vm.doNext }
-                },
-                [_vm._v("下一步")]
-              )
-            ])
+            _c(
+              "div",
+              { staticClass: "btn-wrapper cf" },
+              [
+                _vm.paperList
+                  ? [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "next-btn review2-btn",
+                          attrs: { type: "button", name: "button" },
+                          on: { click: _vm.doRepeat }
+                        },
+                        [_vm._v("此卷重复")]
+                      )
+                    ]
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    staticClass: "next-btn review2-btn",
+                    attrs: { href: "javascript:;" },
+                    on: { click: _vm.doNext }
+                  },
+                  [_vm._v("下一步")]
+                )
+              ],
+              2
+            )
           ],
           2
         )

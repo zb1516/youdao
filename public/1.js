@@ -41527,6 +41527,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
 
 
 
@@ -41561,14 +41563,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             isExaminedStatusShow: 0,
             isExaminedStatusTrue: 1,
             isExaminedStatusSort: 'desc',
-            curImageExaminedStatus: 1,
+            curImageExaminedStatus: 0,
             agencyId: 0,
             curProvince: '',
             curCity: '',
             beginDate: '',
             endDate: '',
             isContent: 1,
-            paperName: ''
+            paperName: '',
+            isType: 1
         };
     },
 
@@ -41588,7 +41591,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                 endDate: that.endDate,
                 province: that.curProvince,
                 city: that.curCity,
-                paperName: that.paperName
+                paperName: that.paperName,
+                isType: that.isType
             };
         }
     }, __WEBPACK_IMPORTED_MODULE_9_vuex__["b" /* mapGetters */]({
@@ -41715,8 +41719,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             }
             that.isExaminedTimeTrue = 1;
             that.isExaminedStatusTrue = 1;
-            that.isExaminedStatusSort = 'desc';
-            that.isExaminedTimeSort = 'desc';
+            that.isExaminedStatusSort = '';
+            that.isExaminedTimeSort = '';
             that.doSearch();
         },
         selectExaminedTimeGet: function selectExaminedTimeGet() {
@@ -41731,8 +41735,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             }
             that.isUploadTimeTrue = 1;
             that.isExaminedStatusTrue = 1;
-            that.isUploadTimeSort = 'desc';
-            that.isExaminedStatusSort = 'desc';
+            that.isUploadTimeSort = '';
+            that.isExaminedStatusSort = '';
             that.doSearch();
         },
         selectExaminedStatusGet: function selectExaminedStatusGet() {
@@ -41747,12 +41751,17 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             }
             that.isUploadTimeTrue = 1;
             that.isExaminedTimeTrue = 1;
-            that.isUploadTimeSort = 'desc';
-            that.isExaminedTimeSort = 'desc';
+            that.isUploadTimeSort = '';
+            that.isExaminedTimeSort = '';
+            that.doSearch();
+        },
+        doReset: function doReset() {
+            var that = this;
+            Object.assign(that.$data, that.$options.data());
             that.doSearch();
         }
-
     }
+
 });
 
 /***/ }),
@@ -41941,6 +41950,8 @@ var render = function() {
                 }
               },
               [
+                _c("option", { attrs: { value: "0" } }, [_vm._v("全部")]),
+                _vm._v(" "),
                 _c("option", { attrs: { value: "1" } }, [_vm._v("待审核")]),
                 _vm._v(" "),
                 _c("option", { attrs: { value: "2" } }, [_vm._v("已通过")]),
