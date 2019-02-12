@@ -180,6 +180,7 @@ class paperController extends Controller
             if($request->isMethod('post')) {
                 $searchArgs['token']=$request->input('token');
                 $searchArgs['taskId'] = $request->input('taskId');
+                $searchArgs['agencyId']=$request->input('agencyId');
                 $searchArgs['paperType'] = $request->input('paperType');
                 $searchArgs['blendQuestionImage']=$request->input('blendQuestionImage');
                 $searchArgs['questionImage'] = $request->input('questionImage');
@@ -192,6 +193,9 @@ class paperController extends Controller
                 $searchArgs['provName']=$request->input('provName');
                 $searchArgs['cityId']=$request->input('cityId');
                 $searchArgs['cityName']=$request->input('cityName');
+                if(intval($searchArgs['agencyId']) <= 0){
+                    throw new \Exception('缺少机构id');
+                }
                 if (!isset($searchArgs['taskId']) || empty($searchArgs['taskId'])) {
                     throw new \Exception('缺少任务ID');
                 }
@@ -313,10 +317,10 @@ class paperController extends Controller
             }
             //取出最后一条照片信息，照片第一张为最后一张，所以倒序排列取最后一条
             $vipPaperIamgeModel=new VipPaperImage();
-            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>['in'=>[1,3]]],['id'=>'desc'],['image_url'])->first();
+            $info=$vipPaperIamgeModel->findOne(['task_id'=>$searchArgs['taskId'],'image_type'=>['in'=>[1,3]]],['create_time'=>'desc'],['image_url']);
             //取一条任务信息
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']])->first();
+            $paperInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             return response()->json(['status'=>200,'data'=>[
                 'taskId'=>$searchArgs['taskId'],
                 'paperType'=>$paperInfo['paper_type'],
