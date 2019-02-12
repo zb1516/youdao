@@ -170,6 +170,7 @@ class Paper extends Model
                 $searchArgs['userKey'] = $formData['userKey'];
             }
         }
+        $searchArgs['sort'] = $formData['sort'];
         return $searchArgs;
     }
 

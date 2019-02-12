@@ -114,6 +114,7 @@
                 if(parseInt(typeVal)){
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
+                    searchArgs.sort = 2;
                     axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
