@@ -251,6 +251,7 @@
                 errorMssage: "请选择必填项",
                 sortTaskIdQuestion:[],
                 sortTaskIdAnswer:[],
+                sort:1,
             }
         },
         computed: {
@@ -274,6 +275,7 @@
                     sortTaskId: that.sortTaskId,
                     sortTaskIdQuestion: that.sortTaskIdQuestion,
                     sortTaskIdAnswer: that.sortTaskIdAnswer,
+                    sort: that.sort,
                 };
             },
             ...mapGetters({
@@ -440,7 +442,6 @@
                         params:{userKey:that.userKey,taskId:that.taskId,allType:1}
                     });
                 }
-                searchArgs.sort = 1;
                 axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
                     if (data.data.errorMsg) {
                         that.$message.error(data.data.errorMsg);
