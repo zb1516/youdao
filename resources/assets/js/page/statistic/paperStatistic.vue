@@ -121,7 +121,7 @@
                         <template v-for="(paper,index) in paperList">
                             <tr role="row" :class="index%2 != 1 ?'odd':'even'">
                                 <td class="sorting_1">{{paper.num}}</td>
-                                <td><span class="color-black" @click="showPaper(paper.task_id)">{{paper.paper_name}}</span></td>
+                                <td><span class="color-black" @click="showPaper(paper.task_id)" style="cursor: pointer">{{paper.paper_name}}</span></td>
                                 <td>{{paper.agency_name}}</td>
                                 <td>{{paper.upload_time}}</td>
                                 <td>{{paper.paper_examined_time}}</td>
@@ -174,7 +174,7 @@
         <div class="dialog-balck-cover" @click="hidePaper()"></div>
         <!-- 试卷详情 -->
         <div class="dialog-paper-detial-wrapper">
-          <h2 class="title">{{paperInfo.paper_name}}</h2>
+          <h2 class="title" >{{paperInfo.paper_name}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
               <dl class="question-wrapper q-radio" v-if="question.hasOptions == 1">
