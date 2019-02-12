@@ -490,16 +490,17 @@ class PaperController extends BaseController
 
 
     /**
-     * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过
+     * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过,每日执行一次
      * @return \Illuminate\Http\JsonResponse
      */
     public function batchPaperExamined()
     {
+        $batchLogDir = $_SERVER['DOCUMENT_ROOT'].'/batchLog/';
         try{
-            $successTask = $this->vipYoudaoExamined->batchExamined();
+            $resultTask = $this->vipYoudaoExamined->batchExamined();
             //批量发送微信模版消息
-            if($successTask){
-                foreach ($successTask as $key=>$task){
+            if($resultTask['successTask']){
+                foreach ($resultTask['successTask'] as $key=>$task){
                     $this->sendWxTemplate(array(
                         'taskId'=>$task['taskId'],
                         'openId'=>$task['openId'],
@@ -509,10 +510,11 @@ class PaperController extends BaseController
                     ));
                 }
             }
-            file_put_contents('/dev/shm/batchExamined-'.date('YmdHis').'.txt',json_encode($successTask));
-            return response()->json(['successTask'=>$successTask]);
+
+            file_put_contents($batchLogDir . '/batchExamined-'. date('YmdHis') . '.txt', json_encode($resultTask['resultArr']));
+            return response()->json(['allTask'=>$resultTask['resultArr']]);
         }catch (\Exception $e){
-            file_put_contents('/dev/shm/batchExamined-'.date('YmdHis').'.txt',$e->getMessage());
+            file_put_contents($batchLogDir . '/batchExamined-'.date('YmdHis').'.txt', $e->getMessage());
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
