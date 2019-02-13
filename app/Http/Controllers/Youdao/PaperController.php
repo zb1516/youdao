@@ -425,7 +425,6 @@ class PaperController extends BaseController
                 $postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
-                $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
             }
             return response()->json(['status'=>$status]);
         }catch (\Exception $e){

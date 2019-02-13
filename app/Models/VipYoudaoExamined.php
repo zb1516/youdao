@@ -987,6 +987,9 @@ class VipYoudaoExamined extends Model
             $row = array(
                 'first_processing_time' => $data['youdaoProcessingTime'],
                 'first_processing_days' => $first_processing_days,
+                'final_youdao_receive_time' => $first_youdao_receive_time,
+                'final_processing_time' => $data['youdaoProcessingTime'],
+                'final_processing_days' => $first_processing_days,
             );
             if($data['isPass'] == 1){
                 //第一次投递任务成功后有道审核通过
@@ -995,9 +998,7 @@ class VipYoudaoExamined extends Model
                 //第一次投递任务成功后有道审核不通过，关闭任务
                 $row['paper_examined_status'] = 5;
                 $row['image_examined_status'] = 7;
-                $row['final_youdao_receive_time'] = $first_youdao_receive_time;
-                $row['final_processing_time'] = $data['youdaoProcessingTime'];
-                $row['final_processing_days'] = $first_processing_days;
+
             }
             $this->beginTransaction();
             $result = $this->edit($row, array('task_id' => $data['taskId']));
@@ -1312,7 +1313,7 @@ class VipYoudaoExamined extends Model
             }
 
         }
-        return array('successArr'=>$successArr, 'resultArr'=>$resultArr);
+        return array('successTask'=>$successArr, 'resultArr'=>$resultArr);
     }
 
 
