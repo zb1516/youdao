@@ -32,7 +32,7 @@ use App\Models\VipYoudaoAgency;
 use App\Services\YoudaoService;
 use App\Clients\KlibPaperClient;
 use DB;
-
+use Illuminate\Support\Facades\Redis;
 
 class CommonController extends BaseController
 {
@@ -523,9 +523,15 @@ class CommonController extends BaseController
     //获取所有省份
     public function getAllProvince()
     {
-        //return 1;
+        $key = 'provinceCityKey';
+        $provinceValue = Redis::get($key);
+        if($provinceValue){
+            //file_put_contents('/dev/shm/province.txt','1'.PHP_EOL,FILE_APPEND);
+            return $provinceValue;
+        }
         $result = $this->province->getAllProvince();
         array_unshift($result,"全部");
+        Redis::set($key,json_encode($result));
         return response()->json($result);
 
     }
@@ -534,6 +540,12 @@ class CommonController extends BaseController
      */
     public function getAllCitys()
     {
+        $key = 'provinceCityKey1';
+        $cityValue = Redis::get($key);
+        if($cityValue){
+            //file_put_contents('/dev/shm/city.txt','1'.PHP_EOL,FILE_APPEND);
+            return $cityValue;
+        }
         $provinceModel=new Province();
         $list = $provinceModel->getCitys();
         $arr = [];
@@ -545,6 +557,7 @@ class CommonController extends BaseController
             $arr[] = $cityValue;
         }
         array_unshift($arr,['0'=>"全部"]);
+        Redis::set($key,json_encode($arr));
         return response()->json($arr);
     }
 }

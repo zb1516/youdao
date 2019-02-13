@@ -18,8 +18,8 @@ class Paper extends Model
      */
     public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 15)
     {
-        $vipYoudaoExamined = new VipYoudaoExamined();
-        $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
+//        $vipYoudaoExamined = new VipYoudaoExamined();
+//        $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
         $province = new Province();
         $provinces = $province->getProvince();//获取省份
         $provinceIds = [];
@@ -170,6 +170,7 @@ class Paper extends Model
                 $searchArgs['userKey'] = $formData['userKey'];
             }
         }
+        $searchArgs['sort'] = $formData['sort'];
         return $searchArgs;
     }
 

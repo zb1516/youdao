@@ -217,10 +217,18 @@ class ImagePaperController extends BaseController
                 //$_GET['sortTaskId'][$_GET['taskId']]['answer'] = $_GET['sortTaskId'][1];
             }
             $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
-            $result = $this->vipPaperImage->paperPass($searchArgs);
+            if($searchArgs['sort'] == 1){
+                $result = $this->vipPaperImage->paperImageSort($searchArgs);
+            }else{
+                $result = $this->vipPaperImage->paperPass($searchArgs);
+            }
+
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
+
+
     }
+
 }

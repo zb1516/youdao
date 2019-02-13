@@ -62,7 +62,8 @@
             return {
                 isType:0,
                 taskId:'',
-                paperType:''
+                paperType:'',
+                sort:2
             }
         },
         computed: {
@@ -114,6 +115,7 @@
                 if(parseInt(typeVal)){
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
+                    searchArgs.sort = that.sort;
                     axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
@@ -133,22 +135,30 @@
                     $(".js-error-box").find('.select').next('span').each(function(){
                         str += $(this).text()+',';
                     });
-                    axios.get('youdao/imagePaper/paperReturn',{params:{userKey:that.userKey,taskId:that.taskId,imageErrorType:str}}).then(function(data){
-                        if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
-                        }
-                        if (data.data == true) {
-                            that.$message({
-                                message: '退回成功',
-                                type: 'success'
-                            });
 
-                        }
-                    });
-                    that.$router.push({
-                        name: 'imagePaper-imagePaperList-imageResult',
-                        params:{userKey:that.userKey,imageStatus:str}
-                    });
+                    if (str == '') {
+                        that.$message({
+                            message: '必须选择其中一项',
+                            type: 'error'
+                        });
+                    }else{
+                        axios.get('youdao/imagePaper/paperReturn',{params:{userKey:that.userKey,taskId:that.taskId,imageErrorType:str}}).then(function(data){
+                            if (data.data.errorMsg) {
+                                that.$message.error(data.data.errorMsg);
+                            }
+                            if (data.data == true) {
+                                that.$message({
+                                    message: '退回成功',
+                                    type: 'success'
+                                });
+
+                            }
+                        });
+                        that.$router.push({
+                            name: 'imagePaper-imagePaperList-imageResult',
+                            params:{userKey:that.userKey,imageStatus:str}
+                        });
+                    }
                 }
 
             },

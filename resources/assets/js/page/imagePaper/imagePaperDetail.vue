@@ -251,6 +251,7 @@
                 errorMssage: "请选择必填项",
                 sortTaskIdQuestion:[],
                 sortTaskIdAnswer:[],
+                sort:1,
             }
         },
         computed: {
@@ -274,6 +275,7 @@
                     sortTaskId: that.sortTaskId,
                     sortTaskIdQuestion: that.sortTaskIdQuestion,
                     sortTaskIdAnswer: that.sortTaskIdAnswer,
+                    sort: that.sort,
                 };
             },
             ...mapGetters({
@@ -440,18 +442,18 @@
                         params:{userKey:that.userKey,taskId:that.taskId,allType:1}
                     });
                 }
+                axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                    }
+                    if (data.data == true) {
+                        that.$message({
+                            message: '排序成功',
+                            type: 'success'
+                        });
 
-                // location.href = 'http://www.shenlabel.org/#/manage/question/eW0mf2QYMxNu0TJDssBMuRgj_21kwTMt';
-                // axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
-                //     if (data.data.errorMsg) {
-                //         that.$message.error(data.data.errorMsg);
-                //     } else {
-                //         that.$nextTick(function () {
-                //             console.log(data.data);
-                //             //that.jsPage();
-                //         });
-                //     }
-                // })
+                    }
+                })
             },
             imagePaperDetail(){
                 var that = this;

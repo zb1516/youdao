@@ -371,12 +371,12 @@ class VipYoudaoExamined extends Model
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
         }
         if (!empty($searchArgs['province'])) {
-            $provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
-            $condition['province'] = array('eq' => $provinceName);
+            //$provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
+            $condition['province'] = array('eq' => $searchArgs['province']);
         }
         if (!empty($searchArgs['city'])) {
-            $countryName = isset($countrys[$searchArgs['city']]) ? $countrys[$searchArgs['city']] : '';
-            $condition['city'] = array('eq' => $countryName);
+            //$countryName = isset($countrys[$searchArgs['city']]) ? $countrys[$searchArgs['city']] : '';
+            $condition['city'] = array('eq' => $searchArgs['city']);
         }
         if (!empty($searchArgs['grade'])) {
             $condition['grade'] = array('eq' => $searchArgs['grade']);
@@ -547,12 +547,12 @@ class VipYoudaoExamined extends Model
             $condition['subject_id'] = array('eq' => $searchArgs['subjectId']);
         }
         if (!empty($searchArgs['province'])) {
-            $provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
-            $condition['province'] = array('eq' => $provinceName);
+            //$provinceName = isset($provinceIdNames[$searchArgs['province']]) ? $provinceIdNames[$searchArgs['province']] : '';
+            $condition['province'] = array('eq' => $searchArgs['province']);
         }
-        if (!empty($searchArgs['country'])) {
-            $countryName = isset($countrys[$searchArgs['country']]) ? $countrys[$searchArgs['country']] : '';
-            $condition['city'] = array('eq' => $countryName);
+        if (!empty($searchArgs['city'])) {
+            //$countryName = isset($countrys[$searchArgs['city']]) ? $countrys[$searchArgs['city']] : '';
+            $condition['city'] = array('eq' => $searchArgs['city']);
         }
         if (!empty($searchArgs['grade'])) {
             $condition['grade'] = array('eq' => $searchArgs['grade']);
@@ -679,7 +679,7 @@ class VipYoudaoExamined extends Model
             'question_number' => $questionNumber,
             'other_information_one' => $other1,
             'other_information_two' => $other2,
-            'paper_name' => $paperName,
+            //'paper_name' => $paperName,
             'image_error_type' => ''
         ];
         $condition = array(
