@@ -224,6 +224,7 @@ class VipYoudaoExamined extends Model
             $subjectIdArr = [];
             $gradeIdArr = [];
             $authorIdArr = [];
+            $cityIdArr = [];
             foreach ($list as $row){
                 if(isset($row['agency_id']) && !empty($row['agency_id'])){
                     $agencyIdArr[] = $row['agency_id'];
@@ -239,6 +240,15 @@ class VipYoudaoExamined extends Model
                 }
                 if(isset($row['paper_examined_auditor_id']) && !empty($row['paper_examined_auditor_id'])){
                     $authorIdArr[] = $row['paper_examined_auditor_id'];
+                }
+                if(isset($row['province']) && !empty($row['province'])){
+                    $cityIdArr[] = $row['province'];
+                }
+                if(isset($row['city']) && !empty($row['city'])){
+                    $cityIdArr[] = $row['city'];
+                }
+                if(isset($row['area']) && !empty($row['area'])){
+                    $cityIdArr[] = $row['area'];
                 }
             }
 
@@ -294,7 +304,22 @@ class VipYoudaoExamined extends Model
                 }
             }
 
+            //获取年级配置
             $gradeArr = Config('app.GRADE_VALUE');
+
+            //获取省份、市、区名称
+            $city = new City();
+            $cityIdArr = array_unique($cityIdArr);
+            $cityArr = [];
+            if(!empty($cityIdArr)){
+                $citys = $city->getCitysByIds($cityIdArr);
+                if(!empty($citys)){
+                    foreach ($citys  as $key=>$row){
+                        $cityArr[$row['id']] = $row['city'];
+                    }
+                }
+            }
+
             foreach ($list as $key=>$row){
                 if(!empty($row['agency_id'])){
                     $list[$key]['agency_name'] = $agencyArr[$row['agency_id']];
@@ -315,6 +340,12 @@ class VipYoudaoExamined extends Model
                         $list[$key]['paper_examined_auditor_name'] = $userArr[$row['paper_examined_auditor_id']];
                     }
                 }
+
+
+                $list[$key]['province_name'] = !empty($row['province'])?$cityArr[$row['province']]:'';
+                $list[$key]['city_name'] = !empty($row['city'])?$cityArr[$row['city']]:'';
+                $list[$key]['area_name'] = !empty($row['area'])?$cityArr[$row['area']]:'';
+
             }
 
         }

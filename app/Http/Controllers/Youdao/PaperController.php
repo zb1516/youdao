@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
 use App\Services\WxService;
+use App\Services\YoudaoService;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
@@ -81,6 +82,7 @@ class PaperController extends BaseController
             $taskId = trim($request->taskId);
             if($taskId){
                 $paperInfo = $this->getPaperInfo($taskId);
+                dd($paperInfo);
                 return response()->json($paperInfo);
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
@@ -94,16 +96,18 @@ class PaperController extends BaseController
 
     public function getPaperInfo($taskId)
     {
+
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
-        $postData['data']['taskId'] = $taskId;
-        /*$common = new CommonController;
-        $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        $postData['taskId'] = $taskId;
+        $common = new CommonController;
+        $youdaoService = new YoudaoService();
+        $result = $youdaoService->getYoudaoTask($postUrl, $postData, 2);return $result;
         if($result['code']== 200){
             $paperInfo['youdao_info'] = $result['data'];
-        }*/
-        $paperInfo['youdao_info'] = array(
+        }
+        /*$paperInfo['youdao_info'] = array(
             "isPaper"=>1,
             "paperFilePath"=>"http://xxxxxxxx/paper/{taskId}.docx",
             'questions'=>array(
@@ -164,24 +168,9 @@ class PaperController extends BaseController
                         'fileUrl'=>"http://teacher.aitifen.com/static/images/logo.png"
                     ),
                 ),
-                /*'2'=>array(
-                    'quesNumber'=>3,
-                    'hasOptions'=>0,
-                    'quesLatextContent'=>array(
-                        'content'=>'<div>3333333333333</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                    'quesLatextAnswer'=>array(
-                        'content'=>'<div>3333333333333</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                    'quesLatextAnalysis'=>array(
-                        'content'=>'<div>22222222222</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                ),*/
+
             )
-        );
+        );*/
         return $paperInfo;
     }
 
@@ -226,9 +215,9 @@ class PaperController extends BaseController
                     $data[$key]['paper_name'] = $row['paper_name'];
                     $data[$key]['subject_name'] = isset($row['subject_name'])?$row['subject_name']:'';
                     $data[$key]['grade_name'] = isset($row['grade_name'])?$row['grade_name']:'';
-                    $data[$key]['province_name'] = $row['province'];
-                    $data[$key]['city_name'] = $row['city'];
-                    $data[$key]['area_name'] = $row['area'];
+                    $data[$key]['province_name'] = $row['province_name'];
+                    $data[$key]['city_name'] = $row['city_name'];
+                    $data[$key]['area_name'] = $row['area_name'];
                     $data[$key]['agency_id'] = $row['agency_id'];
                     $data[$key]['agency_name'] = isset($row['agency_name'])?$row['agency_name']:'';
                     $data[$key]['upload_time'] = $row['upload_time'];
