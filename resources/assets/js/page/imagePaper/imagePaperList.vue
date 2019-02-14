@@ -17,7 +17,7 @@
                     <label for="" class="title">年级</label>
                     <div class="input-box">
                         <select class="grade-select-box" id="grade-select-box" name="grade-select-box" v-model="curGrade" data-options="width: 100">
-                            <option value="">请选择</option>
+                            <option value="">全部</option>
                             <option value="1">一年级</option>
                             <option value="2">二年级</option>
                             <option value="3">三年级</option>
@@ -86,8 +86,8 @@
                         </select>
                     </div>
                 </div>
-                <button type="button" name="button" class="list-search-btn"  @click="doSearch">搜索</button>
-                <!--<button type="reset" name="button" class="list-search-btn"  @click="doReset">重置</button>-->
+                <button type="button" name="button" class="list-search-btn"  @click="doSearchClick">搜索</button>
+
             </div>
         </div>
         <!-- list -->
@@ -105,7 +105,7 @@
                 </span>套</span>
                 <div class="search-wrapper">
                     <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
-                    <span class="search-btn"  @click="doSearch"></span>
+                    <span class="search-btn"  @click="doSearchClick"></span>
                 </div>
             </div>
             <div class="pic-form-wrapper">
@@ -199,7 +199,7 @@
                 isExaminedStatusShow:0,
                 isExaminedStatusTrue:1,
                 isExaminedStatusSort:'',
-                curImageExaminedStatus:0,
+                curImageExaminedStatus:1,
                 agencyId:0,
                 curProvince:'',
                 curCity:'',
@@ -207,7 +207,8 @@
                 endDate:'',
                 isContent:1,
                 paperName:'',
-                isType:1
+                isType:1,
+                isSort:false
             }
         },
         computed: {
@@ -238,6 +239,11 @@
             var that = this;
             that.subjectList();
             that.agencyList();
+            var nowdate = new Date();
+            that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            nowdate.setMonth(nowdate.getMonth()-1);
+            that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
             that.doSearch();
             common.init();
         },
@@ -298,6 +304,7 @@
                         isShowFL: false,
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
+                            that.isSort = true;
                             that.currentPage = currPage;
                             that.pageSize = 5;
                             that.doSearch();
@@ -315,11 +322,18 @@
                     that.curProvince = $(".drop-prov-ul").find('.selected').attr('data-val');
                     that.curCity = $(".drop-city-ul").find('.selected').attr('data-val');
                 }
+                // else{
+                //     that.curProvince = 0;
+                //     that.curCity = 0;
+                // }
                 if($("input[name='start-date']").val()){
                     that.beginDate = $("input[name='start-date']").val();
                     that.endDate = $("input[name='end-date']").val();
                 }
                 var searchArgs = $.extend(true, {}, that.searchArgs);
+                if(that.isSort == false){
+                    that.currentPage = 1;
+                }
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
                 searchArgs.userKey = that.userKey;
@@ -393,11 +407,12 @@
                 that.isExaminedTimeSort = '';
                 that.doSearch();
             },
-            doReset: function () {
+            doSearchClick: function () {
                 var that = this;
-                Object.assign(that.$data, that.$options.data());
+                that.isSort = false;
                 that.doSearch();
-            },
+            }
+
         },
 
     }

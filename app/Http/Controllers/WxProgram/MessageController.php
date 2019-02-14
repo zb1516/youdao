@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WxProgram;
 
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
+use App\Models\VipYoudaoExamined;
 use App\Services\UserService;
 use App\Services\WxService;
 use Illuminate\Http\Request;
@@ -32,21 +33,41 @@ class MessageController extends Controller
             {
                 $messageReadIds[]=$val['message_id'];
             }
-            //获取模板消息
+            //获取用户未读消息记录
             $vipMessageRemindModel=new VipMessageRemind();
             $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageReadIds]],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            //过滤掉用户已经重新上传的记录
+            $taskIds=[];
             foreach($list['data'] as $key => $val)
             {
-                if(in_array($val['id'],$messageReadIds))
+                $taskIds[]=$val['task_id'];
+            }
+            //查询已经重新上传的记录
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $examinedList=$vipYoudaoExaminedModel->findAll(['task_id'=>['in'=>$taskIds],'image_examined_status'=>['neq'=>3]],['id'=>'desc'],['task_id']);
+            //重新上传后的记录
+            $examinTaskIds=[];
+            foreach($examinedList as $key => $val)
+            {
+                $examinTaskIds[]=$val['task_id'];
+            }
+            foreach($list['data'] as $key => $val)
+            {
+                if(in_array($val['task_id'],$examinTaskIds))
                 {
-                    $val['message_read_status']=1;
-                }else
-                {
-                    $val['message_read_status']=0;
+                    unset($list['data'][$key]);
+                }else{
+                    if(in_array($val['id'],$messageReadIds))
+                    {
+                        $val['message_read_status']=1;
+                    }else
+                    {
+                        $val['message_read_status']=0;
+                    }
+                    $val['message_content']=htmlspecialchars_decode($val['message_content']);
+                    $val['addtime']=formatDateTime($val['addtime']);
+                    $list['data'][$key]=$val;
                 }
-                $val['message_content']=htmlspecialchars_decode($val['message_content']);
-                $val['addtime']=formatDateTime($val['addtime']);
-                $list['data'][$key]=$val;
             }
             return response()->json(['status'=>200,'data'=>[
                 'current_page'=>$list['current_page'],
@@ -77,9 +98,35 @@ class MessageController extends Controller
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];
             }
-            //统计当前用户下
+            //获取用户未读消息记录
             $vipMessageRemindModel=new VipMessageRemind();
-            $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds],'uid'=>$userInfo['userId']]);
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageIds]],['addtime'=>'desc']);
+            //过滤掉用户已经重新上传的记录
+            $taskIds=[];
+            foreach($list as $key => $val)
+            {
+                $taskIds[]=$val['task_id'];
+            }
+            //查询已经重新上传的记录
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $examinedList=$vipYoudaoExaminedModel->findAll(['task_id'=>['in'=>$taskIds],'image_examined_status'=>['neq'=>3]],['id'=>'desc'],['task_id']);
+            //重新上传后的记录
+            $examinTaskIds=[];
+            $messageCountIds=[];
+            foreach($examinedList as $key => $val)
+            {
+                $examinTaskIds[]=$val['task_id'];
+            }
+            foreach($list as $key => $val)
+            {
+                if(in_array($val['task_id'],$examinTaskIds))
+                {
+                    unset($list[$key]);
+                }else{
+                    $messageCountIds[]=$val['id'];
+                }
+            }
+            $messageCount=count($messageCountIds);
             return response()->json(['status'=>200,'data'=>['count'=>$messageCount]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);

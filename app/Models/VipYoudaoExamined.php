@@ -505,10 +505,10 @@ class VipYoudaoExamined extends Model
     {
         $searchArgs = [];
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
+            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']).' 00:00:01';
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
+            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']).' 23:59:59';
         }
         if (isset($formData['subjectId'])) {
             $searchArgs['subjectId'] = $formData['subjectId'];
@@ -1054,7 +1054,7 @@ class VipYoudaoExamined extends Model
             }
             if(!$result){
                 $this->rollback();
-                throw new \Exception('有道第一次处理成功回调处理失败2');
+                throw new \Exception('有道第一次处理成功回调处理失败');
             }
 
             $this->commit();
@@ -1194,14 +1194,13 @@ class VipYoudaoExamined extends Model
         }
 
         //审核不通过反馈给有道
-        /*
         $common = new CommonController;
         $result = $common->doYoudaoFeedback(config('YOUDAO_FEEDBACK_URL'), $data);
         $result = json_decode($result, true);
         if($result['code'] !== 200){
             $this->rollback();
             throw new \Exception('审核不通过反馈有道失败:'.$result['message']);
-        }*/
+        }
 
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(

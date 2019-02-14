@@ -28,8 +28,8 @@ class YoudaoService
                 $sign = $this->getYoudaoSign($appKey,$postData['questionUrl'],$salt,$time,$appSecret);
             }else{
                 $sign = $this->getYoudaoSign($appKey,$postData['taskId'],$salt,$time,$appSecret);
-            };
-            $postData = array(
+            }
+            $postDataNew = array(
                 'appKey' => $appKey,
                 'salt' => $salt,
                 'curtime' => $time,
@@ -37,19 +37,15 @@ class YoudaoService
                 'type' => 1,
                 'taskId'=>$postData['taskId']
             );
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-            $result = curl_exec($ch);//有道返回的内容
-            curl_close($ch);
-            return response()->json($result);
-        } catch (\Exception $e){
 
+            $postData = array_merge($postData,$postDataNew);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            return $result;
+        }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
@@ -151,4 +147,6 @@ class YoudaoService
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+    
+
 }

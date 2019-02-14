@@ -81,8 +81,19 @@ class PaperController extends BaseController
         try{
             $taskId = trim($request->taskId);
             if($taskId){
-                $paperInfo = $this->getPaperInfo($taskId);
-                return response()->json($paperInfo);
+                $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
+                //调用有道接口。获取有道处理的试卷详情
+                $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
+                $postData['taskId'] = $taskId;
+                $common = new CommonController;
+                $result = $common->getYoudaoTask($postUrl, $postData, 2);
+                $result = json_decode($result,true);
+                if($result['code'] == 200){
+                    $paperInfo['youdao_info']['questions'] = $result['data'];
+                    return response()->json($paperInfo);
+                }else{
+                    return response()->json(['errorMsg' => '有道错误：获取任务信息失败！code:'.$result['code'].':'.$result['message']]);
+                }
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
             }
@@ -95,13 +106,13 @@ class PaperController extends BaseController
 
     public function getPaperInfo($taskId)
     {
-
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
         $postData['taskId'] = $taskId;
         $common = new CommonController;
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        $result = json_decode($result,true);
         if($result['code'] == 200){
             $paperInfo['youdao_info']['questions'] = $result['data'];
         }
