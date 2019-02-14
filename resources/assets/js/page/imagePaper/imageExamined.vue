@@ -43,6 +43,10 @@
                                 <span class="checkbox js-checkbox"></span>
                                 <span class="r-error-msg">题目或答案缺失</span>
                             </p>
+                            <p class="r-option">
+                                <span class="checkbox js-checkbox"></span>
+                                <span class="r-error-msg">图片重复</span>
+                            </p>
                             <input type="hidden" value="0" class="js-hidden-type-id"/>
                         </div>
                     </div>

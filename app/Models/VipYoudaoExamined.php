@@ -505,10 +505,10 @@ class VipYoudaoExamined extends Model
     {
         $searchArgs = [];
         if (isset($formData['beginDate'])) {
-            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']);
+            $searchArgs['beginDate'] = str_replace('/','-',$formData['beginDate']).' 00:00:01';
         }
         if (isset($formData['endDate'])) {
-            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']);
+            $searchArgs['endDate'] = str_replace('/','-',$formData['endDate']).' 23:59:59';
         }
         if (isset($formData['subjectId'])) {
             $searchArgs['subjectId'] = $formData['subjectId'];

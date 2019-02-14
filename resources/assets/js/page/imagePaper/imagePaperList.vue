@@ -199,7 +199,7 @@
                 isExaminedStatusShow:0,
                 isExaminedStatusTrue:1,
                 isExaminedStatusSort:'',
-                curImageExaminedStatus:0,
+                curImageExaminedStatus:1,
                 agencyId:0,
                 curProvince:'',
                 curCity:'',
