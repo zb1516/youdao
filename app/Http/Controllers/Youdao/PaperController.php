@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
 use App\Services\WxService;
+use App\Services\YoudaoService;
 use Illuminate\Http\Request;
 use Mockery\Exception;
 
@@ -94,16 +95,18 @@ class PaperController extends BaseController
 
     public function getPaperInfo($taskId)
     {
+
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
-        $postData['data']['taskId'] = $taskId;
-        /*$common = new CommonController;
-        $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        $postData['taskId'] = $taskId;
+        $common = new CommonController;
+        $youdaoService = new YoudaoService();
+        $result = $youdaoService->getYoudaoTask($postUrl, $postData, 2);return $result;
         if($result['code']== 200){
             $paperInfo['youdao_info'] = $result['data'];
-        }*/
-        $paperInfo['youdao_info'] = array(
+        }
+        /*$paperInfo['youdao_info'] = array(
             "isPaper"=>1,
             "paperFilePath"=>"http://xxxxxxxx/paper/{taskId}.docx",
             'questions'=>array(
@@ -164,24 +167,9 @@ class PaperController extends BaseController
                         'fileUrl'=>"http://teacher.aitifen.com/static/images/logo.png"
                     ),
                 ),
-                /*'2'=>array(
-                    'quesNumber'=>3,
-                    'hasOptions'=>0,
-                    'quesLatextContent'=>array(
-                        'content'=>'<div>3333333333333</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                    'quesLatextAnswer'=>array(
-                        'content'=>'<div>3333333333333</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                    'quesLatextAnalysis'=>array(
-                        'content'=>'<div>22222222222</div>',
-                        'fileUrl'=>"http://xxxxxx/ques/{quesId}/conent.docx"
-                    ),
-                ),*/
+
             )
-        );
+        );*/
         return $paperInfo;
     }
 
