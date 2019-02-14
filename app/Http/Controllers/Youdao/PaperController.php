@@ -81,9 +81,19 @@ class PaperController extends BaseController
         try{
             $taskId = trim($request->taskId);
             if($taskId){
-                $paperInfo = $this->getPaperInfo($taskId);
-                dd($paperInfo);
-                return response()->json($paperInfo);
+                $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
+                //调用有道接口。获取有道处理的试卷详情
+                $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
+                $postData['taskId'] = $taskId;
+                $common = new CommonController;
+                $result = $common->getYoudaoTask($postUrl, $postData, 2);
+                $result = json_decode($result,true);
+                if($result['code'] == 200){
+                    $paperInfo['youdao_info']['questions'] = $result['data'];
+                    return response()->json($paperInfo);
+                }else{
+                    return response()->json(['errorMsg' => '有道错误：获取任务信息失败！code:'.$result['code'].','.$result['message']]);
+                }
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
             }
@@ -96,16 +106,15 @@ class PaperController extends BaseController
 
     public function getPaperInfo($taskId)
     {
-
         $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
         //调用有道接口。获取有道处理的试卷详情
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
         $postData['taskId'] = $taskId;
         $common = new CommonController;
-        $youdaoService = new YoudaoService();
-        $result = $youdaoService->getYoudaoTask($postUrl, $postData, 2);return $result;
-        if($result['code']== 200){
-            $paperInfo['youdao_info'] = $result['data'];
+        $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        $result = json_decode($result,true);
+        if($result['code'] == 200){
+            $paperInfo['youdao_info']['questions'] = $result['data'];
         }
         /*$paperInfo['youdao_info'] = array(
             "isPaper"=>1,
@@ -320,9 +329,10 @@ class PaperController extends BaseController
                     }
                 }
             }
+
             $request->session()->put($taskId,'');//清空session
             $data = array(
-                'task_id'=>$taskId,
+                'taskId'=>$taskId,
                 'list'=>$errorData
             );
             $request->session()->put($taskId,$data);
@@ -350,7 +360,6 @@ class PaperController extends BaseController
             if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
-                //$result = 1;
                 return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
@@ -364,6 +373,7 @@ class PaperController extends BaseController
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
+                $data['taskId'] = $data['task_id'];
                 //试卷审核不通过，退回有道
                 $result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
                 //$result = 1;
@@ -410,6 +420,7 @@ class PaperController extends BaseController
             $message = $request->post('message','');
             $data = $request->post('data','');
             $status = 0;
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/questionError'.time().'.txt',json_encode($_POST));
             if($code == 200){
                 $postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
@@ -434,6 +445,7 @@ class PaperController extends BaseController
             $message = $request->post('message','');
             $data = $request->post('data','');
             $status = 0;
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
             if($code == 200){
                 $postData = json_decode($data,true);
                 //更新任务的有道审核结果，接收、处理时间

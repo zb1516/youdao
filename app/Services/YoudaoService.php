@@ -27,7 +27,7 @@ class YoudaoService
             if($type == 1){
                 $sign = $this->getYoudaoSign($appKey,$postData['questionUrl'],$salt,$time,$appSecret);
             }else{
-                $sign = $this->getYoudaoSign($appKey,$postData['data']['taskId'],$salt,$time,$appSecret);
+                $sign = $this->getYoudaoSign($appKey,$postData['taskId'],$salt,$time,$appSecret);
             }
             $postDataNew = array(
                 'appKey' => $appKey,
@@ -37,6 +37,7 @@ class YoudaoService
                 'type' => 1,
                 'taskId'=>$postData['taskId']
             );
+
             $postData = array_merge($postData,$postDataNew);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -45,7 +46,6 @@ class YoudaoService
             curl_close($ch);
             return $result;
         }catch (\Exception $e){
-
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
@@ -99,6 +99,7 @@ class YoudaoService
                 'sign' => $sign,
                 'type' => 1,
             );
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/complete'.time().'.txt',json_encode($postData));
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -106,7 +107,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            return response()->json($result);
+            return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
@@ -135,6 +136,7 @@ class YoudaoService
                 'type' => 1,
             );
             $postData = array_merge($data, $postData);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/feedback'.time().'.txt',json_encode($postData));
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -142,9 +144,11 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            return response()->json($result);
+            return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+    
+
 }

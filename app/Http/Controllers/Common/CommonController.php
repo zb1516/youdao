@@ -269,9 +269,9 @@ class CommonController extends BaseController
      * @param $type 1为投递任务，2为获取任务
      * @return boolean
      */
-    public function getYoudaoTask($url,$postData,$type=1)
+    public function getYoudaoTask($url, $postData, $type=1)
     {
-        return $this->youdaoService->getYoudaoTask($url,$postData,$type);
+        return $this->youdaoService->getYoudaoTask($url, $postData, $type);
     }
 
     //获取有道机构列表
@@ -560,4 +560,7 @@ class CommonController extends BaseController
         Redis::set($key,json_encode($arr));
         return response()->json($arr);
     }
+
+
+
 }
