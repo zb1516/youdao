@@ -43,11 +43,10 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
             $result = curl_exec($ch);//有道返回的内容
-            //return curl_error($ch);
-            curl_close($ch);//return $result;
+            curl_close($ch);
             return response()->json($result);
         } catch (\Exception $e){
 

@@ -269,9 +269,14 @@ class CommonController extends BaseController
      * @param $type 1为投递任务，2为获取任务
      * @return boolean
      */
-    public function getYoudaoTask($url,$postData,$type=1)
+    public function getYoudaoTask($url, $postData, $type=1)
     {
-        return $this->youdaoService->getYoudaoTask($url,$postData,$type);
+        $result = $this->youdaoService->getYoudaoTask($url, $postData, $type);
+        $result = get_object_vars($result);
+        if($result['original']){
+            $result = json_decode($result['original'], true);
+        }
+        return $result;
     }
 
     //获取有道机构列表

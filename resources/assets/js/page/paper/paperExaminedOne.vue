@@ -37,40 +37,40 @@
                 <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
                 <template v-for="(question, index) in questions">
                     <dl class="question-wrapper">
-                      <dt class="question-name">{{question.quesNumber}}、{{question.quesLatextContent.content}}</dt>
+                      <dt class="question-name">{{index+1}}、<span v-html="question.quesLatextContent.content"></span></dt>
                       <template v-if="question.hasOptions == 1">
                           <template v-for="(option, i) in question.options">
-                          <dd class="option">{{option.label}}.{{option.latexContent}}</dd>
+                              <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
                           </template>
                       </template>
                       <dd class="analyze" v-if="question.quesLatextAnswer || question.quesLatextAnalysis">
-                         <p class="a-answer" v-if="question.quesLatextAnswer ">答案：{{question.quesLatextAnswer.content}}</p>
-                         <p class="a-info" v-if="question.quesLatextAnalysis ">解析：{{question.quesLatextAnalysis.content}}</p>
+                         <p class="a-answer" v-if="question.quesLatextAnswer ">答案：<span v-html="question.quesLatextAnswer.content"></span></p>
+                         <p class="a-info" v-if="question.quesLatextAnalysis ">解析：<span v-html="question.quesLatextAnalysis.content"></span></p>
                       </dd>
                       <div class="q-operational">
                         <div class="q-o-con">
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干不完整'"></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+(index+1)+'_题干不完整'"></span>
                             <span>题干不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案不完整'" ></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+(index+1)+'_答案不完整'" ></span>
                             <span>答案不完整</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析不完整'" ></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+(index+1)+'_解析不完整'" ></span>
                             <span>解析不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干错误'" ></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+(index+1)+'_题干错误'" ></span>
                             <span>题干错误</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案错误'"></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+(index+1)+'_答案错误'"></span>
                             <span>答案错误</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析错误'"></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+(index+1)+'_解析错误'"></span>
                             <span>解析错误</span>
                           </span>
                         </div>
@@ -147,7 +147,11 @@
                                 return false;
                             } else {
                                 that.paperInfo =  data.data;
+                                that.questions = [];
                                 that.questions = that.paperInfo.youdao_info.questions;
+                                that.$nextTick(() => {
+                                    MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                                });
                             }
                         }
                         that.$nextTick(function() {

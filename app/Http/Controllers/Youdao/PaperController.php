@@ -101,10 +101,9 @@ class PaperController extends BaseController
         $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
         $postData['taskId'] = $taskId;
         $common = new CommonController;
-        $youdaoService = new YoudaoService();
-        $result = $youdaoService->getYoudaoTask($postUrl, $postData, 2);return $result;
-        if($result['code']== 200){
-            $paperInfo['youdao_info'] = $result['data'];
+        $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        if($result['code'] == 200){
+            $paperInfo['youdao_info']['questions'] = $result['data'];
         }
         /*$paperInfo['youdao_info'] = array(
             "isPaper"=>1,
@@ -319,6 +318,7 @@ class PaperController extends BaseController
                     }
                 }
             }
+
             $request->session()->put($taskId,'');//清空session
             $data = array(
                 'task_id'=>$taskId,
@@ -349,7 +349,6 @@ class PaperController extends BaseController
             if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
-                //$result = 1;
                 return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
