@@ -18,7 +18,7 @@
                     <label for="" class="title">年级</label>
                     <div class="input-box">
                         <select class="grade-select-box" id="grade-select-box" name="grade-select-box" v-model="curGrade" data-options="width: 100">
-                            <option value="">请选择</option>
+                            <option value="">全部</option>
                             <option value="1">一年级</option>
                             <option value="2">二年级</option>
                             <option value="3">三年级</option>
@@ -86,7 +86,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="button" name="button" class="list-search-btn" @click="doSearch">搜索</button>
+                <button type="button" name="button" class="list-search-btn" @click="doSearchClick">搜索</button>
             </div>
         </div>
         <!-- list -->
@@ -96,7 +96,7 @@
                 <div class="tool-box">
                     <div class="search-wrapper">
                         <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
-                        <span class="search-btn"  @click="doSearch"></span>
+                        <span class="search-btn"  @click="doSearchClick"></span>
                     </div>
                     <button type="button" name="button" class="export-btn" @click="doExport">导出</button>
                 </div>
@@ -189,6 +189,7 @@
                 isType:2,
                 optionsAuthor:'',
                 authorValue:0,
+                isSort:false
             }
         },
         computed: {
@@ -219,6 +220,11 @@
             that.subjectList();
             that.agencyList();
             that.authorList();
+            var nowdate = new Date();
+            that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            nowdate.setMonth(nowdate.getMonth()-1);
+            that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
+            $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
             that.doSearch();
             common.init();
         },
@@ -279,6 +285,7 @@
                         isShowFL: false,
                         isShowRefresh: false,
                         callBack: function (currPage, pageSize) {
+                            that.isSort = true;
                             that.currentPage = currPage;
                             that.pageSize = 5;
                             that.doSearch();
@@ -301,6 +308,9 @@
                     that.endDate = $("input[name='end-date']").val();
                 }
                 var searchArgs = $.extend(true, {}, that.searchArgs);
+                if(that.isSort == false){
+                    that.currentPage = 1;
+                }
                 searchArgs.currentPage = that.currentPage;
                 searchArgs.pageSize = that.pageSize;
                 searchArgs.userKey = that.userKey;
@@ -389,7 +399,11 @@
                         '&agencyId=' + searchArgs.agencyId;
                 }
             },
-
+            doSearchClick: function () {
+                var that = this;
+                that.isSort = false;
+                that.doSearch();
+            }
 
         }
     }
