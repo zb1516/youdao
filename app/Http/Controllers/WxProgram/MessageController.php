@@ -98,9 +98,35 @@ class MessageController extends Controller
             foreach($messageIdsList as $key => $val){
                 $messageIds[]=$val['message_id'];
             }
-            //统计当前用户下
+            //获取用户未读消息记录
             $vipMessageRemindModel=new VipMessageRemind();
-            $messageCount=$vipMessageRemindModel->count(['id'=>['not in'=>$messageIds],'uid'=>$userInfo['userId']]);
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageIds]],['addtime'=>'desc']);
+            //过滤掉用户已经重新上传的记录
+            $taskIds=[];
+            foreach($list as $key => $val)
+            {
+                $taskIds[]=$val['task_id'];
+            }
+            //查询已经重新上传的记录
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $examinedList=$vipYoudaoExaminedModel->findAll(['task_id'=>['in'=>$taskIds],'image_examined_status'=>['neq'=>3]],['id'=>'desc'],['task_id']);
+            //重新上传后的记录
+            $examinTaskIds=[];
+            $messageCountIds=[];
+            foreach($examinedList as $key => $val)
+            {
+                $examinTaskIds[]=$val['task_id'];
+            }
+            foreach($list as $key => $val)
+            {
+                if(in_array($val['task_id'],$examinTaskIds))
+                {
+                    unset($list[$key]);
+                }else{
+                    $messageCountIds[]=$val['id'];
+                }
+            }
+            $messageCount=count($messageCountIds);
             return response()->json(['status'=>200,'data'=>['count'=>$messageCount]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
