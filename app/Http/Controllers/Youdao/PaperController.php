@@ -89,7 +89,7 @@ class PaperController extends BaseController
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
                 $result = json_decode($result,true);
                 if($result['code'] == 200){
-                    $paperInfo['youdao_info']['questions'] = $result['data'];
+                    $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
                     return response()->json(['errorMsg' => '有道错误：获取任务信息失败！code:'.$result['code'].','.$result['message']]);
@@ -114,7 +114,7 @@ class PaperController extends BaseController
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
         $result = json_decode($result,true);
         if($result['code'] == 200){
-            $paperInfo['youdao_info']['questions'] = $result['data'];
+            $paperInfo['youdao_info'] = $result['data'];
         }
         /*$paperInfo['youdao_info'] = array(
             "isPaper"=>1,
