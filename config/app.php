@@ -255,7 +255,7 @@ return [
     'AGENCY_UPLOAD_NUMBER'=>20,
     'TEST_APP_KEY' => 'zhudytest123',
     'TEST_APP_SECRET' => 'IoyvG6Zb98nEUA4nIGwkEPUXILBYgrGs',
-    'TEST_YOUDAO_URL' => ' test-s4eu.youdao.com',
+    'TEST_YOUDAO_URL' => 'test-s4eu.youdao.com',
     'IMAGE_EXAMINED_STATUS'=> [
         '1' => '待审核',
         '2' => '已通过',

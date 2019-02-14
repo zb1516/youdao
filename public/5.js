@@ -27721,7 +27721,7 @@ var render = function() {
                           attrs: { type: "button", name: "button" },
                           on: { click: _vm.doRepeat }
                         },
-                        [_vm._v("此卷重复")]
+                        [_vm._v("电子试卷已存在")]
                       )
                     ]
                   : _vm._e(),

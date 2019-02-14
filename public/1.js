@@ -41563,7 +41563,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             isExaminedStatusShow: 0,
             isExaminedStatusTrue: 1,
             isExaminedStatusSort: '',
-            curImageExaminedStatus: 0,
+            curImageExaminedStatus: 1,
             agencyId: 0,
             curProvince: '',
             curCity: '',

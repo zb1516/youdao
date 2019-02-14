@@ -192,11 +192,14 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
-            $resultYoudao = json_decode($resultYoudao,true);
-            $dataEdit = [
-                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
-            ];
-            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+            if($resultYoudao['code'] != 200){
+                throw new \Exception('任务投递失败');
+            }
+//            $resultYoudao = json_decode($resultYoudao,true);
+//            $dataEdit = [
+//                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
+//            ];
+//            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
 //            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
 //            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
 //            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
@@ -288,11 +291,14 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
-            $resultYoudao = json_decode($resultYoudao,true);
-            $dataEdit = [
-                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
-            ];
-            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
+            if($resultYoudao['code'] != 200){
+                throw new \Exception('任务投递失败');
+            }
+//            $resultYoudao = json_decode($resultYoudao,true);
+//            $dataEdit = [
+//                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
+//            ];
+//            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
 //            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
 //            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
 //            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
@@ -459,7 +465,7 @@ class VipPaperImage extends Model
         $gradeName = config('app.GRADE_NAME');
         $url = config('app.YOUDAO_DELIVER_TASK');
         $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
-        $paperType = isset($searchArgs['pageType']) ? $searchArgs['pageType'] : 0;
+        $paperType = isset($searchArgs['paperType']) ? $searchArgs['paperType'] : 0;
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $youdaoService = new YoudaoService();
         $postData = [
@@ -467,7 +473,7 @@ class VipPaperImage extends Model
             'name' => $filename,
             'questionUrl' => $questionUrl,
             'answerUrl' => $answerUrl,
-            'pageType' => $paperType,
+            'paperType' => $paperType,
             'education' => isset($gradeName[$grade]) ? $gradeName[$grade] : '',
             'subject' => $subjectId,
         ];
