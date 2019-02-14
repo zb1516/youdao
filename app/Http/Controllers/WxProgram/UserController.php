@@ -18,6 +18,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
         try{
+
             //接收参数
             $searchArgs['userName']=$request->input('userName');
             $searchArgs['password']=$request->input('password');
@@ -127,8 +128,6 @@ class UserController extends Controller
             $userInfo=$vipYoudaoUserLoginLogModel->findOne(['wx_token'=>$searchArgs['token'],'is_delete'=>0]);
             if($userInfo)
             {
-                //删除redis中记录的token
-                Redis::del($searchArgs['token']);
                 //修改登陆记录为已退出状态
                 $result=$vipYoudaoUserLoginLogModel->edit(['is_delete'=>1],['wx_token'=>$searchArgs['token']]);
                 if($result === false)
