@@ -987,6 +987,9 @@ class VipYoudaoExamined extends Model
             $row = array(
                 'first_processing_time' => $data['youdaoProcessingTime'],
                 'first_processing_days' => $first_processing_days,
+                'final_youdao_receive_time' => $first_youdao_receive_time,
+                'final_processing_time' => $data['youdaoProcessingTime'],
+                'final_processing_days' => $first_processing_days,
             );
             if($data['isPass'] == 1){
                 //第一次投递任务成功后有道审核通过
@@ -995,9 +998,7 @@ class VipYoudaoExamined extends Model
                 //第一次投递任务成功后有道审核不通过，关闭任务
                 $row['paper_examined_status'] = 5;
                 $row['image_examined_status'] = 7;
-                $row['final_youdao_receive_time'] = $first_youdao_receive_time;
-                $row['final_processing_time'] = $data['youdaoProcessingTime'];
-                $row['final_processing_days'] = $first_processing_days;
+
             }
             $this->beginTransaction();
             $result = $this->edit($row, array('task_id' => $data['taskId']));
@@ -1268,14 +1269,14 @@ class VipYoudaoExamined extends Model
     //批量自动审核任务
     public function batchExamined()
     {
-        $autoAuditDays = config('AUTO_AUDIT_DAYS');
+        $autoAuditDays = config('app.AUTO_AUDIT_DAYS');
         $vipYoudaoWorkingWeekendDays =  new VipYoudaoWorkingWeekendDays;
         $startTime = $vipYoudaoWorkingWeekendDays->getStartTime($autoAuditDays);
         $vip_paper_examined_details = new VipPaperExaminedDetails;
         $condition = array(
             'paper_examined_status' => 2,
             'author_id' => array('eq'=>null),
-            'youdao_processing_time' => array('between' => array(date('Y-m-d',0), $startTime))
+            'youdao_processing_time' => array('between' => array(date('Y-m-d H:i:s',0), $startTime))
         );
         $join = array(
             array('type'=>'left', 'table'=>'vip_youdao_examined', 'on'=>array($this->table.'.task_id'=>$vip_paper_examined_details->getTable().'.task_id')),
@@ -1283,10 +1284,8 @@ class VipYoudaoExamined extends Model
         $recordCount = $vip_paper_examined_details->count($condition, $join);
         $limit = 1000;
         $max = ceil($recordCount / $limit);
-        $successArr = [];
-        $nowTime = date('Y-m-d H:i:s');
+        $successArr = $resultArr = [];
         if($recordCount > 0){
-            $this->beginTransaction();
             for($i=1; $i<=$max; $i++) {
                 $result = $vip_paper_examined_details->findAll($condition, ['id' => 'asc'], ['vip_paper_examined_details.id','vip_paper_examined_details.task_id','vip_paper_examined_details.youdao_receive_time','vip_paper_examined_details.youdao_processing_time','vip_paper_examined_details.processing_days','vip_youdao_examined.open_id','vip_youdao_examined.create_uid'], '', $join, $i, $limit);
                 $result = json_decode(json_encode($result), true);
@@ -1297,9 +1296,10 @@ class VipYoudaoExamined extends Model
                         $paperInfo = $paper->getPaperInfo($row['task_id']);
                         $result = $this->paperExamined($paperInfo, array('id'=>-1));
                         if(!$result){
-                            $this->rollback();
-                            throw new \Exception('试卷入库、更新任务审核状态失败');
+                            $resultArr[] = array('task_id'=>$row['task_id'],'is_success'=>0);
+                            continue;
                         }else{
+                            $resultArr[] = array('task_id'=>$row['task_id'],'is_success'=>1);
                             $successArr[] = array(
                                 'taskId' => $row['task_id'],
                                 'openId' => $row['open_id'],
@@ -1311,9 +1311,9 @@ class VipYoudaoExamined extends Model
                     }
                 }
             }
-            $this->commit();
+
         }
-        return $successArr;
+        return array('successTask'=>$successArr, 'resultArr'=>$resultArr);
     }
 
 
