@@ -373,7 +373,6 @@ class PaperController extends BaseController
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
-                $data['taskId'] = $data['task_id'];
                 //试卷审核不通过，退回有道
                 $result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
                 //$result = 1;
@@ -415,20 +414,21 @@ class PaperController extends BaseController
      */
     public function questionError(Request $request)
     {
+        $code = 100;
         try{
-            $code = $request->post('code',0);
-            $message = $request->post('message','');
             $data = $request->post('data','');
-            $status = 0;
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/questionError'.time().'.txt',json_encode($_POST));
-            if($code == 200){
-                $postData = json_decode($data,true);
+            if($data){
+                //$postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
-                $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($postData);
+                $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
+                if($status == true){
+                    $code = 200;
+                }
             }
-            return response()->json(['status'=>$status]);
+            return response()->json(['code'=>$code]);
         }catch (\Exception $e){
-            return response()->json(['errorMsg' => $e->getMessage()]);
+            return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
         }
     }
 
@@ -440,31 +440,32 @@ class PaperController extends BaseController
      */
     public function paperExamined(Request $request)
     {
+        $code = 100;
         try{
-            $code = $request->post('code',0);
-            $message = $request->post('message','');
             $data = $request->post('data','');
-            $status = 0;
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
-            if($code == 200){
-                $postData = json_decode($data,true);
+            if($data){
+                //$postData = json_decode($data,true);
                 //更新任务的有道审核结果，接收、处理时间
-                $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($postData);
-                if($postData['isPass'] == 0){
+                $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
+                if($data['isPass'] == 0){
                     //若未通过有道审核，则关闭任务，给用户发模板消息
-                    $paperInfo = $this->getPaperInfo($postData['taskId']);
+                    $paperInfo = $this->getPaperInfo($data['taskId']);
                     $this->sendWxTemplate(array(
-                        'taskId'=>$postData['taskId'],
+                        'taskId'=>$data['taskId'],
                         'openId'=>$paperInfo['open_id'],
                         'type'=>1,
                         'userId'=>$paperInfo['create_uid'],
                         'content'=>'抱歉，您提交的图片未通过有道审核，已被关闭。'
                     ));
                 }
+                if($status){
+                    $code = 200;
+                }
             }
-            return response()->json(['status'=>$status]);
+            return response()->json(['code'=>$code]);
         }catch (\Exception $e){
-            return response()->json(['errorMsg' => $e->getMessage()]);
+            return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
         }
     }
 
