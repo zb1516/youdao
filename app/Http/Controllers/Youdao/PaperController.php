@@ -226,9 +226,9 @@ class PaperController extends BaseController
                     $data[$key]['paper_name'] = $row['paper_name'];
                     $data[$key]['subject_name'] = isset($row['subject_name'])?$row['subject_name']:'';
                     $data[$key]['grade_name'] = isset($row['grade_name'])?$row['grade_name']:'';
-                    $data[$key]['province_name'] = $row['province'];
-                    $data[$key]['city_name'] = $row['city'];
-                    $data[$key]['area_name'] = $row['area'];
+                    $data[$key]['province_name'] = $row['province_name'];
+                    $data[$key]['city_name'] = $row['city_name'];
+                    $data[$key]['area_name'] = $row['area_name'];
                     $data[$key]['agency_id'] = $row['agency_id'];
                     $data[$key]['agency_name'] = isset($row['agency_name'])?$row['agency_name']:'';
                     $data[$key]['upload_time'] = $row['upload_time'];

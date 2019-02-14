@@ -85,4 +85,10 @@ class City extends Model
         return $list;
     }
 
+
+
+    public function getCitysByIds($cityIds){
+        $condition = array('id'=>array('in'=>$cityIds));
+        return $this->findAll($condition, $order=[], ['id', 'oneid', 'city']);
+    }
 }

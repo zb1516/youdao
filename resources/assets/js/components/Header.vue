@@ -6,7 +6,7 @@
                 <p class="picture">
                     <a href="#"><img src="../static/images/user_picture.jpg" alt="詹志明"></a>
                 </p>
-                <span class="name"><a href="#">{{user.user_realname}}<span class="icon"></span></a></span>
+                <span class="name">{{user.user_realname}}<span class="icon"></span></span>
             </div>
             <div class="nav">
                 <ul class="list">
