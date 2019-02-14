@@ -99,6 +99,7 @@ class YoudaoService
                 'sign' => $sign,
                 'type' => 1,
             );
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/complete'.time().'.txt',json_encode($postData));
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -135,6 +136,7 @@ class YoudaoService
                 'type' => 1,
             );
             $postData = array_merge($data, $postData);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/feedback'.time().'.txt',json_encode($postData));
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

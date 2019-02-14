@@ -332,7 +332,7 @@ class PaperController extends BaseController
 
             $request->session()->put($taskId,'');//清空session
             $data = array(
-                'task_id'=>$taskId,
+                'taskId'=>$taskId,
                 'list'=>$errorData
             );
             $request->session()->put($taskId,$data);
@@ -373,6 +373,7 @@ class PaperController extends BaseController
             }else{
                 $data['isPaperError'] = $isPaperError;
                 $data['paperErrorDesc'] = $paperErrorDesc;
+                $data['taskId'] = $data['task_id'];
                 //试卷审核不通过，退回有道
                 $result = $this->vipYoudaoExamined->paperError($data, $paperInfo, $userInfo);
                 //$result = 1;
@@ -419,6 +420,7 @@ class PaperController extends BaseController
             $message = $request->post('message','');
             $data = $request->post('data','');
             $status = 0;
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/questionError'.time().'.txt',json_encode($_POST));
             if($code == 200){
                 $postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
@@ -443,6 +445,7 @@ class PaperController extends BaseController
             $message = $request->post('message','');
             $data = $request->post('data','');
             $status = 0;
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
             if($code == 200){
                 $postData = json_decode($data,true);
                 //更新任务的有道审核结果，接收、处理时间

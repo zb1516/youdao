@@ -173,7 +173,7 @@
         <!-- 遮罩 -->
         <div class="dialog-balck-cover" @click="hidePaper()"></div>
         <!-- 试卷详情 -->
-        <div class="dialog-paper-detial-wrapper">
+        <div class="dialog-paper-detial-wrapper " id="paper-box">
           <h2 class="title" >{{paperInfo.paper_name}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
@@ -435,6 +435,7 @@
                     axios.get('youdao/paper/paperList',{params:searchArgs}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
+
                         } else {
                             that.$nextTick(function () {
                                 if(data.data.rows != ''){
@@ -478,12 +479,18 @@
                     axios.get('youdao/paper/paperInfo',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
+                            return false;
                         } else {
                             that.paperInfo = data.data;
+                            that.questions = [];
                             that.questions = data.data.youdao_info.questions;
+                            that.$nextTick(() => {
+                                MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                            });
+                            $('.dialog-paper-detial-wrapper,.dialog-balck-cover').show();
                         }
                     })
-                    $('.dialog-paper-detial-wrapper,.dialog-balck-cover').show();
+
                 },
                 hidePaper(){
                     $('.dialog-paper-detial-wrapper').hide();

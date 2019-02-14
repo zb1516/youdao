@@ -20,15 +20,17 @@
             <div class="pic-paper-box">
               <div class="pic-list-wrapper">
                   <ul class="pic-list cf" >
-                    <template v-for="(img, index) in paperInfo.images">
-                        <li class="pic-box js-pic-box" >
-                          <a :href="img.image_url" data-fancybox-group="gallery">
-                              <p class="image">
-                                <img :src='img.image_url' alt=""/>
-                              </p>
-                              <span class="tab-index">{{index+1}}</span>
-                          </a>
-                        </li>
+                    <template v-if="paperInfo.images">
+                        <template v-for="(img, index) in paperInfo.images">
+                            <li class="pic-box js-pic-box" >
+                              <a :href="img.image_url" data-fancybox-group="gallery">
+                                  <p class="image">
+                                    <img :src='img.image_url' alt=""/>
+                                  </p>
+                                  <span class="tab-index">{{index+1}}</span>
+                              </a>
+                            </li>
+                        </template>
                     </template>
                   </ul>
               </div>
@@ -50,27 +52,27 @@
                       <div class="q-operational">
                         <div class="q-o-con">
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'content_'+(index+1)+'_题干不完整'"></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干不完整'"></span>
                             <span>题干不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'answer_'+(index+1)+'_答案不完整'" ></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案不完整'" ></span>
                             <span>答案不完整</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" :title="'analysis_'+(index+1)+'_解析不完整'" ></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析不完整'" ></span>
                             <span>解析不完整</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'content_'+(index+1)+'_题干错误'" ></span>
+                            <span class="checkbox js-checkbox" :title="'content_'+question.quesNumber+'_题干错误'" ></span>
                             <span>题干错误</span>
                           </span>
                           <span class="r-option">
-                            <span class="checkbox js-checkbox" :title="'answer_'+(index+1)+'_答案错误'"></span>
+                            <span class="checkbox js-checkbox" :title="'answer_'+question.quesNumber+'_答案错误'"></span>
                             <span>答案错误</span>
                           </span>
                           <span class="r-option mr-n">
-                            <span class="checkbox js-checkbox" :title="'analysis_'+(index+1)+'_解析错误'"></span>
+                            <span class="checkbox js-checkbox" :title="'analysis_'+question.quesNumber+'_解析错误'"></span>
                             <span>解析错误</span>
                           </span>
                         </div>
