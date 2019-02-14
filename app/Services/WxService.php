@@ -137,7 +137,7 @@ class WxService
         if(!empty($accessToken)){
             $accessTokenJson=json_decode($accessToken);
             if($accessTokenJson->expire_time <= time()){
-                //获取access_token
+                //重新获取access_token
                 $url ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appId."&secret=".$secretKey;
                 $accessTokenJson=httpGet($url);
                 if(isset($accessTokenJson->errcode) && $accessTokenJson->errorcode != 0)
@@ -149,7 +149,7 @@ class WxService
                     'access_token'=>$accessTokenJson->access_token,
                     'expire_time'=>time()+$accessTokenJson->expires_in
                 ];
-                Redis::set($key,json_encode($data));        //存入redis
+                Redis::setex($key,7200,json_encode($data));        //存入redis并设置时间为7200秒
             }
         }else{
             //获取access_token
@@ -164,7 +164,7 @@ class WxService
                 'access_token'=>$accessTokenJson->access_token,
                 'expire_time'=>time()+$accessTokenJson->expires_in
             ];
-            Redis::set($key,json_encode($data));        //存入redis
+            Redis::setex($key,7200,json_encode($data));        //存入redis并设置时间为7200秒
         }
         return $accessTokenJson->access_token;
     }
