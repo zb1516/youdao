@@ -970,13 +970,12 @@ class VipYoudaoExamined extends Model
             }
 
             //审核通过反馈给有道
-            /*
-            $result = $common->doYoudaoComplete(config('YOUDAO_COMPLETE_URL'), $data['task_id']);
+            $result = $common->doYoudaoComplete(config('app.YOUDAO_COMPLETE_URL'), $data['task_id']);
             $result = json_decode($result, true);
             if($result['code'] !== 200){
                 $this->rollback();
-                throw new \Exception('审核通过反馈失败:'.$result['message']);
-            }*/
+                throw new \Exception('有道错误：审核通过反馈有道失败，code：'.$result['code'].','.$result['message']);
+            }
 
 
             //$common->uploadPaperFile($fileArr);
@@ -1195,11 +1194,11 @@ class VipYoudaoExamined extends Model
 
         //审核不通过反馈给有道
         $common = new CommonController;
-        $result = $common->doYoudaoFeedback(config('YOUDAO_FEEDBACK_URL'), $data);
+        $result = $common->doYoudaoFeedback(config('app.YOUDAO_FEEDBACK_URL'), $data);
         $result = json_decode($result, true);
         if($result['code'] !== 200){
             $this->rollback();
-            throw new \Exception('审核不通过反馈有道失败:'.$result['message']);
+            throw new \Exception('有道错误：审核不通过反馈有道失败！code:'.$result['code'].','.$result['message']);
         }
 
         //插入新的有道处理记录

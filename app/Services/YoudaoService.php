@@ -106,7 +106,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            return response()->json($result);
+            return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
@@ -142,7 +142,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            return response()->json($result);
+            return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }

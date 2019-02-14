@@ -92,7 +92,7 @@ class PaperController extends BaseController
                     $paperInfo['youdao_info']['questions'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
-                    return response()->json(['errorMsg' => '有道错误：获取任务信息失败！code:'.$result['code'].':'.$result['message']]);
+                    return response()->json(['errorMsg' => '有道错误：获取任务信息失败！code:'.$result['code'].','.$result['message']]);
                 }
             }else{
                 return response()->json(['errorMsg' => '任务id不能为空']);
