@@ -192,6 +192,7 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
 //            if($resultYoudao['code'] != 200){
 //                throw new \Exception('任务投递失败');
 //            }
@@ -291,6 +292,7 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
+            $resultYoudao = json_decode($resultYoudao,true);
 //            if($resultYoudao['code'] != 200){
 //                throw new \Exception('任务投递失败');
 //            }
