@@ -165,7 +165,7 @@ class VipYoudaoExamined extends Model
         if(!empty($searchArgs['sortField'])){
             $order = [$searchArgs['sortField']=>$searchArgs['sortType']];
         }else{
-            $order = ['upload_time'=>'asc'];
+            $order = ['paper_examined_status'=>'asc','upload_time'=>'asc'];
         }
         $list = $this->findAll($condition, $order, ['task_id','paper_name','agency_id','subject_id','grade','upload_time','image_processing_days', 'first_processing_time', 'final_processing_days','final_processing_time','paper_examined_time','paper_examined_status','image_examined_auditor_id','paper_examined_auditor_id'], '', [], $currentPage, $pageSize);
         if($list['data']){

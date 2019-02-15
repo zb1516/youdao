@@ -273,6 +273,7 @@ return [
         '2' => '待审核',
         '3' => '已审核',
         '4' => '已退回',
+        '5' => '已关闭',
     ],
     'OFFICE_DOCUMENT_BUCKET'=>'atf-document',
     'GRADE_NAME'=> [
