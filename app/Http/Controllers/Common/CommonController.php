@@ -448,13 +448,15 @@ class CommonController extends BaseController
             );*/
             $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask;
             $taskList = $vip_youdao_paper_file_upload_task->findAll(array('is_upload'=>0),['create_time'=>'asc']);
+            $resultArr = [];
             if($taskList){
                 $question = new Question;
                 $questionOption = new VipQuestionOption;
-                $question->beginTransaction();
+
                 foreach ($taskList as $key=>$task){
                     if($task['file_json']){
                         $data = json_decode($task['file_json'], true);
+                        $question->beginTransaction();
                         //上传试题文档
                         if($data['questions']){
                             foreach ($data['questions'] as $key=>$q){
@@ -467,7 +469,9 @@ class CommonController extends BaseController
                                 $result = $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
                                 if(!$result){
                                     $question->rollback();
-                                    throw new \Exception('试题目录更新失败');
+                                    $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>0,'error_msg'=>'试题目录更新失败');
+                                    //throw new \Exception('试题目录更新失败');
+                                    continue;
                                 }
 
                                 //上传选项文档
@@ -481,7 +485,9 @@ class CommonController extends BaseController
                                         $result = $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
                                         if(!$result){
                                             $question->rollback();
-                                            throw new \Exception('试题选项目录更新失败');
+                                            $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>0,'error_msg'=>'试题选项目录更新失败');
+                                            //throw new \Exception('试题选项目录更新失败');
+                                            continue;
                                         }
                                     }
                                 }
@@ -506,18 +512,25 @@ class CommonController extends BaseController
                         $result = $vip_youdao_paper_file_upload_task->edit(array('is_upload'=>1,'upload_time'=>$now),array('task_id'=>$task['task_id']));
                         if(!$result){
                             $question->rollback();
-                            throw new \Exception('试题解析文件上传失败');
+                            $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>0,'error_msg'=>'试题解析文件上传失败');
+                            //throw new \Exception('试题解析文件上传失败');
+                            continue;
                         }
 
                         $question->commit();
+                        $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>1,'error_msg'=>'');
                     }
                 }
             }
-
+            $batchLogDir = $_SERVER['DOCUMENT_ROOT'].'/batchLog/';
+            if(is_dir($batchLogDir)){
+                @mkdir($batchLogDir, 0777);
+            }
+            file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
             return response()->json(['status' => 1]);
 
         } catch (\Exception $e) {
-            return response()->json(['errorMsg' => $e->getMessage()]);
+            return response()->json(['status' => 0]);
         }
     }
     //获取所有省份

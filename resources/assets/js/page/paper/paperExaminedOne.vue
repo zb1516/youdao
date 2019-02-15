@@ -46,7 +46,7 @@
                           </template>
                       </template>
                       <dd class="analyze" v-if="question.quesLatextAnswer || question.quesLatextAnalysis">
-                         <p class="a-answer" v-if="question.quesLatextAnswer ">答案：<span v-html="question.quesLatextAnswer.content"></span></p>
+                         <p class="a-answer" v-if="question.quesLatextAnswer">答案：<span v-html="question.quesLatextAnswer.content"></span></p>
                          <p class="a-info" v-if="question.quesLatextAnalysis ">解析：<span v-html="question.quesLatextAnalysis.content"></span></p>
                       </dd>
                       <div class="q-operational">

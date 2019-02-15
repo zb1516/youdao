@@ -329,13 +329,13 @@ class PaperController extends BaseController
                     }
                 }
             }
-
-            $request->session()->put($taskId,'');//清空session
+            $errorData = array_values($errorData);
+            $request->session()->put($taskId, '');//清空session
             $data = array(
                 'taskId'=>$taskId,
                 'list'=>$errorData
             );
-            $request->session()->put($taskId,$data);
+            $request->session()->put($taskId, $data);
             $status = 0;
             if($request->session()->has($taskId)){
                 $status = 1;
@@ -416,8 +416,8 @@ class PaperController extends BaseController
     {
         $code = 100;
         try{
-            $data = $request->post('data','');
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/questionError'.time().'.txt',json_encode($_POST));
+            $data = $request->post();
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/questionError'.time().'.txt',json_encode($request->post()));
             if($data){
                 //$postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
@@ -441,11 +441,11 @@ class PaperController extends BaseController
     public function paperExamined(Request $request)
     {
         $code = 100;
-        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($request->post()));
+        $errorMsg = '';
         try{
             $data = $request->post();
-            if($data['taskId']){
-                //$postData = json_decode($data,true);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($request->post()));
+            if(isset($data['taskId']) && isset($data['isPass']) && isset($data['youdaoReceiveTime']) ){
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
                 if($data['isPass'] == 0){
@@ -462,8 +462,10 @@ class PaperController extends BaseController
                 if($status){
                     $code = 200;
                 }
+            }else{
+                $errorMsg = '参数不完整';
             }
-            return response()->json(['code'=>$code]);
+            return response()->json(['code'=>$code, 'errorMsg' => $errorMsg]);
         }catch (\Exception $e){
             return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
         }
@@ -511,7 +513,9 @@ class PaperController extends BaseController
                     ));
                 }
             }
-
+            if(is_dir($batchLogDir)){
+                @mkdir($batchLogDir, 0777);
+            }
             file_put_contents($batchLogDir . '/batchExamined-'. date('YmdHis') . '.txt', json_encode($resultTask['resultArr']));
             return response()->json(['allTask'=>$resultTask['resultArr']]);
         }catch (\Exception $e){

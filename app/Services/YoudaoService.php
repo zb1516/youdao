@@ -104,7 +104,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
             return $result;
@@ -135,13 +135,17 @@ class YoudaoService
                 'sign' => $sign,
                 'type' => 1,
             );
+
+            if($data['list']){
+                $data['list'] = json_encode($data['list'],JSON_UNESCAPED_UNICODE);
+            }
             $postData = array_merge($data, $postData);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/feedback'.time().'.txt',json_encode($postData));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/feedback'.time().'.txt',json_encode($postData,JSON_UNESCAPED_UNICODE));
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
             return $result;
