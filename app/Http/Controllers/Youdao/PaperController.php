@@ -441,9 +441,10 @@ class PaperController extends BaseController
     public function paperExamined(Request $request)
     {
         $code = 100;
-        try{
+        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
+        return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
+        /*try{
             $data = $request->post('data','');
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
             if($data){
                 //$postData = json_decode($data,true);
                 //更新任务的有道审核结果，接收、处理时间
@@ -466,7 +467,7 @@ class PaperController extends BaseController
             return response()->json(['code'=>$code]);
         }catch (\Exception $e){
             return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
-        }
+        }*/
     }
 
 
