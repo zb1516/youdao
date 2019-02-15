@@ -438,13 +438,13 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExamined()
+    public function paperExamined(Request $request)
     {
         $code = 100;
-        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
+        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($request->post()));
         try{
-            $data = $_REQUEST;
-            if($data){
+            $data = $request->post();
+            if($data['taskId']){
                 //$postData = json_decode($data,true);
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
