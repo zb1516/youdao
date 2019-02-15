@@ -1086,10 +1086,12 @@ class VipYoudaoExamined extends Model
             $this->beginTransaction();
             $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
             $newData = array(
-                'youdao_processing_time' => $data['youdaoProcessingTime'],
-                'processing_days' => $processing_days,
                 'youdao_status'=>$data['isPass']
             );
+            if(data['isPass'] == 1){
+                $newData['youdao_processing_time'] = $data['youdaoProcessingTime'];
+                $newData['processing_days'] = $processing_days;
+            }
             $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
             if($data['isPass'] == 1){
                 if(count($data['list']) > 0){
@@ -1140,8 +1142,6 @@ class VipYoudaoExamined extends Model
                     'image_examined_status'=>7,
                     'paper_examined_status'=>5,
                     'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
-                    'final_processing_time'=>$data['youdaoProcessingTime'],
-                    'final_processing_days'=>$processing_days,
                 );
             }
 
