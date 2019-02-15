@@ -438,11 +438,11 @@ class PaperController extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function paperExamined(Request $request)
+    public function paperExamined()
     {
         $code = 100;
         file_put_contents($_SERVER['DOCUMENT_ROOT'].'/paperExamined'.time().'.txt',json_encode($_POST));
-        return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
+        return $code;
         /*try{
             $data = $request->post('data','');
             if($data){
