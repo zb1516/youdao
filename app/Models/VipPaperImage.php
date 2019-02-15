@@ -192,9 +192,10 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
-            if($resultYoudao['code'] != 200){
-                throw new \Exception('任务投递失败');
-            }
+            $resultYoudao = json_decode($resultYoudao,true);
+//            if($resultYoudao['code'] != 200){
+//                throw new \Exception('任务投递失败');
+//            }
 //            $resultYoudao = json_decode($resultYoudao,true);
 //            $dataEdit = [
 //                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
@@ -291,9 +292,10 @@ class VipPaperImage extends Model
             }
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
-            if($resultYoudao['code'] != 200){
-                throw new \Exception('任务投递失败');
-            }
+            $resultYoudao = json_decode($resultYoudao,true);
+//            if($resultYoudao['code'] != 200){
+//                throw new \Exception('任务投递失败');
+//            }
 //            $resultYoudao = json_decode($resultYoudao,true);
 //            $dataEdit = [
 //                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
