@@ -237,11 +237,11 @@
             that.agencyList();
             that.statusList();
 
-            var nowdate = new Date();
+            /*var nowdate = new Date();
             that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
             nowdate.setMonth(nowdate.getMonth()-1);
             that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
-            $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
+            $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);*/
 
             that.doSearch();
             common.init();
