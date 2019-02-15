@@ -92,10 +92,10 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken','web']], func
 });
 
 //不需要登录验证的路由
-$router->group(['prefix' => 'youdao'], function () use ($router) {
-    Route::post('paper/paperExamined', 'Youdao\PaperController@paperExamined');//有道第一次处理成功回调地址
-    Route::post('paper/questionError', 'Youdao\PaperController@questionError');//有道处理问题试题成功后回调地址
-    Route::any('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');//计划任务批处理通过审核
+Route::group(['prefix' => 'youdao'], function($router) {
+    $router->post('paper/paperExamined', 'Youdao\PaperController@paperExamined');//有道第一次处理成功回调地址
+    $router->post('paper/questionError', 'Youdao\PaperController@questionError');//有道处理问题试题成功后回调地址
+    $router->any('paper/batchPaperExamined', 'Youdao\PaperController@batchPaperExamined');//计划任务批处理通过审核
 });
 
 
