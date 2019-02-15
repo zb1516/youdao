@@ -1417,13 +1417,13 @@ class VipYoudaoExamined extends Model
                     'process_name'=>'第'.($key+1).'次有道接收',
                     'process_time'=>$detail['youdao_receive_time'],
                     'process_user'=>'有道',
-                    'status'=>''
+                    'status'=>$detail['youdao_status']
                 );
                 $processList[] = array(
                     'process_name'=>'第'.($key+1).'次有道处理',
                     'process_time'=>$detail['youdao_processing_time'],
                     'process_user'=>'有道',
-                    'status'=>$detail['youdao_status']
+                    'status'=>''
 
                 );
                 $processList[] = array(
