@@ -1057,7 +1057,7 @@ class VipYoudaoExamined extends Model
             }
             if(!$result){
                 $this->rollback();
-                throw new \Exception('有道第一次处理成功回调处理失败2');
+                throw new \Exception('有道第一次处理成功回调处理信息更新失败');
             }
 
             $this->commit();

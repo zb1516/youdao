@@ -6,7 +6,7 @@
     <div class="main">
       <div class="pic-review1 review2 paper-review1">
         <div class="nav-wrapper">
-            <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回</a></router-link>
+            <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_self"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
@@ -124,6 +124,7 @@
                 var that = this;
                 that.taskId = this.$route.params.taskId;
                 common.init();
+                $(".review2-btn").hide();
                 that.doGetPaperInfo();
                 that.doSelected();
             },
@@ -146,6 +147,7 @@
                         if(data.data){
                             if (data.data.errorMsg) {
                                 that.$message.error(data.data.errorMsg);
+                                $(".review2-btn").hide();
                                 return false;
                             } else {
                                 that.paperInfo =  data.data;
@@ -154,6 +156,7 @@
                                 that.$nextTick(() => {
                                     MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
                                 });
+                                $(".review2-btn").show();
                             }
                         }
                         that.$nextTick(function() {

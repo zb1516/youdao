@@ -2,7 +2,7 @@
     <div class="main">
       <div class="pic-review1 review4">
         <div class="nav-wrapper">
-          <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_blank"><a class="back-btn">返回</a></router-link>
+          <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" target="_self"><a class="back-btn">返回</a></router-link>
           <span class="nav-con">
             <span>操作说明：</span>
             <span class="tab select"><span class="circle">1</span><span class="tab-text">标识题目问题</span></span>
