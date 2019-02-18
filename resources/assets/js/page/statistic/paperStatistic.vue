@@ -266,10 +266,10 @@
                 that.agencyList();
                 that.authorList();
 
-                var nowdate = new Date();
+                /*var nowdate = new Date();
                 that.endDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + ('0' + nowdate.getDate()).slice(-2);
                 that.beginDate = nowdate.getFullYear() + '/' + ('0' + (nowdate.getMonth() + 1)).slice(-2) + '/' + '01';
-                $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);
+                $('.input-date-range').val(that.beginDate + ' - ' + that.endDate);*/
 
                 that.doSearch();
                 common.init();

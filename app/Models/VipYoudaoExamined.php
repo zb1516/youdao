@@ -1086,10 +1086,12 @@ class VipYoudaoExamined extends Model
             $this->beginTransaction();
             $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
             $newData = array(
-                'youdao_processing_time' => $data['youdaoProcessingTime'],
-                'processing_days' => $processing_days,
                 'youdao_status'=>$data['isPass']
             );
+            if(data['isPass'] == 1){
+                $newData['youdao_processing_time'] = $data['youdaoProcessingTime'];
+                $newData['processing_days'] = $processing_days;
+            }
             $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
             if($data['isPass'] == 1){
                 if(count($data['list']) > 0){
@@ -1140,8 +1142,6 @@ class VipYoudaoExamined extends Model
                     'image_examined_status'=>7,
                     'paper_examined_status'=>5,
                     'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
-                    'final_processing_time'=>$data['youdaoProcessingTime'],
-                    'final_processing_days'=>$processing_days,
                 );
             }
 
@@ -1417,13 +1417,13 @@ class VipYoudaoExamined extends Model
                     'process_name'=>'第'.($key+1).'次有道接收',
                     'process_time'=>$detail['youdao_receive_time'],
                     'process_user'=>'有道',
-                    'status'=>''
+                    'status'=>$detail['youdao_status']
                 );
                 $processList[] = array(
                     'process_name'=>'第'.($key+1).'次有道处理',
                     'process_time'=>$detail['youdao_processing_time'],
                     'process_user'=>'有道',
-                    'status'=>$detail['youdao_status']
+                    'status'=>''
 
                 );
                 $processList[] = array(
