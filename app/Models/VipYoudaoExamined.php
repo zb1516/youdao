@@ -1082,77 +1082,143 @@ class VipYoudaoExamined extends Model
             $vip_youdao_paper = new VipYoudaoPaper;
             $vip_youdao_question =  new VipYoudaoQuestion;
             $vip_youdao_question_details =  new VipYoudaoQuestionDetails;
-            $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
-            $this->beginTransaction();
-            $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
-            $newData = array(
-                'youdao_status'=>$data['isPass']
-            );
-            if(data['isPass'] == 1){
-                $newData['youdao_processing_time'] = $data['youdaoProcessingTime'];
-                $newData['processing_days'] = $processing_days;
-            }
-            $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
-            if($data['isPass'] == 1){
-                if(count($data['list']) > 0){
-                    foreach ($data['list'] as $key => $q){
-                        //更新vip_youdao_question表
-                        $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'], 'number'=>$q['number']), ['id'=>'desc']);
-                        $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'], $data['youdaoProcessingTime']);
-                        $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'number'=>$q['number']));
-                        $newData = array(
-                            'youdao_processing_time' => $data['youdaoProcessingTime'],
-                            'processing_days' => $processing_days,
-                            'many_times' => $count
-                        );
-                        $result = $vip_youdao_question->edit($newData, array('id'=>$lastYoudaoQuestion['id']));
-                        if(!$result){
-                            $this->rollback();
-                            throw new \Exception('更新试题有道处理时间失败');
-                        }
-
-                        //更新vip_youdao_question_details表，一道试题只有一条记录
-                        $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'number'=>$q['number']));
-                        $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
-                        $newData = array(
-                            'youdao_processing_time' => $data['youdaoProcessingTime'],
-                            'processing_days' => $processing_days
-                        );
-                        $result = $vip_youdao_question_details->edit($newData, array('id'=>$lastYoudaoQuestionDetail['id']));
-                        if(!$result){
-                            $this->rollback();
-                            throw new \Exception('更新试题有道处理时间失败');
-                        }
-                    }
-
-                }else{
-                    $this->rollback();
-                    throw new \Exception('有道处理问题试题成功后返回的试题不能为空');
+            if(!empty($data['youdaoProcessingTime'])){
+                //有道编辑处理完成
+                $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
+                $this->beginTransaction();
+                $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
+                $newData = array(
+                    'youdao_status'=>$data['isPass']
+                );
+                if($data['isPass'] == 1){
+                    $newData['youdao_processing_time'] = $data['youdaoProcessingTime'];
+                    $newData['processing_days'] = $processing_days;
                 }
-                //若有道审核通过，则激活任务待审状态
-                $newData = array(
-                    'paper_examined_status'=>2,
-                    'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
-                    'final_processing_time'=>$data['youdaoProcessingTime'],
-                    'final_processing_days'=>$processing_days,
-                );
-            }else{
-                //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
-                $newData = array(
-                    'image_examined_status'=>7,
-                    'paper_examined_status'=>5,
-                    'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
-                );
-            }
+                $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
+                if($data['isPass'] == 1){
+                    $data['list'] = json_decode($data['list'], true);
+                    if(count($data['list']) > 0){
+                        foreach ($data['list'] as $key => $q){
+                            //更新vip_youdao_question表
+                            $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']), ['id'=>'desc']);
+                            $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'], $data['youdaoProcessingTime']);
+                            $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
+                            $newData = array(
+                                'youdao_processing_time' => $data['youdaoProcessingTime'],
+                                'processing_days' => $processing_days,
+                                'many_times' => $count
+                            );
+                            $result = $vip_youdao_question->edit($newData, array('id'=>$lastYoudaoQuestion['id']));
+                            if(!$result){
+                                $this->rollback();
+                                throw new \Exception('更新试题有道处理时间失败');
+                            }
 
-            //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
-            $result = $this->edit($newData, array('task_id'=>$data['taskId']));
-            if(!$result){
-                $this->rollback();
-                throw new \Exception('试卷状态更新失败');
+                            //更新vip_youdao_question_details表，一道试题只有一条记录
+                            $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
+                            $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
+                            $newData = array(
+                                'youdao_processing_time' => $data['youdaoProcessingTime'],
+                                'processing_days' => $processing_days
+                            );
+                            $result = $vip_youdao_question_details->edit($newData, array('id'=>$lastYoudaoQuestionDetail['id']));
+                            if(!$result){
+                                $this->rollback();
+                                throw new \Exception('更新试题有道处理时间失败');
+                            }
+                        }
+
+                    }else{
+                        $this->rollback();
+                        throw new \Exception('有道处理问题试题成功后返回的试题不能为空');
+                    }
+                    //若有道审核通过，则激活任务待审状态
+                    $newData = array(
+                        'paper_examined_status'=>2,
+                        'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                        'final_processing_time'=>$data['youdaoProcessingTime'],
+                        'final_processing_days'=>$processing_days,
+                    );
+                }else{
+                    //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
+                    $newData = array(
+                        'image_examined_status'=>7,
+                        'paper_examined_status'=>5,
+                        'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                    );
+                }
+
+                //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
+                $result = $this->edit($newData, array('task_id'=>$data['taskId']));
+                if(!$result){
+                    $this->rollback();
+                    throw new \Exception('试卷状态更新失败');
+                }
+                $this->commit();
+                return true;
+            }else{
+                //有道审核完成（未开始处理）
+                $vip_paper_examined_details = new VipPaperExaminedDetails;
+                $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
+                $this->beginTransaction();
+                $newData = array(
+                    'youdao_status'=>$data['isPass'],
+                    'youdao_receive_time'=> $data['youdaoReceiveTime']
+                );
+                $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
+                if($data['isPass'] == 1) {
+                    if (count($data['list']) > 0) {
+                        foreach ($data['list'] as $key => $q) {
+                            //更新vip_youdao_question表
+                            $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']), ['id'=>'desc']);
+                            $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
+                            $newData = array(
+                                'youdao_receive_time' => $data['youdaoReceiveTime'],
+                                'many_times' => $count
+                            );
+                            $result = $vip_youdao_question->edit($newData, array('id'=>$lastYoudaoQuestion['id']));
+                            if(!$result){
+                                $this->rollback();
+                                throw new \Exception('更新试题有道处理时间失败');
+                            }
+
+
+                            //更新vip_youdao_question_details表，一道试题只有一条记录
+                            $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
+                            $newData = array(
+                                'youdao_receive_time' => $data['youdaoReceiveTime'],
+                            );
+                            $result = $vip_youdao_question_details->edit($newData, array('id'=>$lastYoudaoQuestionDetail['id']));
+                            if(!$result){
+                                $this->rollback();
+                                throw new \Exception('更新试题有道处理时间失败');
+                            }
+                        }
+                    }else{
+                        $this->rollback();
+                        throw new \Exception('有道审核问题试题成功后返回的试题不能为空');
+                    }
+                    //若有道审核通过，则激活任务待审状态
+                    $newData = array(
+                        'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
+                    );
+                }else{
+                    //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
+                    $newData = array(
+                        'image_examined_status'=>7,
+                        'paper_examined_status'=>5,
+                        'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
+                    );
+                }
+                //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
+                $result = $this->edit($newData, array('task_id'=>$data['taskId']));
+                if(!$result){
+                    $this->rollback();
+                    throw new \Exception('试卷状态更新失败');
+                }
+                $this->commit();
+                return true;
             }
-            $this->commit();
-            return true;
         }
         return false;
     }
@@ -1208,7 +1274,7 @@ class VipYoudaoExamined extends Model
         //插入新的有道处理记录
         $newPaperExaminedDetail = array(
             'task_id' => $data['taskId'],
-            'youdao_receive_time' => $nowTime,
+            //'youdao_receive_time' => $nowTime,
         );
         $newDetailId = $vip_youdao_examined_details->add($newPaperExaminedDetail);
         if(!$newDetailId){
@@ -1237,8 +1303,8 @@ class VipYoudaoExamined extends Model
                 $newErrorQuestion = array(
                         'task_id' => $data['taskId'],
                         'quesNumber' => $error['number'],
-                        'youdao_receive_time' => $nowTime,
-                        'many_times' => $return_times + 1,
+                        //'youdao_receive_time' => $nowTime,
+                        //'many_times' => $return_times + 1,
                         'return_reason_content1' => $error['content'],
                         'return_reason_answer1' => $error['answer'],
                         'return_reason_analysis1' => $error['analysis']
@@ -1253,7 +1319,7 @@ class VipYoudaoExamined extends Model
                 $newQuestionDetail = array(
                     'task_id' => $data['taskId'],
                     'quesNumber' => $error['number'],
-                    'youdao_receive_time' => $nowTime,
+                    //'youdao_receive_time' => $nowTime,
                     'return_times' => $return_times + 1,
                     'money' => 0,
                 );

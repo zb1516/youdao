@@ -99,7 +99,7 @@ class YoudaoService
                 'sign' => $sign,
                 'type' => 1,
             );
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/complete'.time().'.txt',json_encode($postData));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/complete.txt',json_encode($postData).PHP_EOL,FILE_APPEND);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -140,7 +140,7 @@ class YoudaoService
                 $data['list'] = json_encode($data['list'],JSON_UNESCAPED_UNICODE);
             }
             $postData = array_merge($data, $postData);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback'.time().'.txt',json_encode($postData,JSON_UNESCAPED_UNICODE));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback.txt',json_encode($postData,JSON_UNESCAPED_UNICODE).PHP_EOL,FILE_APPEND);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
