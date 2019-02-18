@@ -360,7 +360,7 @@ class PaperController extends BaseController
             if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
-                return response()->json(['status' => $result, 'type'=>1]);
+                //return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -386,8 +386,7 @@ class PaperController extends BaseController
                 if(!empty($data['list']) && $isPaperError == 1){
                     $error = 3;
                 }
-
-                return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
+                //return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
@@ -417,7 +416,7 @@ class PaperController extends BaseController
         $code = 100;
         try{
             $data = $request->post();
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/questionError.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/questionError'.date('Ymd').'.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
             if($data){
                 //$postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
@@ -444,7 +443,7 @@ class PaperController extends BaseController
         $errorMsg = '';
         try{
             $data = $request->post();
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/paperExamined.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/paperExamined'.date('Ymd').'.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
             if(isset($data['taskId']) && isset($data['isPass']) && isset($data['youdaoReceiveTime']) ){
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
@@ -516,10 +515,10 @@ class PaperController extends BaseController
             if(is_dir($batchLogDir)){
                 @mkdir($batchLogDir, 0777);
             }
-            file_put_contents($batchLogDir . '/batchExamined-'. date('YmdHis') . '.txt', json_encode($resultTask['resultArr']));
+            file_put_contents($batchLogDir . '/batchExamined-'. date('Ymd') . '.txt', json_encode($resultTask['resultArr']).PHP_EOL,FILE_APPEND);
             return response()->json(['allTask'=>$resultTask['resultArr']]);
         }catch (\Exception $e){
-            file_put_contents($batchLogDir . '/batchExamined-'.date('YmdHis').'.txt', $e->getMessage());
+            file_put_contents($batchLogDir . '/batchExamined-'.date('Ymd').'.txt', $e->getMessage().PHP_EOL,FILE_APPEND);
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
