@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WxProgram;
 
 use App\Models\Common;
+use App\Models\VipMessageRemind;
+use App\Models\VipMessageViewLog;
 use App\Models\VipPaperImage;
 use App\Models\VipYoudaoAgency;
 use App\Models\VipYoudaoExamined;
@@ -293,6 +295,8 @@ class paperController extends Controller
                 if ($result === false) {
                     throw new \Exception('上传试卷失败');
                 }
+                //批量设置用户已读消息
+                self::setMessageViewLogBatch($searchArgs['token'],$searchArgs['taskId'],$openId);
                 $vipPaperImageModel->commit();
                 return response()->json(['status' => 200,'data'=>[], 'errorMsg' => '上传试卷成功']);
             }else{
@@ -591,6 +595,46 @@ class paperController extends Controller
             return response()->json(['status'=>200,'data'=>['rows'=>$list]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
+
+    /**
+     * 设置用户未读消息为已读消息
+     * @param $token
+     * @param $openId
+     * @throws \Exception
+     */
+    protected static function setMessageViewLogBatch($token='',$taskId=0,$openId=0)
+    {
+        try{
+            //获取用户信息
+            $userInfo=UserService::getUserInfo($token);
+            //查询所有用户已读消息记录
+            $vipMessageViewLogModel=new VipMessageViewLog();
+            $messageViewList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId']]);
+            $messageReadIds=[];
+            foreach($messageViewList as $key => $val)
+            {
+                $messageReadIds[]=$val['message_id'];
+            }
+            //如果上传成功，更新未读消息为已读消息
+            $vipMessageRemindModel=new VipMessageRemind();
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'task_id'=>$taskId,'id'=>['not in'=>$messageReadIds]]);
+            foreach($list as $key => $val)
+            {
+                $result=$vipMessageViewLogModel->add([
+                    'uid'=>$userInfo['userId'],
+                    'open_id'=>$openId,
+                    'message_id'=>$val['id'],
+                    'addtime'=>time()
+                ]);
+                if($result === false)
+                {
+                    throw new \Exception('设置已读消息失败');
+                }
+            }
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
         }
     }
 }

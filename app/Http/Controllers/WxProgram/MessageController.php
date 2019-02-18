@@ -25,14 +25,6 @@ class MessageController extends Controller
             $searchArgs['pageSize']=$request->input('pageSize');
             //获取用户信息
             $userInfo=UserService::getUserInfo($searchArgs['token']);
-            //查询退回审核记录
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $examinedList=$vipYoudaoExaminedModel->findAll(['create_uid'=>$userInfo['userId'],'image_examined_status'=>3],['id'=>'desc'],['task_id']);
-            $taskIds=[];
-            foreach($examinedList as $key => $val)
-            {
-                $taskIds[]=$val['task_id'];
-            }
             //查询所有用户已读消息记录
             $vipMessageViewLogModel=new VipMessageViewLog();
             $messageViewList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId']]);
@@ -43,7 +35,7 @@ class MessageController extends Controller
             }
             //获取用户未读消息记录
             $vipMessageRemindModel=new VipMessageRemind();
-            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'task_id'=>['in'=>$taskIds],'id'=>['not in'=>$messageReadIds]],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
+            $list=$vipMessageRemindModel->findAll(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageReadIds]],['addtime'=>'desc'],"*","",[],$searchArgs['page'],$searchArgs['pageSize']);
             foreach($list['data'] as $key => $val)
             {
                 if(in_array($val['id'],$messageReadIds))
@@ -79,14 +71,6 @@ class MessageController extends Controller
             $searchArgs['token']=$request->input('token');         //小程序登陆以后生成的唯一标识
             //获取用户id
             $userInfo=UserService::getUserInfo($searchArgs['token']);
-            //查询已经重新上传的记录
-            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $examinedList=$vipYoudaoExaminedModel->findAll(['create_uid'=>$userInfo['userId'],'image_examined_status'=>3],['id'=>'desc'],['task_id']);
-            $taskIds=[];
-            foreach($examinedList as $key => $val)
-            {
-                $taskIds[]=$val['task_id'];
-            }
             //查询所有用户已读消息记录
             $vipMessageViewLogModel=new VipMessageViewLog();
             $messageViewList=$vipMessageViewLogModel->findAll(['uid'=>$userInfo['userId']]);
@@ -97,7 +81,8 @@ class MessageController extends Controller
             }
             //查询当前用户未读消息
             $vipMessageRemindModel=new VipMessageRemind();
-            $messageCount=$vipMessageRemindModel->count(['uid'=>$userInfo['userId'],'task_id'=>['in'=>$taskIds],'id'=>['not in'=>$messageReadIds]]);
+            $messageCount=$vipMessageRemindModel->count(['uid'=>$userInfo['userId'],'id'=>['not in'=>$messageReadIds]]);
+            $messageCount=empty($messageCount)?0:$messageCount;
             return response()->json(['status'=>200,'data'=>['count'=>$messageCount]]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
@@ -125,7 +110,12 @@ class MessageController extends Controller
             $info=$vipMessageViewLogModel->findOne(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId']]);
             if(!$info)
             {
-                $result=$vipMessageViewLogModel->add(['uid'=>$userInfo['userId'],'open_id'=>$openId,'message_id'=>$searchArgs['messageId'],'addtime'=>time()]);
+                $result=$vipMessageViewLogModel->add([
+                    'uid'=>$userInfo['userId'],
+                    'open_id'=>$openId,
+                    'message_id'=>$searchArgs['messageId'],
+                    'addtime'=>time()
+                ]);
                 if($result === false)
                 {
                     throw new \Exception('操作失败');
