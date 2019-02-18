@@ -467,8 +467,9 @@ class CommonController extends BaseController
                                 $sdate = date('Ymd');
                                 $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
                                 //$result = $this->curlUploadFile($q['content_file'], $newFileName);
-                                file_put_contents($batchLogDir . '/file-'. date('Ymd') . '.txt', $q['content_file'].PHP_EOL,FILE_APPEND);
-                                $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['content_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                $quesFile = json_decode($q['content_file'] ,true);
+                                //file_put_contents($batchLogDir . '/file-'. date('Ymd') . '.txt', $q['content_file'].PHP_EOL,FILE_APPEND);
+                                $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$quesFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
                                 //更新vip_question中uid和sdate字段
                                 $result = $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
                                 if(!$result){
@@ -481,12 +482,14 @@ class CommonController extends BaseController
                                 //上传选项文档
                                 if(isset($q['options']) && !empty($q['options'])){
                                     foreach ($q['options'] as $k=>$o){
-                                        $shorUuid = shortUuid($uuid);
-                                        $newFileName = $sdate.'_test-'.$uuid.'_'.$shorUuid.'_'.$shorUuid.'.docx';
-                                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$o['option_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                        //$shorUuid = shortUuid($uuid);
+                                        $newUuid = strtoupper(substr(uuid(), 0,16));
+                                        $newFileName = $sdate.'_test-'.$uuid.'_'.$newUuid.'_'.$newUuid.'.docx';
+                                        $optionFile = json_decode($o['option_file'] ,true);
+                                        $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$optionFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
 
                                         //更新vip_question_option中uid字段
-                                        $result = $questionOption->edit(array('uid'=>$shorUuid), array('id'=>$o['option_id']));
+                                        $result = $questionOption->edit(array('uid'=>$newUuid), array('id'=>$o['option_id']));
                                         if(!$result){
                                             $question->rollback();
                                             $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>0,'error_msg'=>'试题选项目录更新失败');
@@ -500,7 +503,8 @@ class CommonController extends BaseController
                                 if(isset($q['answer_file'])){
                                     $newFileName = $sdate.'_test-'.$uuid.'_'.'answers'.'_answers.docx';
                                     //$result = $this->curlUploadFile($q['answer_file'], $newFileName);
-                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['answer_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                    $answerFile = json_decode($q['answer_file'] ,true);
+                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$answerFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
 
                                 }
 
@@ -508,7 +512,8 @@ class CommonController extends BaseController
                                 if(isset($q['analysis_file'])){
                                     $newFileName = $sdate.'_test-'.$uuid.'_'.'analysis'.'_analysis.docx';
                                     //$result = $this->curlUploadFile($q['analysis_file'], $newFileName);
-                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['analysis_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                    $analysisFile = json_decode($q['analysis_file'] ,true);
+                                    $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$analysisFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
                                 }
                             }
                         }
@@ -527,11 +532,11 @@ class CommonController extends BaseController
                 }
             }
 
-            file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
+            //file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
             return response()->json(['status' => 1]);
 
         } catch (\Exception $e) {
-            return response()->json(['status' => 0]);
+            return response()->json(['status' => 0,'errorMsg'=>$e->getMessage()]);
         }
     }
     //获取所有省份

@@ -51,10 +51,11 @@ class UploadQueue implements ShouldQueue
                 $result = curl_exec($curl);
                 $aStatus = curl_getinfo($curl);
                 curl_close($curl);
+                file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/fileUploadSuccess-'. date('Ymd') . '.txt', $targetFile.PHP_EOL,FILE_APPEND);
                 @unlink($targetFile);
             }
         } catch (\Exception $e) {
-            \EasyWeChat\Support\Log::info($data['task_id'].':'.$targetFile.', errorMsg:'.$e->getMessage());
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/fileUploadError-'. date('Ymd') . '.txt', $data['task_id'].':failed,errorMsg:'.$e->getMessage().PHP_EOL,FILE_APPEND);
             //return response()->json(['errorMsg' => $e->getMessage()]);
         }
 
