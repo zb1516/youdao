@@ -449,10 +449,13 @@ class CommonController extends BaseController
             $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask;
             $taskList = $vip_youdao_paper_file_upload_task->findAll(array('is_upload'=>0),['create_time'=>'asc']);
             $resultArr = [];
+            $batchLogDir = $_SERVER['DOCUMENT_ROOT'].'/batchLog/';
+            if(is_dir($batchLogDir)){
+                @mkdir($batchLogDir, 0777);
+            }
             if($taskList){
                 $question = new Question;
                 $questionOption = new VipQuestionOption;
-
                 foreach ($taskList as $key=>$task){
                     if($task['file_json']){
                         $data = json_decode($task['file_json'], true);
@@ -464,6 +467,7 @@ class CommonController extends BaseController
                                 $sdate = date('Ymd');
                                 $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
                                 //$result = $this->curlUploadFile($q['content_file'], $newFileName);
+                                file_put_contents($batchLogDir . '/file-'. date('Ymd') . '.txt', $q['content_file'].PHP_EOL,FILE_APPEND);
                                 $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$q['content_file'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
                                 //更新vip_question中uid和sdate字段
                                 $result = $question->edit(array('uid'=>$uuid,'sdate'=>$sdate), array('id'=>$q['question_id']));
@@ -518,14 +522,11 @@ class CommonController extends BaseController
                         }
 
                         $question->commit();
-                        $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>1,'error_msg'=>'');
+                        $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>1,'error_msg'=>'','data'=>$data);
                     }
                 }
             }
-            $batchLogDir = $_SERVER['DOCUMENT_ROOT'].'/batchLog/';
-            if(is_dir($batchLogDir)){
-                @mkdir($batchLogDir, 0777);
-            }
+
             file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
             return response()->json(['status' => 1]);
 

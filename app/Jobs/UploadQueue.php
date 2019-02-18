@@ -34,6 +34,9 @@ class UploadQueue implements ShouldQueue
         try {
             $fileContent = file_get_contents($data['fileUrl']);
             $uploadDir = $_SERVER['DOCUMENT_ROOT'].'/ossImages/temp/';
+            if(is_dir($uploadDir)){
+                @mkdir($uploadDir, 0777);
+            }
             $targetFile = $uploadDir.$data['newFileName'];
             $result = file_put_contents($targetFile, $fileContent);
             if($result){

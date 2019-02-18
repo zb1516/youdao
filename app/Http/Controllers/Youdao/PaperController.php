@@ -417,7 +417,7 @@ class PaperController extends BaseController
         $code = 100;
         try{
             $data = $request->post();
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/questionError'.time().'.txt',json_encode($request->post()));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/questionError.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
             if($data){
                 //$postData = json_decode($data,true);
                 //更新问题任务的有道接收、处理时间
@@ -444,7 +444,7 @@ class PaperController extends BaseController
         $errorMsg = '';
         try{
             $data = $request->post();
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/paperExamined'.time().'.txt',json_encode($request->post()));
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/paperExamined.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
             if(isset($data['taskId']) && isset($data['isPass']) && isset($data['youdaoReceiveTime']) ){
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
