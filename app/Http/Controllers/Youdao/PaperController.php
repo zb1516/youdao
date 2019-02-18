@@ -414,18 +414,20 @@ class PaperController extends BaseController
     public function questionError(Request $request)
     {
         $code = 100;
+        $errorMsg = '';
         try{
             $data = $request->post();
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/questionError'.date('Ymd').'.txt',json_encode($request->post()).PHP_EOL,FILE_APPEND);
-            if($data){
-                //$postData = json_decode($data,true);
+            if($data['taskId']){
                 //更新问题任务的有道接收、处理时间
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
                 if($status == true){
                     $code = 200;
                 }
+            }else{
+                $errorMsg = '任务ID不能为空';
             }
-            return response()->json(['code'=>$code]);
+            return response()->json(['code'=>$code, 'errorMsg' => $errorMsg]);
         }catch (\Exception $e){
             return response()->json(['code'=>$code, 'errorMsg' => $e->getMessage()]);
         }
