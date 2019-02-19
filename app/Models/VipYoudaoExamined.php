@@ -1026,6 +1026,7 @@ class VipYoudaoExamined extends Model
                 $row['first_processing_days'] = $first_processing_days;
                 $row['final_processing_time'] = $data['youdaoProcessingTime'];
                 $row['final_processing_days'] = $first_processing_days;
+                $row['show_name'] = isset($data['name']) ? $data['name'] : '';
             }else{
                 //第一次投递任务成功后有道审核不通过，关闭任务
                 $row['paper_examined_status'] = 5;
@@ -1091,6 +1092,7 @@ class VipYoudaoExamined extends Model
                     'youdao_status'=>$data['isPass']
                 );
                 if($data['isPass'] == 1){
+                    $newData['youdao_receive_time'] = $data['youdaoReceiveTime'];
                     $newData['youdao_processing_time'] = $data['youdaoProcessingTime'];
                     $newData['processing_days'] = $processing_days;
                 }
@@ -1104,6 +1106,7 @@ class VipYoudaoExamined extends Model
                             $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'], $data['youdaoProcessingTime']);
                             $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
                             $newData = array(
+                                'youdao_receive_time' => $data['youdaoReceiveTime'],
                                 'youdao_processing_time' => $data['youdaoProcessingTime'],
                                 'processing_days' => $processing_days,
                                 'many_times' => $count
@@ -1118,6 +1121,7 @@ class VipYoudaoExamined extends Model
                             $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
                             $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
                             $newData = array(
+                                'youdao_receive_time' => $data['youdaoReceiveTime'],
                                 'youdao_processing_time' => $data['youdaoProcessingTime'],
                                 'processing_days' => $processing_days
                             );
@@ -1135,7 +1139,7 @@ class VipYoudaoExamined extends Model
                     //若有道审核通过，则激活任务待审状态
                     $newData = array(
                         'paper_examined_status'=>2,
-                        'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                        'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
                         'final_processing_time'=>$data['youdaoProcessingTime'],
                         'final_processing_days'=>$processing_days,
                     );
@@ -1479,25 +1483,33 @@ class VipYoudaoExamined extends Model
 
         if($examinedDetails){
             foreach ($examinedDetails as $key=>$detail){
-                $processList[] = array(
-                    'process_name'=>'第'.($key+1).'次有道接收',
-                    'process_time'=>$detail['youdao_receive_time'],
-                    'process_user'=>'有道',
-                    'status'=>$detail['youdao_status']
-                );
-                $processList[] = array(
-                    'process_name'=>'第'.($key+1).'次有道处理',
-                    'process_time'=>$detail['youdao_processing_time'],
-                    'process_user'=>'有道',
-                    'status'=>''
+                if($detail['youdao_receive_time']){
+                    $processList[] = array(
+                        'process_name'=>'第'.($key+1).'次有道接收',
+                        'process_time'=>$detail['youdao_receive_time'],
+                        'process_user'=>'有道',
+                        'status'=>$detail['youdao_status']
+                    );
+                }
 
-                );
-                $processList[] = array(
-                    'process_name'=>'第'.($key+1).'次审核试题',
-                    'process_time'=>$detail['audit_time'],
-                    'process_user'=>$userArr[$detail['author_id']],
-                    'status'=>($detail['audit_status']==1)?1:0
-                );
+                if($detail['youdao_processing_time']){
+                    $processList[] = array(
+                        'process_name'=>'第'.($key+1).'次有道处理',
+                        'process_time'=>$detail['youdao_processing_time'],
+                        'process_user'=>'有道',
+                        'status'=>''
+                    );
+                }
+
+                if($detail['author_id']){
+                    $processList[] = array(
+                        'process_name'=>'第'.($key+1).'次审核试题',
+                        'process_time'=>$detail['audit_time'],
+                        'process_user'=>$userArr[$detail['author_id']],
+                        'status'=>($detail['audit_status']==1)?1:0
+                    );
+                }
+
             }
         }
         return $processList;
