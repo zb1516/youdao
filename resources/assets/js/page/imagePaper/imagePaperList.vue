@@ -176,7 +176,6 @@
     import common from "../../static/js/jquery.common.js"
     import "../../static/js/pagination/pagination.min.js"
     import {mapGetters} from 'vuex'
-    import {a} from '../../until/function'
     export default {
         data(){
             return {
@@ -238,7 +237,6 @@
         },
         mounted(){
             var that = this;
-            a();
             that.subjectList();
             that.agencyList();
             var nowdate = new Date();

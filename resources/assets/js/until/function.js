@@ -1,5 +1,5 @@
-export const a = () =>{
-    alert(111);
+export default {
+    a:function(){
+      //alert(1111);
+    }
 }
-
-export default { a }
