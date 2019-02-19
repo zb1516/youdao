@@ -289,7 +289,7 @@
                             that.currentPage = currPage;
                             that.pageSize = 5;
                             that.doSearch();
-                            console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                            //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
 
                         }
                     });
