@@ -697,7 +697,7 @@ class VipYoudaoExamined extends Model
         $gradeValue = isset($gradeName[$grade]) ? $gradeName[$grade] : 0;
         $cityValue = isset($citys[$city]) ? $citys[$city] : 0;
         $provinceValue = isset($provinceIdNames[$province]) ? $provinceIdNames[$province] : 0;
-        //$paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$provinceValue.'-'.$cityValue.'-'.$countryName.'-'.$school.'-'.$gradeValue.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
+        $paperName = $agencyId.'-'.'套卷VIP'.'-'.$str.'-'.$year.'-'.$provinceValue.'-'.$cityValue.'-'.$countryName.'-'.$school.'-'.$gradeValue.'-'.$semester.'-'.$source.'-'.$other1.'-'.$other2.'-'.$duration.'-'.$score.'-'.$questionNumber;
 
         $data = [
             'subject_id' => $subjectId,
@@ -714,7 +714,7 @@ class VipYoudaoExamined extends Model
             'question_number' => $questionNumber,
             'other_information_one' => $other1,
             'other_information_two' => $other2,
-            //'paper_name' => $paperName,
+            'paper_name' => $paperName,
             'image_error_type' => ''
         ];
         $condition = array(
