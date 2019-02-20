@@ -383,6 +383,9 @@ class VipYoudaoExamined extends Model
             if (!empty($searchArgs['imageExaminedStatus'])) {
                 $condition['image_examined_status'] = array('eq' => $searchArgs['imageExaminedStatus']);
             }
+            if(empty($searchArgs['imageExaminedStatus'])){
+                $condition['image_examined_status'] = array('lt' => 5);
+            }
         }else{
             //图片审核统计
             if (empty($searchArgs['beginDate']) && !empty($searchArgs['endDate'])) {
@@ -421,6 +424,7 @@ class VipYoudaoExamined extends Model
         if (empty($condition)) {
             $condition = [];
         }
+
         $recordCount = $this->count($condition);
         if($searchArgs['isType'] == 1){
             $statusStartValue = ['待审核' => 0,'已通过' => 0,'退回' => 0,'试卷重复' => 0];
