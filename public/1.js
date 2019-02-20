@@ -41670,7 +41670,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
                         that.currentPage = currPage;
                         that.pageSize = 5;
                         that.doSearch();
-                        console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                        //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
                     }
                 });
             }
