@@ -365,7 +365,7 @@ class PaperController extends BaseController
                 $this->sendWxTemplate(array(
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
-                    'type'=>0,
+                    'type'=>2,
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));

@@ -787,7 +787,7 @@ class VipYoudaoExamined extends Model
                 'agency_id' => $data['agency_id'],
                 'paper_type' => 2,//1教研，2有道
             );
-            $paper->beginTransaction();
+            $this->beginTransaction();
             $paperId = $paper->add($paperInfo);
             if(!$paperId){
                 $this->rollback();
@@ -932,6 +932,7 @@ class VipYoudaoExamined extends Model
                             'youdao_processing_time' => $lastYoudaoPaperDetail['youdao_processing_time'],
                             'processing_days' => $lastYoudaoPaperDetail['processing_days'],
                             'many_times' => 1,
+                            'create_time'=>date('Y-m-d H:i:s')
                         );
                         $result = $vip_youdao_question->add($newYoudaoQuestion);
                         if(!$result){
@@ -1087,7 +1088,7 @@ class VipYoudaoExamined extends Model
                 //有道编辑处理完成
                 $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
                 $this->beginTransaction();
-                $processing_days = $this->getDiffDaysCount($lastPaperExaminedDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
+                $processing_days = $this->getDiffDaysCount($data['youdaoReceiveTime'], $data['youdaoProcessingTime']);
                 $newData = array(
                     'youdao_status'=>$data['isPass']
                 );
@@ -1103,7 +1104,7 @@ class VipYoudaoExamined extends Model
                         foreach ($data['list'] as $key => $q){
                             //更新vip_youdao_question表
                             $lastYoudaoQuestion = $vip_youdao_question->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']), ['id'=>'desc']);
-                            $processing_days = $this->getDiffDaysCount($lastYoudaoQuestion['youdao_receive_time'], $data['youdaoProcessingTime']);
+                            //$processing_days = $this->getDiffDaysCount($data['youdaoReceiveTime'], $data['youdaoProcessingTime']);
                             $count = $vip_youdao_question->count(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
                             $newData = array(
                                 'youdao_receive_time' => $data['youdaoReceiveTime'],
@@ -1119,7 +1120,7 @@ class VipYoudaoExamined extends Model
 
                             //更新vip_youdao_question_details表，一道试题只有一条记录
                             $lastYoudaoQuestionDetail = $vip_youdao_question_details->findOne(array('task_id'=>$data['taskId'], 'quesNumber'=>$q['number']));
-                            $processing_days = $this->getDiffDaysCount($lastYoudaoQuestionDetail['youdao_receive_time'], $data['youdaoProcessingTime']);
+                            //$processing_days = $this->getDiffDaysCount($data['youdaoReceiveTime'], $data['youdaoProcessingTime']);
                             $newData = array(
                                 'youdao_receive_time' => $data['youdaoReceiveTime'],
                                 'youdao_processing_time' => $data['youdaoProcessingTime'],
@@ -1171,6 +1172,7 @@ class VipYoudaoExamined extends Model
                 );
                 $result = $vip_paper_examined_details->edit($newData, array('id'=>$lastPaperExaminedDetail['id']));
                 if($data['isPass'] == 1) {
+                    $data['list'] = json_decode($data['list'], true);
                     if (count($data['list']) > 0) {
                         foreach ($data['list'] as $key => $q) {
                             //更新vip_youdao_question表
@@ -1311,7 +1313,8 @@ class VipYoudaoExamined extends Model
                         //'many_times' => $return_times + 1,
                         'return_reason_content1' => $error['content'],
                         'return_reason_answer1' => $error['answer'],
-                        'return_reason_analysis1' => $error['analysis']
+                        'return_reason_analysis1' => $error['analysis'],
+                        'create_time'=>$nowTime
                 );
 
                 $newErrorQuestionId = $vip_youdao_question->add($newErrorQuestion);
@@ -1488,7 +1491,7 @@ class VipYoudaoExamined extends Model
                         'process_name'=>'第'.($key+1).'次有道接收',
                         'process_time'=>$detail['youdao_receive_time'],
                         'process_user'=>'有道',
-                        'status'=>$detail['youdao_status']
+                        'status'=>abs($detail['youdao_status'])
                     );
                 }
 
