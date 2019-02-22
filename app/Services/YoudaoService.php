@@ -107,7 +107,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/complete'.date('Ymd').'.txt',json_encode($result).PHP_EOL,FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/complete'.date('Ymd').'.txt',$result.PHP_EOL,FILE_APPEND);
             return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
@@ -149,7 +149,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback'.date('Ymd').'.txt',json_encode($result,JSON_UNESCAPED_UNICODE).PHP_EOL,FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback'.date('Ymd').'.txt',$result.PHP_EOL,FILE_APPEND);
             return $result;
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
