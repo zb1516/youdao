@@ -19,7 +19,7 @@ class VipYoudaoExamined extends Model
         $paperInfo = $this->findOne($condition);
         if($paperInfo){
             $vipPaperImage = new VipPaperImage;
-            $paperInfo['images'] = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0), ['id'=>'asc']);
+            $paperInfo['images'] = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0), ['create_time'=>'desc']);
             if($paperInfo['subject_id']){
                 $kmsSubject = new KmsSubjects;
                 $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
@@ -800,6 +800,7 @@ class VipYoudaoExamined extends Model
             //更新vip_youdao_examined表paper_id字段，和试卷状态、试卷审核人、试卷审核通过时间
             $lastYoudaoTime = $this->getLastYoudaoTime($data['task_id']);
             $result = $this->edit(array('paper_id' => $paperId,
+                                        'image_examined_status' => 6,
                                         'paper_examined_status' => 3,
                                         'paper_examined_auditor_id' => $userInfo['id'],
                                         'paper_examined_time' => date('Y-m-d H:i:s'),
@@ -1026,6 +1027,7 @@ class VipYoudaoExamined extends Model
             if($data['isPass'] == 1){
                 $first_processing_days = $this->getDiffDaysCount($first_youdao_receive_time, $data['youdaoProcessingTime']);
                 //第一次投递任务成功后有道审核通过
+                $row['image_examined_status'] = 5;
                 $row['paper_examined_status'] = 2;
                 $row['first_processing_time'] = $data['youdaoProcessingTime'];
                 $row['first_processing_days'] = $first_processing_days;
@@ -1211,6 +1213,7 @@ class VipYoudaoExamined extends Model
                     //若有道审核通过，则激活任务待审状态
                     $newData = array(
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
+                        'image_examined_status'=>5,
                     );
                 }else{
                     //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
