@@ -174,10 +174,10 @@
                 listCount:'',
                 isUploadTimeShow:0,
                 isUploadTimeTrue:1,
-                isUploadTimeSort:'desc',
+                isUploadTimeSort:'asc',
                 isExaminedTimeShow:0,
                 isExaminedTimeTrue:1,
-                isExaminedTimeSort:'desc',
+                isExaminedTimeSort:'',
                 isExaminedStatusShow:0,
                 agencyId:0,
                 curProvince:'',
@@ -289,7 +289,7 @@
                             that.currentPage = currPage;
                             that.pageSize = 5;
                             that.doSearch();
-                            console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
+                            //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
 
                         }
                     });
@@ -346,7 +346,7 @@
                     that.isUploadTimeShow = 0;
                 }
                 that.isExaminedTimeTrue = 1;
-                that.isExaminedTimeSort = 'desc';
+                that.isExaminedTimeSort = '';
                 that.doSearch();
             },
             selectExaminedTimeGet: function () {
@@ -360,7 +360,7 @@
                     that.isExaminedTimeShow = 0;
                 }
                 that.isUploadTimeTrue = 1;
-                that.isUploadTimeSort = 'desc';
+                that.isUploadTimeSort = '';
                 that.doSearch();
             },
             authorList(){

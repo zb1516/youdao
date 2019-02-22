@@ -146,32 +146,6 @@ class VipPaperImage extends Model
         $dateTime = time();
         $rand = rand(1,1000);
         if($searchArgs['paperType'] == 1){
-//            $condition = array(
-//                'task_id' => $searchArgs['taskId'],
-//                'image_type' => 3,
-//                'is_delete' => 0,
-//            );
-//            $resultAll = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
-//            $count = count($resultAll);
-//            if($resultAll){
-//                for($i=0;$i<$count;$i++){
-//                    $dataAll = [
-//                        'image_url' => $searchArgs['sortTaskId'][$searchArgs['taskId']][$i],
-//                        'is_delete' => 0,
-//                    ];
-//                    $conditionAll = array(
-//                        'id' => $resultAll[$i]['id'],
-//                    );
-//                    $resultImage = $this->edit($dataAll, $conditionAll);
-//                    if($resultImage === false)
-//                    {
-//                        $this->rollback();
-//                        throw new \Exception('图片url编辑失败-混合');
-//                    }
-//                }
-//
-//            }
-
             //第三方oss调用
             $imagesUrl = $searchArgs['sortTaskId'][$searchArgs['taskId']];
             $searchArgs['randName'] = time().rand(1,10000);
@@ -193,48 +167,13 @@ class VipPaperImage extends Model
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl);
             $resultYoudao = json_decode($resultYoudao,true);
-//            if($resultYoudao['code'] != 200){
-//                throw new \Exception('任务投递失败');
-//            }
-//            $resultYoudao = json_decode($resultYoudao,true);
-//            $dataEdit = [
-//                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
-//            ];
-//            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
-//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
-//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
-//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
-//            $vipPaperExaminedDetails->add($dataDetails);
+            if($resultYoudao['code'] != 200){
+                throw new \Exception('任务投递失败');
+            }
+
         }else{
 
-            //第三方oss调用
-//            $condition = array(
-//                'task_id' => $searchArgs['taskId'],
-//                'image_type' => 1,
-//                'is_delete' => 0,
-//            );
-//            $question = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
-            //$count = count($question);
             $imagesQuestionUrl = $searchArgs['sortTaskIdQuestion'][$searchArgs['taskId']];
-//
-//            if($question){
-//                for($i=0;$i<$count;$i++){
-//                    $dataQuestion = [
-//                        'image_url' => $imagesQuestionUrl[$i],
-//                        'is_delete' => 0,
-//                    ];
-//                    $conditionQuestion = array(
-//                        'id' => $question[$i]['id'],
-//                    );
-//                    $resultQuestion = $this->edit($dataQuestion, $conditionQuestion);
-//                    if($resultQuestion === false)
-//                    {
-//                        $this->rollback();
-//                        throw new \Exception('图片url编辑失败-分离问题');
-//                    }
-//                }
-//            }
-
             $searchArgs['randNameQuestion'] = 'question'.time().rand(1,10000);
             $this->createPackage($searchArgs, $imagesQuestionUrl, $dateTime, $rand, 'Question');
             $filenameQuestion = $filename.$dateTime.$rand.'Question';
@@ -250,31 +189,7 @@ class VipPaperImage extends Model
                 $this->rollback();
                 throw new \Exception('编辑有道返回的上传地址失败');
             }
-//            $condition = array(
-//                'task_id' => $searchArgs['taskId'],
-//                'image_type' => 2,
-//                'is_delete' => 0,
-//            );
-            //$answer = $this->findAll($condition, $order=['id' => 'desc'], ['id', 'image_url', 'create_time']);
-            //$count = count($answer);
             $imagesAnswerUrl = $searchArgs['sortTaskIdAnswer'][$searchArgs['taskId']];
-//            if($answer){
-//                for($i=0;$i<$count;$i++){
-//                    $dataAnswer = [
-//                        'image_url' => $imagesAnswerUrl[$i],
-//                        'is_delete' => 0,
-//                    ];
-//                    $conditionAnswer = array(
-//                        'id' => $answer[$i]['id'],
-//                    );
-//                    $resultAnswer = $this->edit($dataAnswer, $conditionAnswer);
-//                    if($resultAnswer === false)
-//                    {
-//                        $this->rollback();
-//                        throw new \Exception('图片url编辑失败-分离答案');
-//                    }
-//                }
-//            }
             $searchArgs['randNameAnswer'] = 'answer'.time().rand(1,10000);
             $this->createPackage($searchArgs, $imagesAnswerUrl, $dateTime, $rand, 'Answer');
             $filenameAnswer = $filename.$dateTime.$rand.'Answer';
@@ -293,29 +208,11 @@ class VipPaperImage extends Model
             //调用有道接口
             $resultYoudao = $this->youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl);
             $resultYoudao = json_decode($resultYoudao,true);
-//            if($resultYoudao['code'] != 200){
-//                throw new \Exception('任务投递失败');
-//            }
-//            $resultYoudao = json_decode($resultYoudao,true);
-//            $dataEdit = [
-//                'first_youdao_receive_time' => $resultYoudao['data']['youdaoReceiveTime']
-//            ];
-//            $vipYoudaoExamined->edit($dataEdit,['task_id' => $resultYoudao['data']['taskId']]);
-//            $vipPaperExaminedDetails =new VipPaperExaminedDetails();
-//            $dataDetails['task_id'] = $resultYoudao['data']['taskId'];
-//            $dataDetails['youdao_receive_time'] = $resultYoudao['data']['youdaoReceiveTime'];
-//            $vipPaperExaminedDetails->add($dataDetails);
-
+            if($resultYoudao['code'] != 200){
+                throw new \Exception('任务投递失败');
+            }
         }
-//        $postData = array(
-//            'openId' => $result['open_id'],
-//            'type' => 2,
-//            'userId' => $result['create_uid'],
-//            'taskId' => $result['task_id'],
-//            'content' => '恭喜您，您提交的图片已审核通过',
-//        );
-//        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
-//        $this->sendCurl($sendTemplateUrl,$postData);
+
         $this->commit();
         return true;
     }
@@ -464,20 +361,26 @@ class VipPaperImage extends Model
      */
     public function youdaoDataHandle($searchArgs, $filename, $questionUrl, $answerUrl = '')
     {
-        $gradeName = config('app.GRADE_NAME');
+
+        //$gradeName = config('app.GRADE_NAME');
         $url = config('app.YOUDAO_DELIVER_TASK');
-        $grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
+        //$grade = isset($searchArgs['grade']) ? $searchArgs['grade'] : 0;
         $paperType = isset($searchArgs['paperType']) ? $searchArgs['paperType'] : 0;
         $subjectId = isset($searchArgs['subjectId']) ? $searchArgs['subjectId'] : 0;
         $youdaoService = new YoudaoService();
+        $common = new Common();
+        $allSubjectNames = $common->getAllSubjectNames();
+        $subjectName = $allSubjectNames[$subjectId];
+        $strValue = $common->stringTransformation($subjectName);
+        $subjectValue = explode('-',$strValue);
         $postData = [
             'taskId' => $searchArgs['taskId'],
             'name' => $filename,
             'questionUrl' => $questionUrl,
             'answerUrl' => $answerUrl,
             'paperType' => $paperType,
-            'education' => isset($gradeName[$grade]) ? $gradeName[$grade] : '',
-            'subject' => $subjectId,
+            'education' => $subjectValue[0],
+            'subject' => $subjectValue[1],
         ];
         return $youdaoService->getYoudaoTask($url,$postData);
     }

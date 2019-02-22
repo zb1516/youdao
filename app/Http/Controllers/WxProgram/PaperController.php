@@ -389,18 +389,18 @@ class paperController extends Controller
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $condition['upload_time'] = array('between' => array($dayData[0].' 00:00:00',$dayData[1].' 11:59:59'));
+            $condition=['agency_id'=>['eq' => $userInfo['agencyId']],'upload_time'=>['between' => [$dayData[0].' 00:00:00',$dayData[1].' 11:59:59']]];
             $paperMonthCount=$vipYoudaoExaminedModel->count($condition);
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
-            //统计入库的有道套卷数
-            $paperCount=$vipYoudaoExaminedModel->count(['create_uid'=>$userInfo['userId'],'paper_examined_status'=>3]);
             //获取本月上传试卷数
-            $condition['agency_id'] = array('eq' => $userInfo['agencyId']);
             $useCount=$vipYoudaoExaminedModel->count($condition);
             $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
             //获取上传额度，先从配置文件中获取上传额度
             $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
             $paperSurplusCount=intval($paperUploadTotalCount-$useCount)>0?$paperUploadTotalCount-$useCount:0;       //计算剩余上传额
+            $condition['paper_examined_status']=3;      //拼上已经入库条件
+            //统计入库的有道套卷数
+            $paperCount=$vipYoudaoExaminedModel->count($condition);
             return response()->json(['status'=>200,'data'=>[
                 'paperMonthCount'=>$paperMonthCount,                //本月上传数
                 'paperCount'=>$paperCount,                          //本月入库数

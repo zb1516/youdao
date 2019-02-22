@@ -35,6 +35,9 @@ class VipYoudaoWorkingWeekendDays extends Model
             $count++;
         }
         $num = $count-2;
+        if($num == 0){
+            return 1;
+        }
         return $num;
 
     }
