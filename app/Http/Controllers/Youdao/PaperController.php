@@ -423,6 +423,17 @@ class PaperController extends BaseController
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
                 if($status == true){
                     $code = 200;
+                    if($data['isPass'] == 0){
+                        //若未通过有道审核，则关闭任务，给用户发模板消息
+                        $paperInfo = $this->getPaperInfo($data['taskId']);
+                        $this->sendWxTemplate(array(
+                            'taskId'=>$data['taskId'],
+                            'openId'=>$paperInfo['open_id'],
+                            'type'=>1,
+                            'userId'=>$paperInfo['create_uid'],
+                            'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
+                        ));
+                    }
                 }
             }else{
                 $errorMsg = '任务ID不能为空';
@@ -449,19 +460,19 @@ class PaperController extends BaseController
             if(isset($data['taskId']) && isset($data['isPass']) && isset($data['youdaoReceiveTime']) ){
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
-                if($data['isPass'] == 0){
-                    //若未通过有道审核，则关闭任务，给用户发模板消息
-                    $paperInfo = $this->getPaperInfo($data['taskId']);
-                    $this->sendWxTemplate(array(
-                        'taskId'=>$data['taskId'],
-                        'openId'=>$paperInfo['open_id'],
-                        'type'=>1,
-                        'userId'=>$paperInfo['create_uid'],
-                        'content'=>'抱歉，您提交的图片未通过有道审核，已被关闭。'
-                    ));
-                }
                 if($status){
                     $code = 200;
+                    if($data['isPass'] == 0){
+                        //若未通过有道审核，则关闭任务，给用户发模板消息
+                        $paperInfo = $this->getPaperInfo($data['taskId']);
+                        $this->sendWxTemplate(array(
+                            'taskId'=>$data['taskId'],
+                            'openId'=>$paperInfo['open_id'],
+                            'type'=>1,
+                            'userId'=>$paperInfo['create_uid'],
+                            'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
+                        ));
+                    }
                 }
             }else{
                 $errorMsg = '参数不完整';
