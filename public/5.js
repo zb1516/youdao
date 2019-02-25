@@ -21098,7 +21098,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 																				});
 																});
 
-																$(document).on('click', 'body', function (e) {
+																$(document).off('.sp.address').on('click.sp.address', 'body', function (e) {
 																				if (!$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length) {
 																								$('.drop-down:visible').prev('.city-select').trigger('click');
 																				}
@@ -21109,7 +21109,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = 
 												eventInit: function eventInit() {
 																var self = this;
 
-																$(document).on('click', '.city-select', function () {
+																$(document).off('.sp.city').on('click.sp.city', '.city-select', function () {
 																				var $this = $(this),
 																				    index = 0;
 																				// $parents, $value, $hidden;
