@@ -303,7 +303,7 @@ class PaperController extends BaseController
         try{
             $taskId = $request->post('taskId',0);
             $errorStr = trim($request->post('errorStr',''), '\'');
-            $errorData = [];
+            $errorData = array();
             if($errorStr){
                 $errorArr = explode(',', $errorStr);
                 foreach ($errorArr as $key=>$error){
@@ -329,7 +329,10 @@ class PaperController extends BaseController
                     }
                 }
             }
-            $errorData = array_values($errorData);
+
+            if(!empty($errorData)){
+                $errorData = array_values($errorData);
+            }
             $request->session()->put($taskId, '');//清空session
             $data = array(
                 'taskId'=>$taskId,
@@ -423,7 +426,7 @@ class PaperController extends BaseController
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
                 if($status == true){
                     $code = 200;
-                    if($data['isPass'] == 0){
+                    /*if($data['isPass'] == 0){
                         //若未通过有道审核，则关闭任务，给用户发模板消息
                         $paperInfo = $this->getPaperInfo($data['taskId']);
                         $this->sendWxTemplate(array(
@@ -433,7 +436,7 @@ class PaperController extends BaseController
                             'userId'=>$paperInfo['create_uid'],
                             'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
                         ));
-                    }
+                    }*/
                 }
             }else{
                 $errorMsg = '任务ID不能为空';
@@ -463,14 +466,14 @@ class PaperController extends BaseController
                 if($status){
                     $code = 200;
                     if($data['isPass'] == 0){
-                        //若未通过有道审核，则关闭任务，给用户发模板消息
+                        //若未通过有道审核，则退回任务，给用户发模板消息
                         $paperInfo = $this->getPaperInfo($data['taskId']);
                         $this->sendWxTemplate(array(
                             'taskId'=>$data['taskId'],
                             'openId'=>$paperInfo['open_id'],
                             'type'=>1,
                             'userId'=>$paperInfo['create_uid'],
-                            'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
+                            'content'=>'抱歉，您提交的图片未通过有道审核，已被退回。'
                         ));
                     }
                 }

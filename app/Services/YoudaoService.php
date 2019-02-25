@@ -104,7 +104,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/complete'.date('Ymd').'.txt',$result.PHP_EOL,FILE_APPEND);
@@ -137,8 +137,10 @@ class YoudaoService
                 'type' => 1,
             );
 
-            if($data['list']){
+            if(is_array($data['list']) && !empty($data['list'])){
                 $data['list'] = json_encode($data['list'],JSON_UNESCAPED_UNICODE);
+            }else {
+                $data['list']='[]';
             }
             $postData = array_merge($data, $postData);
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback'.date('Ymd').'.txt',json_encode($postData,JSON_UNESCAPED_UNICODE).PHP_EOL,FILE_APPEND);
@@ -146,7 +148,7 @@ class YoudaoService
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);// post数据
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);// post的变量
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));// post的变量
             $result = curl_exec($ch);//有道返回的内容
             curl_close($ch);
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/feedback'.date('Ymd').'.txt',$result.PHP_EOL,FILE_APPEND);
