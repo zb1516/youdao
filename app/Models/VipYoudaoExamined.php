@@ -1035,9 +1035,9 @@ class VipYoudaoExamined extends Model
                 $row['final_processing_days'] = $first_processing_days;
                 $row['show_name'] = isset($data['name']) ? $data['name'] : '';
             }else{
-                //第一次投递任务成功后有道审核不通过，关闭任务
-                $row['paper_examined_status'] = 5;
-                $row['image_examined_status'] = 7;
+                //第一次投递任务成功后有道审核不通过，图片退回，试卷为未处理
+                $row['paper_examined_status'] = 0;
+                $row['image_examined_status'] = 3;
             }
 
             $this->beginTransaction();
@@ -1090,7 +1090,7 @@ class VipYoudaoExamined extends Model
             $vip_youdao_paper = new VipYoudaoPaper;
             $vip_youdao_question =  new VipYoudaoQuestion;
             $vip_youdao_question_details =  new VipYoudaoQuestionDetails;
-            if(!empty($data['youdaoProcessingTime'])){
+            //if(!empty($data['youdaoProcessingTime'])){
                 //有道编辑处理完成
                 $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
                 $this->beginTransaction();
@@ -1157,11 +1157,12 @@ class VipYoudaoExamined extends Model
                         $newData['show_name'] = $data['name'];
                     }
                 }else{
-                    //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
+                    //若有道审核未通过，则默认已处理，任务状态改为待审，图片,更新最终有道接收、处理时间
                     $newData = array(
-                        'image_examined_status'=>7,
-                        'paper_examined_status'=>5,
+                        'image_examined_status'=>5,
+                        'paper_examined_status'=>2,
                         'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
+                        'final_processing_time'=>$lastPaperExaminedDetail['youdaoProcessingTime'],
                     );
                 }
 
@@ -1173,7 +1174,7 @@ class VipYoudaoExamined extends Model
                 }
                 $this->commit();
                 return true;
-            }else{
+            /*}else{
                 //有道审核完成（未开始处理）
                 $vip_paper_examined_details = new VipPaperExaminedDetails;
                 $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
@@ -1243,7 +1244,7 @@ class VipYoudaoExamined extends Model
                 }
                 $this->commit();
                 return true;
-            }
+            }*/
         }
         return false;
     }
@@ -1361,9 +1362,6 @@ class VipYoudaoExamined extends Model
                 }
             }
 
-        }else{
-            $this->rollback();
-            throw new \Exception('退回有道试题列表不能为空');
         }
         $this->commit();
         return true;
