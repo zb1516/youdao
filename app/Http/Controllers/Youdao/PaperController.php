@@ -391,13 +391,13 @@ class PaperController extends BaseController
                 }
                 //return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
-                $this->sendWxTemplate(array(
+                /*$this->sendWxTemplate(array(
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>1,
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
-                ));
+                ));*/
 
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
