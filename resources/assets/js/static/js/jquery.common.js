@@ -153,8 +153,8 @@
 				});
             });
 
-			$(document).on('click', 'body', function( e ) {
-				if( !$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length ) {
+			$(document).off('.sp.address').on('click.sp.address', 'body', function (e) {
+				if (!$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length) {
 					$('.drop-down:visible').prev('.city-select').trigger('click');
 				}
 			});
@@ -164,7 +164,7 @@
       eventInit: function() {
             var self = this;
 
-            $(document).on('click', '.city-select', function () {
+            $(document).off('.sp.city').on('click.sp.city', '.city-select', function () {
                 var $this = $(this),
                     index = 0;
 					// $parents, $value, $hidden;
