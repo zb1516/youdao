@@ -1242,14 +1242,13 @@ class VipYoudaoExamined extends Model
                         $newData['show_name'] = $data['name'];
                     }
                 }else{
-                    //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
-                    /*$newData = array(
-                        'image_examined_status'=>3,
-                        'paper_examined_status'=>0,
+                    //若有道审核未通过，则默认已处理，任务状态改为待审，图片,更新最终有道接收、处理时间
+                    $newData = array(
+                        'image_examined_status'=>5,
+                        'paper_examined_status'=>2,
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
-                    );*/
-                    $this->rollback();
-                    throw new \Exception('有道回调请求参数不正确');
+                        'final_processing_time'=>$data['youdaoReceiveTime'],
+                    );
                 }
                 //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
                 $result = $this->edit($newData, array('task_id'=>$data['taskId']));
