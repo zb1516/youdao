@@ -38,8 +38,8 @@
                 <h2 class="title">{{paperInfo.paper_name}}</h2>
                 <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
                 <template v-for="(question, index) in questions">
-                    <dl class="question-wrapper">
-                      <dt class="question-name">{{index+1}}、<span v-html="question.quesLatextContent.content"></span></dt>
+                    <dl class="question-wrapper" v-if="question">
+                      <dt class="question-name">{{index+1}}、<span v-html="question.quesLatextContent.content" ></span></dt>
                       <template v-if="question.hasOptions == 1">
                           <template v-for="(option, i) in question.options">
                               <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
@@ -77,6 +77,9 @@
                           </span>
                         </div>
                       </div>
+                   </dl>
+                   <dl class="question-wrapper" v-else="">
+                       <dt class="question-name">{{index+1}}、</dt>
                    </dl>
                </template>
               </div>
