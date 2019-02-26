@@ -1025,14 +1025,18 @@ class VipYoudaoExamined extends Model
                 'final_youdao_receive_time' => $first_youdao_receive_time,
             );
             if($data['isPass'] == 1){
-                $first_processing_days = $this->getDiffDaysCount($first_youdao_receive_time, $data['youdaoProcessingTime']);
-                //第一次投递任务成功后有道审核通过
+                if(isset($data['youdaoProcessingTime'])){
+                    //第一次投递任务成功后有道审核通过
+                    $row['paper_examined_status'] = 2;
+                    $first_processing_days = $this->getDiffDaysCount($first_youdao_receive_time, $data['youdaoProcessingTime']);
+                    $row['first_processing_time'] = $data['youdaoProcessingTime'];
+                    $row['first_processing_days'] = $first_processing_days;
+                    $row['final_processing_time'] = $data['youdaoProcessingTime'];
+                    $row['final_processing_days'] = $first_processing_days;
+                }else{
+                    $row['paper_examined_status'] = 1;
+                }
                 $row['image_examined_status'] = 5;
-                $row['paper_examined_status'] = 2;
-                $row['first_processing_time'] = $data['youdaoProcessingTime'];
-                $row['first_processing_days'] = $first_processing_days;
-                $row['final_processing_time'] = $data['youdaoProcessingTime'];
-                $row['final_processing_days'] = $first_processing_days;
                 $row['show_name'] = isset($data['name']) ? $data['name'] : '';
             }else{
                 //第一次投递任务成功后有道审核不通过，图片退回，试卷为未处理
@@ -1052,7 +1056,7 @@ class VipYoudaoExamined extends Model
                 'youdao_receive_time' => $first_youdao_receive_time,
                 'youdao_status'=>$data['isPass'],
             );
-            if($data['isPass'] == 1){
+            if($data['isPass'] == 1 && isset($data['youdaoProcessingTime'])){
                 $newPaperExaminedDetail['youdao_processing_time'] = $data['youdaoProcessingTime'];
                 $newPaperExaminedDetail['processing_days'] = $first_processing_days;
             }
@@ -1099,7 +1103,7 @@ class VipYoudaoExamined extends Model
             $vip_youdao_paper = new VipYoudaoPaper;
             $vip_youdao_question =  new VipYoudaoQuestion;
             $vip_youdao_question_details =  new VipYoudaoQuestionDetails;
-            //if(!empty($data['youdaoProcessingTime'])){
+            if(isset($data['youdaoProcessingTime'])){
                 //有道编辑处理完成
                 $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
                 $this->beginTransaction();
@@ -1183,7 +1187,7 @@ class VipYoudaoExamined extends Model
                 }
                 $this->commit();
                 return true;
-            /*}else{
+            }else{
                 //有道审核完成（未开始处理）
                 $vip_paper_examined_details = new VipPaperExaminedDetails;
                 $lastPaperExaminedDetail = $this->getLastPaperExaminedDetail($data['taskId']);
@@ -1238,11 +1242,12 @@ class VipYoudaoExamined extends Model
                         $newData['show_name'] = $data['name'];
                     }
                 }else{
-                    //若有道审核未通过，则关闭任务,更新最终有道接收、处理时间
+                    //若有道审核未通过，则默认已处理，任务状态改为待审，图片,更新最终有道接收、处理时间
                     $newData = array(
-                        'image_examined_status'=>7,
-                        'paper_examined_status'=>5,
+                        'image_examined_status'=>5,
+                        'paper_examined_status'=>2,
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
+                        'final_processing_time'=>$data['youdaoReceiveTime'],
                     );
                 }
                 //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
@@ -1253,7 +1258,7 @@ class VipYoudaoExamined extends Model
                 }
                 $this->commit();
                 return true;
-            }*/
+            }
         }
         return false;
     }
