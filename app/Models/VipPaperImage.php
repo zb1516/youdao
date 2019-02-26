@@ -137,7 +137,6 @@ class VipPaperImage extends Model
                 'paper_examined_status' => 1,
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
-            dd($resultEdit);
             if($resultEdit === false)
             {
                 $this->rollback();
@@ -154,6 +153,7 @@ class VipPaperImage extends Model
             $filenameAll = $filename.$dateTime.$rand;
             $ossPATH="YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filenameAll, $ossPATH,  $searchArgs['randName']);
+            dd($resultUrl);
             $questionUrl = $resultUrl['info']['url'];
             $dataEdit = [
                 'question_url' => $questionUrl,
@@ -180,6 +180,7 @@ class VipPaperImage extends Model
             $filenameQuestion = $filename.$dateTime.$rand.'Question';
             $ossPATH = "YOUDAO/IMAGE/YOUDAO_V1/".$searchArgs['taskId']."/";
             $resultUrl = $this->uploadOssPackage($filenameQuestion, $ossPATH, $searchArgs['randNameQuestion']);
+            dd($resultUrl);
             $questionUrl = $resultUrl['info']['url'];
             $dataEdit = [
                 'question_url' => $questionUrl,
