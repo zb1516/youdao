@@ -157,7 +157,7 @@
                                 that.questions = [];
                                 that.questions = that.paperInfo.youdao_info.questions;
                                 that.$nextTick(() => {
-                                    MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('paper-box')]);
                                 });
                                 $(".review2-btn").show();
                             }
