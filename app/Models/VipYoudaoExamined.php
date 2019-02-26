@@ -1068,6 +1068,15 @@ class VipYoudaoExamined extends Model
                 throw new \Exception('有道第一次处理成功回调处理信息更新失败');
             }
 
+            //如果有道审核不通过，则删除该任务所有图片
+            if($data['isPass'] == 0){
+                $vip_paper_image = new VipPaperImage;
+                $result = $vip_paper_image->edit(array('is_delete'=>1), array('task_id'=>$data['taskId']));
+                if(!$result){
+                    $this->rollback();
+                    throw new \Exception('有道审核未通过回调处理任务图片删除失败');
+                }
+            }
             $this->commit();
             return true;
         }
