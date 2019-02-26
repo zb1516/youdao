@@ -342,7 +342,7 @@ class VipPaperImage extends Model
      * 上传压缩包oss
      */
     public function uploadOssPackage($filename, $ossPATH, $randName)
-    {
+    {dd($ossPATH);
         //$dir = "ossImages/".$taskId;
         $bucketName = config('app.OFFICE_DOCUMENT_BUCKET');
         $localImageUrl = config('app.LOCAL_IMAGE_URL');
