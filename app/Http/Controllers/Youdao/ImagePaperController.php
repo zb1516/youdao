@@ -223,7 +223,6 @@ class ImagePaperController extends BaseController
             }else{
                 $result = $this->vipPaperImage->paperPass($searchArgs);
             }
-            dd($result);
 
             return response()->json($result);
         } catch (\Exception $e) {

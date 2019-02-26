@@ -114,6 +114,7 @@ class VipPaperImage extends Model
      */
     public function paperPass($searchArgs)
     {
+        dd(1111);
         $this->beginTransaction();
         $vipYoudaoExamined = new VipYoudaoExamined();
         $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
