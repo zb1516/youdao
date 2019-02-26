@@ -114,7 +114,6 @@ class VipPaperImage extends Model
      */
     public function paperPass($searchArgs)
     {
-        dd(1111);
         $this->beginTransaction();
         $vipYoudaoExamined = new VipYoudaoExamined();
         $vipYoudaoExamined->youdaoPaperNameInsert($searchArgs);
@@ -138,6 +137,7 @@ class VipPaperImage extends Model
                 'paper_examined_status' => 1,
             ];
             $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            dd($resultEdit);
             if($resultEdit === false)
             {
                 $this->rollback();
