@@ -346,7 +346,6 @@ class VipPaperImage extends Model
         //$dir = "ossImages/".$taskId;
         $bucketName = config('app.OFFICE_DOCUMENT_BUCKET');
         $localImageUrl = config('app.LOCAL_IMAGE_URL');
-        dd($localImageUrl);
         $res = BucketService::uploadFile( $bucketName,$filename . '.zip',$ossPATH.$filename . '.zip',false,'压缩包.zip');
         unlink($localImageUrl . $filename . '.zip');
 
