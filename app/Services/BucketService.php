@@ -153,6 +153,7 @@ class BucketService {
      */
     public static function uploadFile($bucketName, $localFilePath, $ossPath, $internal=true,$downloadFileName="") {
         $bucketInfo = self::getBucketConfig($bucketName, true);
+        dd($bucketInfo);
         $options=null;
         $region = str_replace('oss-', '', $bucketInfo['bucketRegion']);
         if($internal) {
