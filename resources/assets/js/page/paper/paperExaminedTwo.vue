@@ -26,7 +26,8 @@
             <textarea class="error-paper-info js-error-box" v-if="isPaperError == 1" name="paperErrorDesc">
 
             </textarea>
-            <a class="next-btn review2-btn" @click="doPaperExaminedTwo">下一步</a>
+            <a v-if="isForbidden==0" class="next-btn review2-btn" @click="doPaperExaminedTwo">下一步</a>
+            <a v-else="isForbidden==1" class="next-btn review2-btn" >下一步</a>
           </div>
         </div>
       </div>
@@ -45,6 +46,7 @@
                     isPaperError:'',
                     status:'',
                     error:'',
+                    isForbidden:0
                 }
             },
             computed: {
@@ -85,8 +87,10 @@
                         }else{
                             that.paperErrorDesc = '';
                         }
+                        that.isForbidden = 1;
                         axios.post('youdao/paper/paperExaminedTwo',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&isPaperError="+that.isPaperError+"&paperErrorDesc="+that.paperErrorDesc+"").then(function(data){
                             if(data.data){
+                                that.isForbidden = 0;
                                 if (data.data.errorMsg) {
                                     that.$message.error(data.data.errorMsg);
                                     return false;
