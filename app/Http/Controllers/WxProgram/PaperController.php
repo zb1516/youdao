@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Clients\KlibPaperClient;
+use App\Clients\KlibQuestionClient;
 use App\Models\Common;
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
@@ -491,25 +493,24 @@ class paperController extends Controller
             $searchArgs['taskId']=$request->input('taskId');
             $searchArgs['token']=$request->input('token');
             $searchArgs['isShare']=$request->input('isShare');
-//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-//            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
-//            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-//            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
-//            $questions=[];
-//            foreach ($result as $key => $val)
-//            {
-//                $questions[$val['ques_id']]=$val;
-//            }
-//            foreach($paperInfo['module'] as $key => $val)
-//            {
-//                foreach($val['questions'] as $k => $v)
-//                {
-//                    $val['questions'][$k]['ques_score']=$v['ques_score'];
-//                    $val['questions'][$k]=$questions[$v['ques_id']];
-//                }
-//                $paperInfo['module'][$key]=$val;
-//            }
-            $paperInfo=[];
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+            $questions=[];
+            foreach ($result as $key => $val)
+            {
+                $questions[$val['ques_id']]=$val;
+            }
+            foreach($paperInfo['module'] as $key => $val)
+            {
+                foreach($val['questions'] as $k => $v)
+                {
+                    $val['questions'][$k]['ques_score']=$v['ques_score'];
+                    $val['questions'][$k]=$questions[$v['ques_id']];
+                }
+                $paperInfo['module'][$key]=$val;
+            }
             return response()->json(['status'=>200,'data'=>$paperInfo]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);
