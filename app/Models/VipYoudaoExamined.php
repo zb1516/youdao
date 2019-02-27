@@ -1013,7 +1013,7 @@ class VipYoudaoExamined extends Model
     {
         if($data['taskId']){
             $taskInfo = $this->findOne(array('task_id' => $data['taskId']));
-            if($data['isPass']==1 && $taskInfo['paper_examined_status'] == 2){
+            if($data['isPass']==1 && isset($data['youdaoProcessingTime']) && $taskInfo['paper_examined_status'] == 2){
                 throw new \Exception('此任务已经为待审核状态，不能重复处理');
             }
             if($data['isPass']==0 && $taskInfo['paper_examined_status'] == 5){
@@ -1159,7 +1159,7 @@ class VipYoudaoExamined extends Model
                         }
                     }
 
-                    //若有道审核通过，则激活任务待审状态
+                    //若有道审核通过且处理完成，则激活任务待审状态
                     $newData = array(
                         'paper_examined_status'=>2,
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
@@ -1174,11 +1174,12 @@ class VipYoudaoExamined extends Model
                     $newData = array(
                         'image_examined_status'=>5,
                         'paper_examined_status'=>2,
-                        'final_youdao_receive_time'=>$lastPaperExaminedDetail['youdao_receive_time'],
-                        'final_processing_time'=>$lastPaperExaminedDetail['youdaoProcessingTime'],
+                        'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
+                        'final_processing_time'=>$data['youdaoProcessingTime'],
+                        'final_processing_days'=>$processing_days
                     );
                 }
-
+                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/newData'.date('Ymd').'.txt',json_encode(array_merge($newData, array('task_id'=>$data['taskId']))).PHP_EOL,FILE_APPEND);
                 //更新任务状态，如通过有道审核，则激活试卷待审状态，如未通过有道审核，则关闭任务
                 $result = $this->edit($newData, array('task_id'=>$data['taskId']));
                 if(!$result){
@@ -1233,7 +1234,7 @@ class VipYoudaoExamined extends Model
                         }
                     }
 
-                    //若有道审核通过，则激活任务待审状态
+                    //若有道审核通过,还未处理时，则不更新任务状态，只更新有道接收时间
                     $newData = array(
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
                         'image_examined_status'=>5,
@@ -1244,8 +1245,8 @@ class VipYoudaoExamined extends Model
                 }else{
                     //若有道审核未通过，则默认已处理，任务状态改为待审，图片,更新最终有道接收、处理时间
                     $newData = array(
-                        'image_examined_status'=>5,
-                        'paper_examined_status'=>2,
+                        //'image_examined_status'=>5,
+                        //'paper_examined_status'=>2,
                         'final_youdao_receive_time'=>$data['youdaoReceiveTime'],
                         'final_processing_time'=>$data['youdaoReceiveTime'],
                     );
