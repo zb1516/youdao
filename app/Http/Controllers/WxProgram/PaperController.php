@@ -358,6 +358,7 @@ class paperController extends Controller
                 $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
                 //判断是否是退回状态如果是退回状态，取审核时间，如果不是退回状态，取上传时间
                 $val['upload_time']=intval($val['image_examined_status'])==3?$val['image_examined_time']:$val['upload_time'];
+                $val['image_examined_status']=intval($val['image_examined_status'])==4?6:$val['image_examined_status'];
                 $list['data'][$key]=$val;
             }
             $list['data']=key_sort($list['data'],SORT_DESC,'upload_time');
