@@ -397,7 +397,6 @@ class paperController extends Controller
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
             //获取本月上传试卷数
             $useCount=$vipYoudaoExaminedModel->count($condition);
-            dd($useCount);
             $useCount=intval($useCount)>0?$useCount:0;           //本月已上传次数
             //获取上传额度，先从配置文件中获取上传额度
             $paperUploadTotalCount=config('app.AGENCY_UPLOAD_NUMBER');
