@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\WxProgram;
 
+use App\Clients\KlibPaperClient;
+use App\Clients\KlibQuestionClient;
 use App\Models\Common;
 use App\Models\VipMessageRemind;
 use App\Models\VipMessageViewLog;
@@ -356,6 +358,7 @@ class paperController extends Controller
                 $val['image_error_type']=!empty($val['image_error_type'])?explode(',',$val['image_error_type']):array();
                 //判断是否是退回状态如果是退回状态，取审核时间，如果不是退回状态，取上传时间
                 $val['upload_time']=intval($val['image_examined_status'])==3?$val['image_examined_time']:$val['upload_time'];
+                $val['image_examined_status']=intval($val['image_examined_status'])==4?6:$val['image_examined_status'];
                 $list['data'][$key]=$val;
             }
             $list['data']=key_sort($list['data'],SORT_DESC,'upload_time');
@@ -491,25 +494,24 @@ class paperController extends Controller
             $searchArgs['taskId']=$request->input('taskId');
             $searchArgs['token']=$request->input('token');
             $searchArgs['isShare']=$request->input('isShare');
-//            $vipYoudaoExaminedModel=new VipYoudaoExamined();
-//            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
-//            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
-//            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
-//            $questions=[];
-//            foreach ($result as $key => $val)
-//            {
-//                $questions[$val['ques_id']]=$val;
-//            }
-//            foreach($paperInfo['module'] as $key => $val)
-//            {
-//                foreach($val['questions'] as $k => $v)
-//                {
-//                    $val['questions'][$k]['ques_score']=$v['ques_score'];
-//                    $val['questions'][$k]=$questions[$v['ques_id']];
-//                }
-//                $paperInfo['module'][$key]=$val;
-//            }
-            $paperInfo=[];
+            $vipYoudaoExaminedModel=new VipYoudaoExamined();
+            $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
+            $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
+            $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+            $questions=[];
+            foreach ($result as $key => $val)
+            {
+                $questions[$val['ques_id']]=$val;
+            }
+            foreach($paperInfo['module'] as $key => $val)
+            {
+                foreach($val['questions'] as $k => $v)
+                {
+                    $val['questions'][$k]['ques_score']=$v['ques_score'];
+                    $val['questions'][$k]=$questions[$v['ques_id']];
+                }
+                $paperInfo['module'][$key]=$val;
+            }
             return response()->json(['status'=>200,'data'=>$paperInfo]);
         }catch (\Exception $e){
             return response()->json(['status'=>0,'errorMsg'=>$e->getMessage()]);

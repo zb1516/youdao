@@ -22,6 +22,34 @@ class VipRepeatPaperRecord extends Model
         $userModel = new User();
         $userInfo = $userModel->getUserInfo($userKey);
         if($result){
+            $vipPaper = new Paper();
+            $conditionPaper = array(
+                'id' => $paperId
+            );
+            $resultPaper = $vipPaper->findOne($conditionPaper)->toArray();
+            unset($resultPaper['id']);
+            $resultPaper['agency_id'] = $result['agency_id'];
+            $resultEditPaper = $vipPaper->add($resultPaper);
+            if($resultEditPaper === false)
+            {
+                $this->rollback();
+                throw new \Exception('保存试卷记录失败');
+            }
+            $conditionQuestion = array(
+                'paper_id' => $paperId
+            );
+            $vipQuestion = new Question();
+            $resultQuestion = $vipQuestion->findAll($conditionQuestion);
+            foreach ($resultQuestion as $v){
+                unset($v['id']);
+                $v['agency_id'] = $result['agency_id'];
+                $resultEditQuestion = $vipQuestion->add($v);
+                if($resultEditQuestion === false)
+                {
+                    $this->rollback();
+                    throw new \Exception('保存试题记录失败');
+                }
+            }
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
             $diffDays = $vipYoudaoWorkingWeekendDays->getDiffDaysCount($result['upload_time'],$date);
             $data = [
@@ -29,9 +57,10 @@ class VipRepeatPaperRecord extends Model
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
+                'paper_examined_status' => 3
             ];
-            $result = $vipYoudaoExamined->edit($data, $condition);
-            if($result === false)
+            $resultEdit = $vipYoudaoExamined->edit($data, $condition);
+            if($resultEdit === false)
             {
                 $this->rollback();
                 throw new \Exception('试卷退回失败');
@@ -44,8 +73,8 @@ class VipRepeatPaperRecord extends Model
                 'paper_id' => $paperId,
                 'create_time' => $date,
             ];
-            $result = $this->add($data);
-            if($result === false)
+            $resultAdd = $this->add($data);
+            if($resultAdd === false)
             {
                 $this->rollback();
                 throw new \Exception('保存试卷记录失败');
@@ -53,6 +82,19 @@ class VipRepeatPaperRecord extends Model
         }else{
             $this->rollback();
             throw new \Exception('已经有重复记录了');
+        }
+        $vipPaperImage = new VipPaperImage();
+        $resultAll = $vipPaperImage->findAll($condition);
+        if($resultAll){
+            $data = [
+                'is_delete' => 1,
+            ];
+            $resultEdit = $vipPaperImage->edit($data, $condition);
+            if($resultEdit === false)
+            {
+                $this->rollback();
+                throw new \Exception('图片详情退回失败');
+            }
         }
         $this->commit();
         return true;
