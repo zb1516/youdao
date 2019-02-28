@@ -187,7 +187,7 @@
                 optionsGrade:'',
                 province:'',
                 city:'',
-                statusValue:0,
+                statusValue:2,
                 optionsStatus:'',
                 agencyValue:0,
                 optionsAgency:'',

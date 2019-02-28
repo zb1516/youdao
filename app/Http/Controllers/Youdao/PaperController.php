@@ -473,7 +473,7 @@ class PaperController extends BaseController
                             'openId'=>$paperInfo['open_id'],
                             'type'=>1,
                             'userId'=>$paperInfo['create_uid'],
-                            'content'=>'抱歉，您提交的图片未通过有道审核，已被退回。'
+                            'content'=>'图片不清晰'
                         ));
                     }
                 }
