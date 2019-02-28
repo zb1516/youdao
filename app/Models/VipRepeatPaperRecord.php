@@ -29,6 +29,7 @@ class VipRepeatPaperRecord extends Model
             $resultPaper = $vipPaper->findOne($conditionPaper)->toArray();
             unset($resultPaper['id']);
             $resultPaper['agency_id'] = $result['agency_id'];
+            $resultPaper['created_time'] = time();
             $resultEditPaper = $vipPaper->add($resultPaper);
             if($resultEditPaper === false)
             {
@@ -43,6 +44,8 @@ class VipRepeatPaperRecord extends Model
             foreach ($resultQuestion as $v){
                 unset($v['id']);
                 $v['agency_id'] = $result['agency_id'];
+                $v['content_text'] = strip_tags($v['content_text']);
+                $v['analysis_text'] = strip_tags($v['analysis_text']);
                 $resultEditQuestion = $vipQuestion->add($v);
                 if($resultEditQuestion === false)
                 {
@@ -66,7 +69,7 @@ class VipRepeatPaperRecord extends Model
                 'image_examined_time' => $date,
                 'image_examined_auditor_id' => $userInfo['id'],
                 'image_processing_days' => $diffDays,
-                'paper_examined_status' => 3,
+                //'paper_examined_status' => 3,
                 'paper_id' => $paperId,
                 'subject_id' => $resultPaper['subject_id'],
                 'grade' => $gradeName[$resultPaper['grades']],
