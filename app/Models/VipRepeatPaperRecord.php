@@ -41,16 +41,18 @@ class VipRepeatPaperRecord extends Model
             );
             $vipQuestion = new Question();
             $resultQuestion = $vipQuestion->findAll($conditionQuestion);
-            foreach ($resultQuestion as $v){
-                unset($v['id']);
-                $v['agency_id'] = $result['agency_id'];
-                $v['content_text'] = strip_tags($v['content_text']);
-                $v['analysis_text'] = strip_tags($v['analysis_text']);
-                $resultEditQuestion = $vipQuestion->add($v);
-                if($resultEditQuestion === false)
-                {
-                    $this->rollback();
-                    throw new \Exception('保存试题记录失败');
+            if($resultQuestion){
+                foreach ($resultQuestion as $v){
+                    unset($v['id']);
+                    $v['agency_id'] = $result['agency_id'];
+                    $v['content_text'] = strip_tags($v['content_text']);
+                    $v['analysis_text'] = strip_tags($v['analysis_text']);
+                    $resultEditQuestion = $vipQuestion->add($v);
+                    if($resultEditQuestion === false)
+                    {
+                        $this->rollback();
+                        throw new \Exception('保存试题记录失败');
+                    }
                 }
             }
             $vipYoudaoWorkingWeekendDays = new VipYoudaoWorkingWeekendDays();
@@ -64,6 +66,21 @@ class VipRepeatPaperRecord extends Model
                 $str = $common->stringTransformation($subjectName);
             }
             $paperName = $result['agency_id'].'-'.'套卷VIP'.'-'.$str.'-'.$resultPaper['year'].'-'.$resultPaper['province'].'-'.$resultPaper['city'].'-'.$resultPaper['country'].'-'.$resultPaper['school'].'-'.$resultPaper['grades'].'-'.$resultPaper['term'].'-'.$resultPaper['source'].'-'.$resultPaper['other1'].'-'.$resultPaper['other2'].'-'.$resultPaper['duration'].'-'.$resultPaper['score'].'-'.$resultPaper['question_number'];
+            $province = new Province();
+            $provinces = $province->getProvince();//获取省份
+
+            $provinceIds = [];
+            $provinceIdNames = [];
+            foreach ($provinces as $v) {
+                $provinceIds[] = $v['id'];
+                $provinceIdNames[$v['id']] = $v['city'];
+            }
+            $provinceIdNamesFlip = array_flip($provinceIdNames);
+            $city = new City();
+            $citys = $city->getIdCountrys($provinceIds);
+            $countrys = $city->getIdAreas($provinceIds);
+            $citysFlip = array_flip($citys);
+            $countrysFlip = array_flip($countrys);
             $data = [
                 'image_examined_status' => 4,
                 'image_examined_time' => $date,
@@ -73,9 +90,9 @@ class VipRepeatPaperRecord extends Model
                 'paper_id' => $paperId,
                 'subject_id' => $resultPaper['subject_id'],
                 'grade' => $gradeName[$resultPaper['grades']],
-                'province' => $resultPaper['province'],
-                'city' => $resultPaper['city'],
-                'area' => $resultPaper['country'],
+                'province' => $provinceIdNamesFlip[$resultPaper['province']],
+                'city' => $citysFlip[$resultPaper['city']],
+                'area' => $countrysFlip[$resultPaper['country']],
                 'school' => $resultPaper['school'],
                 'year' => $resultPaper['year'],
                 'semester' => $resultPaper['term'],
