@@ -153,7 +153,7 @@
 				});
             });
 
-			$(document).off('.sp.address').on('click.sp.address', 'body', function (e) {
+			$(document.body).off('.sp.address').on('click.sp.address', function (e) {
 				if (!$(e.target).closest('.address-search-box').length && $('.drop-down:visible').length) {
 					$('.drop-down:visible').prev('.city-select').trigger('click');
 				}

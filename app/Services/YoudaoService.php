@@ -91,7 +91,7 @@ class YoudaoService
             $url = config('app.TEST_YOUDAO_URL').$url;
             $salt = rand(1,1000);
             $time = time();
-            $sign = $this->getYoudaoSign($appKey,$url,$salt,$time,$appSecret);
+            $sign = $this->getYoudaoSign($appKey,$taskId,$salt,$time,$appSecret);
             $postData = array(
                 'taskId'=>$taskId,
                 'appKey' => $appKey,
@@ -129,7 +129,7 @@ class YoudaoService
             $url = config('app.TEST_YOUDAO_URL').$url;
             $salt = rand(1,1000);
             $time = time();
-            $sign = $this->getYoudaoSign($appKey,$url,$salt,$time,$appSecret);
+            $sign = $this->getYoudaoSign($appKey,$data['taskId'],$salt,$time,$appSecret);
             $postData = array(
                 'appKey' => $appKey,
                 'salt' => $salt,
