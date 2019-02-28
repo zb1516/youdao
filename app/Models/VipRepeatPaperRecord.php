@@ -81,7 +81,7 @@ class VipRepeatPaperRecord extends Model
                 'semester' => $resultPaper['term'],
                 'source' => $resultPaper['source'],
                 'examination_length' => $resultPaper['duration'],
-                'examination_score' => $resultPaper['sorce'],
+                'examination_score' => $resultPaper['score'],
                 'question_number' => $resultPaper['question_number'],
                 'other_information_one' => $resultPaper['other1'],
                 'other_information_two' => $resultPaper['other2'],
