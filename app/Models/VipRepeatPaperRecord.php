@@ -26,10 +26,10 @@ class VipRepeatPaperRecord extends Model
             $conditionPaper = array(
                 'id' => $paperId
             );
-            $resultPaper = $vipPaper->findOne($conditionPaper);
+            $resultPaper = $vipPaper->findOne($conditionPaper)->toArray();
             unset($resultPaper['id']);
             $resultPaper['agency_id'] = $result['agency_id'];
-            $resultEditPaper = $this->add($resultPaper);
+            $resultEditPaper = $vipPaper->add($resultPaper);
             if($resultEditPaper === false)
             {
                 $this->rollback();
@@ -43,7 +43,7 @@ class VipRepeatPaperRecord extends Model
             foreach ($resultQuestion as $v){
                 unset($v['id']);
                 $v['agency_id'] = $result['agency_id'];
-                $resultEditQuestion = $this->add($v);
+                $resultEditQuestion = $vipQuestion->add($v);
                 if($resultEditQuestion === false)
                 {
                     $this->rollback();
