@@ -392,7 +392,7 @@ class paperController extends Controller
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $condition=['agency_id'=>['eq' => $userInfo['agencyId']],'upload_time'=>['between' => [$dayData[0].' 00:00:00',$dayData[1].' 11:59:59']]];
+            $condition=['agency_id'=>['eq' => $userInfo['agencyId']],'upload_time'=>['between' => [$dayData[0].' 00:00:00',$dayData[1].' 23:59:59']]];
             $paperMonthCount=$vipYoudaoExaminedModel->count($condition);
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
             //获取本月上传试卷数
