@@ -54,6 +54,20 @@ class VipRepeatPaperRecord extends Model
             $this->rollback();
             throw new \Exception('已经有重复记录了');
         }
+        $vipPaperImage = new VipPaperImage();
+        $resultAll = $vipPaperImage->findAll($condition);
+        if($resultAll){
+            $data = [
+                'is_delete' => 1,
+            ];
+            $resultEdit = $this->edit($data, $condition);
+            if($resultEdit === false)
+            {
+                $this->rollback();
+                throw new \Exception('图片详情退回失败');
+            }
+        }
+
         $this->commit();
         return true;
     }
