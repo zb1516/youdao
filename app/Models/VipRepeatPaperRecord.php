@@ -60,7 +60,7 @@ class VipRepeatPaperRecord extends Model
             $data = [
                 'is_delete' => 1,
             ];
-            $resultEdit = $this->edit($data, $condition);
+            $resultEdit = $vipPaperImage->edit($data, $condition);
             if($resultEdit === false)
             {
                 $this->rollback();
