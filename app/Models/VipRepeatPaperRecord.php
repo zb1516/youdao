@@ -22,7 +22,7 @@ class VipRepeatPaperRecord extends Model
         $userModel = new User();
         $userInfo = $userModel->getUserInfo($userKey);
         if($result){
-            $vipPaper = new VipPaper();
+            $vipPaper = new Paper();
             $conditionPaper = array(
                 'id' => $paperId
             );
