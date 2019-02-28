@@ -39,7 +39,11 @@
                 <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
                 <template v-for="(question, index) in questions">
                     <dl class="question-wrapper" v-if="question">
-                      <dt class="question-name">{{index+1}}、<span v-html="question.quesLatextContent.content" v-if="question.quesLatextContent"></span></dt>
+                      <dt class="question-name">
+                          <template v-if="question.quesNo">{{question.quesNo}}</template>
+                          <template v-else="!question.quesNo">{{index+1}}</template>
+                          、（{{question.quesScore}}分）<span v-html="question.quesLatextContent.content" v-if="question.quesLatextContent"></span>
+                      </dt>
                       <template v-if="question.hasOptions == 1">
                           <template v-for="(option, i) in question.options">
                               <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>

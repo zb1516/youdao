@@ -832,7 +832,8 @@ class VipYoudaoExamined extends Model
                 $ans = new VipQuestionAnswer;
                 foreach ($data['youdao_info']['questions'] as $key => $q){
                     $question = [];
-                    $question['number'] = $q['quesNumber'];
+                    $question['number'] = isset($q['quesNo'])?$q['quesNo']:($key+1);
+                    $question['score'] = isset($q['quesScore'])?$q['quesScore']:'';
                     $question['yd_question_type'] = $q['quesType'];
                     $question['content'] = $q['quesLatextContent']['content'];
                     $question['content_text'] = strip_tags($q['quesLatextContent']['content']);

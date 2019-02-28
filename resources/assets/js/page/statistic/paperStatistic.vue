@@ -178,14 +178,19 @@
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
               <dl class="question-wrapper q-radio" v-if="question.hasOptions == 1">
-                  <dt class="question-name">{{index+1}}、{{question.quesLatextContent.content}}</dt>
+                  <dt class="question-name">
+                      <template v-if="question.quesNo">{{question.quesNo}}</template>
+                      <template v-else="!question.quesNo">{{index+1}}</template>
+                      、（{{question.quesScore}}分）{{question.quesLatextContent.content}}</dt>
                   <template v-for="(option,i) in question.options">
                     <dd class="option" >{{option.label}}.{{option.latexContent}}</dd>
                   </template>
                </dl>
               <div class="question-wrapper q-answer" v-if="question.hasOptions == 0">
                 <p class="q-answer-con">
-                  {{index+1}}、{{question.quesLatextContent.content}}
+                    <template v-if="question.quesNo">{{question.quesNo}}</template>
+                    <template v-else="!question.quesNo">{{index+1}}</template>
+                    、（{{question.quesScore}}分）{{question.quesLatextContent.content}}
                 </p>
               </div>
            </template>

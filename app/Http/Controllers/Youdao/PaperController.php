@@ -116,14 +116,17 @@ class PaperController extends BaseController
         if($result['code'] == 200){
             $paperInfo['youdao_info'] = $result['data'];
         }
+
         /*$paperInfo['youdao_info'] = array(
-            "isPaper"=>1,
-            "paperFilePath"=>"http://xxxxxxxx/paper/{taskId}.docx",
+            'textbook'=>array(
+                'name'=>'222222',
+            ),
             'questions'=>array(
                 '0'=>array(
                     'quesNumber'=>1,
                     'hasOptions'=>1,
                     'quesType'=>'单选题', //题型
+                    'quesScore'=>5,
                     'quesLatextContent'=>array(
                         'content'=>'<div>safasfasfasfs</div>',
                         'fileUrl'=>"http://vip.gaosiedu.com/static/images/eap_loginbg2.png"

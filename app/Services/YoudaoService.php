@@ -39,6 +39,7 @@ class YoudaoService
             );
 
             $postData = array_merge($postData,$postDataNew);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/taskResult'.date('Ymd').'.txt',json_encode($postData).PHP_EOL,FILE_APPEND);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
