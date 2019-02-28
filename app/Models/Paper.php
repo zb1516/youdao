@@ -78,6 +78,7 @@ class Paper extends Model
         if (!empty($searchArgs['other2'])) {
             $condition['other2'] = array('eq' => $searchArgs['other2']);
         }
+        $condition['agency_id'] = array('eq' => 0);
         if (empty($condition)) {
             $condition = [];
         }
