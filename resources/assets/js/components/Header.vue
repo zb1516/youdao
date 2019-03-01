@@ -10,13 +10,13 @@
             </div>
             <div class="nav">
                 <ul class="list">
-                    <li :class="imageShow?'nav-box current':'nav-box'" @click="selectImage">
+                    <li :class="imageShow?'nav-box current':'nav-box'" @click="selectImage" v-if="isImageShow==1">
                         <router-link  :to="{name:'imagePaper-imagePaperList',params:{userKey:userKey}}" class="back-btn">图片审核</router-link>
                     </li>
-                    <li :class="paperShow?'nav-box current':'nav-box'" @click="selectPaper">
+                    <li :class="paperShow?'nav-box current':'nav-box'" @click="selectPaper" v-if="isPaperShow==1">
                         <router-link  :to="{name:'paper-paperList',params:{userKey:userKey}}" class="back-btn">试卷审核</router-link>
                     </li>
-                    <li :class="statisticShow?'nav-box current':'nav-box'">
+                    <li :class="statisticShow?'nav-box current':'nav-box'" v-if="isStatisticShow==1">
                         <a href="#">数据统计<span class="icon"></span></a>
                         <div class="child-nav">
                             <ul class="list">
@@ -43,6 +43,9 @@
                 imageShow:1,
                 paperShow:0,
                 statisticShow:0,
+                isImageShow:0,
+                isPaperShow:0,
+                isStatisticShow:0
             }
         },
         computed: {
@@ -55,6 +58,7 @@
         mounted(){
             var strName = this.$route.path.split("/");
             var that = this;
+            that.doCheckAuth();
             if(strName[2] == 'paperList' || strName[2] == 'paperExaminedOne' || strName[2] == 'paperExaminedTwo' ||strName[2] == 'paperExaminedResult'){
                 that.paperShow = 1;
                 that.imageShow = 0;
@@ -88,6 +92,24 @@
                 that.imageShow = 0;
                 that.paperShow = 0;
             },
+            doCheckAuth: function (){
+                var that = this;
+                var searchArgs = $.extend(true, {}, that.searchArgs);
+                searchArgs.userKey = that.userKey;
+                axios.get('youdao/user/checkAuth',{params:searchArgs}).then(function(data){
+                    if(data.data){
+                        if (data.data.errorMsg) {
+                            that.$message.error(data.data.errorMsg);
+                            return false;
+                        } else {
+                            that.isImageShow = data.data.isImageShow;
+                            that.isPaperShow = data.data.isPaperShow;
+                            that.isStatisticShow = data.data.isStatisticShow;
+                        }
+                    }
+
+                })
+            }
         }
     }
 </script>

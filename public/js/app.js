@@ -36261,7 +36261,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return {
             imageShow: 1,
             paperShow: 0,
-            statisticShow: 0
+            statisticShow: 0,
+            isImageShow: 0,
+            isPaperShow: 0,
+            isStatisticShow: 0
         };
     },
 
@@ -36272,6 +36275,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     mounted: function mounted() {
         var strName = this.$route.path.split("/");
         var that = this;
+        that.doCheckAuth();
         if (strName[2] == 'paperList' || strName[2] == 'paperExaminedOne' || strName[2] == 'paperExaminedTwo' || strName[2] == 'paperExaminedResult') {
             that.paperShow = 1;
             that.imageShow = 0;
@@ -36305,6 +36309,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             that.statisticShow = 1;
             that.imageShow = 0;
             that.paperShow = 0;
+        },
+        doCheckAuth: function doCheckAuth() {
+            var that = this;
+            var searchArgs = $.extend(true, {}, that.searchArgs);
+            searchArgs.userKey = that.userKey;
+            axios.get('youdao/user/checkAuth', { params: searchArgs }).then(function (data) {
+                if (data.data) {
+                    if (data.data.errorMsg) {
+                        that.$message.error(data.data.errorMsg);
+                        return false;
+                    } else {
+                        that.isImageShow = data.data.isImageShow;
+                        that.isPaperShow = data.data.isPaperShow;
+                        that.isStatisticShow = data.data.isStatisticShow;
+                    }
+                }
+            });
         }
     }
 });
@@ -36332,111 +36353,117 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "nav" }, [
         _c("ul", { staticClass: "list" }, [
-          _c(
-            "li",
-            {
-              class: _vm.imageShow ? "nav-box current" : "nav-box",
-              on: { click: _vm.selectImage }
-            },
-            [
-              _c(
-                "router-link",
+          _vm.isImageShow == 1
+            ? _c(
+                "li",
                 {
-                  staticClass: "back-btn",
-                  attrs: {
-                    to: {
-                      name: "imagePaper-imagePaperList",
-                      params: { userKey: _vm.userKey }
-                    }
-                  }
+                  class: _vm.imageShow ? "nav-box current" : "nav-box",
+                  on: { click: _vm.selectImage }
                 },
-                [_vm._v("图片审核")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              class: _vm.paperShow ? "nav-box current" : "nav-box",
-              on: { click: _vm.selectPaper }
-            },
-            [
-              _c(
-                "router-link",
-                {
-                  staticClass: "back-btn",
-                  attrs: {
-                    to: {
-                      name: "paper-paperList",
-                      params: { userKey: _vm.userKey }
-                    }
-                  }
-                },
-                [_vm._v("试卷审核")]
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            { class: _vm.statisticShow ? "nav-box current" : "nav-box" },
-            [
-              _vm._m(2),
-              _vm._v(" "),
-              _c("div", { staticClass: "child-nav" }, [
-                _c("ul", { staticClass: "list" }, [
+                [
                   _c(
-                    "li",
+                    "router-link",
                     {
-                      staticClass: "link-box",
-                      on: { click: _vm.selectStatistic }
+                      staticClass: "back-btn",
+                      attrs: {
+                        to: {
+                          name: "imagePaper-imagePaperList",
+                          params: { userKey: _vm.userKey }
+                        }
+                      }
                     },
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "statistic-imagePaperStatistic",
-                              params: { userKey: _vm.userKey }
-                            }
-                          }
-                        },
-                        [_vm._v("图片审核统计")]
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "li",
-                    {
-                      staticClass: "link-box",
-                      on: { click: _vm.selectStatistic }
-                    },
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          attrs: {
-                            to: {
-                              name: "statistic-paperStatistic",
-                              params: { userKey: _vm.userKey }
-                            }
-                          }
-                        },
-                        [_vm._v("试卷审核统计")]
-                      )
-                    ],
-                    1
+                    [_vm._v("图片审核")]
                   )
-                ])
-              ])
-            ]
-          )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isPaperShow == 1
+            ? _c(
+                "li",
+                {
+                  class: _vm.paperShow ? "nav-box current" : "nav-box",
+                  on: { click: _vm.selectPaper }
+                },
+                [
+                  _c(
+                    "router-link",
+                    {
+                      staticClass: "back-btn",
+                      attrs: {
+                        to: {
+                          name: "paper-paperList",
+                          params: { userKey: _vm.userKey }
+                        }
+                      }
+                    },
+                    [_vm._v("试卷审核")]
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.isStatisticShow == 1
+            ? _c(
+                "li",
+                { class: _vm.statisticShow ? "nav-box current" : "nav-box" },
+                [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "child-nav" }, [
+                    _c("ul", { staticClass: "list" }, [
+                      _c(
+                        "li",
+                        {
+                          staticClass: "link-box",
+                          on: { click: _vm.selectStatistic }
+                        },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "statistic-imagePaperStatistic",
+                                  params: { userKey: _vm.userKey }
+                                }
+                              }
+                            },
+                            [_vm._v("图片审核统计")]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        {
+                          staticClass: "link-box",
+                          on: { click: _vm.selectStatistic }
+                        },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              attrs: {
+                                to: {
+                                  name: "statistic-paperStatistic",
+                                  params: { userKey: _vm.userKey }
+                                }
+                              }
+                            },
+                            [_vm._v("试卷审核统计")]
+                          )
+                        ],
+                        1
+                      )
+                    ])
+                  ])
+                ]
+              )
+            : _vm._e()
         ])
       ])
     ])

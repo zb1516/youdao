@@ -88,6 +88,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken','web']], func
     Route::any('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
     Route::any('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
     Route::get('paper/getProcessList', 'Youdao\PaperController@getProcessList');
+    Route::get('user/checkAuth', 'Youdao\UserController@checkAuth');
 
 });
 
