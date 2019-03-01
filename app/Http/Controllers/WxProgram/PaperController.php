@@ -503,7 +503,6 @@ class paperController extends Controller
             {
                 $questions[$val['ques_id']]=$val;
             }
-            dd($paperInfo);
             foreach($paperInfo['module'] as $key => $val)
             {
                 foreach($val['questions'] as $k => $v)
