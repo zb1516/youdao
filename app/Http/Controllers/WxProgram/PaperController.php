@@ -503,8 +503,14 @@ class paperController extends Controller
             {
                 $questions[$val['ques_id']]=$val;
             }
-            foreach($paperInfo as $key => $val)
+            dd($paperInfo);
+            foreach($paperInfo['module'] as $key => $val)
             {
+                foreach($val['questions'] as $k => $v)
+                {
+                    $val['questions'][$k]['ques_score']=$v['ques_score'];
+                    $val['questions'][$k]=$questions[$v['ques_id']];
+                }
                 $paperInfo['module'][$key]=$val;
             }
             return response()->json(['status'=>200,'data'=>$paperInfo]);
