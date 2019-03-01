@@ -380,4 +380,5 @@ return [
         '高三' => 12,
     ],
     'YOUDAO_SEND_TEMPLATE'=>'/WxService/sendTemplate',
+    'EAP_GROUP_NAME'=>'Vip',//有道项目所属eap中的模块名称
 ];
