@@ -121,7 +121,6 @@
                     searchArgs.userKey = that.userKey;
                     searchArgs.sort = that.sort;
                     axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
-                        return false;
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
                         }
