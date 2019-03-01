@@ -173,7 +173,7 @@
         <!-- 遮罩 -->
         <div class="dialog-balck-cover" @click="hidePaper()"></div>
         <!-- 试卷详情 -->
-        <div class="dialog-paper-detial-wrapper " id="paper-box">
+        <div class="dialog-paper-detial-wrapper " >
           <h2 class="title" >{{paperInfo.paper_name}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
@@ -181,16 +181,18 @@
                   <dt class="question-name">
                       <template v-if="question.quesNo">{{question.quesNo}}</template>
                       <template v-else="!question.quesNo">{{index+1}}</template>
-                      、（{{question.quesScore}}分）{{question.quesLatextContent.content}}</dt>
+                      、（{{question.quesScore}}分）
+                      <span v-html="question.quesLatextContent.content"></span> </dt>
                   <template v-for="(option,i) in question.options">
-                    <dd class="option" >{{option.label}}.{{option.latexContent}}</dd>
+                    <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
                   </template>
                </dl>
               <div class="question-wrapper q-answer" v-if="question.hasOptions == 0">
                 <p class="q-answer-con">
                     <template v-if="question.quesNo">{{question.quesNo}}</template>
                     <template v-else="!question.quesNo">{{index+1}}</template>
-                    、（{{question.quesScore}}分）{{question.quesLatextContent.content}}
+                    、（{{question.quesScore}}分）
+                    <span v-html="question.quesLatextContent.content"></span>
                 </p>
               </div>
            </template>
@@ -496,9 +498,11 @@
                             that.questions = [];
                             that.questions = data.data.youdao_info.questions;
                             that.$nextTick(() => {
-                                MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                                MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('paper-box')]);
                             });
                             $('.dialog-paper-detial-wrapper,.dialog-balck-cover').show();
+
+
                         }
                     })
 
