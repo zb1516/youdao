@@ -181,16 +181,18 @@
                   <dt class="question-name">
                       <template v-if="question.quesNo">{{question.quesNo}}</template>
                       <template v-else="!question.quesNo">{{index+1}}</template>
-                      、（{{question.quesScore}}分）{{question.quesLatextContent.content}}</dt>
+                      、（{{question.quesScore}}分）
+                      <span v-html="question.quesLatextContent.content"></span> </dt>
                   <template v-for="(option,i) in question.options">
-                    <dd class="option" >{{option.label}}.{{option.latexContent}}</dd>
+                    <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
                   </template>
                </dl>
               <div class="question-wrapper q-answer" v-if="question.hasOptions == 0">
                 <p class="q-answer-con">
                     <template v-if="question.quesNo">{{question.quesNo}}</template>
                     <template v-else="!question.quesNo">{{index+1}}</template>
-                    、（{{question.quesScore}}分）{{question.quesLatextContent.content}}
+                    、（{{question.quesScore}}分）
+                    <span v-html="question.quesLatextContent.content"></span>
                 </p>
               </div>
            </template>
@@ -495,10 +497,11 @@
                             that.paperInfo = data.data;
                             that.questions = [];
                             that.questions = data.data.youdao_info.questions;
-                            $('.dialog-paper-detial-wrapper,.dialog-balck-cover').show();
                             that.$nextTick(() => {
-                                MathJax.Hub.Queue(["Typeset",MathJax.Hub, document.getElementById('dialog-paper-detial-wrapper')]);
+                                MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('paper-box')]);
                             });
+                            $('.dialog-paper-detial-wrapper,.dialog-balck-cover').show();
+
 
                         }
                     })
