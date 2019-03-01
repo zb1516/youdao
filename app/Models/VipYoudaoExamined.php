@@ -1043,6 +1043,7 @@ class VipYoudaoExamined extends Model
                 //第一次投递任务成功后有道审核不通过，图片退回，试卷为未处理
                 $row['paper_examined_status'] = 0;
                 $row['image_examined_status'] = 3;
+                $row['image_examined_time'] = date('Y-m-d H:i:s');
             }
 
             $this->beginTransaction();
