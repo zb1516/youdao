@@ -498,7 +498,6 @@ class paperController extends Controller
             $paperExaminedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']]);
             $paperInfo=KlibPaperClient::getPaperClient($paperExaminedInfo['paper_id']);
             $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
-            dd($result);
             $questions=[];
             foreach ($result as $key => $val)
             {
