@@ -174,27 +174,23 @@
         <div class="dialog-balck-cover" @click="hidePaper()"></div>
         <!-- 试卷详情 -->
         <div class="dialog-paper-detial-wrapper " >
-          <h2 class="title" >{{paperInfo.paper_name}}</h2>
+          <h2 class="title" >{{paperInfo.title}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
-              <dl class="question-wrapper q-radio" v-if="question.hasOptions == 1">
+              <dl class="question-wrapper q-radio" v-if="question.ques_options">
                   <dt class="question-name">
-                      <template v-if="question.quesNo">{{question.quesNo}}</template>
-                      <template v-else="!question.quesNo">{{index+1}}</template>
-                      、（{{question.quesScore}}分）
-                      <span v-html="question.quesLatextContent.content"></span> </dt>
-                  <template v-for="(option,i) in question.options">
-                    <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
-                  </template>
+                      <template v-if="question.ques_number">{{question.ques_number}}</template>
+                      <template v-else="!question.ques_number">{{index+1}}</template>
+                      、（{{question.ques_score}}分）
+                      <span v-html="question.ques_content"></span>
+                  </dt>
+                  <div v-if="question.ques_answer">
+                      答案：<span v-html="question.ques_answer"></span>
+                  </div>
+                  <div v-if="question.ques_analysis">
+                      解析：<span v-html="question.ques_analysis"></span>
+                  </div>
                </dl>
-              <div class="question-wrapper q-answer" v-if="question.hasOptions == 0">
-                <p class="q-answer-con">
-                    <template v-if="question.quesNo">{{question.quesNo}}</template>
-                    <template v-else="!question.quesNo">{{index+1}}</template>
-                    、（{{question.quesScore}}分）
-                    <span v-html="question.quesLatextContent.content"></span>
-                </p>
-              </div>
            </template>
         </div>
     </div>
@@ -489,14 +485,14 @@
                 },
                 showPaper(taskId){
                     var that = this;
-                    axios.get('youdao/paper/paperInfo',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
+                    axios.get('youdao/paper/getSKPaperInfo',{params:{userKey:that.userKey,taskId:taskId}}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
                             return false;
                         } else {
                             that.paperInfo = data.data;
                             that.questions = [];
-                            that.questions = data.data.youdao_info.questions;
+                            that.questions = data.data.questions;
                             that.$nextTick(() => {
                                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('paper-box')]);
                             });
