@@ -1044,6 +1044,7 @@ class VipYoudaoExamined extends Model
                 $row['paper_examined_status'] = 0;
                 $row['image_examined_status'] = 3;
                 $row['image_examined_time'] = date('Y-m-d H:i:s');
+                $row['image_error_type'] = '图片不清晰';
             }
 
             $this->beginTransaction();
