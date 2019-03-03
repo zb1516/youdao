@@ -234,6 +234,7 @@ return [
     'YEAR' => [2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],//年份
     'JUDGE_TYPE' => ['题型','难度','年级','题类','知识点','同步升学'],//判定类型
     'JUDGE_TYPE_VALUE' => ['题型' => 'questionType','难度' => 'difficulty','年级' => 'grade','题类' => 'questionCategory','知识点' => 'knowledge','同步升学' => 'type'],//判定类型
+    'SUBJECT_NAME_MAPPING'=>['小学思维'=>'小学数学','小学科学'=>'小学化学'],
     'QUESTION_CATEGORY_OPTION'=>[
         ['id'=>1,'name'=>'物理'],
         ['id'=>2,'name'=>'化学'],

@@ -371,6 +371,8 @@ class VipPaperImage extends Model
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
         $subjectName = $allSubjectNames[$subjectId];
+        $config=config('app.SUBJECT_NAME_MAPPING');
+        $subjectName=!iseet($config[$subjectName])?$subjectName:$config[$subjectName];
         $strValue = $common->stringTransformation($subjectName);
         $subjectValue = explode('-',$strValue);
         $postData = [
