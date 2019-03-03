@@ -8,6 +8,8 @@
  */
 namespace App\http\Controllers\Youdao;
 
+use App\Clients\KlibPaperClient;
+use App\Clients\KlibQuestionClient;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Common\CommonController;
 use App\Libs\Export;
@@ -553,6 +555,32 @@ class PaperController extends BaseController
                 $processList = $this->vipYoudaoExamined->getProcessList($taskId);
             }
             return response()->json($processList);
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
+
+
+    //从私库获取试卷信息
+    public function getSKPaperInfo(Request $request){
+        try{
+            $taskId = trim($request->taskId);
+            if($taskId){
+                $taskInfo = $this->vipYoudaoExamined->findOne(array('task_id'=>$taskId));
+                if($taskInfo){
+                    $paperInfo = KlibPaperClient::getPaperClient($taskInfo['paper_id']);
+                    $paperInfo['questions'] = [];
+                    if($paperInfo['ques_ids']){
+                        $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+                        $paperInfo['questions'] = $result;
+                    }
+                    return response()->json($paperInfo);
+                }else{
+                    return response()->json(['errorMsg' => '任务不存在']);
+                }
+            }else{
+                return response()->json(['errorMsg' => '任务id不能为空']);
+            }
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
