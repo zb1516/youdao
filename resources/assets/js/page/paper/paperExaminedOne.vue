@@ -44,7 +44,7 @@
                           <template v-else="!question.quesNo">{{index+1}}</template>
                           、（{{question.quesScore}}分）<span v-html="question.quesLatextContent.content" v-if="question.quesLatextContent"></span>
                       </dt>
-                      <template v-if="question.hasOptions == 1">
+                      <template v-if="question.hasOptions == 1 && question.options">
                           <template v-for="(option, i) in question.options">
                               <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
                           </template>
