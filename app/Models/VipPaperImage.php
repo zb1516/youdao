@@ -371,6 +371,7 @@ class VipPaperImage extends Model
         $common = new Common();
         $allSubjectNames = $common->getAllSubjectNames();
         $subjectName = $allSubjectNames[$subjectId];
+        dd($subjectName);
         $strValue = $common->stringTransformation($subjectName);
         $subjectValue = explode('-',$strValue);
         $postData = [
