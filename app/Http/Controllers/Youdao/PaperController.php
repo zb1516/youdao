@@ -569,7 +569,6 @@ class PaperController extends BaseController
                 $taskInfo = $this->vipYoudaoExamined->findOne(array('task_id'=>$taskId));
                 if($taskInfo){
                     $paperInfo = KlibPaperClient::getPaperClient($taskInfo['paper_id']);
-                    $paperInfo['questions'] = [];
                     if($paperInfo['ques_ids']){
                         $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
                         $paperInfo['questions'] = $result;

@@ -177,17 +177,18 @@
           <h2 class="title" >{{paperInfo.title}}</h2>
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
-              <dl class="question-wrapper q-radio" v-if="question.ques_options">
+              <dl class="question-wrapper q-radio" >
                   <dt class="question-name">
                       <template v-if="question.ques_number">{{question.ques_number}}</template>
                       <template v-else="!question.ques_number">{{index+1}}</template>
                       、（{{question.ques_score}}分）
                       <span v-html="question.ques_content"></span>
                   </dt>
-                  <div v-if="question.ques_answer">
+                  <div v-if="question.ques_answer" >
                       答案：<span v-html="question.ques_answer"></span>
                   </div>
-                  <div v-if="question.ques_analysis">
+                  <div v-if="question.ques_analysis" >
+                      <br>
                       解析：<span v-html="question.ques_analysis"></span>
                   </div>
                </dl>
