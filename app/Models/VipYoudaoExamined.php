@@ -868,7 +868,7 @@ class VipYoudaoExamined extends Model
                     }
 
                     //选项录入
-                    if($q['hasOptions'] == 1){
+                    if($q['hasOptions'] == 1 && !empty($q['options'])){
                         foreach ($q['options'] as $k => $o){
                             $option['question_id'] = $newQuesId;
                             $option['content'] = $o['latexContent'];
