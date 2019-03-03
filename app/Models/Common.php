@@ -29,6 +29,7 @@ class Common extends Model
         foreach ($result as $v) {
             $subjectNamesArray[$v['id']] = $gradeArray[$v['grade_id']] . $v['title'];
         }
+        dd($subjectNamesArray);
         return $subjectNamesArray;
     }
     /**
