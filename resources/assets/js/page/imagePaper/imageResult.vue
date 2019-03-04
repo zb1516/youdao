@@ -80,6 +80,7 @@
         methods:{
             doSelect(){
                 var time = 3;
+
                 var that = this;
                 setInterval(function(){
                     time--;
