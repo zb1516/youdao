@@ -98,6 +98,7 @@ class paperController extends Controller
                 if($result === false){
                     throw new \Exception('上传失败');
                 }
+                $createTime=time();     //创建时间
                 $vipPaperImageModel=new VipPaperImage();
                 //如果创建任务成功，上传图片
                 //判断是分离样式还是混合样式
@@ -111,7 +112,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>3,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -127,7 +128,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>1,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -142,7 +143,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>2,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -232,17 +233,19 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择省份');
                 }
+                $createTime=time();//创建时间
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
                     $questionImage=arrayReverse($questionImage);
+
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
                             'image_type' => 3,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' =>$createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -257,7 +260,7 @@ class paperController extends Controller
                             'image_url' => $val,
                             'image_type' => 1,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' => $createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -271,7 +274,7 @@ class paperController extends Controller
                             'image_url' => $val,
                             'image_type' => 2,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' => $createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -434,10 +437,8 @@ class paperController extends Controller
             $exainedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'paper_type');
             $vipPaperImageModel=new VipPaperImage();
             $imageInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['id'=>'desc']);
-            $where=['task_id'=>$searchArgs['taskId'],'create_time'=>['egt'=>$imageInfo['create_time']]];
-            $vipPaperImageModel->beginQueryLog();
+            $where=['task_id'=>$searchArgs['taskId'],'create_time'=>$imageInfo['create_time']];
             $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
-            $vipPaperImageModel->getQueryLog();
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
             {
