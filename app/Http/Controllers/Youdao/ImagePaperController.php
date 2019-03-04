@@ -187,37 +187,38 @@ class ImagePaperController extends BaseController
     public function paperPass(Request $request)
     {
         set_time_limit(0);
-        $userKey = isset($_GET['userKey']) ? $_GET['userKey'] : '';
+        $_POST = $request->post('params');
+        $userKey = isset($_POST['userKey']) ? $_POST['userKey'] : '';
         $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
-        $_GET['userKey'] = $userKey;
+        $_POST['userKey'] = $userKey;
         try {
             if(empty($userKey))
             {
                 throw new \Exception('userKey不能为空');
             }
-            if(empty($_GET['paperType']))
+            if(empty($_POST['paperType']))
             {
                 throw new \Exception('类型不能为空');
             }
-            if($_GET['paperType'] == 1){
-                if(!isset($_GET['sortTaskId'])){
+            if($_POST['paperType'] == 1){
+                if(!isset($_POST['sortTaskId'])){
                     throw new \Exception('图片不能为空');
                 }
             }else{
-                if(!isset($_GET['sortTaskIdQuestion']) || !isset($_GET['sortTaskIdAnswer'])){
+                if(!isset($_POST['sortTaskIdQuestion']) || !isset($_POST['sortTaskIdAnswer'])){
                     throw new \Exception('图片不能为空');
                 }
             }
             $isSort = 1;
-            if($_GET['paperType'] == 1){
-                $_GET['sortTaskId'][$_GET['taskId']] = $_GET['sortTaskId'];
+            if($_POST['paperType'] == 1){
+                $_POST['sortTaskId'][$_POST['taskId']] = $_POST['sortTaskId'];
             }else{
-                $_GET['sortTaskIdQuestion'][$_GET['taskId']] = $_GET['sortTaskIdQuestion'];
-                $_GET['sortTaskIdAnswer'][$_GET['taskId']] = $_GET['sortTaskIdAnswer'];
+                $_POST['sortTaskIdQuestion'][$_POST['taskId']] = $_POST['sortTaskIdQuestion'];
+                $_POST['sortTaskIdAnswer'][$_POST['taskId']] = $_POST['sortTaskIdAnswer'];
                 //$_GET['sortTaskId'][$_GET['taskId']]['question'] = $_GET['sortTaskId'][0];
                 //$_GET['sortTaskId'][$_GET['taskId']]['answer'] = $_GET['sortTaskId'][1];
             }
-            $searchArgs = $this->paper->imagePaperSearchArgs($_GET,$isSort);
+            $searchArgs = $this->paper->imagePaperSearchArgs($_POST,$isSort);
             if($searchArgs['sort'] == 1){
                 $result = $this->vipPaperImage->paperImageSort($searchArgs);
             }else{

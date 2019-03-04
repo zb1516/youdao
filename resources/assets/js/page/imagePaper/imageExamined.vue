@@ -120,7 +120,7 @@
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
                     searchArgs.sort = that.sort;
-                    axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
+                    axios.post('youdao/imagePaper/paperPass',{params:searchArgs},{timeout: 1000 * 60 * 10}).then(function(data){
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
                         }
