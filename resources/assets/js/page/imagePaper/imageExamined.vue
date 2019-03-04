@@ -129,12 +129,13 @@
                                 message: '审核通过',
                                 type: 'success'
                             });
+                            that.$router.push({
+                                name: 'imagePaper-imagePaperList-imageResult',
+                                params:{userKey:that.userKey,imageStatus:typeVal}
+                            });
                         }
                     });
-                    that.$router.push({
-                        name: 'imagePaper-imagePaperList-imageResult',
-                        params:{userKey:that.userKey,imageStatus:typeVal}
-                    });
+
                 }else{
                     $(".js-error-box").find('.select').next('span').each(function(){
                         str += $(this).text()+',';
