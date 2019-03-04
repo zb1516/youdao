@@ -435,7 +435,9 @@ class paperController extends Controller
             $vipPaperImageModel=new VipPaperImage();
             $imageInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['id'=>'desc']);
             $where=['task_id'=>$searchArgs['taskId'],'create_time'=>['egt'=>$imageInfo['create_time']]];
+            $vipPaperImageModel->beginQueryLog();
             $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
+            $vipPaperImageModel->getQueryLog();
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
             {
