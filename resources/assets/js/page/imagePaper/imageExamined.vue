@@ -130,6 +130,7 @@
                                 message: data.data.errorMsg,
                                 type: 'error'
                             });
+                            typeVal = '任务投递失败';
                         }
                         if (data.data == true) {
                             that.$message({
@@ -142,7 +143,6 @@
                             name: 'imagePaper-imagePaperList-imageResult',
                             params:{userKey:that.userKey,imageStatus:typeVal}
                         });
-                        
                     });
 
                 }else{
