@@ -57,6 +57,8 @@
     </div>
 </template>
 <script>
+    import "../../static/js/jquery.mloading.js"
+    import "../../static/css/jquery.mloading.css"
     import "../../static/js/jquery.min.js"
     import "../../static/js/jquery.plugin.js"
     import common from "../../static/js/jquery.common.js"
@@ -120,7 +122,9 @@
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
                     searchArgs.sort = that.sort;
+                    $("body").mLoading('show');
                     axios.post('youdao/imagePaper/paperPass',{params:searchArgs},{timeout: 1000 * 60 * 10}).then(function(data){
+                        $("body").mLoading('hide');
                         if (data.data.errorMsg) {
                             that.$message.error(data.data.errorMsg);
                         }
