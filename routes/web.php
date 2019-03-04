@@ -83,7 +83,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken','web']], func
     Route::get('imagePaper/imagePaperDetail', 'Youdao\ImagePaperController@imagePaperDetail');
     Route::get('imagePaper/repeatPaperRecord', 'Youdao\ImagePaperController@repeatPaperRecord');
     Route::get('imagePaper/paperReturn', 'Youdao\ImagePaperController@paperReturn');
-    Route::get('imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
+
     Route::get('imagePaper/imagePaper', 'Youdao\ImagePaperController@imagePaper');
     Route::any('paper/paperExaminedOne', 'Youdao\PaperController@paperExaminedOne');
     Route::any('paper/paperExaminedTwo', 'Youdao\PaperController@paperExaminedTwo');
@@ -91,7 +91,7 @@ $router->group(['prefix' => 'youdao', 'middleware' => ['usertoken','web']], func
     Route::get('user/checkAuth', 'Youdao\UserController@checkAuth');
     Route::get('paper/getSKPaperInfo', 'Youdao\PaperController@getSKPaperInfo');
 });
-
+Route::post('youdao/imagePaper/paperPass', 'Youdao\ImagePaperController@paperPass');
 //不需要登录验证的路由
 Route::group(['prefix' => 'youdao'], function($router) {
     $router->post('paper/paperExamined', 'Youdao\PaperController@paperExamined');//有道第一次处理成功回调地址
