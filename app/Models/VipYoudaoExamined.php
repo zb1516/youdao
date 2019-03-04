@@ -19,7 +19,10 @@ class VipYoudaoExamined extends Model
         $paperInfo = $this->findOne($condition);
         if($paperInfo){
             $vipPaperImage = new VipPaperImage;
-            $paperInfo['images'] = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0), ['id'=>'desc']);
+            $imageTypeOne = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0, 'image_type'=>1), ['id'=>'desc']);
+            $imageTypeTwo = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0, 'image_type'=>2), ['id'=>'desc']);
+            $paperInfo['images'] = [];
+            $paperInfo['images'] = array_merge($imageTypeOne,$imageTypeTwo);
             if($paperInfo['subject_id']){
                 $kmsSubject = new KmsSubjects;
                 $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
