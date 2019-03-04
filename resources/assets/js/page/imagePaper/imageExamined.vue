@@ -142,6 +142,7 @@
                             name: 'imagePaper-imagePaperList-imageResult',
                             params:{userKey:that.userKey,imageStatus:typeVal}
                         });
+                        
                     });
 
                 }else{
