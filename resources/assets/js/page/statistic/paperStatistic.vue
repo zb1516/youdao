@@ -83,7 +83,7 @@
                       </select>
                   </div>
               </div>
-              <button type="button" name="button" class="list-search-btn" @click="doSearch">搜索</button>
+              <button type="button" name="button" class="list-search-btn" @click="doSearchClick">搜索</button>
           </div>
         </div>
         <!-- list -->
@@ -93,7 +93,7 @@
             <div class="tool-box">
               <div class="search-wrapper">
                   <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称">
-                  <span class="search-btn" @click="doSearch"></span>
+                  <span class="search-btn" @click="doSearchClick"></span>
               </div>
               <button type="button" name="button" class="export-btn" @click="questionExport()">导出试题</button>
               <button type="button" name="button" class="export-btn" @click="paperExport()">导出试卷</button>
@@ -178,14 +178,19 @@
           <!--<p class="question-type">一、单选题（共2题，共10分）</p>-->
           <template v-for="(question,index) in questions">
               <dl class="question-wrapper q-radio" v-if="question.hasOptions == 1">
-                  <dt class="question-name">{{index+1}}、{{question.quesLatextContent.content}}</dt>
+                  <dt class="question-name">
+                      <template v-if="question.quesNo">{{question.quesNo}}</template>
+                      <template v-else="!question.quesNo">{{index+1}}</template>
+                      、（{{question.quesScore}}分）{{question.quesLatextContent.content}}</dt>
                   <template v-for="(option,i) in question.options">
                     <dd class="option" >{{option.label}}.{{option.latexContent}}</dd>
                   </template>
                </dl>
               <div class="question-wrapper q-answer" v-if="question.hasOptions == 0">
                 <p class="q-answer-con">
-                  {{index+1}}、{{question.quesLatextContent.content}}
+                    <template v-if="question.quesNo">{{question.quesNo}}</template>
+                    <template v-else="!question.quesNo">{{index+1}}</template>
+                    、（{{question.quesScore}}分）{{question.quesLatextContent.content}}
                 </p>
               </div>
            </template>
@@ -233,7 +238,8 @@
                     processList:'',
                     paperInfo:'',
                     questions:'',
-                    timer:''
+                    timer:'',
+                    isSort:false
                 }
             },
             computed: {
@@ -407,6 +413,7 @@
                             isShowFL: false,
                             isShowRefresh: false,
                             callBack: function (currPage, pageSize) {
+                                that.isSort = true;
                                 that.currentPage = currPage;
                                 that.doSearch();
                                 console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
@@ -418,6 +425,9 @@
                 },
                 doSearch(){
                     var that = this;
+                    if(that.isSort == false){
+                        that.currentPage = 1;
+                    }
                     if($("input[name='start-date']").val()){
                        that.beginDate = $("input[name='start-date']").val();
                        that.endDate = $("input[name='end-date']").val();
@@ -471,6 +481,7 @@
                            that.sortType = 'desc';
                         }
                     }
+                    that.isSort = false;
                     that.currentPage = 1;
                     that.doSearch();
                 },
@@ -531,6 +542,11 @@
                             '&authorId=' + searchArgs.authorId+
                             '&agencyId=' + searchArgs.agencyId;
                     }
+                },
+                doSearchClick(){
+                    var that = this;
+                    that.isSort = false;
+                    that.doSearch();
                 }
             }
         }

@@ -38,8 +38,12 @@
                 <h2 class="title">{{paperInfo.paper_name}}</h2>
                 <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
                 <template v-for="(question, index) in questions">
-                    <dl class="question-wrapper">
-                      <dt class="question-name">{{index+1}}、<span v-html="question.quesLatextContent.content"></span></dt>
+                    <dl class="question-wrapper" v-if="question">
+                      <dt class="question-name">
+                          <template v-if="question.quesNo">{{question.quesNo}}</template>
+                          <template v-else="!question.quesNo">{{index+1}}</template>
+                          、（{{question.quesScore}}分）<span v-html="question.quesLatextContent.content" v-if="question.quesLatextContent"></span>
+                      </dt>
                       <template v-if="question.hasOptions == 1">
                           <template v-for="(option, i) in question.options">
                               <dd class="option" >{{option.label}}.<span v-html="option.latexContent"></span></dd>
@@ -78,11 +82,15 @@
                         </div>
                       </div>
                    </dl>
+                   <dl class="question-wrapper" v-else="">
+                       <dt class="question-name">{{index+1}}、</dt>
+                   </dl>
                </template>
               </div>
             </div>
             <div class="btn-wrapper cf">
-                <span class="next-btn review2-btn" @click="doPaperExaminedOne">下一步</span>
+                <span v-if="isForbidden==0" class="next-btn review2-btn" @click="doPaperExaminedOne">下一步</span>
+                <span v-else="isForbidden==1" class="next-btn review2-btn" >下一步</span>
             </div>
           </div>
         </div>
@@ -107,6 +115,7 @@
                     questions:'',
                     selected:'',
                     errorArr:[],
+                    isForbidden:0
                 }
             },
             computed: {
@@ -124,7 +133,6 @@
                 var that = this;
                 that.taskId = this.$route.params.taskId;
                 common.init();
-                $(".review2-btn").hide();
                 that.doGetPaperInfo();
                 that.doSelected();
             },
@@ -140,23 +148,23 @@
 
                 doGetPaperInfo(){
                     var that = this;
+                    that.isForbidden = 1;
                     var searchArgs = $.extend(true, {}, that.searchArgs);
                     searchArgs.userKey = that.userKey;
                     searchArgs.taskId = that.taskId;
                     axios.get('youdao/paper/paperInfo',{params:searchArgs}).then(function(data){
                         if(data.data){
+                            that.isForbidden = 0;
                             if (data.data.errorMsg) {
                                 that.$message.error(data.data.errorMsg);
-                                $(".review2-btn").hide();
                                 return false;
                             } else {
                                 that.paperInfo =  data.data;
                                 that.questions = [];
                                 that.questions = that.paperInfo.youdao_info.questions;
                                 that.$nextTick(() => {
-                                    MathJax.Hub.Queue(["Typeset",MathJax.Hub], document.getElementById('paper-box'));
+                                    MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById('paper-box')]);
                                 });
-                                $(".review2-btn").show();
                             }
                         }
                         that.$nextTick(function() {
@@ -173,9 +181,10 @@
                             that.errorArr.push($(this).attr('title'));
                         }
                     });
-
+                    that.isForbidden = 1;
                     axios.post('youdao/paper/paperExaminedOne',"userKey='"+that.userKey+"'&taskId="+that.taskId+"&errorStr='"+that.errorArr+"'").then(function(data){
                         if(data.data){
+                            that.isForbidden = 0;
                             if (data.data.errorMsg) {
                                 that.$message.error(data.data.errorMsg);
                                 return false;

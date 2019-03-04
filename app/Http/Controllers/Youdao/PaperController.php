@@ -116,14 +116,17 @@ class PaperController extends BaseController
         if($result['code'] == 200){
             $paperInfo['youdao_info'] = $result['data'];
         }
+
         /*$paperInfo['youdao_info'] = array(
-            "isPaper"=>1,
-            "paperFilePath"=>"http://xxxxxxxx/paper/{taskId}.docx",
+            'textbook'=>array(
+                'name'=>'222222',
+            ),
             'questions'=>array(
                 '0'=>array(
                     'quesNumber'=>1,
                     'hasOptions'=>1,
                     'quesType'=>'单选题', //题型
+                    'quesScore'=>5,
                     'quesLatextContent'=>array(
                         'content'=>'<div>safasfasfasfs</div>',
                         'fileUrl'=>"http://vip.gaosiedu.com/static/images/eap_loginbg2.png"
@@ -303,7 +306,7 @@ class PaperController extends BaseController
         try{
             $taskId = $request->post('taskId',0);
             $errorStr = trim($request->post('errorStr',''), '\'');
-            $errorData = [];
+            $errorData = array();
             if($errorStr){
                 $errorArr = explode(',', $errorStr);
                 foreach ($errorArr as $key=>$error){
@@ -329,7 +332,10 @@ class PaperController extends BaseController
                     }
                 }
             }
-            $errorData = array_values($errorData);
+
+            if(!empty($errorData)){
+                $errorData = array_values($errorData);
+            }
             $request->session()->put($taskId, '');//清空session
             $data = array(
                 'taskId'=>$taskId,
@@ -388,13 +394,13 @@ class PaperController extends BaseController
                 }
                 //return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
                 //审核不通过需要给小程序发模版消息
-                $this->sendWxTemplate(array(
+                /*$this->sendWxTemplate(array(
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>1,
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'抱歉，您提交的试卷未通过审核。'
-                ));
+                ));*/
 
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
@@ -423,6 +429,17 @@ class PaperController extends BaseController
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
                 if($status == true){
                     $code = 200;
+                    /*if($data['isPass'] == 0){
+                        //若未通过有道审核，则关闭任务，给用户发模板消息
+                        $paperInfo = $this->getPaperInfo($data['taskId']);
+                        $this->sendWxTemplate(array(
+                            'taskId'=>$data['taskId'],
+                            'openId'=>$paperInfo['open_id'],
+                            'type'=>1,
+                            'userId'=>$paperInfo['create_uid'],
+                            'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
+                        ));
+                    }*/
                 }
             }else{
                 $errorMsg = '任务ID不能为空';
@@ -449,19 +466,19 @@ class PaperController extends BaseController
             if(isset($data['taskId']) && isset($data['isPass']) && isset($data['youdaoReceiveTime']) ){
                 //更新任务的有道审核结果，接收、处理时间
                 $status = $this->vipYoudaoExamined->updateFirstYouDaoTime($data);
-                if($data['isPass'] == 0){
-                    //若未通过有道审核，则关闭任务，给用户发模板消息
-                    $paperInfo = $this->getPaperInfo($data['taskId']);
-                    $this->sendWxTemplate(array(
-                        'taskId'=>$data['taskId'],
-                        'openId'=>$paperInfo['open_id'],
-                        'type'=>1,
-                        'userId'=>$paperInfo['create_uid'],
-                        'content'=>'抱歉，您提交的图片未通过有道审核，已被关闭。'
-                    ));
-                }
                 if($status){
                     $code = 200;
+                    if($data['isPass'] == 0){
+                        //若未通过有道审核，则退回任务，给用户发模板消息
+                        $paperInfo = $this->getPaperInfo($data['taskId']);
+                        $this->sendWxTemplate(array(
+                            'taskId'=>$data['taskId'],
+                            'openId'=>$paperInfo['open_id'],
+                            'type'=>1,
+                            'userId'=>$paperInfo['create_uid'],
+                            'content'=>'图片不清晰'
+                        ));
+                    }
                 }
             }else{
                 $errorMsg = '参数不完整';
