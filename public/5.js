@@ -27328,7 +27328,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         $("body").mLoading('hide');
         that.$nextTick(function () {
           if (data.data.errorMsg) {
-            that.$message.error(data.data.errorMsg);
+            that.$message({
+              message: data.data.errorMsg,
+              type: 'error'
+            });
           } else {
             if (data.data) {
               that.imagePaperDetailContent = data.data;
@@ -27348,7 +27351,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       // console.log(searchArgs);
       axios.get('youdao/imagePaper/paperList', { params: searchArgs }).then(function (data) {
         if (data.data.errorMsg) {
-          that.$message.error(data.data.errorMsg);
+          that.$message({
+            message: data.data.errorMsg,
+            type: 'error'
+          });
         } else {
           //that.$nextTick(function () {
           if (data.data.rows != '') {
@@ -27378,13 +27384,19 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         axios.get('common/common/getPaperClient', { params: { paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
           that.$nextTick(function () {
             if (data.data.errorMsg) {
-              that.$message.error(data.data.errorMsg);
+              that.$message({
+                message: data.data.errorMsg,
+                type: 'error'
+              });
             } else {
               that.paperContent = data.data;
             }
             axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
               if (data.data.errorMsg) {
-                that.$message.error(data.data.errorMsg);
+                that.$message({
+                  message: data.data.errorMsg,
+                  type: 'error'
+                });
               } else {
                 that.questionContent = data.data.rows;
                 that.$nextTick(function () {
@@ -27414,14 +27426,20 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       that.paperId = $firstTab.attr('data-val');
       axios.get('common/common/getPaperClient', { params: { paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
         if (data.data.errorMsg) {
-          that.$message.error(data.data.errorMsg);
+          that.$message({
+            message: data.data.errorMsg,
+            type: 'error'
+          });
         } else {
           that.paperContent = data.data;
         }
 
         axios.post('common/common/getQuestionClient', { questionIds: that.paperContent.ques_ids.join(','), userKey: that.userKey }).then(function (data) {
           if (data.data.errorMsg) {
-            that.$message.error(data.data.errorMsg);
+            that.$message({
+              message: data.data.errorMsg,
+              type: 'error'
+            });
           } else {
             that.questionContent = data.data.rows;
             that.$nextTick(function () {
@@ -27445,7 +27463,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       var that = this;
       axios.get('youdao/imagePaper/repeatPaperRecord', { params: { taskId: that.taskId, paperId: that.paperId, userKey: that.userKey } }).then(function (data) {
         if (data.data.errorMsg) {
-          that.$message.error(data.data.errorMsg);
+          that.$message({
+            message: data.data.errorMsg,
+            type: 'error'
+          });
         }
         if (data.data == true) {
           that.$message({

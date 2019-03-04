@@ -126,7 +126,10 @@
                     axios.post('youdao/imagePaper/paperPass',{params:searchArgs},{timeout: 1000 * 60 * 10}).then(function(data){
                         $("body").mLoading('hide');
                         if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
+                            that.$message({
+                                message: data.data.errorMsg,
+                                type: 'error'
+                            });
                         }
                         if (data.data == true) {
                             that.$message({
@@ -153,7 +156,10 @@
                     }else{
                         axios.get('youdao/imagePaper/paperReturn',{params:{userKey:that.userKey,taskId:that.taskId,imageErrorType:str}}).then(function(data){
                             if (data.data.errorMsg) {
-                                that.$message.error(data.data.errorMsg);
+                                that.$message({
+                                    message: data.data.errorMsg,
+                                    type: 'error'
+                                });
                             }
                             if (data.data == true) {
                                 that.$message({
