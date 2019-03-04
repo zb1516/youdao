@@ -434,7 +434,7 @@ class paperController extends Controller
             $exainedInfo=$vipYoudaoExaminedModel->findOne(['task_id'=>$searchArgs['taskId']],[],'paper_type');
             $vipPaperImageModel=new VipPaperImage();
             $imageInfo=$vipPaperImageModel->findOne(['task_id'=>$searchArgs['taskId']],['id'=>'desc']);
-            $where=['task_id'=>$searchArgs['taskId'],'create_time'=>$imageInfo['create_time']];
+            $where=['task_id'=>$searchArgs['taskId'],'create_time'=>['egt'=>$imageInfo['create_time']]];
             $list=$vipPaperImageModel->findAll($where,['id'=>'desc'],['id','image_url','image_type']);
             $result=['paper_type'=>$exainedInfo['paper_type']];
             foreach($list as $key => $val)
