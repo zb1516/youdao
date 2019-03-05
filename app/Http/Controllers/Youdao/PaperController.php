@@ -381,7 +381,7 @@ class PaperController extends BaseController
             $data = $request->session()->get($taskId);//从session中获取该任务的题干问题
             $userInfo = $this->user->getUserInfo($this->userKey);
             $paperInfo = $this->getPaperInfo($taskId);
-            if($isPaperError == 0){
+            if(empty($data['list']) && $isPaperError == 0){
                 //试卷通过审核，通知有道
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 //return response()->json(['status' => $result, 'type'=>1]);
