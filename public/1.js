@@ -42132,6 +42132,7 @@ var render = function() {
               }
             ],
             staticClass: "s-input",
+            staticStyle: { width: "500px" },
             attrs: { type: "text", value: "", placeholder: "试卷名称" },
             domProps: { value: _vm.paperName },
             on: {

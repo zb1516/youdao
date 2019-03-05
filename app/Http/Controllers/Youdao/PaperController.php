@@ -46,7 +46,7 @@ class PaperController extends BaseController
         try{
             //$userInfo = $this->user->getUserInfo($this->userKey);
             $currentPage = abs($request->get('currentPage', 1));
-            $pageSize = abs($request->get('pageSize', 15));
+            $pageSize = abs($request->get('pageSize', 10));
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->paperList($searchArgs, $currentPage, $pageSize);
             return response()->json($result);

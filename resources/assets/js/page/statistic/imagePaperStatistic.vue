@@ -95,7 +95,7 @@
                 <span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>
                 <div class="tool-box">
                     <div class="search-wrapper">
-                        <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
+                        <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName" style="width: 500px;">
                         <span class="search-btn"  @click="doSearchClick"></span>
                     </div>
                     <button type="button" name="button" class="export-btn" @click="doExport">导出</button>
