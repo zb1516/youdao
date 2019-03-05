@@ -129,6 +129,7 @@ class PaperController extends BaseController
         $postData['taskId'] = $taskId;
         $common = new CommonController;
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
+        dd($result);
         $result = json_decode($result,true);
         if($result['code'] == 200){
             $paperInfo['youdao_info'] = $result['data'];
