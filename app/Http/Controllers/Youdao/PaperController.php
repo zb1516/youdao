@@ -91,6 +91,19 @@ class PaperController extends BaseController
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
                 $result = json_decode($result,true);
                 if($result['code'] == 200){
+                    if($result['data']['questions']){
+                        foreach ($result['data']['questions'] as $key=>$ques){
+                            if($result['data']['questions'][$key]['quesLatextAnalysis']){
+                                $result['data']['questions'][$key]['quesLatextAnalysis']['content'] = self::clearWordHtml($ques['quesLatextAnalysis']['content']);
+                            }
+                            if($result['data']['questions'][$key]['quesLatextAnswer']){
+                                $result['data']['questions'][$key]['quesLatextAnswer']['content'] = self::clearWordHtml($ques['quesLatextAnswer']['content']);
+                            }
+                            if($result['data']['questions'][$key]['quesLatextContent']){
+                                $result['data']['questions'][$key]['quesLatextContent']['content'] = self::clearWordHtml($ques['quesLatextContent']['content']);
+                            }
+                        }
+                    }
                     $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
@@ -583,6 +596,84 @@ class PaperController extends BaseController
         }catch (\Exception $e){
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
+    }
+
+
+    protected static function clearWordHtml($html,$convertLatex=true) {
+        $pattern = '#<\/?span[^>]*>#i';
+
+        $parts = preg_split($pattern, $html);
+        preg_match_all($pattern, $html, $matches);
+
+        if(false==$matches){
+            $matches = array(array());
+        }
+        $spanStacks = array();
+
+        foreach($matches[0] as $key=>$match) {
+            if(false == stristr($match, '</span>')) {
+                array_push($spanStacks, array($key, $match));
+            } else {
+                $startTag = array_pop($spanStacks);
+                $endTag = array($key, $match);
+
+                $cleanedStartTag = $startTag[1];
+
+                $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
+                $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
+                $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
+
+                $fonts = array(
+                    'Symbol', '华文新魏', '华文楷体', '黑体'
+                );
+
+                if($cleanedStartTag == $startTag[1]) {
+                    $keep = false;
+                    if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
+                        $keep = true;
+                    } else {
+                        foreach($fonts as $font) {
+                            if(false == $keep && stristr($cleanedStartTag, $font)) {
+                                $keep = true;
+                            }
+                        }
+                    }
+                    if(false == $keep) $cleanedStartTag = '';
+                }
+                $startTag[1] = $cleanedStartTag;
+                if(false == $cleanedStartTag) {
+                    $endTag[1] = '';
+                }
+
+                $matches[$startTag[0]] = $startTag[1];
+                $matches[$endTag[0]] = $endTag[1];
+            }
+        }
+
+        $html = '';
+        foreach($parts as $key=>$part) {
+            $html .= trim($part);
+            $tag = isset($matches[$key]) ? $matches[$key] : '';
+            if($tag){
+                $html .= $tag;
+            }
+        }
+        $html = preg_replace('#line\-height:[^;\'"]+;?#i', '', $html);
+        $html = preg_replace('#letter\-spacing:[^;\'"]+;?#i', '', $html);
+        $html = preg_replace('#layout\-grid:[^;\'"]+;?#i', '', $html);
+        $html = preg_replace('#<img#i', '<img align="absmiddle"', $html);
+        if($convertLatex){
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\%)(.*?)(\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
+            $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
+            $html = preg_replace("#\\[#i","(",$html);
+            $html = preg_replace("#\\]#i",")",$html);
+            $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
+            $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
+            return $html;
+
+        }
+        return $html;
     }
 
 }
