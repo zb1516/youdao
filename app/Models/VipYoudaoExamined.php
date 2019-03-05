@@ -794,7 +794,7 @@ class VipYoudaoExamined extends Model
                 'created_time' => $time,
                 'file_name' => $data['paper_name'],
                 'file_name_md5' => md5($data['paper_name']),
-                'show_name' => isset($data['youdao_info']['paper_name'])?:$data['paper_name'],
+                'show_name' => isset($data['youdao_info']['textbook']['name'])?$data['youdao_info']['textbook']['name']:$data['show_name'],
                 'agency_id' => $data['agency_id'],
                 'paper_type' => 2,//1教研，2有道
             );
