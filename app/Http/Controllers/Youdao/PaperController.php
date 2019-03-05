@@ -667,7 +667,7 @@ class PaperController extends BaseController
         if($convertLatex){
             $html = preg_replace("#(<.*?img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
             $html = preg_replace("#(<.*?img[^>]*alt=\")(.*?)(\\\\%)(.*?)(\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
-            $html = preg_replace("#<.*?img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
+            $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
             $html = preg_replace("#\\[#i","(",$html);
             $html = preg_replace("#\\]#i",")",$html);
             $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
