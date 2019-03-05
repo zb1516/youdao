@@ -90,7 +90,7 @@ class PaperController extends BaseController
                 $common = new CommonController;
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
                 $result = json_decode($result,true);
-                print_r($result);die;
+//                print_r($result);die;
                 if($result['code'] == 200){
                     if($result['data']['questions']){
                         foreach ($result['data']['questions'] as $key=>$ques){
@@ -669,8 +669,8 @@ class PaperController extends BaseController
             $html = preg_replace("#(<img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
             $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\%)(.*?)(\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
             $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
-            $html = preg_replace("#\\[#i","(",$html);
-            $html = preg_replace("#\\]#i",")",$html);
+            $html = preg_replace("#^\\[#i","(",$html);
+            $html = preg_replace("#$\\]#i",")",$html);
             $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
             $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
             return $html;
