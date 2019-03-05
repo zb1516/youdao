@@ -20,7 +20,7 @@
                       <p class="time-box"><span class="time"><span class="time-num js-time-num">3</span>秒</span><a href="reviewPicList.html">后返回列表</a></p>
                     </div>
                 </template>
-                <template v-else-if="imageStatus == '任务投递失败'">
+                <template v-else-if="imageStatus == '任务投递失败,'">
                     <div class="scuess-box">
                         <p class="icon-scuess"></p>
                         <p class="scuess-text">图片审核未通过</p>

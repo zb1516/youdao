@@ -184,7 +184,7 @@
                 agencyValue:'',
                 optionsAgency:'',
                 imagePaperList: '',
-                pageSize: 5,
+                pageSize: 10,
                 currentPage:1,
                 curGrade:'',
                 _total:0,
