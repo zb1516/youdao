@@ -90,6 +90,7 @@ class PaperController extends BaseController
                 $common = new CommonController;
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
                 $result = json_decode($result,true);
+                var_dump($result);exit;
                 if($result['code'] == 200){
                     if($result['data']['questions']){
                         foreach ($result['data']['questions'] as $key=>$ques){
@@ -130,7 +131,6 @@ class PaperController extends BaseController
         $common = new CommonController;
         $result = $common->getYoudaoTask($postUrl, $postData, 2);
         $result = json_decode($result,true);
-        var_dump($result);exit;
         if($result['code'] == 200){
             $paperInfo['youdao_info'] = $result['data'];
         }
