@@ -15,7 +15,7 @@ class Model extends BaseModel
      * @param string $field
      * @return mixed
      */
-    public function findAll($condition=[],$order=[],$field=["*"],$group="",$join=[],$page=null,$pageSize=20)
+    public function findAll($condition=[],$order=[],$field=["*"],$group="",$join=[],$page=null,$pageSize=10)
     {
         //获取条件
         $db=self::getCondition($this,$condition);
@@ -39,7 +39,7 @@ class Model extends BaseModel
      * @param array $field
      * @param int $pageSize
      */
-    public function findLimit($condition=[],$order=[],$field=["*"],$group="",$join=[],$pageSize=20)
+    public function findLimit($condition=[],$order=[],$field=["*"],$group="",$join=[],$pageSize=10)
     {
         //获取条件
         $db=self::getCondition($this,$condition);

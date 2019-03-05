@@ -94,7 +94,7 @@
                 <span class="info-n right">已通过<span class="num green">{{listCount.passCount}}</span>套</span>
                 <span class="info-n pass">退回<span class="num red">{{listCount.returnCount}}</span>套</span>
                 <div class="search-wrapper">
-                    <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称">
+                    <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称" style="width: 500px;">
                     <span class="search-btn" @click="doSearchClick"></span>
                 </div>
             </div>
@@ -195,7 +195,7 @@
                 endDate:'',
                 paperName:'',
                 paperList: '',
-                pageSize: 5,
+                pageSize: 10,
                 currentPage:1,
                 curGrade:'',
                 _total:0,
@@ -329,7 +329,7 @@
                 } else {
                     $("#paginationBox").pagination({
                         totalPage: that._total,
-                        showPageNum: 5,
+                        showPageNum: 10,
                         isShowPageSizeOpt: false,
                         isShowFL: false,
                         isShowRefresh: false,

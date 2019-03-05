@@ -92,7 +92,7 @@
             <span class="info-n sum">共<span class="num">{{totalNum}}</span>套</span>
             <div class="tool-box">
               <div class="search-wrapper">
-                  <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称">
+                  <input type="text" v-model="paperName" class="s-input" value="" placeholder="试卷名称" style="width: 500px;">
                   <span class="search-btn" @click="doSearchClick"></span>
               </div>
               <button type="button" name="button" class="export-btn" @click="questionExport()">导出试题</button>
@@ -224,7 +224,7 @@
                     endDate:'',
                     paperName:'',
                     paperList: '',
-                    pageSize: 5,
+                    pageSize: 10,
                     currentPage:1,
                     curGrade:'',
                     _total:0,
@@ -407,7 +407,7 @@
                     } else {
                         $("#paginationBox").pagination({
                             totalPage: that._total,
-                            showPageNum: 5,
+                            showPageNum: 10,
                             isShowPageSizeOpt: false,
                             isShowFL: false,
                             isShowRefresh: false,

@@ -104,7 +104,7 @@
                     <template v-if="listCount['试卷重复']">{{listCount['试卷重复']}}</template><template v-else>0</template>
                 </span>套</span>
                 <div class="search-wrapper">
-                    <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName">
+                    <input type="text" class="s-input" value="" placeholder="试卷名称" v-model="paperName" style="width: 500px;">
                     <span class="search-btn"  @click="doSearchClick"></span>
                 </div>
             </div>
