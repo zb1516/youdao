@@ -73,7 +73,6 @@
                 },
                 doPaperExaminedTwo(){
                     var that = this;
-                    console.log(that.isPaperError);return false;
                     if(that.isPaperError === ''){
                         that.$message.error('请选择标识试卷问题');
                         return false;
