@@ -287,7 +287,7 @@
                         callBack: function (currPage, pageSize) {
                             that.isSort = true;
                             that.currentPage = currPage;
-                            that.pageSize = 5;
+                            that.pageSize = 10;
                             that.doSearch();
                             //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
 
