@@ -19,8 +19,10 @@ a {
     text-decoration: none; }
 
 #paginationBox {
-  width: 600px;
-  margin: 60px auto; }
+  text-align: center;
+  /*width: 600px;*/
+  margin: 60px auto;
+}
 
 .header {
   position: fixed;
