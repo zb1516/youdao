@@ -586,7 +586,7 @@ class PaperController extends BaseController
                 if($taskInfo){
                     $paperInfo = KlibPaperClient::getPaperClient($taskInfo['paper_id']);
                     if($paperInfo['ques_ids']){
-                        $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids']);
+                        $result = KlibQuestionClient::getQuestion($paperInfo['ques_ids'], 1);
                         $paperInfo['questions'] = $result;
                     }
                     return response()->json($paperInfo);
