@@ -62,7 +62,7 @@ class WxController extends Controller
     {
         try{
             $searchArgs['taskId']=$request->input('taskId');
-            if(intval($searchArgs['taskId']) <= 0)
+            if(empty($searchArgs['taskId']))
             {
                 throw new \Exception('缺少试卷任务id');
             }

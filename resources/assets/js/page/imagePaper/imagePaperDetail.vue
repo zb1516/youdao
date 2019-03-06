@@ -300,7 +300,10 @@
                 var that = this
                 axios.get('common/common/getSubjects',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.optionsSubject = data.data;
                         that.$nextTick(function() {
@@ -316,7 +319,10 @@
                 axios.get('common/common/getPaperSourceAjaxSearch',{params:{subjectId:that.subjectValue,userKey:that.userKey}}).then(function(data){
                     that.$nextTick(function () {
                         if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
+                            that.$message({
+                                message: data.data.errorMsg,
+                                type: 'error'
+                            });
                         } else {
                             that.ajaxAllSubjectPaperSource = data.data;
                             that.$nextTick(function() {
@@ -330,7 +336,10 @@
                 var that = this;
                 axios.get('common/common/getProvince',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.optionsProvinces = data.data;
                         that.$nextTick(function() {
@@ -345,7 +354,10 @@
                 axios.get('common/common/getPaperCitysAjaxSearch',{params:{provinceId:that.curProvince,userKey:that.userKey}}).then(function(data){
                     that.$nextTick(function () {
                         if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
+                            that.$message({
+                                message: data.data.errorMsg,
+                                type: 'error'
+                            });
                         } else {
                             that.ajaxAllPaperCitys = data.data;
                             that.$nextTick(function() {
@@ -361,7 +373,10 @@
                 axios.get('common/common/getPaperAreasAjaxSearch',{params:{provinceId:that.curProvince+'-'+that.curCity,userKey:that.userKey}}).then(function(data){
                     that.$nextTick(function () {
                         if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
+                            that.$message({
+                                message: data.data.errorMsg,
+                                type: 'error'
+                            });
                         } else {
                             that.ajaxAllPaperAreas = data.data;
                             that.$nextTick(function() {
@@ -376,7 +391,10 @@
                 var that = this;
                 axios.get('common/common/getYear',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.optionsYears = data.data;
                         that.$nextTick(function() {
@@ -444,7 +462,10 @@
                 }
                 axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     }
                     if (data.data == true) {
                         that.$message({
@@ -461,7 +482,10 @@
                 axios.get('youdao/imagePaper/imagePaperDetail',{params:{userKey:that.userKey,taskId:that.taskId,paperType:that.paperType}}).then(function(data){
                     $("body").mLoading('hide');
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         if(data.data){
                             if(that.paperType == 1){

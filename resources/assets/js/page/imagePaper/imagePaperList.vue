@@ -184,7 +184,7 @@
                 agencyValue:'',
                 optionsAgency:'',
                 imagePaperList: '',
-                pageSize: 5,
+                pageSize: 10,
                 currentPage:1,
                 curGrade:'',
                 _total:0,
@@ -262,7 +262,10 @@
                 var that = this;
                 axios.get('common/common/getYoudaoAgency',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.optionsAgency = data.data;
                         that.$nextTick(function() {
@@ -275,7 +278,10 @@
                 var that = this;
                 axios.get('common/common/getSubjects',{params:{userKey:that.userKey}}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.$nextTick(function(){
                             that.optionsSubject = data.data;
@@ -306,7 +312,7 @@
                         callBack: function (currPage, pageSize) {
                             that.isSort = true;
                             that.currentPage = currPage;
-                            that.pageSize = 5;
+                            that.pageSize = 10;
                             that.doSearch();
                             //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
 
@@ -339,7 +345,10 @@
                 searchArgs.userKey = that.userKey;
                 axios.get('youdao/imagePaper/imagePaper',{params:searchArgs}).then(function(data){
                     if (data.data.errorMsg) {
-                        that.$message.error(data.data.errorMsg);
+                        that.$message({
+                            message: data.data.errorMsg,
+                            type: 'error'
+                        });
                     } else {
                         that.$nextTick(function () {
                             if(data.data.rows != ''){

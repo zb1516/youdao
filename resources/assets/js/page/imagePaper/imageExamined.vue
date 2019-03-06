@@ -57,6 +57,8 @@
     </div>
 </template>
 <script>
+    import "../../static/js/jquery.mloading.js"
+    import "../../static/css/jquery.mloading.css"
     import "../../static/js/jquery.min.js"
     import "../../static/js/jquery.plugin.js"
     import common from "../../static/js/jquery.common.js"
@@ -120,21 +122,29 @@
                     var searchArgs = JSON.parse(localStorage.getItem("paperSearchArgs"));
                     searchArgs.userKey = that.userKey;
                     searchArgs.sort = that.sort;
-                    axios.get('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
+                    $("body").mLoading('show');
+                    axios.post('youdao/imagePaper/paperPass',{params:searchArgs},{timeout: 1000 * 60 * 10}).then(function(data){
+                        $("body").mLoading('hide');
                         if (data.data.errorMsg) {
-                            that.$message.error(data.data.errorMsg);
+                            that.$message({
+                                message: data.data.errorMsg,
+                                type: 'error'
+                            });
+                            typeVal = '任务投递失败,';
                         }
                         if (data.data == true) {
                             that.$message({
                                 message: '审核通过',
                                 type: 'success'
                             });
+
                         }
+                        that.$router.push({
+                            name: 'imagePaper-imagePaperList-imageResult',
+                            params:{userKey:that.userKey,imageStatus:typeVal}
+                        });
                     });
-                    that.$router.push({
-                        name: 'imagePaper-imagePaperList-imageResult',
-                        params:{userKey:that.userKey,imageStatus:typeVal}
-                    });
+
                 }else{
                     $(".js-error-box").find('.select').next('span').each(function(){
                         str += $(this).text()+',';
@@ -148,7 +158,10 @@
                     }else{
                         axios.get('youdao/imagePaper/paperReturn',{params:{userKey:that.userKey,taskId:that.taskId,imageErrorType:str}}).then(function(data){
                             if (data.data.errorMsg) {
-                                that.$message.error(data.data.errorMsg);
+                                that.$message({
+                                    message: data.data.errorMsg,
+                                    type: 'error'
+                                });
                             }
                             if (data.data == true) {
                                 that.$message({

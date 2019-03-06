@@ -362,7 +362,7 @@ class VipYoudaoExamined extends Model
     /**
      * 图片审核列表及统计
      */
-    public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 15)
+    public function getImagePaperList($searchArgs, $currentPage = 1, $pageSize = 10)
     {
         $sysUsers = new SysUsers();
         $imgNames = $sysUsers->getUserNames($searchArgs['IMG_AUDITOR']);//图片审核角色
@@ -436,7 +436,7 @@ class VipYoudaoExamined extends Model
         if($searchArgs['isType'] == 1){
             $statusStartValue = ['待审核' => 0,'已通过' => 0,'退回' => 0,'试卷重复' => 0];
             if (0 == abs($recordCount)) {
-                return array('rows' => [], 'total' => ceil($recordCount/5), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
+                return array('rows' => [], 'total' => ceil($recordCount/10), 'listCount' => $statusStartValue,'totalNum' => $recordCount);
             }
             if ($searchArgs['isUploadTimeSort']) {
                 $orderSort = ['upload_time' => $searchArgs['isUploadTimeSort']];
@@ -450,7 +450,7 @@ class VipYoudaoExamined extends Model
 
         }else{
             if (0 == abs($recordCount)) {
-                return array('rows' => [], 'total' => ceil($recordCount/5), 'totalNum' => $recordCount);
+                return array('rows' => [], 'total' => ceil($recordCount/10), 'totalNum' => $recordCount);
             }
             if ($searchArgs['isUploadTimeSort']) {
                 $orderSort = ['upload_time' => $searchArgs['isUploadTimeSort']];
@@ -501,9 +501,9 @@ class VipYoudaoExamined extends Model
                 $listCount[$imageExaminedStatus[$v['image_examined_status']]] = $v['total'];
             }
             $arrayMerge = array_merge($statusStartValue,$listCount);
-            return array('rows' => $list, 'total' => ceil($recordCount/5), 'listCount' => $arrayMerge,'totalNum' => $recordCount);
+            return array('rows' => $list, 'total' => ceil($recordCount/10), 'listCount' => $arrayMerge,'totalNum' => $recordCount);
         }else{
-            return array('rows' => $list, 'total' => ceil($recordCount/5), 'totalNum' => $recordCount);
+            return array('rows' => $list, 'total' => ceil($recordCount/10), 'totalNum' => $recordCount);
         }
 
     }

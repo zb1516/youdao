@@ -98,6 +98,7 @@ class paperController extends Controller
                 if($result === false){
                     throw new \Exception('上传失败');
                 }
+                $createTime=time();     //创建时间
                 $vipPaperImageModel=new VipPaperImage();
                 //如果创建任务成功，上传图片
                 //判断是分离样式还是混合样式
@@ -111,7 +112,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>3,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -127,7 +128,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>1,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -142,7 +143,7 @@ class paperController extends Controller
                             'image_url'=>$val,
                             'image_type'=>2,
                             'is_delete'=>0,
-                            'create_time'=>time()
+                            'create_time'=>$createTime
                         ]);
                         if($result === false){
                             throw new \Exception('上传试卷失败');
@@ -232,17 +233,19 @@ class paperController extends Controller
                 {
                     throw new \Exception('请选择省份');
                 }
+                $createTime=time();//创建时间
                 //判断是分离样式还是混合样式
                 if ($searchArgs['paperType'] == 1) {
                     $questionImage=explode(',',$searchArgs['blendQuestionImage']);
                     $questionImage=arrayReverse($questionImage);
+
                     foreach ($questionImage as $key => $val) {
                         $result = $vipPaperImageModel->add([
                             'task_id' => $searchArgs['taskId'],
                             'image_url' => $val,
                             'image_type' => 3,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' =>$createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -257,7 +260,7 @@ class paperController extends Controller
                             'image_url' => $val,
                             'image_type' => 1,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' => $createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -271,7 +274,7 @@ class paperController extends Controller
                             'image_url' => $val,
                             'image_type' => 2,
                             'is_delete' => 0,
-                            'create_time' => time()
+                            'create_time' => $createTime
                         ]);
                         if ($result === false) {
                             throw new \Exception('上传试卷失败');
@@ -392,7 +395,7 @@ class paperController extends Controller
             $userInfo=UserService::getUserInfo($searchArgs['token']);
             $dayData=getthemonth(date('Y-m-d'));            //获取本月第一天和最后一天
             $vipYoudaoExaminedModel=new VipYoudaoExamined();
-            $condition=['agency_id'=>['eq' => $userInfo['agencyId']],'upload_time'=>['between' => [$dayData[0].' 00:00:00',$dayData[1].' 11:59:59']]];
+            $condition=['agency_id'=>['eq' => $userInfo['agencyId']],'upload_time'=>['between' => [$dayData[0].' 00:00:00',$dayData[1].' 23:59:59']]];
             $paperMonthCount=$vipYoudaoExaminedModel->count($condition);
             $paperMonthCount=intval($paperMonthCount)>0?$paperMonthCount:0;
             //获取本月上传试卷数
