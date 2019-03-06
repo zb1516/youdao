@@ -40,6 +40,7 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->get('user/logout','WxProgram\UserController@logout')->middleware('checkUserToken');
     $router->post('upload/getSignature','WxProgram\UploadController@getSignature')->middleware('checkUserToken');
     $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject')->middleware('checkUserToken');
+
     $router->get('paper/testUpdate','WxProgram\PaperController@testUpdate');
 
 });
