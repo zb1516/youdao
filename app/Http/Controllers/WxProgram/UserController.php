@@ -56,6 +56,10 @@ class UserController extends Controller
             {
                 throw new \Exception('抱歉，您的机构未开通私库！');
             }
+            if($agencyDeatil['agency_type'] == 1)
+            {
+                throw new \Exception('请用新元课堂账号登陆！');
+            }
             //获取教师信息
             $teacherInfo=KlibTeacherClient::getTeacherInfo($authUserInfo['userId'],$microToken);
             if($teacherInfo['isPrivateLibraryManage'] != 1)
