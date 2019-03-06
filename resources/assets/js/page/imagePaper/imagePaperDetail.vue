@@ -460,7 +460,7 @@
                         params:{userKey:that.userKey,taskId:that.taskId,allType:1}
                     });
                 }
-                axios.post('youdao/imagePaper/paperPass',{params:searchArgs}).then(function(data){
+                axios.post('youdao/imagePaper/paperPass',{params:searchArgs},{timeout: 1000 * 60 * 10}).then(function(data){
                     if (data.data.errorMsg) {
                         that.$message({
                             message: data.data.errorMsg,
