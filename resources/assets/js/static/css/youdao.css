@@ -771,7 +771,7 @@ html, body {
       margin-bottom: 25px; }
 
 /*# sourceMappingURL=youdao.css.map */
-.question-wrapper table{
+.question-wrapper table.youdao-table {
   border: 1px solid #000;
   border-collapse: collapse;
 }
