@@ -535,8 +535,8 @@ function(e) { !
         u.VERSION = "1.13.5",
         u.BootstrapVersion = K.major,
         u.DEFAULTS = {
-            noneSelectedText: "Nothing selected",
-            noneResultsText: "No results matched {0}",
+            noneSelectedText: "没有选中",
+            noneResultsText: "无匹配数据",
             countSelectedText: function(e, t) {
                 return 1 == e ? "{0} item selected": "{0} items selected"
             },
