@@ -1109,6 +1109,10 @@ class VipYoudaoExamined extends Model
     public function updateErrorYouDaoTime($data)
     {
         if($data['taskId']){
+            $taskInfo = $this->findOne(array('task_id' => $data['taskId']));
+            if($taskInfo['paper_examined_status'] == 3){
+                throw new \Exception('处理失败，此任务已经完结，请勿重复处理');
+            }
             $vip_paper_examined_details = new VipPaperExaminedDetails;
             $vip_youdao_paper = new VipYoudaoPaper;
             $vip_youdao_question =  new VipYoudaoQuestion;
