@@ -12,11 +12,15 @@ use Hprose\Http\Client;
 
 class KlibQuestionClient
 {
-    public static function getQuestion($questionIds)
+    public static function getQuestion($questionIds, $latex = 0)
     {
         try{
             $user = new Client(env('KLIB_SERVICE_HOST'). '/klibService/quesService', false);
-            $res = $user->getQuesInfoById($questionIds, false, intval(env('QUES_ATTR_DEFAULT',7)) | intval(env('QUES_ATTR_PAPER',32)));
+            if($latex == 1){
+                $res = $user->getQuesInfoById($questionIds, false, 8199 | intval(env('QUES_ATTR_PAPER',32)));
+            }else{
+                $res = $user->getQuesInfoById($questionIds, false, intval(env('QUES_ATTR_DEFAULT',7)) | intval(env('QUES_ATTR_PAPER',32)));
+            }
             if(count($res) == count($res,1)){
                 $quesOptions=isset($res['ques_options'])?trim($res['ques_options']):'';
                 $quesContent=isset($res['ques_content'])?trim($res['ques_content']):'';
