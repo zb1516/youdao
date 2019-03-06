@@ -92,16 +92,16 @@ class PaperController extends BaseController
                 $result = json_decode($result,true);
 //                print_r($result);die;
                 if($result['code'] == 200){
-                    if($result['data']['questions']){
+                    if(isset($result['data']['questions']) && $result['data']['questions']){
                         foreach ($result['data']['questions'] as $key=>$ques){
                             //$ques['quesLatextContent']['content'] = '< img src="" alt="$ (a+2)^{2} $"/> &#43;|b&#43;3|&#61;0&#xff0c;<br />∴a&#43;2&#61;0&#xff0c;b&#43;3&#61;0.<br />解得a&#61;-2&#xff0c;b&#61;-3.<br />3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-(2< img src="" alt="$ a^{2} $"/> b-3ab&#43;< img src="" alt="$ a^{2} $"/> b&#43;4< img src="" alt="$ a^{2} $"/> )-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-2< img src="" alt="$ a^{2} $"/> b&#43;3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> -2ab<br />&#61;ab-4< img src="" alt="$ a^{2} $"/> .<br />将a&#61;-2&#xff0c;b&#61;-3代入ab-4< img src="" alt="$ a^{2} $"/> 得-2×(-3)-4×< img src="" alt="$ (-2)^{2} $"/> &#61;6-16&#61;-10&#xff0c;<br />所以3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab&#61;-10.';
-                            if($result['data']['questions'][$key]['quesLatextAnalysis']){
+                            if(isset($result['data']['questions'][$key]['quesLatextAnalysis'])){
                                 $result['data']['questions'][$key]['quesLatextAnalysis']['content'] = self::clearWordHtml($ques['quesLatextAnalysis']['content']);
                             }
-                            if($result['data']['questions'][$key]['quesLatextAnswer']){
+                            if(isset($result['data']['questions'][$key]['quesLatextAnswer'])){
                                 $result['data']['questions'][$key]['quesLatextAnswer']['content'] = self::clearWordHtml($ques['quesLatextAnswer']['content']);
                             }
-                            if($result['data']['questions'][$key]['quesLatextContent']){
+                            if(isset($result['data']['questions'][$key]['quesLatextContent'])){
                                 $result['data']['questions'][$key]['quesLatextContent']['content'] = self::clearWordHtml($ques['quesLatextContent']['content']);
                             }
 
