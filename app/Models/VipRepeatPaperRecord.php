@@ -37,7 +37,8 @@ class VipRepeatPaperRecord extends Model
                 throw new \Exception('保存试卷记录失败');
             }
             $conditionQuestion = array(
-                'paper_id' => $paperId
+                'paper_id' => $paperId,
+                'agency_id' => 0
             );
             $vipQuestion = new Question();
             $resultQuestion = $vipQuestion->findAll($conditionQuestion);
