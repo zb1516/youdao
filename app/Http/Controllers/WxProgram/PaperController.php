@@ -642,4 +642,14 @@ class paperController extends Controller
             throw new \Exception($e->getMessage());
         }
     }
+
+    public function testUpdate()
+    {
+        $result=DB::connection('mysql_kms')->select("update vip_question set is_get=1,is_label=1 where id in (select id from vip_question where knowledge_id <> 0 and is_label = 0)");
+        if($result === false)
+        {
+            echo "失败";die;
+        }
+        echo "成功";die;
+    }
 }
