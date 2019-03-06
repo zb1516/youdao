@@ -41,8 +41,6 @@ Route::group(['prefix'=>'wxprogram'],function($router){
     $router->post('upload/getSignature','WxProgram\UploadController@getSignature')->middleware('checkUserToken');
     $router->get('paper/getGradeBySubject','WxProgram\PaperController@getGradeBySubject')->middleware('checkUserToken');
 
-    $router->get('paper/testUpdate','WxProgram\PaperController@testUpdate');
-
 });
 
 //以下为4.0路由
