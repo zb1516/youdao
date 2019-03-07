@@ -344,7 +344,7 @@ class CommonController extends BaseController
                 throw new \Exception('试卷Id不能为空');
             }
             //print_r($paperId);exit;
-            $result = KlibPaperClient::getPaperClient(487);
+            $result = KlibPaperClient::getPaperClient($paperId);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['errorMsg' => $e->getMessage()]);
