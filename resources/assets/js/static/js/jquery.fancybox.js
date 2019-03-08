@@ -535,7 +535,7 @@
 				pos;
 
 			if (wrap) {
-				console.log( onlyAbsolute );
+				//console.log( onlyAbsolute );
 				pos = F._getPosition(onlyAbsolute);
 
 				if (e && e.type === 'scroll') {
