@@ -386,13 +386,13 @@ class PaperController extends BaseController
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 //return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
-                $this->sendWxTemplate(array(
-                    'taskId'=>$taskId,
-                    'openId'=>$paperInfo['open_id'],
-                    'type'=>2,
-                    'userId'=>$paperInfo['create_uid'],
-                    'content'=>'恭喜您，您提交的试卷已通过审核。'
-                ));
+//                $this->sendWxTemplate(array(
+//                    'taskId'=>$taskId,
+//                    'openId'=>$paperInfo['open_id'],
+//                    'type'=>2,
+//                    'userId'=>$paperInfo['create_uid'],
+//                    'content'=>'恭喜您，您提交的试卷已通过审核。'
+//                ));
                 return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
