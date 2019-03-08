@@ -96,15 +96,15 @@ class VipPaperImage extends Model
             }
         }
 
-        $postData = array(
-            'openId' => $result['open_id'],
-            'type' => 1,
-            'userId' => $result['create_uid'],
-            'taskId' => $taskId,
-            'content' => $imageErrorType,
-        );
+//        $postData = array(
+//            'openId' => $result['open_id'],
+//            'type' => 1,
+//            'userId' => $result['create_uid'],
+//            'taskId' => $taskId,
+//            'content' => $imageErrorType,
+//        );
         //$sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
-        WxService::sendTemplate($postData);
+        //WxService::sendTemplate($postData);
         $this->commit();
         return true;
     }
