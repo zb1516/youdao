@@ -633,7 +633,7 @@ class PaperController extends BaseController
         if(false==$matches){
             $matches = array(array());
         }
-//        dd((is_array($matches) && !empty($matches[0])) !== false);
+        dd($matches);
         $spanStacks = array();
         if((count($matches[0]) > 0)== true){
             dd(11111111111);
