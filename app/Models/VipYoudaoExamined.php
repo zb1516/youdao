@@ -32,9 +32,12 @@ class VipYoudaoExamined extends Model
                 $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
             }
             if($paperInfo['grade']){
-                $vipDict = new VipDict;
-                $gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
-                $paperInfo['grade_name'] = $gradeInfo['title'];
+                //$vipDict = new VipDict;
+                //$gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
+                //$paperInfo['grade_name'] = $gradeInfo['title'];
+
+                $gradeArr = Config('app.GRADE_VALUE');
+                $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
             }
         }
 
