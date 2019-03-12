@@ -84,7 +84,6 @@ class PaperController extends BaseController
             $taskId = trim($request->taskId);
             if($taskId){
                 $paperInfo = $this->vipYoudaoExamined->getPaperInfo($taskId);
-                var_dump($paperInfo);
                 //调用有道接口。获取有道处理的试卷详情
                 $postUrl = config('app.YOUDAO_TASK_RESULT_URL');
                 $postData['taskId'] = $taskId;
