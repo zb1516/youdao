@@ -92,7 +92,10 @@ class PaperController extends BaseController
                 $result = json_decode($result,true);
 //                print_r($result);die;
                 if($result['code'] == 200){
-                    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/cc.txt',json_encode($paperInfo));
+                    if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
+                        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/cc.txt',json_encode($paperInfo));
+                    }
+
                     if(isset($result['data']['questions']) && $result['data']['questions']){
                         foreach ($result['data']['questions'] as $key=>$ques){
                             //$ques['quesLatextContent']['content'] = '< img src="" alt="$ (a+2)^{2} $"/> &#43;|b&#43;3|&#61;0&#xff0c;<br />∴a&#43;2&#61;0&#xff0c;b&#43;3&#61;0.<br />解得a&#61;-2&#xff0c;b&#61;-3.<br />3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-(2< img src="" alt="$ a^{2} $"/> b-3ab&#43;< img src="" alt="$ a^{2} $"/> b&#43;4< img src="" alt="$ a^{2} $"/> )-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-2< img src="" alt="$ a^{2} $"/> b&#43;3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> -2ab<br />&#61;ab-4< img src="" alt="$ a^{2} $"/> .<br />将a&#61;-2&#xff0c;b&#61;-3代入ab-4< img src="" alt="$ a^{2} $"/> 得-2×(-3)-4×< img src="" alt="$ (-2)^{2} $"/> &#61;6-16&#61;-10&#xff0c;<br />所以3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab&#61;-10.';
@@ -108,7 +111,9 @@ class PaperController extends BaseController
 
                         }
                     }
-                    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/dd.txt',json_encode($result));
+                    if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
+                        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/dd.txt',json_encode($result));
+                    }
                     $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
