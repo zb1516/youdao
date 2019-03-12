@@ -89,6 +89,7 @@ class PaperController extends BaseController
                 $postData['taskId'] = $taskId;
                 $common = new CommonController;
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
+                dd($result);
                 $result = json_decode($result,true);
 //                print_r($result);die;
                 if($result['code'] == 200){
@@ -127,10 +128,8 @@ class PaperController extends BaseController
                         }
                     }
                     if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                        dd($taskId);
                         file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/dd.txt',json_encode($result));
                     }
-                    dd($result['data']);
                     $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
