@@ -640,6 +640,10 @@ class PaperController extends BaseController
                     array_push($spanStacks, array($key, $match));
                 } else {
                     $startTag = array_pop($spanStacks);
+                    if(!isset($startTag[0])){
+                        unset($key);
+                        $match='';
+                    }
                     $endTag = array($key, $match);
 
                     $cleanedStartTag = $startTag[1];
@@ -668,9 +672,6 @@ class PaperController extends BaseController
                     $startTag[1] = $cleanedStartTag;
                     if(false == $cleanedStartTag) {
                         $endTag[1] = '';
-                    }
-                    if(!isset($startTag[0])){
-                        unset($startTag[1]);
                     }
                     $matches[$startTag[0]] = $startTag[1];
                     $matches[$endTag[0]] = $endTag[1];
