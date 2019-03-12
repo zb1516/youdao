@@ -634,47 +634,47 @@ class PaperController extends BaseController
             $matches = array(array());
         }
         $spanStacks = array();
-dd($matches);
-        foreach($matches[0] as $key=>$match) {
-            if(false == stristr($match, '</span>')) {
-                array_push($spanStacks, array($key, $match));
-            } else {
-                $startTag = array_pop($spanStacks);
-                $endTag = array($key, $match);
+        if(!empty($matches[0])){
+            foreach($matches[0] as $key=>$match) {
+                if(false == stristr($match, '</span>')) {
+                    array_push($spanStacks, array($key, $match));
+                } else {
+                    $startTag = array_pop($spanStacks);
+                    $endTag = array($key, $match);
 
-                $cleanedStartTag = $startTag[1];
+                    $cleanedStartTag = $startTag[1];
 
-                $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
-                $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
-                $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
+                    $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
+                    $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
+                    $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
 
-                $fonts = array(
-                    'Symbol', '华文新魏', '华文楷体', '黑体'
-                );
+                    $fonts = array(
+                        'Symbol', '华文新魏', '华文楷体', '黑体'
+                    );
 
-                if($cleanedStartTag == $startTag[1]) {
-                    $keep = false;
-                    if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
-                        $keep = true;
-                    } else {
-                        foreach($fonts as $font) {
-                            if(false == $keep && stristr($cleanedStartTag, $font)) {
-                                $keep = true;
+                    if($cleanedStartTag == $startTag[1]) {
+                        $keep = false;
+                        if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
+                            $keep = true;
+                        } else {
+                            foreach($fonts as $font) {
+                                if(false == $keep && stristr($cleanedStartTag, $font)) {
+                                    $keep = true;
+                                }
                             }
                         }
+                        if(false == $keep) $cleanedStartTag = '';
                     }
-                    if(false == $keep) $cleanedStartTag = '';
-                }
-                $startTag[1] = $cleanedStartTag;
-                if(false == $cleanedStartTag) {
-                    $endTag[1] = '';
-                }
+                    $startTag[1] = $cleanedStartTag;
+                    if(false == $cleanedStartTag) {
+                        $endTag[1] = '';
+                    }
 
-                $matches[$startTag[0]] = $startTag[1];
-                $matches[$endTag[0]] = $endTag[1];
+                    $matches[$startTag[0]] = $startTag[1];
+                    $matches[$endTag[0]] = $endTag[1];
+                }
             }
         }
-
         $html = '';
         foreach($parts as $key=>$part) {
             $html .= trim($part);
