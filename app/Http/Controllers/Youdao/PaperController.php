@@ -669,7 +669,10 @@ class PaperController extends BaseController
                     if(false == $cleanedStartTag) {
                         $endTag[1] = '';
                     }
-var_dump($startTag);
+                    if(!isset($startTag[0])){
+                        var_dump($startTag);
+                    }
+
                     $matches[$startTag[0]] = $startTag[1];
                     $matches[$endTag[0]] = $endTag[1];
                 }
