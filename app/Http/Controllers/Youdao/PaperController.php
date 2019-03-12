@@ -631,11 +631,10 @@ class PaperController extends BaseController
         preg_match_all($pattern, $html, $matches);
 
         if(false==$matches){
-            dd(111);
             $matches = array(array());
         }
         $spanStacks = array();
-        if(!empty($matches[0]) && $matches==false){
+        if(!empty($matches[0]) && $matches[0] != '[]'){
             foreach($matches[0] as $key=>$match) {
                 if(false == stristr($match, '</span>')) {
                     array_push($spanStacks, array($key, $match));
