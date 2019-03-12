@@ -138,7 +138,7 @@ class PaperController extends BaseController
                 return response()->json(['errorMsg' => '任务id不能为空']);
             }
         }catch (\Exception $e){
-            return response()->json(['errorMsg' => $e->getTraceAsString()]);
+            return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
 
