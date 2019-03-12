@@ -643,7 +643,6 @@ class PaperController extends BaseController
                     if(!isset($startTag[0])){
                         $key='';
                         $match='';
-                    }
                     $endTag = array($key, $match);
 
                     $cleanedStartTag = $startTag[1];
@@ -675,6 +674,7 @@ class PaperController extends BaseController
                     }
                     $matches[$startTag[0]] = $startTag[1];
                     $matches[$endTag[0]] = $endTag[1];
+                }
                 }
             }
         }
