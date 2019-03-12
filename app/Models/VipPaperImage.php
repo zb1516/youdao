@@ -103,7 +103,7 @@ class VipPaperImage extends Model
             'taskId' => $taskId,
             'content' => $imageErrorType,
         );
-        //$sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
+//        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
         WxService::sendTemplate($postData);
         $this->commit();
         return true;

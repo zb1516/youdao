@@ -59,11 +59,11 @@ class WxService
                     'keyword3'  => ['value'=>'已进入您的机构私库','color'=>'#000000']
                 ];
             }
-            $result=self::sendTemplateMessage($searchArgs['openId'],$templateData,$searchArgs['type']);
-            if($result->errcode != 0)
-            {
-                throw new \Exception($result->errmsg);
-            }
+//            $result=self::sendTemplateMessage($searchArgs['openId'],$templateData,$searchArgs['type']);
+//            if($result->errcode != 0)
+//            {
+//                throw new \Exception($result->errmsg);
+//            }
             //添加发送消息记录
             $messageModel=new VipMessageRemind();
             $result=$messageModel->add([

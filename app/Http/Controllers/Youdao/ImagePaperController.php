@@ -145,6 +145,11 @@ class ImagePaperController extends BaseController
             $taskId = $request->get('taskId', '');
             $paperId = abs($request->get('paperId', 0));
             $userKey = $request->get('userKey', '');
+            if(empty($userKey))
+            {
+                throw new \Exception('userKey不能为空');
+            }
+            $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
             if(empty($paperId))
             {
                 throw new \Exception('套卷id不能为空');
@@ -169,6 +174,11 @@ class ImagePaperController extends BaseController
             $taskId = $request->get('taskId', '');
             $imageErrorType = trim($request->get('imageErrorType', ''),',');
             $userKey = $request->get('userKey', '');
+            if(empty($userKey))
+            {
+                throw new \Exception('userKey不能为空');
+            }
+            $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
             if(empty($taskId))
             {
                 throw new \Exception('缺少taskId');
@@ -188,14 +198,14 @@ class ImagePaperController extends BaseController
     {
         set_time_limit(0);
         $_POST = $request->post('params');
-        $userKey = isset($_POST['userKey']) ? $_POST['userKey'] : '';
-        $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
-        $_POST['userKey'] = $userKey;
         try {
+            $userKey = isset($_POST['userKey']) ? $_POST['userKey'] : '';
             if(empty($userKey))
             {
                 throw new \Exception('userKey不能为空');
             }
+            $userKey = Xxtea::decrypt($userKey, 'aitifen.com');
+            $_POST['userKey'] = $userKey;
             if(empty($_POST['paperType']))
             {
                 throw new \Exception('类型不能为空');
