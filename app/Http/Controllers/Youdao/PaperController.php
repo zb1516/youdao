@@ -105,9 +105,9 @@ class PaperController extends BaseController
                             if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
                                 file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/2.txt',json_encode($result));
                             }
-//                            if(isset($result['data']['questions'][$key]['quesLatextAnalysis'])){
-//                                $result['data']['questions'][$key]['quesLatextAnalysis']['content'] = self::clearWordHtml($ques['quesLatextAnalysis']['content']);
-//                            }
+                            if(isset($result['data']['questions'][$key]['quesLatextAnalysis'])){
+                                $result['data']['questions'][$key]['quesLatextAnalysis']['content'] = self::clearWordHtml($ques['quesLatextAnalysis']['content']);
+                            }
 //                            if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
 //                                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/3.txt',json_encode($result));
 //                            }
