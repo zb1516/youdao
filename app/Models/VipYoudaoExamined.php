@@ -27,20 +27,20 @@ class VipYoudaoExamined extends Model
                 $imageTypeTwo = $vipPaperImage->findAll(array('task_id'=>$taskId, 'is_delete'=>0, 'image_type'=>2), ['id'=>'desc']);
                 $paperInfo['images'] = array_merge($imageTypeOne,$imageTypeTwo);
             }
-//            if($paperInfo['subject_id']){
-//                $kmsSubject = new KmsSubjects;
-//                $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
-//            }
-//            if($paperInfo['grade']){
-//                //$vipDict = new VipDict;
-//                //$gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
-//                //$paperInfo['grade_name'] = $gradeInfo['title'];
-//
-//                $gradeArr = Config('app.GRADE_VALUE');
-//                $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
-//            }
+            if($paperInfo['subject_id']){
+                $kmsSubject = new KmsSubjects;
+                $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
+            }
+            if($paperInfo['grade']){
+                //$vipDict = new VipDict;
+                //$gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
+                //$paperInfo['grade_name'] = $gradeInfo['title'];
+
+                $gradeArr = Config('app.GRADE_VALUE');
+                $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
+            }
         }
-dd($paperInfo);
+
         return $paperInfo;
     }
 

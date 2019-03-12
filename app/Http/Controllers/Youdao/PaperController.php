@@ -90,7 +90,7 @@ class PaperController extends BaseController
                 $common = new CommonController;
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
                 $result = json_decode($result,true);
-//                print_r($result);die;
+                print_r($result);die;
                 if($result['code'] == 200){
                     if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
                         file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/cc.txt',json_encode($result));
