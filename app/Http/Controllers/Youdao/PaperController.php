@@ -631,9 +631,9 @@ class PaperController extends BaseController
         preg_match_all($pattern, $html, $matches);
 
         if(false==$matches){
+            dd(111);
             $matches = array(array());
         }
-        dd($matches);
         $spanStacks = array();
         if(!empty($matches[0]) && $matches==false){
             foreach($matches[0] as $key=>$match) {
