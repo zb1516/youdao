@@ -630,12 +630,12 @@ class PaperController extends BaseController
         $parts = preg_split($pattern, $html);
         preg_match_all($pattern, $html, $matches);
 
-        if(false==$matches){
-            $matches = array(array());
-        }
+//        if(false==$matches){
+//            $matches = array(array());
+//        }
         $spanStacks = array();
-        if(isset($matches[0]) && !empty($matches)){
-            dd(111);
+
+        if(!empty($matches)){
             foreach($matches[0] as $key=>$match) {
                 if(false == stristr($match, '</span>')) {
                     array_push($spanStacks, array($key, $match));
