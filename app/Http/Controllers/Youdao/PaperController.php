@@ -641,8 +641,8 @@ class PaperController extends BaseController
                 } else {
                     $startTag = array_pop($spanStacks);
                     if(!isset($startTag[0])){
-                        $key='';
-                        $match='';
+                        $matches[0][$key]='';
+                    }else{
                     $endTag = array($key, $match);
 
                     $cleanedStartTag = $startTag[1];
