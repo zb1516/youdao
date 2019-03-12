@@ -125,7 +125,7 @@ class PaperController extends BaseController
                                 file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/5.txt',json_encode($result));
                             }
 
-                        }
+                        }exit;
                     }
                     if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
                         file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/dd.txt',json_encode($result));
