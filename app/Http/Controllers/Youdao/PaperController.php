@@ -625,6 +625,7 @@ class PaperController extends BaseController
 
 
     protected static function clearWordHtml($html,$convertLatex=true) {
+        var_dump($html);
         $pattern = '#<\/?span[^>]*>#i';
 
         $parts = preg_split($pattern, $html);
