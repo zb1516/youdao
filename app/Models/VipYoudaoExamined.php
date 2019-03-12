@@ -40,7 +40,7 @@ class VipYoudaoExamined extends Model
 //                $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
 //            }
         }
-
+dd($paperInfo);
         return $paperInfo;
     }
 
