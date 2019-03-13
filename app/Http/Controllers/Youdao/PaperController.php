@@ -92,42 +92,19 @@ class PaperController extends BaseController
                 $result = json_decode($result,true);
 //                print_r($result);die;
                 if($result['code'] == 200){
-                    if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/cc.txt',json_encode($result));
-                    }
-
                     if(isset($result['data']['questions']) && $result['data']['questions']){
-                        if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/1.txt',json_encode($result));
-                        }
                         foreach ($result['data']['questions'] as $key=>$ques){
                             //$ques['quesLatextContent']['content'] = '< img src="" alt="$ (a+2)^{2} $"/> &#43;|b&#43;3|&#61;0&#xff0c;<br />∴a&#43;2&#61;0&#xff0c;b&#43;3&#61;0.<br />解得a&#61;-2&#xff0c;b&#61;-3.<br />3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-(2< img src="" alt="$ a^{2} $"/> b-3ab&#43;< img src="" alt="$ a^{2} $"/> b&#43;4< img src="" alt="$ a^{2} $"/> )-2ab<br />&#61;3< img src="" alt="$ a^{2} $"/> b-2< img src="" alt="$ a^{2} $"/> b&#43;3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> -2ab<br />&#61;ab-4< img src="" alt="$ a^{2} $"/> .<br />将a&#61;-2&#xff0c;b&#61;-3代入ab-4< img src="" alt="$ a^{2} $"/> 得-2×(-3)-4×< img src="" alt="$ (-2)^{2} $"/> &#61;6-16&#61;-10&#xff0c;<br />所以3< img src="" alt="$ a^{2} $"/> b-[2< img src="" alt="$ a^{2} $"/> b-(3ab-< img src="" alt="$ a^{2} $"/> b-4< img src="" alt="$ a^{2} $"/> )]-2ab&#61;-10.';
-                            if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/2.txt',json_encode($result));
-                            }
                             if(isset($result['data']['questions'][$key]['quesLatextAnalysis'])){
                                 $result['data']['questions'][$key]['quesLatextAnalysis']['content'] = self::clearWordHtml($ques['quesLatextAnalysis']['content']);
-                            }
-                            if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/3.txt',json_encode($result));
                             }
                             if(isset($result['data']['questions'][$key]['quesLatextAnswer'])){
                                 $result['data']['questions'][$key]['quesLatextAnswer']['content'] = self::clearWordHtml($ques['quesLatextAnswer']['content']);
                             }
-                            if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/4.txt',json_encode($result));
-                            }
                             if(isset($result['data']['questions'][$key]['quesLatextContent'])){
                                 $result['data']['questions'][$key]['quesLatextContent']['content'] = self::clearWordHtml($ques['quesLatextContent']['content']);
                             }
-                            if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                                file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/5.txt',json_encode($result));
-                            }
-
                         }
-                    }
-                    if($taskId == 'b7f1b653-0edd-85b7-c268-697c4e7c'){
-                        file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/dd.txt',json_encode($result));
                     }
                     $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
@@ -626,7 +603,7 @@ class PaperController extends BaseController
 
     protected static function clearWordHtml($html,$convertLatex=true) {
         $pattern = '#<\/?span[^>]*>#i';
-
+//var_dump($html);
         $parts = preg_split($pattern, $html);
         preg_match_all($pattern, $html, $matches);
 
@@ -634,47 +611,50 @@ class PaperController extends BaseController
             $matches = array(array());
         }
         $spanStacks = array();
+        if(is_array($matches) && $matches[0]){
+            foreach($matches[0] as $key=>$match) {
+                if(false == stristr($match, '</span>')) {
+                    array_push($spanStacks, array($key, $match));
+                } else {
+                    $startTag = array_pop($spanStacks);
+                    if(!isset($startTag[0])){
+                        continue;
+                    }else{
+                    $endTag = array($key, $match);
 
-        foreach($matches[0] as $key=>$match) {
-            if(false == stristr($match, '</span>')) {
-                array_push($spanStacks, array($key, $match));
-            } else {
-                $startTag = array_pop($spanStacks);
-                $endTag = array($key, $match);
+                    $cleanedStartTag = $startTag[1];
 
-                $cleanedStartTag = $startTag[1];
+                    $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
+                    $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
+                    $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
 
-                $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
-                $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
-                $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
+                    $fonts = array(
+                        'Symbol', '华文新魏', '华文楷体', '黑体'
+                    );
 
-                $fonts = array(
-                    'Symbol', '华文新魏', '华文楷体', '黑体'
-                );
-
-                if($cleanedStartTag == $startTag[1]) {
-                    $keep = false;
-                    if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
-                        $keep = true;
-                    } else {
-                        foreach($fonts as $font) {
-                            if(false == $keep && stristr($cleanedStartTag, $font)) {
-                                $keep = true;
+                    if($cleanedStartTag == $startTag[1]) {
+                        $keep = false;
+                        if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
+                            $keep = true;
+                        } else {
+                            foreach($fonts as $font) {
+                                if(false == $keep && stristr($cleanedStartTag, $font)) {
+                                    $keep = true;
+                                }
                             }
                         }
+                        if(false == $keep) $cleanedStartTag = '';
                     }
-                    if(false == $keep) $cleanedStartTag = '';
+                    $startTag[1] = $cleanedStartTag;
+                    if(false == $cleanedStartTag) {
+                        $endTag[1] = '';
+                    }
+                    $matches[$startTag[0]] = $startTag[1];
+                    $matches[$endTag[0]] = $endTag[1];
                 }
-                $startTag[1] = $cleanedStartTag;
-                if(false == $cleanedStartTag) {
-                    $endTag[1] = '';
                 }
-
-                $matches[$startTag[0]] = $startTag[1];
-                $matches[$endTag[0]] = $endTag[1];
             }
         }
-
         $html = '';
         foreach($parts as $key=>$part) {
             $html .= trim($part);

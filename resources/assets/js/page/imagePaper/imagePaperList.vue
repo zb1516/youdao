@@ -112,7 +112,7 @@
                 <table id="pic-form-box" class="pic-form-box dataTable no-footer" role="grid" style="width: 1400px;">
                     <thead>
                     <tr role="row">
-                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="序号" style="width: 84px;">序号</th>
+                        <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="任务ID" style="width: 84px;">序号</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="试卷名称" style="width: 518px;">试卷名称</th>
                         <th class="sorting_disabled" rowspan="1" colspan="1" aria-label="机构名称" style="width: 308px;">机构名称</th>
                         <th :class="isUploadTimeTrue?'sorting':(isUploadTimeShow?'sorting_asc':'sorting_desc')" id="paginationBox1" tabindex="0" aria-controls="pic-form-box" rowspan="1" colspan="1" aria-label="上传时间: activate to sort column ascending" style="width: 140px;" @click="selectUploadTimeGet">上传时间</th>
