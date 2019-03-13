@@ -253,7 +253,7 @@ return [
         '3' => '难',
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
-    'AGENCY_UPLOAD_NUMBER'=>20,
+    'AGENCY_UPLOAD_NUMBER'=>40,
     'TEST_APP_KEY' => '5fa6598e27baf265',
     'TEST_APP_SECRET' => 'ZCO0xUhohrqEBO8lYGbfQDBRLFLuWLCs',
     'TEST_YOUDAO_URL' => 'http://openapi.youdao.com/s4eu',
