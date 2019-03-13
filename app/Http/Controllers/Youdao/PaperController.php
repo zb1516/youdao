@@ -603,7 +603,6 @@ class PaperController extends BaseController
 
     protected static function clearWordHtml($html,$convertLatex=true) {
         $pattern = '#<\/?span[^>]*>#i';
-//var_dump($html);
         $parts = preg_split($pattern, $html);
         preg_match_all($pattern, $html, $matches);
 
@@ -617,9 +616,9 @@ class PaperController extends BaseController
                     array_push($spanStacks, array($key, $match));
                 } else {
                     $startTag = array_pop($spanStacks);
-                    if(!isset($startTag[0])){
-                        continue;
-                    }else{
+                    //if(!isset($startTag[0])){
+                    //    continue;
+                    //}else{
                     $endTag = array($key, $match);
 
                     $cleanedStartTag = $startTag[1];
@@ -651,7 +650,7 @@ class PaperController extends BaseController
                     }
                     $matches[$startTag[0]] = $startTag[1];
                     $matches[$endTag[0]] = $endTag[1];
-                }
+                //}
                 }
             }
         }
