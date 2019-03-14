@@ -673,7 +673,7 @@ class PaperController extends BaseController
             $html = str_replace(['\[','\]'],['\(','\)'],$html);
 //            $html = preg_replace("#^\\[#i","(",$html);
 //            $html = preg_replace("#$\\]#i",")",$html);
-            $html = preg_replace("#\\$\\$(.*?)\\$\\$#i","\("."$1"."\)",$html);
+            //$html = preg_replace("#\\$\\$(.*?)\\$\\$#i","\("."$1"."\)",$html);
             $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
             $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
             return $html;
