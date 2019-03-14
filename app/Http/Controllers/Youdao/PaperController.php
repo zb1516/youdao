@@ -104,6 +104,11 @@ class PaperController extends BaseController
                             if(isset($result['data']['questions'][$key]['quesLatextContent'])){
                                 $result['data']['questions'][$key]['quesLatextContent']['content'] = self::clearWordHtml($ques['quesLatextContent']['content']);
                             }
+                            if(isset($result['data']['questions'][$key]['options'])){
+                                foreach ($result['data']['questions'][$key]['options'] as $k=>$option){
+                                    $result['data']['questions'][$key]['options'][$k]['latexContent'] = self::clearWordHtml($option['latexContent']);
+                                }
+                            }
                         }
                     }
                     $paperInfo['youdao_info'] = $result['data'];
