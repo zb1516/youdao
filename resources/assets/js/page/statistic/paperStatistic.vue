@@ -224,7 +224,7 @@
                     endDate:'',
                     paperName:'',
                     paperList: '',
-                    pageSize: 10,
+                    pageSize: 30,
                     currentPage:1,
                     curGrade:'',
                     _total:0,
@@ -407,7 +407,7 @@
                     } else {
                         $("#paginationBox").pagination({
                             totalPage: that._total,
-                            showPageNum: 10,
+                            showPageNum: 5,
                             isShowPageSizeOpt: false,
                             isShowFL: false,
                             isShowRefresh: false,

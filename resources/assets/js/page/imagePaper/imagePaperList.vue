@@ -184,7 +184,7 @@
                 agencyValue:'',
                 optionsAgency:'',
                 imagePaperList: '',
-                pageSize: 10,
+                pageSize: 30,
                 currentPage:1,
                 curGrade:'',
                 _total:0,
@@ -312,7 +312,7 @@
                         callBack: function (currPage, pageSize) {
                             that.isSort = true;
                             that.currentPage = currPage;
-                            that.pageSize = 10;
+                            that.pageSize = 30;
                             that.doSearch();
                             //console.log('currPage:' + currPage + '     pageSize:' + that.pageSize);
 
