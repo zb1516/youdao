@@ -46,7 +46,7 @@ class PaperController extends BaseController
         try{
             //$userInfo = $this->user->getUserInfo($this->userKey);
             $currentPage = abs($request->get('currentPage', 1));
-            $pageSize = abs($request->get('pageSize', 10));
+            $pageSize = abs($request->get('pageSize', 30));
             $searchArgs = $this->vipYoudaoExamined->paperSearchArgs($_GET);
             $result = $this->vipYoudaoExamined->paperList($searchArgs, $currentPage, $pageSize);
             return response()->json($result);
@@ -674,6 +674,7 @@ class PaperController extends BaseController
 //            $html = preg_replace("#^\\[#i","(",$html);
 //            $html = preg_replace("#$\\]#i",")",$html);
             $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
+            $html = preg_replace("#\\$\\$(.*?)\\$\\$#i","\("."$1"."\)",$html);
             $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
             return $html;
 
