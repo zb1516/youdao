@@ -19,16 +19,16 @@
           <div class="pic-paper-form">
             <div class="pic-paper-box">
               <div class="pic-list-wrapper">
-                  <ul class="pic-list cf" >
+                  <ul class="pic-list cf" id="images">
                     <template v-if="paperInfo.images">
                         <template v-for="(img, index) in paperInfo.images">
                             <li class="pic-box js-pic-box" >
-                              <a :href="img.image_url" data-fancybox-group="gallery">
+                              <!--<a :href="img.image_url" data-fancybox-group="gallery">-->
                                   <p class="image">
                                     <img :src='img.image_url' alt=""/>
                                   </p>
                                   <span class="tab-index">{{index+1}}</span>
-                              </a>
+                              <!--</a>-->
                             </li>
                         </template>
                     </template>
@@ -99,11 +99,13 @@
 </template>
 <script>
     import "../../static/css/jquery-ui.min.css"
-    import "../../static/css/jquery.fancybox.css"
+//    import "../../static/css/jquery.fancybox.css"
+    import "../../static/css/viewer.min.css"
     import "../../static/js/jquery-1.12.2.min.js"
     import "../../static/js/jquery.plugin.js"
-    import "../../static/js/jquery.fancybox.js"
-    import "../../static/js/jquery.fancybox-buttons.js"
+//    import "../../static/js/jquery.fancybox.js"
+//    import "../../static/js/jquery.fancybox-buttons.js"
+    import "../../static/js/viewer.min.js"
     import common from "../../static/js/jquery.common.js"
     import "../../static/js/jquery-ui.min.js"
     import {mapGetters} from 'vuex'
@@ -135,6 +137,18 @@
                 common.init();
                 that.doGetPaperInfo();
                 that.doSelected();
+
+                setTimeout(function(){
+                    $("#images").viewer({
+                        container: '.pic-list-wrapper'
+                    })
+                }, 3000)
+                $('.pic-list-wrapper').scroll(function() {
+                    if ($('.viewer-container').hasClass('viewer-in')) {
+                        var scrollTop = $(this).scrollTop()
+                        $('.viewer-container').css({top: scrollTop, bottom: -scrollTop})
+                    }
+                })
             },
             watch:{
 
