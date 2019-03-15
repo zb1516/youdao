@@ -159,12 +159,12 @@
                     <ul class="pic-list cf js-pic-list" id="questionImage">
                         <template v-for="(item,index) in questionContent">
                         <li class="pic-box">
-                            <a :href="item.image_url" data-fancybox-group="gallery">
+                            <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
                                 <p class="image">
                                     <img :src="item.image_url" alt=""/>
                                 </p>
                                 <span class="tab-index">{{index+1}}</span>
-                            </a>
+                            <!--</a>-->
                         </li>
                         </template>
                     </ul>
@@ -189,12 +189,12 @@
                     <ul class="pic-list cf js-pic-list"  id="questionAll">
                         <template v-for="(item,index) in imagePaperDetailContent">
                             <li class="pic-box">
-                                <a :href="item.image_url" data-fancybox-group="gallery">
+                                <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
                                     <p class="image">
                                         <img :src="item.image_url" alt=""/>
                                     </p>
                                     <span class="tab-index">{{index+1}}</span>
-                                </a>
+                                <!--</a>-->
                             </li>
                         </template>
                     </ul>
@@ -210,12 +210,14 @@
 <script>
     import "../../static/js/jquery.mloading.js"
     import "../../static/css/jquery.mloading.css"
-    import "../../static/css/jquery.fancybox.css"
+    //    import "../../static/css/jquery.fancybox.css"
+    import "../../static/css/viewer.min.css"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery-ui.min.js"
     import common from "../../static/js/jquery.common.js"
-    import "../../static/js/jquery.fancybox.js"
-    import "../../static/js/jquery.fancybox-buttons.js"
+    //    import "../../static/js/jquery.fancybox.js"
+    //    import "../../static/js/jquery.fancybox-buttons.js"
+    import "../../static/js/viewer.min.js"
     import {mapGetters} from 'vuex'
 
     export default {
@@ -293,7 +295,10 @@
             that.provinceList();
             that.imagePaperDetail();
             common.init();
-
+            setTimeout(function(){
+                $("#questionAll, #questionAnswer, #questionImage").viewer({
+                })
+            }, 3000)
         },
         methods:{
             subjectList(){
