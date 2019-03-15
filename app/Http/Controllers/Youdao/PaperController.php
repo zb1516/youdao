@@ -672,15 +672,16 @@ class PaperController extends BaseController
         $html = preg_replace('#layout\-grid:[^;\'"]+;?#i', '', $html);
         $html = preg_replace('#<img#i', '<img align="absmiddle"', $html);
         if($convertLatex){
+            $html = preg_replace("#(<img[^>]*)(alt=\")(.*?)学科网(.*?)(\".*?>)#i","$1$5",$html);
             $html = preg_replace("#(<img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
-            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\%)(.*?)(\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\\\\\%)(.*?)(\\\\\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
             $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
             $html = str_replace(['\[','\]'],['\(','\)'],$html);
-//            $html = preg_replace("#^\\[#i","(",$html);
-//            $html = preg_replace("#$\\]#i",")",$html);
-            //$html = preg_replace("#\\$\\$(.*?)\\$\\$#i","\("."$1"."\)",$html);
-            $html = preg_replace("#\\$(.*?)\\$#i","\("."$1"."\)",$html);
+//            $html = preg_replace("#\\\\[#i","(",$html);
+//            $html = preg_replace("#\\\\]#i",")",$html);
+            $html = preg_replace("#\\$(.*?)\\$#i","\\("."$1"."\\)",$html);
             $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
+            $html = preg_replace("#(.*?)(\\\\xrightarrow)(.*?)#is","$1"."\\)\\("."$2"."$3",$html);
             return $html;
 
         }
