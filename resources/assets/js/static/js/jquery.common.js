@@ -62,19 +62,19 @@
                     }
                 });
             }
-            if( $('.pic-list a').length ){
-            	var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
-                    topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
-                self.initGallery(parentBox, topRatio);
-                $('.js-pic-list,.js-st-list').sortable({
-                    deactivate: function() {
-                        $('> li', this).each(function functionName( i ) {
-                            $(this).find('.tab-index').text( i + 1 );
-                        });
-                        self.initGallery(parentBox, topRatio);
-                    }
-                });
-            }
+            // if( $('.pic-list a').length ){
+            // 	var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
+            //         topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
+            //     self.initGallery(parentBox, topRatio);
+            //     $('.js-pic-list,.js-st-list').sortable({
+            //         deactivate: function() {
+            //             $('> li', this).each(function functionName( i ) {
+            //                 $(this).find('.tab-index').text( i + 1 );
+            //             });
+            //             self.initGallery(parentBox, topRatio);
+            //         }
+            //     });
+            // }
 
             return self;
         },
@@ -226,56 +226,56 @@
         return self;
       }
     },
-        initGallery: function(parent,topRatio){
-            $('.pic-list a').fancybox({
-                parent: parent || null,
-                fixed: !parent,
-                openEffect  : 'none',
-                closeEffect : 'none',
-                padding: 0,
-                prevEffect : 'none',
-                nextEffect : 'none',
-                closeBtn  : true,
-                maxWidth  : 610,
-                maxHeight : 855,
-                minWidth : 580,
-                topRatio : topRatio,
-                helpers : {
-                    buttons	: {
-                        show: false
-                    }
-                },
-                afterLoad : function() {
-                    this.title = (this.index + 1) + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
-                }
-            });
-        }
+        // initGallery: function(parent,topRatio){
+        //     $('.pic-list a').fancybox({
+        //         parent: parent || null,
+        //         fixed: !parent,
+        //         openEffect  : 'none',
+        //         closeEffect : 'none',
+        //         padding: 0,
+        //         prevEffect : 'none',
+        //         nextEffect : 'none',
+        //         closeBtn  : true,
+        //         maxWidth  : 610,
+        //         maxHeight : 855,
+        //         minWidth : 580,
+        //         topRatio : topRatio,
+        //         helpers : {
+        //             buttons	: {
+        //                 show: false
+        //             }
+        //         },
+        //         afterLoad : function() {
+        //             this.title = (this.index + 1) + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
+        //         }
+        //     });
+        // }
 	}
     function stf( s ) {
         return new Function('return ' + s)();
     }
     return siteFns;
 });
-function initGallery( parent ) {
-	$('.pic-list a').fancybox({
-		parent: parent || null,
-		fixed: !parent,
-		openEffect  : 'none',
-		closeEffect : 'none',
-		padding: 0,
-		prevEffect : 'none',
-		nextEffect : 'none',
-		closeBtn  : false,
-		helpers : {
-			buttons	: {
-				show: false
-			}
-		},
-		afterLoad : function() {
-			this.title = (this.index + 1) + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
-		}
-	});
-}
+// function initGallery( parent ) {
+// 	$('.pic-list a').fancybox({
+// 		parent: parent || null,
+// 		fixed: !parent,
+// 		openEffect  : 'none',
+// 		closeEffect : 'none',
+// 		padding: 0,
+// 		prevEffect : 'none',
+// 		nextEffect : 'none',
+// 		closeBtn  : false,
+// 		helpers : {
+// 			buttons	: {
+// 				show: false
+// 			}
+// 		},
+// 		afterLoad : function() {
+// 			this.title = (this.index + 1) + ' / ' + this.group.length + (this.title ? ' - ' + this.title : '');
+// 		}
+// 	});
+// }
 // 省份
 function initSelectBox(){
 	var provs = [
