@@ -62,19 +62,19 @@
                     }
                 });
             }
-            // if( $('.pic-list a').length ){
-            // 	var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
-            //         topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
-            //     self.initGallery(parentBox, topRatio);
-            //     $('.js-pic-list,.js-st-list').sortable({
-            //         deactivate: function() {
-            //             $('> li', this).each(function functionName( i ) {
-            //                 $(this).find('.tab-index').text( i + 1 );
-            //             });
-            //             self.initGallery(parentBox, topRatio);
-            //         }
-            //     });
-            // }
+             if( $('.pic-list div').length ){
+             	var parentBox = $('.pic-list-wrapper').length ? $('.pic-list-wrapper') : null,
+                     topRatio  = $('.pic-list-wrapper').length ? '0.1' : '0.5';
+                 // self.initGallery(parentBox, topRatio);
+                 $('.js-pic-list,.js-st-list').sortable({
+                     deactivate: function() {
+                         $('> li', this).each(function functionName( i ) {
+                             $(this).find('.tab-index').text( i + 1 );
+                         });
+                         // self.initGallery(parentBox, topRatio);
+                     }
+                 });
+             }
 
             return self;
         },
