@@ -160,10 +160,12 @@
                         <template v-for="(item,index) in questionContent">
                         <li class="pic-box">
                             <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
+                            <div data-fancybox-group="gallery">
                                 <p class="image">
                                     <img :src="item.image_url" alt=""/>
                                 </p>
                                 <span class="tab-index">{{index+1}}</span>
+                            </div>
                             <!--</a>-->
                         </li>
                         </template>
@@ -172,12 +174,14 @@
                     <ul class="pic-list cf js-st-list"  id="questionAnswer">
                         <template v-for="(item,index) in answerContent">
                             <li class="pic-box">
-                                <a :href="item.image_url" data-fancybox-group="gallery">
+                                <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
+                                <div data-fancybox-group="gallery">
                                     <p class="image">
                                         <img :src="item.image_url" alt=""/>
                                     </p>
                                     <span class="tab-index">{{index+1}}</span>
-                                </a>
+                                </div>
+                                <!--</a>-->
                             </li>
                         </template>
                     </ul>
@@ -190,10 +194,13 @@
                         <template v-for="(item,index) in imagePaperDetailContent">
                             <li class="pic-box">
                                 <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
+                                <div data-fancybox-group="gallery">
                                     <p class="image">
                                         <img :src="item.image_url" alt=""/>
                                     </p>
                                     <span class="tab-index">{{index+1}}</span>
+                                </div>
+
                                 <!--</a>-->
                             </li>
                         </template>
@@ -210,13 +217,13 @@
 <script>
     import "../../static/js/jquery.mloading.js"
     import "../../static/css/jquery.mloading.css"
-    //    import "../../static/css/jquery.fancybox.css"
+        import "../../static/css/jquery.fancybox.css"
     import "../../static/css/viewer.min.css"
     import "../../static/js/jquery.plugin.js"
     import "../../static/js/jquery-ui.min.js"
     import common from "../../static/js/jquery.common.js"
-    //    import "../../static/js/jquery.fancybox.js"
-    //    import "../../static/js/jquery.fancybox-buttons.js"
+        import "../../static/js/jquery.fancybox.js"
+        import "../../static/js/jquery.fancybox-buttons.js"
     import "../../static/js/viewer.min.js"
     import {mapGetters} from 'vuex'
 
