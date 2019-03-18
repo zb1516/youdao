@@ -39,7 +39,7 @@ class ImagePaperController extends BaseController
     {
         try {
             $currentPage = abs($request->get('currentPage', 1));
-            $pageSize = abs($request->get('pageSize', 30));
+            $pageSize = abs($request->get('pageSize', 10));
             $imgAuditor = config('app.IMG_AUDITOR');
             $roleId = $this->sysRoles->getRoleId ($imgAuditor);
             $_GET['IMG_AUDITOR'] = $roleId;
