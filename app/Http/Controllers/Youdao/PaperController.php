@@ -89,8 +89,8 @@ class PaperController extends BaseController
                 $postData['taskId'] = $taskId;
                 $common = new CommonController;
                 $result = $common->getYoudaoTask($postUrl, $postData, 2);
+                file_put_contents('/dev/shm/result.txt',$result);
                 $result = json_decode($result,true);
-                file_put_contents('/public/result.txt',$result);
                 if($result['code'] == 200){
                     if(isset($result['data']['questions']) && $result['data']['questions']){
                         foreach ($result['data']['questions'] as $key=>$ques){
