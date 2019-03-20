@@ -465,7 +465,7 @@ class CommonController extends BaseController
                             foreach ($data['questions'] as $key=>$q){
                                 $uuid = uuid();
                                 $sdate = date('Ymd');
-                                $newFileName = $sdate.'_test-'.$uuid.'_'.'content'.'_content.docx';
+                                $newFileName = $sdate.'_'.$uuid.'_'.'content'.'_content.docx';
                                 //$result = $this->curlUploadFile($q['content_file'], $newFileName);
                                 $quesFile = json_decode($q['content_file'] ,true);
                                 //file_put_contents($batchLogDir . '/file-'. date('Ymd') . '.txt', $q['content_file'].PHP_EOL,FILE_APPEND);
@@ -484,7 +484,7 @@ class CommonController extends BaseController
                                     foreach ($q['options'] as $k=>$o){
                                         //$shorUuid = shortUuid($uuid);
                                         $newUuid = strtoupper(substr(uuid(), 0,16));
-                                        $newFileName = $sdate.'_test-'.$uuid.'_'.$newUuid.'_'.$newUuid.'.docx';
+                                        $newFileName = $sdate.'_'.$uuid.'_'.$newUuid.'_'.$newUuid.'.docx';
                                         $optionFile = json_decode($o['option_file'] ,true);
                                         $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$optionFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
 
@@ -501,7 +501,7 @@ class CommonController extends BaseController
 
                                 //上传答案文档
                                 if(isset($q['answer_file'])){
-                                    $newFileName = $sdate.'_test-'.$uuid.'_'.'answers'.'_answers.docx';
+                                    $newFileName = $sdate.'_'.$uuid.'_'.'answers'.'_answers.docx';
                                     //$result = $this->curlUploadFile($q['answer_file'], $newFileName);
                                     $answerFile = json_decode($q['answer_file'] ,true);
                                     $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$answerFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
@@ -510,7 +510,7 @@ class CommonController extends BaseController
 
                                 //上传解析文档
                                 if(isset($q['analysis_file'])){
-                                    $newFileName = $sdate.'_test-'.$uuid.'_'.'analysis'.'_analysis.docx';
+                                    $newFileName = $sdate.'_'.$uuid.'_'.'analysis'.'_analysis.docx';
                                     //$result = $this->curlUploadFile($q['analysis_file'], $newFileName);
                                     $analysisFile = json_decode($q['analysis_file'] ,true);
                                     $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$analysisFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
