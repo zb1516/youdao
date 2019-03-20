@@ -158,7 +158,7 @@
                     <h2 class="title2">试题</h2>
                     <ul class="pic-list cf js-pic-list" id="questionImage">
                         <template v-for="(item,index) in questionContent">
-                        <li class="pic-box">
+                        <li class="pic-box" style="overflow: hidden;">
                             <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
                             <div data-fancybox-group="gallery">
                                 <p class="image">
@@ -173,7 +173,7 @@
                     <h2 class="title2">答案</h2>
                     <ul class="pic-list cf js-st-list"  id="questionAnswer">
                         <template v-for="(item,index) in answerContent">
-                            <li class="pic-box">
+                            <li class="pic-box" style="overflow: hidden;">
                                 <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
                                 <div data-fancybox-group="gallery">
                                     <p class="image">
@@ -192,7 +192,7 @@
                 <div class="pic-form">
                     <ul class="pic-list cf js-pic-list"  id="questionAll">
                         <template v-for="(item,index) in imagePaperDetailContent">
-                            <li class="pic-box">
+                            <li class="pic-box" style="overflow: hidden;">
                                 <!--<a :href="item.image_url" data-fancybox-group="gallery">-->
                                 <div data-fancybox-group="gallery">
                                     <p class="image">
