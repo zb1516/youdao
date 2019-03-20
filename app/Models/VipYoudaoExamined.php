@@ -865,6 +865,7 @@ class VipYoudaoExamined extends Model
                     $question['agency_id'] = $data['agency_id'];
                     $question['yd_question_type'] = $q['quesType'];
                     $question['is_yd'] = 1;
+                    $question['status'] = 1;
                     $newQuesId = $ques->add($question);
                     if(!$newQuesId){
                         $this->rollback();
