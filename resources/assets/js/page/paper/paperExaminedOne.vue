@@ -36,6 +36,7 @@
               </div>
               <div class="paper-box">
                 <h2 class="title">{{paperInfo.paper_name}}</h2>
+                <div style="margin-left:20px;color:blue;cursor:pointer;" v-if="textbook.paperFilePath" @click="doDownload(textbook.paperFilePath)">下载文档</div>
                 <!--<p class="question-type">选择题（共24小题，每小题2分，合计48分）</p>-->
                 <template v-for="(question, index) in questions">
                     <dl class="question-wrapper" v-if="question">
@@ -115,6 +116,7 @@
                 return {
                     paperInfo:'',
                     questions:'',
+                    textbook:'',
                     selected:'',
                     errorArr:[],
                     isForbidden:0
@@ -174,6 +176,7 @@
                                 return false;
                             } else {
                                 that.paperInfo =  data.data;
+                                that.textbook = data.data.youdao_info.textbook;
                                 that.questions = [];
                                 that.questions = that.paperInfo.youdao_info.questions;
                                 that.$nextTick(() => {
@@ -215,6 +218,10 @@
                             }
                         }
                     })
+                },
+
+                doDownload(url){
+                    window.open(url);
                 }
             }
         }
