@@ -463,7 +463,7 @@ class CommonController extends BaseController
                         //上传试题文档
                         if($data['questions']){
                             foreach ($data['questions'] as $key=>$q){
-                                $uuid = uuid();
+                                $uuid = str_replace('-','',uuid());
                                 $sdate = date('Ymd');
                                 $newFileName = $sdate.'_'.$uuid.'_'.'content'.'_content.docx';
                                 //$result = $this->curlUploadFile($q['content_file'], $newFileName);
