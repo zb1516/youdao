@@ -254,9 +254,9 @@ return [
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
     'AGENCY_UPLOAD_NUMBER'=>40,
-    'TEST_APP_KEY' => 'zhudytest123',
-    'TEST_APP_SECRET' => 'IoyvG6Zb98nEUA4nIGwkEPUXILBYgrGs',
-    'TEST_YOUDAO_URL' => 'test-s4eu.youdao.com',
+    'TEST_APP_KEY' => '5fa6598e27baf265',
+    'TEST_APP_SECRET' => 'ZCO0xUhohrqEBO8lYGbfQDBRLFLuWLCs',
+    'TEST_YOUDAO_URL' => 'http://openapi.youdao.com/s4eu',
     'IMAGE_EXAMINED_STATUS'=> [
         '1' => '待审核',
         '2' => '已通过',
