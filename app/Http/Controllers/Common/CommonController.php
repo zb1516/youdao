@@ -483,7 +483,7 @@ class CommonController extends BaseController
                                 if(isset($q['options']) && !empty($q['options'])){
                                     foreach ($q['options'] as $k=>$o){
                                         //$shorUuid = shortUuid($uuid);
-                                        $newUuid = strtoupper(substr(uuid(), 0,16));
+                                        $newUuid = strtoupper(substr(str_replace('-','',uuid()), 0,16));
                                         $newFileName = $sdate.'_'.$uuid.'_'.$newUuid.'_'.$newUuid.'.docx';
                                         $optionFile = json_decode($o['option_file'] ,true);
                                         $result = $this->dispatch(new UploadQueue(array('fileUrl'=>$optionFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
