@@ -112,6 +112,7 @@ class PaperController extends BaseController
                             }
                         }
                     }
+
                     $paperInfo['youdao_info'] = $result['data'];
                     return response()->json($paperInfo);
                 }else{
