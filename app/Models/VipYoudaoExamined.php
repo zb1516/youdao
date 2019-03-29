@@ -39,6 +39,22 @@ class VipYoudaoExamined extends Model
                 $gradeArr = Config('app.GRADE_VALUE');
                 $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
             }
+            if($paperInfo['create_uid']){
+                $data =  array(
+                    'platform' => env('MICRO_API_SERVICE_TYPE'), //平台类型
+                    'secret' => env('MICRO_API_SERVICE_KEY'),//秘钥
+                    'userId' => $paperInfo['create_uid'], //用户id
+                    'agencyId' =>$paperInfo['agency_id'],
+                );
+                $klibTeacherClient = new KlibTeacherClient();
+                $freeToken = $klibTeacherClient->getFreeToken($data);
+                $teacherInfo = $klibTeacherClient->getTeacherInfo($paperInfo['create_uid'], $freeToken);
+                if(!$teacherInfo){
+                    //throw new \Exception('抱歉，查询不到上传该任务的教师信息');
+                    $teacherInfo['realName'] = '';
+                }
+                $paperInfo['user_name'] = $teacherInfo['realName'];
+            }
         }
 
         return $paperInfo;
@@ -1457,11 +1473,9 @@ class VipYoudaoExamined extends Model
                         }else{
                             $resultArr[] = array('task_id'=>$row['task_id'],'is_success'=>1);
                             $successArr[] = array(
-                                'taskId' => $row['task_id'],
-                                'openId' => $row['open_id'],
-                                'type' => 2,
+                                'agencyId' => $row['agency_id'],
                                 'userId' => $row['create_uid'],
-                                'content'=>'恭喜您，您提交的试卷已审核通过。'
+                                'paperName' => $row['paper_name'],
                             );
                         }
                     }

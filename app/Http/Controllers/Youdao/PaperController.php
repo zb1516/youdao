@@ -10,6 +10,7 @@ namespace App\http\Controllers\Youdao;
 
 use App\Clients\KlibPaperClient;
 use App\Clients\KlibQuestionClient;
+use App\Clients\KlibWechatMessageClient;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Common\CommonController;
 use App\Libs\Export;
@@ -392,13 +393,22 @@ class PaperController extends BaseController
                 $result = $this->vipYoudaoExamined->paperExamined($paperInfo, $userInfo);
                 //return response()->json(['status' => $result, 'type'=>1]);
                 //审核通过需要给小程序发模版消息
-                $this->sendWxTemplate(array(
+                /*$this->sendWxTemplate(array(
                     'taskId'=>$taskId,
                     'openId'=>$paperInfo['open_id'],
                     'type'=>2,
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
-                ));
+                ));*/
+                $this->sendWxTemplate(array(
+                    'message'=>'恭喜您你，您提交的试卷已加工完成',
+                    'agency_id'=>$paperInfo['agency_id'],
+                    'name'=>$paperInfo['paper_name'],
+                    'user_id'=>$paperInfo['create_uid'],
+                    'content'=>'加工试卷',
+                    'status'=>'已进入您的机构私库',
+                    'url'=>'pages/message/index/index'
+                ), 1);
                 return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
@@ -416,15 +426,6 @@ class PaperController extends BaseController
                 if(!empty($data['list']) && $isPaperError == 1){
                     $error = 3;
                 }
-                //return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
-                //审核不通过需要给小程序发模版消息
-                /*$this->sendWxTemplate(array(
-                    'taskId'=>$taskId,
-                    'openId'=>$paperInfo['open_id'],
-                    'type'=>1,
-                    'userId'=>$paperInfo['create_uid'],
-                    'content'=>'抱歉，您提交的试卷未通过审核。'
-                ));*/
 
                 return response()->json(['status' => $result, 'type'=>2, 'error'=>$error]);
             }
@@ -453,17 +454,6 @@ class PaperController extends BaseController
                 $status = $this->vipYoudaoExamined->updateErrorYouDaoTime($data);
                 if($status == true){
                     $code = 200;
-                    /*if($data['isPass'] == 0){
-                        //若未通过有道审核，则关闭任务，给用户发模板消息
-                        $paperInfo = $this->getPaperInfo($data['taskId']);
-                        $this->sendWxTemplate(array(
-                            'taskId'=>$data['taskId'],
-                            'openId'=>$paperInfo['open_id'],
-                            'type'=>1,
-                            'userId'=>$paperInfo['create_uid'],
-                            'content'=>'抱歉，您提交的试卷未通过有道审核，已被关闭。'
-                        ));
-                    }*/
                 }
             }else{
                 $errorMsg = '任务ID不能为空';
@@ -495,13 +485,22 @@ class PaperController extends BaseController
                     if($data['isPass'] == 0){
                         //若未通过有道审核，则退回任务，给用户发模板消息
                         $paperInfo = $this->getPaperInfo($data['taskId']);
-                        $this->sendWxTemplate(array(
+                        /*$this->sendWxTemplate(array(
                             'taskId'=>$data['taskId'],
                             'openId'=>$paperInfo['open_id'],
                             'type'=>1,
                             'userId'=>$paperInfo['create_uid'],
                             'content'=>'图片不清晰'
-                        ));
+                        ));*/
+                        $this->sendWxTemplate(array(
+                            'message'=>'您上传的试卷图片未通过审核，请重新上传',
+                            'agency_id'=>$paperInfo['agency_id'],
+                            'user_name'=>$paperInfo['user_name'],
+                            'user_id'=>$paperInfo['create_uid'],
+                            'date'=>$paperInfo['upload_time'],
+                            'error_why'=>'图片不清晰',
+                            'url'=>'pages/message/index/index'
+                        ), 0);
                     }
                 }
             }else{
@@ -519,10 +518,10 @@ class PaperController extends BaseController
      * @param $data
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sendWxTemplate($data)
+    public function sendWxTemplate($data , $type=0)
     {
         //$wxTemplate = new WxController;
-        $wxTemplate = new WxService();
+        /*$wxTemplate = new WxService();
         $wxTemplateData =  array(
             'taskId'=>$data['taskId'],
             'openId'=>$data['openId'],
@@ -530,7 +529,8 @@ class PaperController extends BaseController
             'userId'=>$data['userId'],
             'content'=>$data['content']
         );
-        return $wxTemplate->sendTemplate($wxTemplateData);
+        return $wxTemplate->sendTemplate($wxTemplateData);*/
+        return KlibWechatMessageClient::sendWxTemplate($data , $type);
     }
 
 
@@ -546,13 +546,22 @@ class PaperController extends BaseController
             //批量发送微信模版消息
             if($resultTask['successTask']){
                 foreach ($resultTask['successTask'] as $key=>$task){
-                    $this->sendWxTemplate(array(
+                    /*$this->sendWxTemplate(array(
                         'taskId'=>$task['taskId'],
                         'openId'=>$task['openId'],
                         'userId'=>$task['userId'],
                         'type'=>$task['type'],
                         'content'=>$task['content']
-                    ));
+                    ));*/
+                    $this->sendWxTemplate(array(
+                        'message'=>'恭喜您你，您提交的试卷已加工完成',
+                        'agency_id'=>$task['agencyId'],
+                        'name'=>$task['paperName'],
+                        'user_id'=>$task['createUid'],
+                        'content'=>'加工试卷',
+                        'status'=>'已进入您的机构私库',
+                        'url'=>'pages/message/index/index'
+                    ), 1);
                 }
             }
             if(is_dir($batchLogDir)){
