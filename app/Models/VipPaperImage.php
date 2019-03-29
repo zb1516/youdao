@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Clients\KlibTeacherClient;
+use App\Clients\KlibWechatMessageClient;
 use App\Models\Model;
 use App\Services\BucketService;
 use App\Services\WxService;
@@ -96,15 +98,40 @@ class VipPaperImage extends Model
             }
         }
 
-        $postData = array(
+        /*$postData = array(
             'openId' => $result['open_id'],
             'type' => 1,
             'userId' => $result['create_uid'],
             'taskId' => $taskId,
             'content' => $imageErrorType,
         );
-//        $sendTemplateUrl = config('app.YOUDAO_SEND_TEMPLATE');
-        WxService::sendTemplate($postData);
+        WxService::sendTemplate($postData);*/
+        if($result['create_uid']){
+            $data =  array(
+                'platform' => env('MICRO_API_SERVICE_TYPE'), //平台类型
+                'secret' => env('MICRO_API_SERVICE_KEY'),//秘钥
+                'userId' => $result['create_uid'], //用户id
+                'agencyId' =>$result['agency_id'],
+            );
+            $klibTeacherClient = new KlibTeacherClient();
+            $freeToken = $klibTeacherClient->getFreeToken($data);
+            $teacherInfo = $klibTeacherClient->getTeacherInfo($result['create_uid'], $freeToken);
+            if(!$teacherInfo){
+                //throw new \Exception('抱歉，查询不到上传该任务的教师信息');
+                $teacherInfo['realName'] = '';
+            }
+            $result['user_name'] = $teacherInfo['realName'];
+        }
+        $postData = array(
+            'message'=>'您上传的试卷图片未通过审核，请重新上传',
+            'agency_id'=>$result['agency_id'],
+            'user_name'=>$result['user_name'],
+            'user_id'=>$result['create_uid'],
+            'date'=>$result['upload_time'],
+            'error_why'=>'图片不清晰',
+            'url'=>'pages/message/index/index'
+        );
+        KlibWechatMessageClient::sendWxTemplate($postData, 0);
         $this->commit();
         return true;
     }
