@@ -15,6 +15,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Common\CommonController;
 use App\Libs\Export;
 use App\Models\User;
+use App\Models\VipMessageRemind;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
 use App\Services\WxService;
@@ -409,6 +410,20 @@ class PaperController extends BaseController
                     'status'=>'已进入您的机构私库',
                     'url'=>'pages/message/index/index'
                 ), 1);
+                //添加发送消息记录
+                $messageModel=new VipMessageRemind();
+                $result=$messageModel->add([
+                    'uid'=>$paperInfo['create_uid'],
+                    'task_id'=>$taskId,
+                    'open_id'=>$paperInfo['open_id'],
+                    'message_content'=>htmlspecialchars('恭喜您，您提交的试卷已通过审核。'),
+                    'message_status'=>2,
+                    'message_type'=>1,
+                    'addtime'=>time()
+                ]);
+                if($result === false) {
+                    throw new \Exception('添加消息记录失败');
+                }
                 return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
@@ -501,6 +516,20 @@ class PaperController extends BaseController
                             'error_why'=>'图片不清晰',
                             'url'=>'pages/message/index/index'
                         ), 0);
+                        //添加发送消息记录
+                        $messageModel=new VipMessageRemind();
+                        $result=$messageModel->add([
+                            'uid'=>$paperInfo['create_uid'],
+                            'task_id'=>$data['taskId'],
+                            'open_id'=>$paperInfo['open_id'],
+                            'message_content'=>htmlspecialchars('图片不清晰'),
+                            'message_status'=>1,
+                            'message_type'=>1,
+                            'addtime'=>time()
+                        ]);
+                        if($result === false) {
+                            throw new \Exception('添加消息记录失败');
+                        }
                     }
                 }
             }else{
@@ -534,6 +563,9 @@ class PaperController extends BaseController
     }
 
 
+
+
+
     /**
      * 套卷提交有道处理超过9个工作日未反馈的批量处理审核通过,每日执行一次
      * @return \Illuminate\Http\JsonResponse
@@ -554,7 +586,7 @@ class PaperController extends BaseController
                         'content'=>$task['content']
                     ));*/
                     $this->sendWxTemplate(array(
-                        'message'=>'恭喜您你，您提交的试卷已加工完成',
+                        'message'=>'恭喜您，您提交的试卷已加工完成',
                         'agency_id'=>$task['agencyId'],
                         'name'=>$task['paperName'],
                         'user_id'=>$task['createUid'],
@@ -562,6 +594,20 @@ class PaperController extends BaseController
                         'status'=>'已进入您的机构私库',
                         'url'=>'pages/message/index/index'
                     ), 1);
+                    //添加发送消息记录
+                    $messageModel=new VipMessageRemind();
+                    $result=$messageModel->add([
+                        'uid'=>$task['userId'],
+                        'task_id'=>$task['taskId'],
+                        'open_id'=>$task['openId'],
+                        'message_content'=>htmlspecialchars($task['content']),
+                        'message_status'=>2,
+                        'message_type'=>1,
+                        'addtime'=>time()
+                    ]);
+                    if($result === false) {
+                        throw new \Exception('添加消息记录失败');
+                    }
                 }
             }
             if(is_dir($batchLogDir)){

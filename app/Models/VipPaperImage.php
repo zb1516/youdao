@@ -128,10 +128,25 @@ class VipPaperImage extends Model
             'user_name'=>$result['user_name'],
             'user_id'=>$result['create_uid'],
             'date'=>$result['upload_time'],
-            'error_why'=>'图片不清晰',
+            'error_why'=>$imageErrorType,
             'url'=>'pages/message/index/index'
         );
         KlibWechatMessageClient::sendWxTemplate($postData, 0);
+        //添加发送消息记录
+        $messageModel=new VipMessageRemind();
+        $result=$messageModel->add([
+            'uid'=>$result['create_uid'],
+            'task_id'=>$taskId,
+            'open_id'=>$result['open_id'],
+            'message_content'=>htmlspecialchars($imageErrorType),
+            'message_status'=>1,
+            'message_type'=>1,
+            'addtime'=>time()
+        ]);
+        if($result === false) {
+            $this->rollback();
+            throw new \Exception('添加消息记录失败');
+        }
         $this->commit();
         return true;
     }
