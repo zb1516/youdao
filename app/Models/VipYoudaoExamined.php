@@ -856,8 +856,12 @@ class VipYoudaoExamined extends Model
                 $ques = new Question;
                 $opt = new VipQuestionOption;
                 $ans = new VipQuestionAnswer;
+                $courseType = new VpDictCourseType();
+                $courseTypeInfo = $courseType->findOne(array('subject_id'=>$data['subject_id']), ['sort'=>'asc']);
+                $courseTypeId = $courseTypeInfo['id'];
                 foreach ($data['youdao_info']['questions'] as $key => $q){
                     $question = [];
+                    $question['course_type_id'] = isset($courseTypeId)?$courseTypeId:0;
                     $question['number'] = isset($q['quesNo'])?$q['quesNo']:($key+1);
                     $question['score'] = isset($q['quesScore'])?$q['quesScore']:'';
                     $question['yd_question_type'] = $q['quesType'];
