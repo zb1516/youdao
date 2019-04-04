@@ -59,6 +59,7 @@ class UploadQueue implements ShouldQueue
                     'taskId'=>$data['task_id'],
                     'url'=>$data['fileUrl']
                 );
+                file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
                 $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
 
             }
