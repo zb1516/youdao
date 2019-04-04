@@ -159,6 +159,46 @@ class YoudaoService
             return response()->json(['errorMsg' => $e->getMessage()]);
         }
     }
+
+
+    /**
+     * 删除有道word文件
+     * @param $url
+     * @param $postData
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    public function deleteYoudaoDocUrl($url,$postData)
+    {
+        try{
+            $appKey = config('app.TEST_APP_KEY');
+            $appSecret = config('app.TEST_APP_SECRET');
+            $url = config('app.TEST_YOUDAO_URL').$url;
+            $salt = rand(1,1000);
+            $time = time();
+            $sign = $this->getYoudaoSign($appKey,$postData['taskId'],$salt,$time,$appSecret);
+            $postDataNew = array(
+                'appKey' => $appKey,
+                'salt' => $salt,
+                'curtime' => $time,
+                'sign' => $sign,
+                'type' => 1,
+                'taskId'=>$postData['taskId'],
+                'url'=>$postData['url']
+            );
+
+            $postData = array_merge($postData,$postDataNew);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/deleteDoc'.date('Ymd').'.txt',json_encode($postData).PHP_EOL,FILE_APPEND);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/deleteDoc'.date('Ymd').'.txt',$result.PHP_EOL,FILE_APPEND);
+            return $result;
+        }catch (\Exception $e){
+            return response()->json(['errorMsg' => $e->getMessage()]);
+        }
+    }
     
 
 }
