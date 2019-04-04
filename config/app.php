@@ -381,4 +381,5 @@ return [
     ],
     'YOUDAO_SEND_TEMPLATE'=>'/WxService/sendTemplate',
     'EAP_GROUP_NAME'=>'Vip',//有道项目所属eap中的模块名称
+    'YOUDAO_DELETE_DOC_URL'=>'/api/gaosi/deleteDocUrl'
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Services\YoudaoService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Queue\SerializesModels;
@@ -53,6 +54,13 @@ class UploadQueue implements ShouldQueue
                 curl_close($curl);
                 file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/fileUploadSuccess-'. date('Ymd') . '.txt', $targetFile.PHP_EOL,FILE_APPEND);
                 @unlink($targetFile);
+                $youdaoService = new YoudaoService();
+                $postData = array(
+                    'taskId'=>$data['task_id'],
+                    'url'=>$data['fileUrl']
+                );
+                $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
+
             }
         } catch (\Exception $e) {
             file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/fileUploadError-'. date('Ymd') . '.txt', $data['task_id'].':failed,errorMsg:'.$e->getMessage().PHP_EOL,FILE_APPEND);
