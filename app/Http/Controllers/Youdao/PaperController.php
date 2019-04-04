@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\VipMessageRemind;
 use App\Models\VipYoudaoExamined;
 use App\Models\VipYoudaoQuestion;
+use App\Models\VpDictCourseType;
 use App\Services\WxService;
 use App\Services\YoudaoService;
 use Illuminate\Http\Request;
@@ -401,7 +402,7 @@ class PaperController extends BaseController
                     'userId'=>$paperInfo['create_uid'],
                     'content'=>'恭喜您，您提交的试卷已通过审核。'
                 ));*/
-                $this->sendWxTemplate(array(
+                /*$this->sendWxTemplate(array(
                     'message'=>'恭喜您你，您提交的试卷已加工完成',
                     'agency_id'=>$paperInfo['agency_id'],
                     'name'=>$paperInfo['paper_name'],
@@ -423,7 +424,7 @@ class PaperController extends BaseController
                 ]);
                 if($result === false) {
                     throw new \Exception('添加消息记录失败');
-                }
+                }*/
                 return response()->json(['status' => $result, 'type'=>1]);
             }else{
                 $data['isPaperError'] = $isPaperError;
@@ -585,7 +586,7 @@ class PaperController extends BaseController
                         'type'=>$task['type'],
                         'content'=>$task['content']
                     ));*/
-                    $this->sendWxTemplate(array(
+                    /*$this->sendWxTemplate(array(
                         'message'=>'恭喜您，您提交的试卷已加工完成',
                         'agency_id'=>$task['agencyId'],
                         'name'=>$task['paperName'],
@@ -607,7 +608,7 @@ class PaperController extends BaseController
                     ]);
                     if($result === false) {
                         throw new \Exception('添加消息记录失败');
-                    }
+                    }*/
                 }
             }
             if(is_dir($batchLogDir)){
