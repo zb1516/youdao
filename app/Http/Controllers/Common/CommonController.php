@@ -581,7 +581,80 @@ class CommonController extends BaseController
     }
 
 
+    /**
+     * 删除有道的试卷文件
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteYoudaoFile()
+    {
+        try {
+            $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask;
+            $taskList = $vip_youdao_paper_file_upload_task->findAll(array('is_delete'=>0),['create_time'=>'asc']);
+            $resultArr = [];
+            $batchLogDir = $_SERVER['DOCUMENT_ROOT'].'/batchLog/';
+            if(is_dir($batchLogDir)){
+                @mkdir($batchLogDir, 0777);
+            }
+            if($taskList){
+                foreach ($taskList as $key=>$task){
+                    if($task['file_json']){
+                        $data = json_decode($task['file_json'], true);
+                        $youdaoService = new YoudaoService();
+                        //删除试卷文档
+                        if($data['paper_url']){
+                            $postData = array(
+                                'taskId'=>$task['task_id'],
+                                'url'=>$data['paper_url']
+                            );
+                            file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
+                            $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
+                            $result = json_decode($result,true);
+                            if($result['code'] == 200){
+                                $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$data['paper_url'],'is_success'=>1,'error_msg'=>'','data'=>$data);
+                            }
+                        }
+                        //删除试题文档
+                        if($data['questions']){
+                            foreach ($data['questions'] as $key=>$q){
 
 
+                                //上传选项文档
+                                if(isset($q['options']) && !empty($q['options'])){
+                                    foreach ($q['options'] as $k=>$o){
+
+                                    }
+                                }
+
+                                //上传答案文档
+                                if(isset($q['answer_file'])){
+
+
+                                }
+
+                                //上传解析文档
+                                if(isset($q['analysis_file'])){
+
+                                }
+                            }
+                        }
+                        $now = date('Y-m-d H:i:s');
+                        $result = $vip_youdao_paper_file_upload_task->edit(array('is_upload'=>1,'upload_time'=>$now),array('task_id'=>$task['task_id']));
+                        if(!$result){
+
+                        }
+
+
+                        $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>1,'error_msg'=>'','data'=>$data);
+                    }
+                }
+            }
+
+            //file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
+            return response()->json(['status' => 1]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => 0,'errorMsg'=>$e->getMessage()]);
+        }
+    }
 
 }

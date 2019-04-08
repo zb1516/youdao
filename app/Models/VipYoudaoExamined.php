@@ -850,7 +850,7 @@ class VipYoudaoExamined extends Model
             }
 
             $fileArr['paper_id'] = $paperId;
-            //$fileArr['complete_file'] = $data['youdao_info']['paperFilePath'];
+            $fileArr['paper_url'] = $data['youdao_info']['textbook']['paperFilePath'];
 
             if(!empty($data['youdao_info']['questions'])){
                 $ques = new Question;
