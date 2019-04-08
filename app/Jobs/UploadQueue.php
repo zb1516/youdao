@@ -54,13 +54,13 @@ class UploadQueue implements ShouldQueue
                 curl_close($curl);
                 file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/fileUploadSuccess-'. date('Ymd') . '.txt', $targetFile.PHP_EOL,FILE_APPEND);
                 @unlink($targetFile);
-                $youdaoService = new YoudaoService();
+               /* $youdaoService = new YoudaoService();
                 $postData = array(
                     'taskId'=>$data['task_id'],
                     'url'=>$data['fileUrl']
                 );
                 file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/batchLog/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
-                $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
+                $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);*/
 
             }
         } catch (\Exception $e) {
