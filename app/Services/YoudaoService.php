@@ -167,26 +167,27 @@ class YoudaoService
      * @param $postData
      * @return \Illuminate\Http\JsonResponse|mixed
      */
-    public function deleteYoudaoDocUrl($url,$postData)
+    public function deleteYoudaoDocUrl($url,$data)
     {
         try{
+            file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/deleteDoc2'.date('Ymd').'.txt',json_encode($data).PHP_EOL,FILE_APPEND);
             $appKey = config('app.TEST_APP_KEY');
             $appSecret = config('app.TEST_APP_SECRET');
             $url = config('app.TEST_YOUDAO_URL').$url;
             $salt = rand(1,1000);
             $time = time();
-            $sign = $this->getYoudaoSign($appKey,$postData['taskId'],$salt,$time,$appSecret);
+            $sign = $this->getYoudaoSign($appKey,$data['taskId'],$salt,$time,$appSecret);
             $postDataNew = array(
                 'appKey' => $appKey,
                 'salt' => $salt,
                 'curtime' => $time,
                 'sign' => $sign,
                 'type' => 1,
-                'taskId'=>$postData['taskId'],
-                'url'=>$postData['url']
+                'taskId'=>$data['taskId'],
+                'url'=>$data['url']
             );
 
-            $postData = array_merge($postData,$postDataNew);
+            $postData = array_merge($data,$postDataNew);
             file_put_contents($_SERVER['DOCUMENT_ROOT'].'/batchLog/deleteDoc'.date('Ymd').'.txt',json_encode($postData).PHP_EOL,FILE_APPEND);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
