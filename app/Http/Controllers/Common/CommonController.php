@@ -585,7 +585,7 @@ class CommonController extends BaseController
      * 删除有道的试卷文件
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteYoudaoFile()
+    /*public function deleteYoudaoFile()
     {
         try {
             $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask;
@@ -655,6 +655,6 @@ class CommonController extends BaseController
         } catch (\Exception $e) {
             return response()->json(['status' => 0,'errorMsg'=>$e->getMessage()]);
         }
-    }
+    }*/
 
 }
