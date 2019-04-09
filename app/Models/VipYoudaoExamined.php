@@ -494,6 +494,7 @@ class VipYoudaoExamined extends Model
         foreach ($result['data'] as $k => $item) {
             $list[] = [
                 'number' => $i,
+                'num'=>abs(( $k + 1 )+ ( $currentPage - 1 ) * $pageSize ),
                 'id' => $item['id'],
                 'taskId' => $item['task_id'],
                 'paperType' => $item['paper_type'],

@@ -585,7 +585,7 @@ class CommonController extends BaseController
      * 删除有道的试卷文件
      * @return \Illuminate\Http\JsonResponse
      */
-    /*public function deleteYoudaoFile()
+    public function deleteYoudaoFile()
     {
         try {
             $vip_youdao_paper_file_upload_task = new VipYoudaoPaperFileUploadTask;
@@ -598,63 +598,102 @@ class CommonController extends BaseController
             if($taskList){
                 foreach ($taskList as $key=>$task){
                     if($task['file_json']){
+                        $urls = [];
                         $data = json_decode($task['file_json'], true);
-                        $youdaoService = new YoudaoService();
                         //删除试卷文档
                         if($data['paper_url']){
-                            $postData = array(
+                            $urls[] = $data['paper_url'];
+                            /*$postData = array(
                                 'taskId'=>$task['task_id'],
                                 'url'=>$data['paper_url']
                             );
+
                             file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
                             $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
                             $result = json_decode($result,true);
                             if($result['code'] == 200){
-                                $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$data['paper_url'],'is_success'=>1,'error_msg'=>'','data'=>$data);
+                                $is_success = 1;
+                            }else{
+                                $is_success = 0;
                             }
+                            $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$data['paper_url'],'is_success'=>$is_success,'error_msg'=>$result['message'],'data'=>json_encode($result).PHP_EOL,FILE_APPEND);
+                            */
                         }
                         //删除试题文档
                         if($data['questions']){
                             foreach ($data['questions'] as $key=>$q){
-
-
-                                //上传选项文档
                                 if(isset($q['options']) && !empty($q['options'])){
                                     foreach ($q['options'] as $k=>$o){
-
+                                        $optionFile = json_decode($o['option_file'] ,true);
+                                        $urls[] = $optionFile['url'];
+                                        /*$postData = array(
+                                            'taskId'=>$task['task_id'],
+                                            'url'=>$optionFile['url']
+                                        );
+                                        file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
+                                        $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
+                                        $result = json_decode($result,true);
+                                        if($result['code'] == 200){
+                                            $is_success = 1;
+                                        }else{
+                                            $is_success = 0;
+                                        }
+                                        $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$optionFile['url'],'is_success'=>$is_success,'error_msg'=>$result['message'],'data'=>json_encode($result).PHP_EOL,FILE_APPEND);
+                                        */
                                     }
                                 }
 
                                 //上传答案文档
                                 if(isset($q['answer_file'])){
-
+                                    $answerFile = json_decode($q['answer_file'] ,true);
+                                    $urls[] = $answerFile['url'];
+                                    /*$postData = array(
+                                        'taskId'=>$task['task_id'],
+                                        'url'=>$answerFile['url']
+                                    );*/
+                                    //$result = $this->dispatch(new UploadQueue(array('fileUrl'=>$answerFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
 
                                 }
 
                                 //上传解析文档
                                 if(isset($q['analysis_file'])){
-
+                                    $analysisFile = json_decode($q['analysis_file'] ,true);
+                                    $urls[] = $analysisFile['url'];
+                                    /*$postData = array(
+                                        'taskId'=>$task['task_id'],
+                                        'url'=>$analysisFile['url']
+                                    );*/
+                                    //$result = $this->dispatch(new UploadQueue(array('fileUrl'=>$analysisFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
                                 }
                             }
                         }
-                        $now = date('Y-m-d H:i:s');
-                        $result = $vip_youdao_paper_file_upload_task->edit(array('is_upload'=>1,'upload_time'=>$now),array('task_id'=>$task['task_id']));
-                        if(!$result){
-
+                        $postData = array(
+                            'taskId'=>$task['task_id'],
+                            'url'=>implode(',', $urls)
+                        );
+                        file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
+                        $youdaoService = new YoudaoService();
+                        $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
+                        $result = json_decode($result,true);
+                        if($result['code'] == 200){
+                            $now = date('Y-m-d H:i:s');
+                            $vip_youdao_paper_file_upload_task->edit(array('is_delete'=>1,'delete_time'=>$now),array('task_id'=>$task['task_id']));
+                            $is_success = 1;
+                        }else{
+                            $is_success = 0;
                         }
+                        $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$urls,'is_success'=>$is_success,'error_msg'=>$result['message'],'data'=>$result);
 
-
-                        $resultArr[] = array('task_id'=>$task['task_id'],'is_success'=>1,'error_msg'=>'','data'=>$data);
                     }
                 }
             }
 
-            //file_put_contents($batchLogDir . '/uploadFile-'. date('YmdHis') . '.txt', json_encode($resultArr));
+            file_put_contents($batchLogDir . '/deleteDoc-'. date('YmdHis') . '.txt', json_encode($resultArr));
             return response()->json(['status' => 1]);
 
         } catch (\Exception $e) {
             return response()->json(['status' => 0,'errorMsg'=>$e->getMessage()]);
         }
-    }*/
+    }
 
 }
