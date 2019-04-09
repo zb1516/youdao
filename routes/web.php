@@ -68,6 +68,7 @@ Route::group(['prefix'=>'common'],function($router){
     $router->get('common/uploadPaperFile', 'Common\CommonController@uploadPaperFile');//上传试卷相关文档
     $router->get('common/getAllProvince', 'Common\CommonController@getAllProvince');
     $router->get('common/getAllCitys','Common\CommonController@getAllCitys');
+    $router->get('common/deleteYoudaoFile','Common\CommonController@deleteYoudaoFile');//删除有道方的试卷相关文档
 });
 
 
