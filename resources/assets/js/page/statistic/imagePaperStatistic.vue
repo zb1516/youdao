@@ -121,7 +121,7 @@
                     <template v-if="isContent == 1">
                         <template v-for="imagePaper in imagePaperList">
                             <tr role="row" class="odd">
-                                <td class="sorting_1">{{imagePaper.number}}</td>
+                                <td class="sorting_1">{{imagePaper.num}}</td>
                                 <td><span class="color-black">{{imagePaper.paperName}}</span></td>
                                 <td>{{imagePaper.subjectName}}</td>
                                 <td>{{imagePaper.province}}/{{imagePaper.city}}</td>
