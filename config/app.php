@@ -254,9 +254,9 @@ return [
     ],
     'MIDDLE_TIME'=>strtotime(date('2018-11-07')),
     'AGENCY_UPLOAD_NUMBER'=>40,
-    'TEST_APP_KEY' => '5fa6598e27baf265',
-    'TEST_APP_SECRET' => 'ZCO0xUhohrqEBO8lYGbfQDBRLFLuWLCs',
-    'TEST_YOUDAO_URL' => 'http://openapi.youdao.com/s4eu',
+    'TEST_APP_KEY' => env('YOUDAO_APP_KEY'),
+    'TEST_APP_SECRET' => env('YOUDAO_APP_SECRET'),
+    'TEST_YOUDAO_URL' => env('YOUDAO_APP_URL'),
     'IMAGE_EXAMINED_STATUS'=> [
         '1' => '待审核',
         '2' => '已通过',
@@ -291,7 +291,7 @@ return [
         '12' => '高三',
     ],
     'YOUDAO_DELIVER_TASK'=>'/api/gaosi/deliverTask',
-    'LOCAL_IMAGE_URL'=>'/data/wwwroot/Dev/AtfApps/youdao/public/',
+    'LOCAL_IMAGE_URL'=>$_SERVER['DOCUMENT_ROOT'].'/',
     'AUTO_AUDIT_DAYS'=>9,//套卷超过9个工作日自动审核通过
     'YOUDAO_COMPLETE_URL'=>'/api/gaosi/complete',
     'UPLOAD_PHP_URL'=>'http://ksrc2.gaosiedu.com/upload_yd.php',
