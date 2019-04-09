@@ -601,23 +601,8 @@ class CommonController extends BaseController
                         $urls = [];
                         $data = json_decode($task['file_json'], true);
                         //删除试卷文档
-                        if($data['paper_url']){
+                        if(isset($data['paper_url'])){
                             $urls[] = $data['paper_url'];
-                            /*$postData = array(
-                                'taskId'=>$task['task_id'],
-                                'url'=>$data['paper_url']
-                            );
-
-                            file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
-                            $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
-                            $result = json_decode($result,true);
-                            if($result['code'] == 200){
-                                $is_success = 1;
-                            }else{
-                                $is_success = 0;
-                            }
-                            $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$data['paper_url'],'is_success'=>$is_success,'error_msg'=>$result['message'],'data'=>json_encode($result).PHP_EOL,FILE_APPEND);
-                            */
                         }
                         //删除试题文档
                         if($data['questions']){
@@ -625,45 +610,26 @@ class CommonController extends BaseController
                                 if(isset($q['options']) && !empty($q['options'])){
                                     foreach ($q['options'] as $k=>$o){
                                         $optionFile = json_decode($o['option_file'] ,true);
-                                        $urls[] = $optionFile['url'];
-                                        /*$postData = array(
-                                            'taskId'=>$task['task_id'],
-                                            'url'=>$optionFile['url']
-                                        );
-                                        file_put_contents($batchLogDir.'/postDelDoc-'. date('Ymd') . '.txt', json_encode($postData).PHP_EOL,FILE_APPEND);
-                                        $result = $youdaoService->deleteYoudaoDocUrl(config('app.YOUDAO_DELETE_DOC_URL'), $postData);
-                                        $result = json_decode($result,true);
-                                        if($result['code'] == 200){
-                                            $is_success = 1;
-                                        }else{
-                                            $is_success = 0;
+                                        if(isset($optionFile['url']) && !empty($optionFile['url'])){
+                                            $urls[] = $optionFile['url'];
                                         }
-                                        $resultArr[] = array('task_id'=>$task['task_id'],'url'=>$optionFile['url'],'is_success'=>$is_success,'error_msg'=>$result['message'],'data'=>json_encode($result).PHP_EOL,FILE_APPEND);
-                                        */
                                     }
                                 }
 
                                 //上传答案文档
                                 if(isset($q['answer_file'])){
                                     $answerFile = json_decode($q['answer_file'] ,true);
-                                    $urls[] = $answerFile['url'];
-                                    /*$postData = array(
-                                        'taskId'=>$task['task_id'],
-                                        'url'=>$answerFile['url']
-                                    );*/
-                                    //$result = $this->dispatch(new UploadQueue(array('fileUrl'=>$answerFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
-
+                                    if(isset($answerFile['url']) && !empty($answerFile['url'])){
+                                        $urls[] = $answerFile['url'];
+                                    }
                                 }
 
                                 //上传解析文档
                                 if(isset($q['analysis_file'])){
                                     $analysisFile = json_decode($q['analysis_file'] ,true);
-                                    $urls[] = $analysisFile['url'];
-                                    /*$postData = array(
-                                        'taskId'=>$task['task_id'],
-                                        'url'=>$analysisFile['url']
-                                    );*/
-                                    //$result = $this->dispatch(new UploadQueue(array('fileUrl'=>$analysisFile['url'], 'newFileName'=>$newFileName, 'task_id'=>$task['task_id'])));
+                                    if(isset($analysisFile['url']) && !empty($analysisFile['url'])){
+                                        $urls[] = $analysisFile['url'];
+                                    }
                                 }
                             }
                         }
