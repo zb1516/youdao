@@ -886,12 +886,12 @@ class VipYoudaoExamined extends Model
                     $question['created_time'] = $time;
                     $question['sdate'] = date('Ym');
                     $question['source'] = $data['source'];
-                    $question['grade_id'] = $data['grade'];
+                    $question['grade_id'] = $data['grade_id'];
                     $question['subject_id'] = $data['subject_id'];
                     $question['school'] = $data['school'];
-                    $question['province'] = $data['province'];
-                    $question['city'] = $data['city'];
-                    $question['country'] = $data['area'];
+                    $question['province'] = $data['province_name'];
+                    $question['city'] = $data['city_name'];
+                    $question['country'] = $data['area_name'];
                     $question['year'] = $data['year'];
                     $question['term'] = $data['semester'];
                     $question['name'] = $data['source'];
