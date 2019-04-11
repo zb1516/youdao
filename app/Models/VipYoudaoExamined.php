@@ -30,12 +30,11 @@ class VipYoudaoExamined extends Model
             if($paperInfo['subject_id']){
                 $kmsSubject = new KmsSubjects;
                 $paperInfo['subject_name'] = $kmsSubject->getSubjectName($paperInfo['subject_id']);
+                $vipDictSubject = new VipDictSubject();
+                $subjectInfo = $vipDictSubject->findOne(array('id'=>$paperInfo['subject_id']));//根据学科获取年部
+                $paperInfo['grade_id'] = $subjectInfo['grade_id'];
             }
-            if($paperInfo['grade']){
-                //$vipDict = new VipDict;
-                //$gradeInfo = $vipDict->findOne(array('id'=>$paperInfo['grade'], 'category'=>'GRADE'));
-                //$paperInfo['grade_name'] = $gradeInfo['title'];
-
+            if($paperInfo['grade']){//年级
                 $gradeArr = Config('app.GRADE_VALUE');
                 $paperInfo['grade_name'] = $gradeArr[$paperInfo['grade']];
             }
@@ -54,6 +53,19 @@ class VipYoudaoExamined extends Model
                     $teacherInfo['realName'] = '';
                 }
                 $paperInfo['user_name'] = $teacherInfo['realName'];
+            }
+            $city = new City();
+            if($paperInfo['province']){
+                $cityInfo = $city->findOne(array('id'=>$paperInfo['province']));
+                $paperInfo['province_name'] = $cityInfo['city'];
+            }
+            if($paperInfo['city']){
+                $cityInfo = $city->findOne(array('id'=>$paperInfo['city']));
+                $paperInfo['city_name'] = $cityInfo['city'];
+            }
+            if($paperInfo['area']){
+                $cityInfo = $city->findOne(array('id'=>$paperInfo['area']));
+                $paperInfo['area_name'] = $cityInfo['city'];
             }
         }
 
@@ -797,14 +809,14 @@ class VipYoudaoExamined extends Model
             $question = new Question;
             $paper = new Paper;
             $paperInfo = array(
-                'grade_id' => $data['grade'],
+                'grade_id' => $data['grade_id'],
                 'subject_id' => $data['subject_id'],
                 'name' => $data['source'],
                 'source' => $data['source'],
                 'year' => $data['year'],
-                'province' => $data['province'],
-                'city' => $data['city'],
-                'country' => $data['area'],
+                'province' => $data['province_name'],
+                'city' => $data['city_name'],
+                'country' => $data['area_name'],
                 'school' => $data['school'],
                 'grades' => $data['grade'],
                 'term' => $data['semester'],
