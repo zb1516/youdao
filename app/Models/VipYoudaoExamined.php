@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Clients\KlibTeacherClient;
 use App\Http\Controllers\Common\CommonController;
 use App\http\Controllers\Youdao\PaperController;
+use Illuminate\Foundation\Console\VendorPublishCommand;
 
 class VipYoudaoExamined extends Model
 {
@@ -864,7 +865,7 @@ class VipYoudaoExamined extends Model
 
             $fileArr['paper_id'] = $paperId;
             $fileArr['paper_url'] = $data['youdao_info']['textbook']['paperFilePath'];
-
+            $newQuestionIdArr = [];
             if(!empty($data['youdao_info']['questions'])){
                 $ques = new Question;
                 $opt = new VipQuestionOption;
@@ -904,6 +905,7 @@ class VipYoudaoExamined extends Model
                         $this->rollback();
                         throw new \Exception('试题添加失败');
                     }else{
+                        $newQuestionIdArr[] = $newQuesId;
                         $fileArr['questions'][$key]['question_id'] = $newQuesId;
                         $fileArr['questions'][$key]['content_file'] = isset($q['quesLatextContent']['fileUrl'])?$q['quesLatextContent']['fileUrl']:'';
 
@@ -971,6 +973,8 @@ class VipYoudaoExamined extends Model
                         $fileArr['questions'][$key]['answer_file'] = isset($q['quesLatextAnswer']['fileUrl'])?$q['quesLatextAnswer']['fileUrl']:'';
                     }
 
+
+
                     //查看vip_youdao_question中该试题是否有记录，若无记录，则插入一条，若有记录，则不做操作(即使试题没有被退回过也需要录一条记录，此种试题也需导出)
                     $vip_youdao_question = new VipYoudaoQuestion;
                     $count = $vip_youdao_question->count(array('task_id'=>$data['task_id'], 'quesNumber'=>$q['quesNumber']));
@@ -1019,6 +1023,16 @@ class VipYoudaoExamined extends Model
 
                 }
             }
+
+            if($newQuestionIdArr){
+                //往完善试题字段队列里推数据
+                $client = new \HproseSwooleClient(config('app.MICRO_SERVICE_HOST').'/quesService');
+                $result = $client->pushQuesQueue(array('data'=>$newQuestionIdArr,'type'=>'question'));
+                if(!$result){
+                    file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pushQuesQueueError.txt',implode(',',$newQuestionIdArr).PHP_EOL,FILE_APPEND);
+                }
+            }
+
 
             //审核通过反馈给有道
             $result = $common->doYoudaoComplete(config('app.YOUDAO_COMPLETE_URL'), $data['task_id']);
