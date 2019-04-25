@@ -1026,7 +1026,7 @@ class VipYoudaoExamined extends Model
 
             if($newQuestionIdArr){
                 //往完善试题字段队列里推数据
-                $client = new \HproseSwooleClient(config('app.MICRO_SERVICE_HOST').'/quesService');
+                $client = new \HproseSwooleClient(config('app.MICRO_SERVICE_HOST').'/quesService/');
                 $result = $client->pushQuesQueue(array('data'=>$newQuestionIdArr,'type'=>'question'));
                 if(!$result){
                     file_put_contents($_SERVER['DOCUMENT_ROOT'].'/pushQuesQueueError.txt',implode(',',$newQuestionIdArr).PHP_EOL,FILE_APPEND);
