@@ -382,5 +382,5 @@ return [
     'YOUDAO_SEND_TEMPLATE'=>'/WxService/sendTemplate',
     'EAP_GROUP_NAME'=>'Vip',//有道项目所属eap中的模块名称
     'YOUDAO_DELETE_DOC_URL'=>'/api/gaosi/deleteDocUrl',
-    'MICRO_SERVICE_HOST'=>'http://172.16.12.122:10086'
+    'MICRO_SERVICE_HOST'=>'http://ques_service.aitifen.cn/'
 ];
