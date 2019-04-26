@@ -600,6 +600,7 @@ class PaperController extends BaseController
 
     protected static function clearWordHtml($html,$convertLatex=true) {
         $pattern = '#<\/?span[^>]*>#i';
+
         $parts = preg_split($pattern, $html);
         preg_match_all($pattern, $html, $matches);
 
@@ -607,50 +608,47 @@ class PaperController extends BaseController
             $matches = array(array());
         }
         $spanStacks = array();
-        if(is_array($matches) && $matches[0]){
-            foreach($matches[0] as $key=>$match) {
-                if(false == stristr($match, '</span>')) {
-                    array_push($spanStacks, array($key, $match));
-                } else {
-                    $startTag = array_pop($spanStacks);
-                    //if(!isset($startTag[0])){
-                    //    continue;
-                    //}else{
-                    $endTag = array($key, $match);
 
-                    $cleanedStartTag = $startTag[1];
+        foreach($matches[0] as $key=>$match) {
+            if(false == stristr($match, '</span>')) {
+                array_push($spanStacks, array($key, $match));
+            } else {
+                $startTag = array_pop($spanStacks);
+                $endTag = array($key, $match);
 
-                    $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
-                    $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
-                    $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
+                $cleanedStartTag = $startTag[1];
 
-                    $fonts = array(
-                        'Symbol', '华文新魏', '华文楷体', '黑体'
-                    );
+                $cleanedStartTag = preg_replace('#font\-emphasize:\s*dot#is', '-webkit-text-emphasis:dot;-webkit-text-emphasis-position:under', $cleanedStartTag);
+                $cleanedStartTag = preg_replace('#text\-underline:\s*wave#is', 'text-underline:wavy', $cleanedStartTag);
+                $cleanedStartTag = preg_replace('#text\-underline:([a-z]+)#is', 'text-decoration:underline;text-decoration-style:\\1', $cleanedStartTag);
 
-                    if($cleanedStartTag == $startTag[1]) {
-                        $keep = false;
-                        if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
-                            $keep = true;
-                        } else {
-                            foreach($fonts as $font) {
-                                if(false == $keep && stristr($cleanedStartTag, $font)) {
-                                    $keep = true;
-                                }
+                $fonts = array(
+                    'Symbol', '华文新魏', '华文楷体', '黑体'
+                );
+
+                if($cleanedStartTag == $startTag[1]) {
+                    $keep = false;
+                    if(stristr($cleanedStartTag, 'decoration') || stristr($cleanedStartTag, 'text-indent')) {
+                        $keep = true;
+                    } else {
+                        foreach($fonts as $font) {
+                            if(false == $keep && stristr($cleanedStartTag, $font)) {
+                                $keep = true;
                             }
                         }
-                        if(false == $keep) $cleanedStartTag = '';
                     }
-                    $startTag[1] = $cleanedStartTag;
-                    if(false == $cleanedStartTag) {
-                        $endTag[1] = '';
-                    }
-                    $matches[$startTag[0]] = $startTag[1];
-                    $matches[$endTag[0]] = $endTag[1];
-                //}
+                    if(false == $keep) $cleanedStartTag = '';
                 }
+                $startTag[1] = $cleanedStartTag;
+                if(false == $cleanedStartTag) {
+                    $endTag[1] = '';
+                }
+
+                $matches[$startTag[0]] = $startTag[1];
+                $matches[$endTag[0]] = $endTag[1];
             }
         }
+
         $html = '';
         foreach($parts as $key=>$part) {
             $html .= trim($part);
@@ -664,16 +662,23 @@ class PaperController extends BaseController
         $html = preg_replace('#layout\-grid:[^;\'"]+;?#i', '', $html);
         $html = preg_replace('#<img#i', '<img align="absmiddle"', $html);
         if($convertLatex){
-            $html = preg_replace("#(<img[^>]*)(alt=\")(.*?)学科网(.*?)(\".*?>)#i","$1$5",$html);
-            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
-            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\\\\\%)(.*?)(\\\\\\\\%)(.*?)(\".*?>)#i","$1$2\\%$4\\%$6$7",$html);
-            $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#i","$1",$html);
+
+            $html = preg_replace("#(<img[^>]*)(alt=\")(.*?)学科网(.*?)(\".*?>)#is","$1$5",$html);
+            $html = preg_replace("#(<img[^>]*)(alt=\")(.*?)标题(.*?)(\".*?>)#is","$1$5",$html);
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(%)(.*?)(%)(.*?)(\".*?>)#is","$1$2\\%$4\\%$6$7",$html);
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)(\\\\\\\\%)(.*?)(\\\\\\\\%)(.*?)(\".*?>)#is","$1$2\\%$4\\%$6$7",$html);
+            $html = preg_replace("#<img[^>]*alt=\"(.*?)\"(.*?)>#is","$1",$html);
             $html = str_replace(['\[','\]'],['\(','\)'],$html);
 //            $html = preg_replace("#\\\\[#i","(",$html);
 //            $html = preg_replace("#\\\\]#i",")",$html);
-            $html = preg_replace("#\\$(.*?)\\$#i","\\("."$1"."\\)",$html);
+            $html = preg_replace("#(<img[^>]*alt=\")(.*?)\\$(.*?)\\$(.*?)(\".*?>)#is","$1$2\\\("."$3"."\\\)$4$5",$html);
+            $html = preg_replace("#\\$(.*?)\\$#is","\\\("."$1"."\\\)",$html);
             $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
             $html = preg_replace("#(.*?)(\\\\xrightarrow)(.*?)#is","$1"."\\)\\("."$2"."$3",$html);
+            $html = preg_replace("#(.*?)(\\\\right[^\.])(\\\left)(.*?)#is","$1"."$2"."\\)\\("."$3$4",$html);
+            $html = preg_replace("#(.*?)(\\\\right\.)(\\\left)(.*?)#is","$1"."$2"."\\)\\("."$3$4",$html);
+            $html = preg_replace("#(.*?)(\\\\\()([^\)]*)(\\\\\()#is","$1"."$2"."$3",$html);
+            $html = preg_replace("#(.*?)(\\\\\))([^\(]*)(\\\\\))#is","$1"."$2"."$3",$html);
             return $html;
 
         }
