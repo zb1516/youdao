@@ -18,6 +18,15 @@
         }
     </style>
     <script type="text/x-mathjax-config">
+        /*MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["\\\\(", "\\\\)"]]},
+          skipTags: ["script", "noscript", "style", "textarea", "pre","code","a"],
+          showProcessingMessages: false,
+          showMathMenu: false,
+                messageStyle: "none"
+            });
+            */
+
         MathJax.Hub.Config({
             showProcessingMessages: false,
             messageStyle: "none",
