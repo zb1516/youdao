@@ -18,20 +18,20 @@
         }
     </style>
     <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-          showProcessingMessages: false,
-          messageStyle: "none",
-          displayAlign: "center",
-          showMathMenu: false,
-          jax: ["input/TeX","output/HTML-CSS"],
-          tex2jax: {
-              inlineMath: [ ['$','$'], ['\\(','\\)'] ],
-              skipTags: ["script","noscript","style","textarea","pre","code"]
-          }
-      });
+    MathJax.Hub.Config({
+    showProcessingMessages: false,
+    messageStyle: "none",
+    displayAlign: "center",
+    showMathMenu: false,
+    jax: ["input/TeX","output/HTML-CSS"],
+    tex2jax: {
+    inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+    skipTags: ["script","noscript","style","textarea","pre","code"]
+    }
+    });
 
-      <!-- MathJax.Hub.Queue(["Typeset",MathJax.Hub); -->
-    </script>
+    <!-- MathJax.Hub.Queue(["Typeset",MathJax.Hub); -->
+</script>
     <script type="text/javascript" src="http://atf-static.oss-cn-beijing.aliyuncs.com/common/mathjax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </head>
 <body>
