@@ -673,9 +673,9 @@ class PaperController extends BaseController
 //            $html = preg_replace("#\\\\]#i",")",$html);
             $html = preg_replace("#(<img[^>]*alt=\")(.*?)\\$(.*?)\\$(.*?)(\".*?>)#is","$1$2\\\("."$3"."\\\)$4$5",$html);
             $html = preg_replace("#\\$(.*?)\\$#is","\\\("."$1"."\\\)",$html);
-            //$html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
+            $html = preg_replace("#(.*?)(\\\\Rightarrow)(.*?)#is","$1"."$2"."\\)\\("."$3",$html);
             $html = preg_replace("#(.*?)(\\\\xrightarrow)(.*?)#is","$1"."\\)\\("."$2"."$3",$html);
-            //$html = preg_replace("#(.*?)(\\\\right[^\.])(\\\left)(.*?)#is","$1"."$2"."\\)\\("."$3$4",$html);
+            $html = preg_replace("#(.*?)(\\\\right[^\.])(\\\left)(.*?)#is","$1"."$2"."\\)\\("."$3$4",$html);
             $html = preg_replace("#(.*?)(\\\\right\.)(\\\left)(.*?)#is","$1"."$2"."\\)\\("."$3$4",$html);
             $html = preg_replace("#(.*?)(\\\\\()([^\)]*)(\\\\\()#is","$1"."$2"."$3",$html);
             $html = preg_replace("#(.*?)(\\\\\))([^\(]*)(\\\\\))#is","$1"."$2"."$3",$html);
