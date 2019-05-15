@@ -34,7 +34,7 @@
             showMathMenu: false,
             jax: ["input/TeX","output/HTML-CSS"],
             tex2jax: {
-                inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+                inlineMath: [['\\(','\\)'] ],
                 displayMath: [ ['$$','$$']],
                 skipTags: ["script","noscript","style","textarea","pre","code"]
             }
