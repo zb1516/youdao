@@ -819,7 +819,7 @@ class VipYoudaoExamined extends Model
                 'city' => $data['city_name'],
                 'country' => $data['area_name'],
                 'school' => $data['school'],
-                'grades' => $data['grade'],
+                'grades' => $data['grade_name'],
                 'term' => $data['semester'],
                 'duration' => $data['examination_length'],
                 'score' => $data['examination_score'],
