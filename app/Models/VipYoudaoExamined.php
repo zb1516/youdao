@@ -809,6 +809,15 @@ class VipYoudaoExamined extends Model
             $common = new CommonController;
             $question = new Question;
             $paper = new Paper;
+            if($data['grade']){
+                //将元课堂年级id转换成4.0的年级id
+                $yktGradeArr = config('app.GRADE_VALUE');
+                $gradeName = $yktGradeArr[$data['grade']];
+                $dict = new VipDict();
+                $eapGradeInfo = $dict->findOne(array('title'=>$gradeName,'category'=>'GRADE'));
+                $eapGradeId = $eapGradeInfo['id'];
+                file_put_contents('/dev/shm/eapGrade.txt',json_encode($eapGradeInfo));
+            }
             $paperInfo = array(
                 'grade_id' => $data['grade_id'],
                 'subject_id' => $data['subject_id'],
@@ -888,6 +897,7 @@ class VipYoudaoExamined extends Model
                     $question['sdate'] = date('Ym');
                     $question['source'] = $data['source'];
                     $question['grade_id'] = $data['grade_id'];
+                    $question['grades'] = $eapGradeId;
                     $question['subject_id'] = $data['subject_id'];
                     $question['school'] = $data['school'];
                     $question['province'] = $data['province_name'];
