@@ -923,6 +923,7 @@ class VipYoudaoExamined extends Model
                         $fileArr['questions'][$key]['analysis_file'] = isset($q['quesLatextAnalysis']['fileUrl'])?$q['quesLatextAnalysis']['fileUrl']:'';
                     }
 
+
                     //选项录入
                     if($q['hasOptions'] == 1 && !empty($q['options'])){
                         foreach ($q['options'] as $k => $o){
